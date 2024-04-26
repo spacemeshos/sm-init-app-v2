@@ -1,0 +1,39 @@
+import React from "react";
+import styled from "styled-components";
+import Colors from "./styles/colors";
+import AppRoutes from "./Shared/Routes";
+
+const AppWrapper = styled.div`
+  height: 740px;
+  width: 1200px;
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  background-color: ${Colors.background};
+
+  }
+`;
+const FooterDivider = styled.div`
+  background: linear-gradient(
+    90deg,
+    ${Colors.purpleDark} 0%,
+    ${Colors.purpleLight} 50%,
+    ${Colors.purpleDark} 100%
+  );
+  margin-top: 690px;
+  left: 50px;
+  height: 2px;
+  width: 1100px;
+  position: absolute;
+`;
+
+function App() {
+  return (
+    <AppWrapper>
+      <AppRoutes />
+      <FooterDivider />
+    </AppWrapper>
+  );
+}
+
+export default App;
