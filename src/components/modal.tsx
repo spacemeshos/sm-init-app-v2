@@ -3,15 +3,12 @@ import styled from "styled-components";
 import Colors from "../styles/colors";
 
 const Backdrop = styled.div<{ modalZIndex?: number }>`
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: ${({ modalZIndex }) => modalZIndex || 999};
+  z-index: ${({ modalZIndex }) => modalZIndex || 2};
 `;
 
 const Wrapper = styled.div<{
@@ -22,22 +19,35 @@ const Wrapper = styled.div<{
   left: number;
 }>`
   position: relative;
-  top: ${({ top }) => top}px;
-  left: ${({ left }) => left}px;
+  top: ${({ top }) => top}%;
+  left: ${({ left }) => left}%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: ${Colors.darkerGreen};
+  background-color: ${Colors.background};
   z-index: ${({ modalZIndex }) =>
     modalZIndex + 1}; // Ensure modal content is above the backdrop
-  width: ${({ width }) => width}px;
-  height: ${({ height }) => height}px;
+  width: ${({ width }) => width}%;
+  height: ${({ height }) => height}%;
+  border: 2px solid transparent;
+
+  /* Gradient border */
+  border-image: linear-gradient(${Colors.purpleLight}, ${Colors.background});
+  border-image-slice: 1;
 `;
 
 const Header = styled.h1`
   color: ${Colors.white};
   margin-bottom: 15px;
+  text-align: center;
+  font-family: "Source Code Pro", sans-serif;
+  font-size: 14px;
+  font-weight: 200;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  line-height: 20px;
 `;
+
 const Text = styled.span`
   color: ${Colors.white};
   display: flex;
@@ -80,11 +90,11 @@ const Modal = ({
   header,
   text,
   children,
-  width = 440,
-  height = 360,
-  top=0,
-  left=0,
-  modalZIndex = 1000,
+  width = 100,
+  height = 100,
+  top = 0,
+  left = 0,
+  modalZIndex = 1,
   onClose,
   isOpen,
 }: Props) => {

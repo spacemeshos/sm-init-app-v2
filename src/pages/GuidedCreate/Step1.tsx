@@ -146,8 +146,8 @@ const Step1: React.FC = () => {
             onClick={() => console.log("Button Clicked")} /* TO DO */
           />
           <TooltipButton
-            top={0}
-            left={0}
+            modalTop={0}
+            modalLeft={0}
             modalHeader="Test"
             modalText="dir"
             modalContent
@@ -161,8 +161,8 @@ const Step1: React.FC = () => {
             your rewards and qualification chances every epoch
           </HintText>
           <TooltipButton
-            top={0}
-            left={0}
+            modalTop={0}
+            modalLeft={0}
             modalHeader="Test"
             modalText="dfghjkloikjuhygf"
             modalContent

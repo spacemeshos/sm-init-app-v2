@@ -15,8 +15,9 @@ const TileWrapper = styled.div`
   border: 1px solid transparent;
   background-color: ${Colors.darkerGreen};
   transition: border-color 0.3s ease;
-  height: 370px;
-  width: 450px;
+  height: 99%;
+  width: 99%;
+  position: absolute;
 
   display: flex;
   justify-content: center;
