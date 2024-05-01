@@ -48,7 +48,6 @@ const ContainerBottom = styled.div`
 const DirWrapper = styled.div`
   height: 370px;
   width: 450px;
-  left: 0px;
   position: absolute;
   left: 112px;
   display: flex;
@@ -140,17 +139,19 @@ const Step1: React.FC = () => {
       </TextWrapper>
       <ContainerBottom>
         <DirWrapper>
-        <Tile
-          text={"Where to Store pos data?"}
-          imageSrc={folder}
-          buttonText="Choose directory"
-          onClick={() => console.log("Button Clicked")} /* TO DO */
-        />
-        <TooltipButton
-          modalHeader="Test"
-          modalText="dir"
-          modalContent
-        />
+          <Tile
+            text={"Where to Store pos data?"}
+            imageSrc={folder}
+            buttonText="Choose directory"
+            onClick={() => console.log("Button Clicked")} /* TO DO */
+          />
+          <TooltipButton
+            top={0}
+            left={0}
+            modalHeader="Test"
+            modalText="dir"
+            modalContent
+          />
         </DirWrapper>
 
         <HintWrapper>
@@ -160,6 +161,8 @@ const Step1: React.FC = () => {
             your rewards and qualification chances every epoch
           </HintText>
           <TooltipButton
+            top={0}
+            left={0}
             modalHeader="Test"
             modalText="dfghjkloikjuhygf"
             modalContent

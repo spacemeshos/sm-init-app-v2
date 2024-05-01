@@ -18,16 +18,18 @@ const Wrapper = styled.div<{
   width: number;
   height: number;
   modalZIndex: number;
+  top: number;
+  left: number;
 }>`
   position: relative;
+  top: ${({ top }) => top}px;
+  left: ${({ left }) => left}px;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: ${Colors.darkerGreen};
   z-index: ${({ modalZIndex }) =>
     modalZIndex + 1}; // Ensure modal content is above the backdrop
-  padding: 20px;
-  border-radius: 8px;
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
 `;
@@ -50,7 +52,6 @@ const Text = styled.span`
   line-height: 20px;
 `;
 
-
 const CloseButton = styled.button`
   position: absolute;
   top: 10px;
@@ -67,6 +68,8 @@ type Props = {
   text: string;
   width?: number;
   height?: number;
+  top?: number;
+  left?: number;
   modalZIndex?: number;
   onClose: () => void;
   isOpen: boolean;
@@ -79,6 +82,8 @@ const Modal = ({
   children,
   width = 440,
   height = 360,
+  top=0,
+  left=0,
   modalZIndex = 1000,
   onClose,
   isOpen,
@@ -91,6 +96,8 @@ const Modal = ({
         onClick={(e) => e.stopPropagation()}
         width={width}
         height={height}
+        top={top}
+        left={left}
         modalZIndex={modalZIndex}
       >
         <CloseButton onClick={onClose}>&times;</CloseButton>
