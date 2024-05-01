@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
-import { TileButton, TooltipButton } from "./button";
+import { TileButton } from "./button";
 
 interface TileProps {
   text: string;
@@ -9,7 +9,6 @@ interface TileProps {
   children?: React.ReactNode;
   buttonText?: string;
   onClick?: () => void;
-  tooltip?: () => void;
 }
 
 const TileWrapper = styled.div`
@@ -21,8 +20,6 @@ const TileWrapper = styled.div`
 
   display: flex;
   justify-content: center;
-  left: 112px;
-  position: absolute;
 
   /* Gradient border */
   border-image: linear-gradient(${Colors.greenLight}, ${Colors.greenDark});
@@ -55,13 +52,12 @@ const TileImage = styled.img`
   top: 112px;
 `;
 
-const Tile: React.FC<TileProps> = ({ text, imageSrc, buttonText, onClick, tooltip }) => {
+const Tile: React.FC<TileProps> = ({ text, imageSrc, buttonText, onClick}) => {
   return (
     <TileWrapper>
       <TileHeading>{text}</TileHeading>
       {imageSrc && <TileImage src={imageSrc} alt="" />}
       <TileButton label={buttonText} onClick={onClick} />
-      <TooltipButton onClick={tooltip}/>
     </TileWrapper>
   );
 };

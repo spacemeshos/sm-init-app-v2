@@ -1,6 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
-import { BackButton, ForwardButton, TooltipButton } from "../../components/button";
+import {
+  BackButton,
+  ForwardButton,
+  TooltipButton,
+} from "../../components/button";
 import Title from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
@@ -40,6 +44,15 @@ const ContainerBottom = styled.div`
   top: 278px;
   width: 1200px;
   position: absolute;
+`;
+const DirWrapper = styled.div`
+  height: 370px;
+  width: 450px;
+  left: 0px;
+  position: absolute;
+  left: 112px;
+  display: flex;
+  justify-content: center;
 `;
 
 const HintWrapper = styled.div`
@@ -90,25 +103,6 @@ const HintText = styled.div`
   letter-spacing: 2px;
   text-transform: uppercase;
 `;
-const DirTip = styled.div`
-background-color: ${Colors.darkerGreen};
-height: 370px;
-width: 450px;
-
-display: flex;
-justify-content: center;
-position: absolute;
-  font-family: "Source Code Pro", monospace;
-  font-weight: 100;
-  font-height: 16px;
-  text-align: center;
-  font-size: 22px;
-  font-weight: 100;
-  line-height: 35px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-`;
-
 
 const Step1: React.FC = () => {
   const folder = require("../../assets/folder.png");
@@ -145,22 +139,31 @@ const Step1: React.FC = () => {
         </a>
       </TextWrapper>
       <ContainerBottom>
+        <DirWrapper>
         <Tile
           text={"Where to Store pos data?"}
           imageSrc={folder}
           buttonText="Choose directory"
           onClick={() => console.log("Button Clicked")} /* TO DO */
         />
-        
+        <TooltipButton
+          modalHeader="Test"
+          modalText="dir"
+          modalContent
+        />
+        </DirWrapper>
+
         <HintWrapper>
           <HintImage src={bulb} />
           <HintText>
             Next, we'll optimize your settings with a quick benchmark to boost
             your rewards and qualification chances every epoch
           </HintText>
-          <TooltipButton>
-
-          </TooltipButton>
+          <TooltipButton
+            modalHeader="Test"
+            modalText="dfghjkloikjuhygf"
+            modalContent
+          />
         </HintWrapper>
       </ContainerBottom>
     </>

@@ -81,7 +81,12 @@ const ForwardButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
 };
 
 // Tooltip button component
-const TooltipButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
+const TooltipButton: React.FC<{
+  onClick?: () => void,
+  modalHeader: string,
+  modalText: string,
+  modalContent: React.ReactNode
+}> = ({ onClick, modalHeader, modalText, modalContent }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const question = require("../assets/question.png");
 
@@ -102,9 +107,9 @@ const TooltipButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
-        header={""}
-        text={""}
-        children={undefined}
+        header={modalHeader}
+        text={modalText}
+        children={modalContent}
       />
     </>
   );
