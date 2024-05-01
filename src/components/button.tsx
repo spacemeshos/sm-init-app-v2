@@ -84,7 +84,6 @@ const ForwardButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
 const TooltipButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const question = require("../assets/question.png");
-  
 
   const openTooltip = () => {
     setModalOpen(true);
@@ -100,7 +99,13 @@ const TooltipButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
       <TooltipWrapper onClick={openTooltip} role="button" tabIndex={0}>
         <HintIcon src={question} alt="question" />
       </TooltipWrapper>
-      <Modal isOpen={isModalOpen} onClose={closeModal} header={""} children={undefined} />
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        header={""}
+        text={""}
+        children={undefined}
+      />
     </>
   );
 };
@@ -213,7 +218,7 @@ const ForwardkWrapper = styled.button`
 
 const HintIcon = styled.img`
   aspect-ratio: 1;
-  width: 30px;  
+  width: 30px;
 `;
 
 const TooltipWrapper = styled.button`
@@ -225,6 +230,5 @@ const TooltipWrapper = styled.button`
   top: 96%;
   left: 46%;
 `;
-
 
 export { Button, TileButton, BackButton, ForwardButton, TooltipButton };

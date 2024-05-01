@@ -90,6 +90,25 @@ const HintText = styled.div`
   letter-spacing: 2px;
   text-transform: uppercase;
 `;
+const DirTip = styled.div`
+background-color: ${Colors.darkerGreen};
+height: 370px;
+width: 450px;
+
+display: flex;
+justify-content: center;
+position: absolute;
+  font-family: "Source Code Pro", monospace;
+  font-weight: 100;
+  font-height: 16px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 100;
+  line-height: 35px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+`;
+
 
 const Step1: React.FC = () => {
   const folder = require("../../assets/folder.png");
@@ -132,13 +151,16 @@ const Step1: React.FC = () => {
           buttonText="Choose directory"
           onClick={() => console.log("Button Clicked")} /* TO DO */
         />
+        
         <HintWrapper>
           <HintImage src={bulb} />
           <HintText>
             Next, we'll optimize your settings with a quick benchmark to boost
             your rewards and qualification chances every epoch
           </HintText>
-          <TooltipButton/> {/* TO DO */}
+          <TooltipButton>
+
+          </TooltipButton>
         </HintWrapper>
       </ContainerBottom>
     </>

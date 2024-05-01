@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import Colors from '../styles/colors';
+import React from "react";
+import styled from "styled-components";
+import Colors from "../styles/colors";
 
 const Backdrop = styled.div<{ modalZIndex?: number }>`
   position: fixed;
@@ -24,18 +24,33 @@ const Wrapper = styled.div<{
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: ${Colors.background};
-  z-index: ${({ modalZIndex }) => modalZIndex + 1}; // Ensure modal content is above the backdrop
+  background-color: ${Colors.darkerGreen};
+  z-index: ${({ modalZIndex }) =>
+    modalZIndex + 1}; // Ensure modal content is above the backdrop
   padding: 20px;
   border-radius: 8px;
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
 `;
 
-const Header = styled.h1<{ color?: string }>`
+const Header = styled.h1`
   color: ${Colors.white};
-  margin-bottom: 0.5em;
+  margin-bottom: 15px;
 `;
+const Text = styled.span`
+  color: ${Colors.white};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: "Source Code Pro", sans-serif;
+  font-size: 14px;
+  font-weight: 200;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  line-height: 20px;
+`;
+
 
 const CloseButton = styled.button`
   position: absolute;
@@ -50,9 +65,9 @@ const CloseButton = styled.button`
 
 type Props = {
   header: string;
+  text: string;
   width?: number;
   height?: number;
-  headerColor?: string;
   modalZIndex?: number;
   onClose: () => void;
   isOpen: boolean;
@@ -61,13 +76,13 @@ type Props = {
 
 const Modal = ({
   header,
-  headerColor,
+  text,
   children,
-  width = 520,
-  height = 310,
+  width = 440,
+  height = 360,
   modalZIndex = 1000,
   onClose,
-  isOpen
+  isOpen,
 }: Props) => {
   if (!isOpen) return null;
 
@@ -80,7 +95,8 @@ const Modal = ({
         modalZIndex={modalZIndex}
       >
         <CloseButton onClick={onClose}>&times;</CloseButton>
-        <Header color={headerColor}>{header}</Header>
+        <Header>{header}</Header>
+        <Text>{text}</Text>
         {children}
       </Wrapper>
     </Backdrop>
