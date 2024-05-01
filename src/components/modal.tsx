@@ -29,11 +29,6 @@ const Wrapper = styled.div<{
     modalZIndex + 1}; // Ensure modal content is above the backdrop
   width: ${({ width }) => width}%;
   height: ${({ height }) => height}%;
-  border: 2px solid transparent;
-
-  /* Gradient border */
-  border-image: linear-gradient(${Colors.purpleLight}, ${Colors.background});
-  border-image-slice: 1;
 `;
 
 const Header = styled.h1`
@@ -90,8 +85,8 @@ const Modal = ({
   header,
   text,
   children,
-  width = 100,
-  height = 100,
+  width = 99,
+  height = 99,
   top = 0,
   left = 0,
   modalZIndex = 1,
