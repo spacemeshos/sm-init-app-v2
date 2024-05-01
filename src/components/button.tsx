@@ -159,7 +159,7 @@ const ButtonImage = styled.img`
 
 const ButtonText = styled.span`
   font-family: "Source Code Pro", sans-serif;
-  color: white;
+  color: ${Colors.white};
   font-size: 14px;
   font-weight: 200;
   text-transform: uppercase;
