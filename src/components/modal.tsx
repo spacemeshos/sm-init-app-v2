@@ -1,10 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import Colors from "../styles/colors";
+import React from 'react';
+import styled from 'styled-components';
+import Colors from '../styles/colors';
 
-const Backdrop = styled.div<{
-  modalZIndex?: number;
-}>`
+const Backdrop = styled.div<{ modalZIndex?: number }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -14,32 +12,29 @@ const Backdrop = styled.div<{
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: ${({ modalZIndex }) => modalZIndex || 999}
+  z-index: ${({ modalZIndex }) => modalZIndex || 999};
 `;
 
 const Wrapper = styled.div<{
-  modalZIndex?: number;
   width: number;
   height: number;
+  modalZIndex: number;
 }>`
-  position: relative; // Relative to the backdrop
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: ${Colors.background};
-  z-index: ${({ modalZIndex }) => modalZIndex || 1000};
-  padding: 20px; // Padding around content
-  border-radius: 8px; // Optional styling
+  z-index: ${({ modalZIndex }) => modalZIndex + 1}; // Ensure modal content is above the backdrop
+  padding: 20px;
+  border-radius: 8px;
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}px;
 `;
 
 const Header = styled.h1<{ color?: string }>`
-  color: ${({ color }) => color || Colors.white};
+  color: ${Colors.white};
   margin-bottom: 0.5em;
-`;
-
-const SubHeader = styled.h2<{ color?: string }>`
-  color: ${({ color }) => color || Colors.white};
-  margin-bottom: 1em;
 `;
 
 const CloseButton = styled.button`
@@ -55,33 +50,37 @@ const CloseButton = styled.button`
 
 type Props = {
   header: string;
-  subHeader?: string;
   width?: number;
   height?: number;
   headerColor?: string;
-  indicatorColor?: string;
   modalZIndex?: number;
   onClose: () => void;
+  isOpen: boolean;
   children: React.ReactNode;
 };
 
 const Modal = ({
   header,
-  subHeader = "",
   headerColor,
-  indicatorColor,
   children,
   width = 520,
   height = 310,
   modalZIndex = 1000,
   onClose,
+  isOpen
 }: Props) => {
+  if (!isOpen) return null;
+
   return (
-    <Backdrop modalZIndex={modalZIndex -1} onClick={onClose}>
-      <Wrapper onClick={e => e.stopPropagation()}  modalZIndex={modalZIndex} width={width} height={height}>
+    <Backdrop modalZIndex={modalZIndex} onClick={onClose}>
+      <Wrapper
+        onClick={(e) => e.stopPropagation()}
+        width={width}
+        height={height}
+        modalZIndex={modalZIndex}
+      >
         <CloseButton onClick={onClose}>&times;</CloseButton>
         <Header color={headerColor}>{header}</Header>
-        {subHeader && <SubHeader color={indicatorColor}>{subHeader}</SubHeader>}
         {children}
       </Wrapper>
     </Backdrop>

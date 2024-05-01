@@ -100,7 +100,7 @@ const TooltipButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
       <TooltipWrapper onClick={openTooltip} role="button" tabIndex={0}>
         <HintIcon src={question} alt="question" />
       </TooltipWrapper>
-      <Modal onClose={closeModal} header={""} children={undefined} />
+      <Modal isOpen={isModalOpen} onClose={closeModal} header={""} children={undefined} />
     </>
   );
 };
