@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Colors from "../styles/colors";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Modal from "./modal";
 
 interface ButtonProps {
   imageSrc?: string;
@@ -83,6 +84,7 @@ const ForwardButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
 const TooltipButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const question = require("../assets/question.png");
+  
 
   const openTooltip = () => {
     setModalOpen(true);
@@ -98,25 +100,7 @@ const TooltipButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
       <TooltipWrapper onClick={openTooltip} role="button" tabIndex={0}>
         <HintIcon src={question} alt="question" />
       </TooltipWrapper>
-      {isModalOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: "50%", // Adjust modal position
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "300px", // Set modal width
-            height: "200px", // Set modal height
-            backgroundColor: "white",
-            padding: "20px",
-            zIndex: 1000,
-          }}
-        >
-          <h2>Modal Title</h2>
-          <p>Modal Content Here...</p>
-          <button onClick={closeModal}>Close</button>
-        </div>
-      )}
+      <Modal onClose={closeModal} header={""} children={undefined} />
     </>
   );
 };
@@ -241,5 +225,6 @@ const TooltipWrapper = styled.button`
   top: 96%;
   left: 46%;
 `;
+
 
 export { Button, TileButton, BackButton, ForwardButton, TooltipButton };
