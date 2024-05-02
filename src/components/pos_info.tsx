@@ -12,23 +12,19 @@ const Backdrop = styled.div<{ modalZIndex?: number }>`
 `;
 
 const Wrapper = styled.div<{
-  width: number;
-  height: number;
   modalZIndex: number;
-  top: number;
-  left: number;
 }>`
   position: relative;
-  top: ${({ top }) => top}%;
-  left: ${({ left }) => left}%;
+  top: 95%;
+  left: 95%;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: ${Colors.background};
   z-index: ${({ modalZIndex }) =>
     modalZIndex + 1}; // Ensure modal content is above the backdrop
-  width: ${({ width }) => width}%;
-  height: ${({ height }) => height}%;
+  width: 95%;
+  height: 95%;
 `;
 
 const Header = styled.h1`
@@ -68,25 +64,17 @@ const CloseButton = styled.button`
 
 type Props = {
   header?: string;
-  text?:  React.ReactNode;
-  width?: number;
-  height?: number;
-  top?: number;
-  left?: number;
+  text:  React.ReactNode;
   modalZIndex?: number;
   onClose: () => void;
   isOpen: boolean;
   children?: React.ReactNode;
 };
 
-const Modal = ({
+const PosInfo = ({
   header,
   text,
   children,
-  width = 99,
-  height = 99,
-  top = 0,
-  left = 0,
   modalZIndex = 1,
   onClose,
   isOpen,
@@ -97,10 +85,6 @@ const Modal = ({
     <Backdrop modalZIndex={modalZIndex} onClick={onClose}>
       <Wrapper
         onClick={(e) => e.stopPropagation()}
-        width={width}
-        height={height}
-        top={top}
-        left={left}
         modalZIndex={modalZIndex}
       >
         <CloseButton onClick={onClose}>&times;</CloseButton>
@@ -112,4 +96,4 @@ const Modal = ({
   );
 };
 
-export default Modal;
+export default PosInfo;
