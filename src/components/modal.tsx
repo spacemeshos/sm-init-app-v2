@@ -67,7 +67,7 @@ const CloseButton = styled.button`
 `;
 
 type Props = {
-  header: string;
+  header?: string;
   text: string;
   width?: number;
   height?: number;

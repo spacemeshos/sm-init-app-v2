@@ -83,7 +83,7 @@ const ForwardButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
 // Tooltip button component
 const TooltipButton: React.FC<{
   onClick?: () => void,
-  modalHeader: string,
+  modalHeader?: string,
   modalText: string,
   modalTop?: number,
   modalLeft?: number,

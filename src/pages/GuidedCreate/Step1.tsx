@@ -146,7 +146,6 @@ const Step1: React.FC = () => {
             onClick={() => console.log("Button Clicked")} /* TO DO */
           />
           <TooltipButton
-            modalHeader="Test"
             modalText="Use a reliable disk with at least 256 Gibibytes, preferring good read speed (HDDs suffice).
             Ensure PoS files remain accessible, as they're checked every 2 weeks. 
             Consider a dedicated disk or no other activity during proving windows for disk longevity.
