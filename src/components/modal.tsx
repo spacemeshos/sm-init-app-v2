@@ -33,11 +33,11 @@ const Wrapper = styled.div<{
 
 const Header = styled.h1`
   color: ${Colors.white};
-  margin-bottom: 15px;
   text-align: center;
-  font-family: "Source Code Pro", sans-serif;
-  font-size: 14px;
-  font-weight: 200;
+  font-family: "Source Code Pro ExtraLight", sans-serif;
+  font-size: 16px;
+  margin-top: 20px;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 3px;
   line-height: 20px;
@@ -45,16 +45,14 @@ const Header = styled.h1`
 
 const Text = styled.span`
   color: ${Colors.white};
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 15px;
+  margin-top: 15px;
   text-align: center;
-  font-family: "Source Code Pro", sans-serif;
-  font-size: 14px;
-  font-weight: 200;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  line-height: 20px;
+  font-family: "Source Code Pro ExtraLight", sans-serif;
+  font-size: 16px;
+  font-weight: 100;
+  letter-spacing: 2px;
+  line-height: 25px;
 `;
 
 const CloseButton = styled.button`
@@ -78,7 +76,7 @@ type Props = {
   modalZIndex?: number;
   onClose: () => void;
   isOpen: boolean;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 const Modal = ({

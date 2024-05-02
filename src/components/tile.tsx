@@ -33,7 +33,7 @@ const TileWrapper = styled.div`
 
 const TileHeading = styled.h2`
   color: ${Colors.grayLight};
-  font-family: "Source Code Pro", sans-serif;
+  font-family: "Source Code Pro ExtraLight", sans-serif;
   height: 90px;
   padding: 30px 15px;
   text-align: center;

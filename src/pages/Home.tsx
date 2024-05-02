@@ -33,7 +33,7 @@ const CustomTitle = styled.h1`
   top: 50px;
   position: absolute;
   color: ${Colors.grayLight};
-  font-family: "Source Code Pro", sans-serif;
+  font-family: "Source Code Pro ExtraLight", sans-serif;
   text-align: center;
   white-space: nowrap;
   text-transform: uppercase;

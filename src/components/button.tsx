@@ -85,10 +85,9 @@ const TooltipButton: React.FC<{
   onClick?: () => void,
   modalHeader: string,
   modalText: string,
-  modalContent: React.ReactNode,
   modalTop: number,
   modalLeft: number,
-}> = ({ onClick, modalHeader, modalText, modalContent, modalTop, modalLeft }) => {
+}> = ({ onClick, modalHeader, modalText, modalTop, modalLeft }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const question = require("../assets/question.png");
 
@@ -113,9 +112,9 @@ const TooltipButton: React.FC<{
         onClose={closeModal}
         header={modalHeader}
         text={modalText}
-        children={modalContent}
         top={modalTop}
         left={modalLeft}
+        children
       />
     </>
   );
@@ -169,7 +168,7 @@ const ButtonImage = styled.img`
 `;
 
 const ButtonText = styled.span`
-  font-family: "Source Code Pro", sans-serif;
+  font-family: "Source Code Pro ExtraLight", sans-serif;
   color: ${Colors.white};
   font-size: 14px;
   font-weight: 200;

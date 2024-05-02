@@ -149,8 +149,10 @@ const Step1: React.FC = () => {
             modalTop={0}
             modalLeft={0}
             modalHeader="Test"
-            modalText="dir"
-            modalContent
+            modalText="Use a reliable disk with at least 256 Gibibytes, preferring good read speed (HDDs suffice).
+            Ensure PoS files remain accessible, as they're checked every 2 weeks. 
+            Consider a dedicated disk or no other activity during proving windows for disk longevity.
+            Read more: Spacemesh docs and Discord FAQ."
           />
         </DirWrapper>
 
@@ -165,7 +167,6 @@ const Step1: React.FC = () => {
             modalLeft={0}
             modalHeader="Test"
             modalText="dfghjkloikjuhygf"
-            modalContent
           />
         </HintWrapper>
       </ContainerBottom>
