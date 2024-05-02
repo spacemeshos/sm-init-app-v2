@@ -182,7 +182,7 @@ const Step1: React.FC = () => {
             Next, we'll optimize your settings with a quick benchmark to boost
             your rewards and qualification chances every epoch
           </HintText>
-          <TooltipButton modalHeader="Test" modalText="dfghjkloikjuhygf" />
+          <TooltipButton />
         </HintWrapper>
       </ContainerBottom>
     </>
