@@ -68,7 +68,7 @@ const CloseButton = styled.button`
 
 type Props = {
   header?: string;
-  text?:  React.ReactNode;
+  text:  React.ReactNode;
   width?: number;
   height?: number;
   top?: number;
