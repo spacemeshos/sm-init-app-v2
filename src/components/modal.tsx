@@ -45,13 +45,12 @@ const Header = styled.h1`
 
 const Text = styled.div`
   color: ${Colors.white};
-  padding: 15px;
-  margin-top: 15px;
+  padding: 10px;
+  margin-top: 10px;
   text-align: center;
   font-family: "Source Code Pro ExtraLight", sans-serif;
   font-size: 16px;
   font-weight: 100;
-  letter-spacing: 2px;
   line-height: 25px;
   white-space: pre-wrap
 `;
@@ -69,7 +68,7 @@ const CloseButton = styled.button`
 
 type Props = {
   header?: string;
-  text: string;
+  text:  React.ReactNode;
   width?: number;
   height?: number;
   top?: number;

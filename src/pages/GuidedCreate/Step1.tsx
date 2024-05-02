@@ -139,10 +139,40 @@ const Step1: React.FC = () => {
             onClick={() => console.log("Button Clicked")} /* TO DO */
           />
           <TooltipButton
-            modalText="Use a reliable disk with at least 256 Gibibytes, preferring good read speed (HDDs suffice).
-            Ensure PoS files remain accessible, as they're checked every 2 weeks. 
-            Consider a dedicated disk or no other activity during proving windows for disk longevity.
-            Read more: Spacemesh docs and Discord FAQ."
+            modalText={
+              <>
+                Use a reliable disk with at least 256 Gibibytes, preferring good
+                read speed (HDDs suffice).
+                <br />
+                <br />
+                Ensure PoS files remain accessible, as they're checked every 2
+                weeks.
+                <br />
+                <br />
+                Consider a dedicated disk or no other activity during proving
+                windows for disk longevity.
+                <br />
+                <br />
+                Read more:{" "}
+                <a
+                  onClick={navigateToDocs}
+                  role="button"
+                  tabIndex={0}
+                  style={{ cursor: "pointer", textDecoration: "underline" }}
+                >
+                  Spacemesh docs
+                </a>
+                {", and "}
+                <a
+                  onClick={navigateToDiscord}
+                  role="button"
+                  tabIndex={0}
+                  style={{ cursor: "pointer", textDecoration: "underline" }}
+                >
+                  Discord FAQ
+                </a>
+              </>
+            }
           />
         </DirWrapper>
 
@@ -152,10 +182,7 @@ const Step1: React.FC = () => {
             Next, we'll optimize your settings with a quick benchmark to boost
             your rewards and qualification chances every epoch
           </HintText>
-          <TooltipButton
-            modalHeader="Test"
-            modalText="dfghjkloikjuhygf"
-          />
+          <TooltipButton modalHeader="Test" modalText="dfghjkloikjuhygf" />
         </HintWrapper>
       </ContainerBottom>
     </>
