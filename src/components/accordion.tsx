@@ -23,7 +23,7 @@ const MenuTitle = styled.div`
   cursor: pointer;
   height: 30px;
   color: ${Colors.grayLight};
-  font-family: "Source Code Pro ExtraLight", sans-serif;
+  font-family: "Source Code Pro", sans-serif;
   white-space: nowrap;
   text-transform: uppercase;
   font-size: 21px;

@@ -168,7 +168,7 @@ const ButtonImage = styled.img`
 `;
 
 const ButtonText = styled.span`
-  font-family: "Source Code Pro ExtraLight", sans-serif;
+  font-family: "Source Code Pro", sans-serif;
   color: ${Colors.white};
   font-size: 14px;
   font-weight: 200;

@@ -6,19 +6,19 @@ const Colors = {
     purpleLight: '#AA58B1',
     grayLight: '#dddddd',
     grayDark: '#585858',
+    grayMedium: '#828282',
     purpleDark: '#48254B',
     darkerGreen: '#26282b',
     darkerPurple: '#2c2731',
 
+
     // lightGray: '#EEEEEE',
     // darkerGray: '#404040',
-    // mediumGray: '#828282',
     // mediumGraySecond: '#b7b7b7',
     // black: '#252429',
     // black80Alpha2: 'rgba(37, 36, 41, 0.8)',
     // disabledGray: '#BCBCBD',
     // disabledGray10Alpha: 'rgba(188, 188, 189, 0.1)',
-    // 
     // blue: '#588ecc',
     // darkerBlue: '#0E4F9A',
     // orange: '#F79F53',

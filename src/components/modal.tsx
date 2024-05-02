@@ -43,7 +43,7 @@ const Header = styled.h1`
   line-height: 20px;
 `;
 
-const Text = styled.span`
+const Text = styled.div`
   color: ${Colors.white};
   padding: 15px;
   margin-top: 15px;
@@ -53,6 +53,7 @@ const Text = styled.span`
   font-weight: 100;
   letter-spacing: 2px;
   line-height: 25px;
+  white-space: pre-wrap
 `;
 
 const CloseButton = styled.button`

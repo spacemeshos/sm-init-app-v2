@@ -13,13 +13,12 @@ const Title: React.FC<TitleProps> = ({ text }) => {
 
 const StyledTitle = styled.h1`
   color: ${Colors.grayLight};
-  font-family: "Source Code Pro ExtraLight", sans-serif;
-  height: 22px;
+  font-family: "Source Code Pro", sans-serif;
   text-align: center;
   white-space: nowrap;
   text-transform: uppercase;
   font-size: 21px;
-  font-weight: 100;
+  font-weight: 400;
   letter-spacing: 4px;
 `;
 

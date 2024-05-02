@@ -23,13 +23,8 @@ const TextWrapper = styled.div`
   top: 170px;
 
   position: absolute;
-  color: ${Colors.grayDark};
-  font-family: "Source Code Pro", monospace;
-  font-optical-sizing: auto;
-  font-weight: 100;
-  font-height: 16px;
-  font-style: normal;
-  height: 22px;
+  color: ${Colors.grayLight};
+  font-family: "Source Code Pro ExtraLight", monospace;
   text-align: center;
   font-size: 16px;
   font-weight: 100;
@@ -93,11 +88,9 @@ const HintText = styled.div`
   flex-shrink: 0;
   color: ${Colors.greenLight};
   font-family: "Source Code Pro", monospace;
-  font-weight: 100;
-  font-height: 16px;
+  font-weight: 200;
   text-align: center;
   font-size: 22px;
-  font-weight: 100;
   line-height: 35px;
   letter-spacing: 2px;
   text-transform: uppercase;
