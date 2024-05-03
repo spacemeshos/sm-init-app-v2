@@ -12,7 +12,7 @@ const Backdrop = styled.div`
 `;
 
 const Wrapper = styled.div`
-  position: absolute;
+  position: fixed;
   top: 5%;
   left: 5%;
   display: flex;
@@ -83,7 +83,7 @@ const CloseButton = styled.button`
   border: none;
   color: ${Colors.purpleLight};
   cursor: pointer;
-  font-size: 24px;
+  font-size: 28px;
 `;
 
 type Props = {

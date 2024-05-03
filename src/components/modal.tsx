@@ -63,7 +63,7 @@ const CloseButton = styled.button`
   border: none;
   color: ${Colors.purpleLight};
   cursor: pointer;
-  font-size: 24px;
+  font-size: 28px;
 `;
 
 type Props = {
