@@ -12,7 +12,7 @@ const Backdrop = styled.div`
 `;
 
 const Wrapper = styled.div`
-  position: fixed;
+  position: absolute;
   top: 5%;
   left: 5%;
   display: flex;
@@ -28,11 +28,11 @@ const Header = styled.h1`
   color: ${Colors.white};
   text-align: center;
   font-family: "Source Code Pro", sans-serif;
-  font-size: 20px;
-  margin-top: 20px;
-  font-weight: 600;
+  font-size: 26px;
+  margin-top: 40px;
+  font-weight: 200;
   text-transform: uppercase;
-  letter-spacing: 3px;
+  letter-spacing: 5px;
   line-height: 20px;
 `;
 
@@ -44,15 +44,16 @@ const Subheader = styled.h2`
   margin-top: 20px;
   font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  line-height: 20px;
+  letter-spacing: 3px;
+  line-height: 26px;
+  padding: 20px 75px 10px;
 `;
 
 const Text = styled.div`
   color: ${Colors.white};
-  padding: 10px;
+  padding: 20px 75px;
   margin-top: 10px;
-  text-align: center;
+  text-align: justify;
   font-family: "Source Code Pro ExtraLight", sans-serif;
   font-size: 16px;
   font-weight: 100;
@@ -66,11 +67,12 @@ const BgImage = styled.img<{
 }>`
   aspect-ratio: 1;
   object-fit: contain;
-  width: 74px;
+  width: 75px;
   position: absolute;
   left: 20px;
   top: ${({ top }) => top}px;
   left: ${({ left }) => left}px;
+  opacity: 0.2
 `;
 
 const CloseButton = styled.button`
@@ -105,8 +107,9 @@ const PosInfo = ({ children, onClose, isOpen}: Props) => {
           We run a benchmark to find the best settings for you, to maximise
           both: rewards and chances to qualify for them every epoch.
         </Subheader>
-        <BgImage src={gpu}  top={216} left={35}/>
-
+        <BgImage src={gpu}  top={225} left={35}/>
+        <BgImage src={files}  top={340} left={35}/>
+        <BgImage src={cpu}  top={460} left={35}/>
         <Text>
           {
             <>
