@@ -10,6 +10,7 @@ import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Tile from "../../components/tile";
 import { ExternalLinks } from "../../Shared/Constants";
+import PosInfo from "../../components/pos_info";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -182,7 +183,7 @@ const Step1: React.FC = () => {
             Next, we'll optimize your settings with a quick benchmark to boost
             your rewards and qualification chances every epoch
           </HintText>
-          <TooltipButton />
+          <TooltipButton modalComponent={PosInfo} />
         </HintWrapper>
       </ContainerBottom>
     </>

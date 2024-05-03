@@ -12,7 +12,7 @@ const Backdrop = styled.div`
 `;
 
 const Wrapper = styled.div`
-  position: relative;
+  position: fixed;
   top: 5%;
   left: 5%;
   display: flex;
@@ -88,16 +88,13 @@ type Props = {
   onClose: () => void;
   isOpen: boolean;
   children?: React.ReactNode;
-  top?: number;
-  left?: number;
-  imageSrc?: string;
 };
 
-const PosInfo = ({ children, onClose, isOpen, top, left, imageSrc }: Props) => {
+const PosInfo = ({ children, onClose, isOpen}: Props) => {
   if (!isOpen) return null;
-  const gpu = require("../../assets/graphics-card.png");
-  const files = require("../../assets/duplicate.png");
-  const cpu = require("../../assets/cpu.png");
+  const gpu = require("../assets/graphics-card.png");
+  const files = require("../assets/duplicate.png");
+  const cpu = require("../assets/cpu.png");
 
   return (
     <Backdrop onClick={onClose}>

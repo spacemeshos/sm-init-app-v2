@@ -87,7 +87,15 @@ const TooltipButton: React.FC<{
   modalText?:  React.ReactNode,
   modalTop?: number,
   modalLeft?: number,
-}> = ({ onClick, modalHeader, modalText, modalTop, modalLeft }) => {
+  modalComponent?: React.ElementType 
+}> = ({
+  onClick,
+  modalHeader,
+  modalText,
+  modalTop,
+  modalLeft,
+  modalComponent: CustomModal
+}) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const question = require("../assets/question.png");
 
@@ -107,15 +115,21 @@ const TooltipButton: React.FC<{
           <HintIcon src={question} alt="question" />
         </TooltipWrapper>
       )}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        header={modalHeader}
-        text={modalText}
-        top={modalTop}
-        left={modalLeft}
-        children
-      />
+      {isModalOpen && CustomModal ? (
+        <CustomModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+        />
+      ) : (
+        <Modal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          header={modalHeader}
+          text={modalText}
+          top={modalTop}
+          left={modalLeft}
+        />
+      )}
     </>
   );
 };
