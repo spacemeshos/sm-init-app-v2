@@ -87,7 +87,7 @@ const Home: React.FC = () => {
   const navigateToReqs = () => window.open(ExternalLinks.Requirements);
 
   const CreateButtons = [
-    { label: "Guided Mode", onClick: () => navigate("/guided/step1") },
+    { label: "Guided Mode", onClick: () => navigate("/guided/SelectDirectory") },
     { label: "Advanced Mode", onClick: () => console.log("Button 2 clicked") },
   ];
   const EditButtons = [

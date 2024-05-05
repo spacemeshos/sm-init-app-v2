@@ -97,7 +97,7 @@ const HintText = styled.div`
   text-transform: uppercase;
 `;
 
-const Step1: React.FC = () => {
+const SelectDirectory: React.FC = () => {
   const folder = require("../../assets/folder.png");
   const bulb = require("../../assets/light-bulb.png");
   const navigateToDocs = () => window.open(ExternalLinks.Docs);
@@ -190,4 +190,4 @@ const Step1: React.FC = () => {
   );
 };
 
-export default Step1;
+export default SelectDirectory;
