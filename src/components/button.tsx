@@ -80,21 +80,86 @@ const ForwardButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
   );
 };
 
-// Tooltip button component
-const TooltipButton: React.FC<{
-  onClick?: () => void,
-  modalHeader?: string,
-  modalText?:  React.ReactNode,
-  modalTop?: number,
-  modalLeft?: number,
-  modalComponent?: React.ElementType 
+// Edit button component
+const EditButton: React.FC<{
+  onClick?: () => void;
+  modalHeader?: string;
+  modalText?: React.ReactNode;
+  EditButtonTop?: number;
+  EditButtonLeft?: number;
+  modalTop?: number;
+  modalLeft?: number;
+  modalComponent?: React.ElementType;
 }> = ({
   onClick,
   modalHeader,
   modalText,
+  EditButtonTop = 0,
+  EditButtonLeft = 0,
   modalTop,
   modalLeft,
-  modalComponent: CustomModal
+  modalComponent: CustomModal,
+}) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const pen = require("../assets/edit-circle.png");
+
+  const openTooltip = () => {
+    setModalOpen(true);
+    if (typeof onClick === "function") {
+      onClick();
+    }
+  };
+
+  const closeModal = () => setModalOpen(false);
+
+  return (
+    <>
+      {!isModalOpen && (
+        <EditpWrapper
+          onClick={openTooltip}
+          role="button"
+          tabIndex={0}
+          top={EditButtonTop}
+          left={EditButtonLeft}
+        >
+          <EditIcon src={pen} alt="pen" />
+        </EditpWrapper>
+      )}
+      {isModalOpen && CustomModal ? (
+        <CustomModal isOpen={isModalOpen} onClose={closeModal} />
+      ) : (
+        <Modal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          header={modalHeader}
+          text={modalText}
+          top={modalTop}
+          left={modalLeft}
+        />
+      )}
+    </>
+  );
+};
+
+// Tooltip button component
+const TooltipButton: React.FC<{
+  onClick?: () => void;
+  modalHeader?: string;
+  modalText?: React.ReactNode;
+  TooltipButtonTop?: number;
+  TooltipButtonLeft?: number;
+  modalTop?: number;
+  modalLeft?: number;
+  modalComponent?: React.ElementType;
+}> = ({
+  onClick,
+  modalHeader,
+  modalText,
+  TooltipButtonTop = 0,
+  TooltipButtonLeft = 0,
+  modalTop,
+  modalLeft,
+  modalComponent: CustomModal,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const question = require("../assets/question.png");
@@ -111,15 +176,18 @@ const TooltipButton: React.FC<{
   return (
     <>
       {!isModalOpen && (
-        <TooltipWrapper onClick={openTooltip} role="button" tabIndex={0}>
+        <TooltipWrapper
+          onClick={openTooltip}
+          role="button"
+          tabIndex={0}
+          top={TooltipButtonTop}
+          left={TooltipButtonLeft}
+        >
           <HintIcon src={question} alt="question" />
         </TooltipWrapper>
       )}
       {isModalOpen && CustomModal ? (
-        <CustomModal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-        />
+        <CustomModal isOpen={isModalOpen} onClose={closeModal} />
       ) : (
         <Modal
           isOpen={isModalOpen}
@@ -206,7 +274,10 @@ const PurpleButtonWrapper = styled.button`
   position: absolute;
   left: 50%;
   top: 80%;
-  transform: translate(-50%, -50%); // Centers the image both horizontally and vertically
+  transform: translate(
+    -50%,
+    -50%
+  ); // Centers the image both horizontally and vertically
 `;
 
 const BackIcon = styled.img`
@@ -246,16 +317,40 @@ const HintIcon = styled.img`
   width: 30px;
 `;
 
-const TooltipWrapper = styled.button`
+const EditIcon = styled.img`
+  aspect-ratio: 1;
+  width: 30px;
+`;
+
+const EditpWrapper = styled.button<{ top: number; left: number }>`
   background-color: transparent;
   border: transparent;
   cursor: pointer;
   z-index: 1;
   position: absolute;
-  top: 96%;
-  left: 50%;
-  transform: translate(-50%, 0%); // Centers the image both horizontally and vertically
-
+  top: ${({ top }) => top}px;
+  left: ${({ left }) => left}px;
 `;
 
-export { Button, PurpleButton, BackButton, ForwardButton, TooltipButton };
+const TooltipWrapper = styled.button<{ top: number; left: number }>`
+  background-color: transparent;
+  border: transparent;
+  cursor: pointer;
+  z-index: 1;
+  position: absolute;
+  top: ${({ top }) => top}%;
+  left: ${({ left }) => left}%;
+  transform: translate(
+    -50%,
+    0%
+  ); // Centers the image both horizontally and vertically
+`;
+
+export {
+  Button,
+  PurpleButton,
+  BackButton,
+  ForwardButton,
+  TooltipButton,
+  EditButton,
+};

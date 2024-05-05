@@ -9,6 +9,7 @@ import Title from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Tile from "../../components/tile";
+import PosInfo from "../../components/pos_info";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -18,7 +19,7 @@ const NavProgress = styled.div`
 
 const TextWrapper = styled.div`
   width: 1200px;
-  height: 22px;
+  height: 100px;
   top: 170px;
   position: absolute;
   color: ${Colors.grayLight};
@@ -34,7 +35,7 @@ const ContainerBottom = styled.div`
   flex-direction: column;
   align-items: left;
   justify-content: flex-start;
-  top: 278px;
+  top: 325px;
   width: 1200px;
   position: absolute;
 `;
@@ -81,18 +82,17 @@ const TailoredSettings: React.FC = () => {
         Customise freely to match your needs. Ensure settings enhance,
         <br />
         not hinder your smeshing experience.
+        <TooltipButton
+        modalComponent={PosInfo}
+        TooltipButtonTop={100}
+        TooltipButtonLeft={50}
+      />
       </TextWrapper>
+     
+
       <ContainerBottom>
         <GPUWrapper>
-          <Tile
-            text={"Where to Store pos data?"}
-            imageSrc={gpu}
-          />
-          <TooltipButton
-            modalText={
-              <>abc              </>
-            }
-          />
+          <Tile text={"Where to Store pos data?"} imageSrc={gpu} />
         </GPUWrapper>
       </ContainerBottom>
     </>

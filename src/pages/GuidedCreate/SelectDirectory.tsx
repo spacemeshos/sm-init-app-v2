@@ -179,6 +179,8 @@ const SelectDirectory: React.FC = () => {
                 </a>
               </>
             }
+            TooltipButtonTop={96}
+            TooltipButtonLeft={50}
           />
         </DirWrapper>
 
@@ -188,7 +190,11 @@ const SelectDirectory: React.FC = () => {
             Next, we'll optimize your settings with a quick benchmark to boost
             your rewards and qualification chances every epoch
           </HintText>
-          <TooltipButton modalComponent={PosInfo} />
+          <TooltipButton
+            modalComponent={PosInfo}
+            TooltipButtonTop={96}
+            TooltipButtonLeft={50}
+          />
         </HintWrapper>
       </ContainerBottom>
     </>
