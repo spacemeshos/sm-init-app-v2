@@ -330,6 +330,10 @@ const EditpWrapper = styled.button<{ top: number; left: number }>`
   position: absolute;
   top: ${({ top }) => top}%;
   left: ${({ left }) => left}%;
+  transform: translate(
+    -50%,
+    0%
+  ); // Centers the image both horizontally and vertically
 `;
 
 const TooltipWrapper = styled.button<{ top: number; left: number }>`
