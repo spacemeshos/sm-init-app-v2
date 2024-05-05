@@ -328,8 +328,8 @@ const EditpWrapper = styled.button<{ top: number; left: number }>`
   cursor: pointer;
   z-index: 1;
   position: absolute;
-  top: ${({ top }) => top}px;
-  left: ${({ left }) => left}px;
+  top: ${({ top }) => top}%;
+  left: ${({ left }) => left}%;
 `;
 
 const TooltipWrapper = styled.button<{ top: number; left: number }>`

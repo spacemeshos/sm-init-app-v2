@@ -2,6 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import {
   BackButton,
+  EditButton,
   ForwardButton,
   TooltipButton,
 } from "../../components/button";
@@ -83,17 +84,21 @@ const TailoredSettings: React.FC = () => {
         <br />
         not hinder your smeshing experience.
         <TooltipButton
-        modalComponent={PosInfo}
-        TooltipButtonTop={100}
-        TooltipButtonLeft={50}
-      />
+          modalComponent={PosInfo}
+          TooltipButtonTop={100}
+          TooltipButtonLeft={50}
+        />
       </TextWrapper>
-     
 
       <ContainerBottom>
         <GPUWrapper>
           <Tile text={"Where to Store pos data?"} imageSrc={gpu} />
-        </GPUWrapper>
+          <EditButton
+            modalComponent={PosInfo}
+            EditButtonTop={96}
+            EditButtonLeft={50}
+          />
+        </GPUWrapper>{" "}
       </ContainerBottom>
     </>
   );
