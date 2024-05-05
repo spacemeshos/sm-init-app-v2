@@ -237,7 +237,7 @@ const ForwardkWrapper = styled.button`
   height: 45px;
   position: absolute;
   top: 96px;
-  right: 67px;
+  left: 1087px;
 `;
 
 const HintIcon = styled.img`
