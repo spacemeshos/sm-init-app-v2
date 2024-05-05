@@ -1,7 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
-import { TileButton } from "./button";
 
 interface TileProps {
   text: string;
@@ -34,13 +33,14 @@ const TileWrapper = styled.div`
 const TileHeading = styled.h2`
   color: ${Colors.grayLight};
   font-family: "Source Code Pro", sans-serif;
-  padding: 30px 15px;
+  margin: 40px 15px 0px;
   text-align: center;
   text-transform: uppercase;
   font-size: 20px;
   font-weight: 100;
+  height: 90px;
   letter-spacing: 3px;
-  width: 450px;
+  width: 100%;
 `;
 
 const TileImage = styled.img`
@@ -48,16 +48,16 @@ const TileImage = styled.img`
   object-fit: contain;
   width: 100px;
   position: absolute;
-  left: 175px;
-  top: 112px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); // Centers the image both horizontally and vertically
 `;
 
-const Tile: React.FC<TileProps> = ({ text, imageSrc, buttonText, onClick}) => {
+const Tile: React.FC<TileProps> = ({ text, imageSrc}) => {
   return (
     <TileWrapper>
       <TileHeading>{text}</TileHeading>
       {imageSrc && <TileImage src={imageSrc} alt="" />}
-      <TileButton label={buttonText} onClick={onClick} />
     </TileWrapper>
   );
 };

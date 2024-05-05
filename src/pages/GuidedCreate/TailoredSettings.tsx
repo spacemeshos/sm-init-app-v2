@@ -20,7 +20,6 @@ const TextWrapper = styled.div`
   width: 1200px;
   height: 22px;
   top: 170px;
-
   position: absolute;
   color: ${Colors.grayLight};
   font-family: "Source Code Pro ExtraLight", monospace;

@@ -27,18 +27,18 @@ const Button: React.FC<ButtonProps> = ({ imageSrc, label, onClick }) => {
   );
 };
 
-// Settings Tiles Button component
-const TileButton: React.FC<ButtonProps> = ({ imageSrc, label, onClick }) => {
+// Settings Buttons components
+const PurpleButton: React.FC<ButtonProps> = ({ imageSrc, label, onClick }) => {
   const handleClick = () => {
     if (typeof onClick === "function") {
       onClick();
     }
   };
   return (
-    <TileButtonWrapper onClick={handleClick} role="button" tabIndex={0}>
+    <PurpleButtonWrapper onClick={handleClick} role="button" tabIndex={0}>
       {imageSrc && <ButtonImage src={imageSrc} alt="" />}
       <ButtonText>{label}</ButtonText>
-    </TileButtonWrapper>
+    </PurpleButtonWrapper>
   );
 };
 
@@ -191,7 +191,7 @@ const ButtonText = styled.span`
   line-height: 20px;
 `;
 
-const TileButtonWrapper = styled.button`
+const PurpleButtonWrapper = styled.button`
   border: 1px solid ${Colors.purpleLight};
   background-color: ${Colors.darkerPurple};
   cursor: pointer;
@@ -204,8 +204,9 @@ const TileButtonWrapper = styled.button`
   justify-content: center;
   text-align: center;
   position: absolute;
-  top: 258px;
-  left: 38px;
+  left: 50%;
+  top: 80%;
+  transform: translate(-50%, -50%); // Centers the image both horizontally and vertically
 `;
 
 const BackIcon = styled.img`
@@ -252,7 +253,9 @@ const TooltipWrapper = styled.button`
   z-index: 1;
   position: absolute;
   top: 96%;
-  left: 46%;
+  left: 50%;
+  transform: translate(-50%, 0%); // Centers the image both horizontally and vertically
+
 `;
 
-export { Button, TileButton, BackButton, ForwardButton, TooltipButton };
+export { Button, PurpleButton, BackButton, ForwardButton, TooltipButton };

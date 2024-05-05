@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {
   BackButton,
   ForwardButton,
+  PurpleButton,
   TooltipButton,
 } from "../../components/button";
 import Title from "../../components/titles";
@@ -106,13 +107,12 @@ const SelectDirectory: React.FC = () => {
   const navigate = useNavigate();
   const TailoredSettings = () => navigate("/guided/TailoredSettings");
 
-
   return (
     <>
       <NavProgress>
         <ProgressBar progress={33} />
         <BackButton />
-        <ForwardButton  onClick={TailoredSettings} />
+        <ForwardButton onClick={TailoredSettings} />
       </NavProgress>
       <TextWrapper>
         <Title text="Your Path to Crypto Starts Here" />
@@ -137,12 +137,13 @@ const SelectDirectory: React.FC = () => {
       </TextWrapper>
       <ContainerBottom>
         <DirWrapper>
-          <Tile
-            text={"Where to Store pos data?"}
-            imageSrc={folder}
-            buttonText="Choose directory"
-            onClick={() => console.log("Button Clicked")} /* TO DO */
+          <Tile text={"Where to Store pos data?"} imageSrc={folder} />
+          <PurpleButton
+            onClick={() => console.log("Button Clicked")}
+            label="Choose directory"
+            /* TO DO */
           />
+
           <TooltipButton
             modalText={
               <>
