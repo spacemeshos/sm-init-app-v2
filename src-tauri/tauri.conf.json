@@ -48,11 +48,12 @@
     },
     "windows": [
       {
-        "fullscreen": false,
+        "label": "main",
+        "width": 1200,
         "height": 740,
         "resizable": true,
-        "title": "init-app",
-        "width": 1200
+        "fullscreen": false,
+        "decorations": true
       }
     ]
   }

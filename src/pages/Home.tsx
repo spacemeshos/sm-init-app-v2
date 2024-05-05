@@ -14,7 +14,7 @@ const ContainerLeft = styled.div`
   justify-content: flex-start;
   width: 450px;
   height: 740px;
-  position: relative;
+  position: absolute;
 `;
 
 const ContainerRight = styled.div`
