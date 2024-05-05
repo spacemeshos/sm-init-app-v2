@@ -92,7 +92,7 @@ const TailoredSettings: React.FC = () => {
 
       <ContainerBottom>
         <GPUWrapper>
-          <Tile text={"Where to Store pos data?"} imageSrc={gpu} />
+          <Tile heading={"How to create POS?"} subheader={"placeholder"} imageSrc={gpu} />
           <EditButton
             modalComponent={PosInfo}
             EditButtonTop={96}

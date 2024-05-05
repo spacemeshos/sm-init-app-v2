@@ -137,7 +137,7 @@ const SelectDirectory: React.FC = () => {
       </TextWrapper>
       <ContainerBottom>
         <DirWrapper>
-          <Tile text={"Where to Store pos data?"} imageSrc={folder} />
+          <Tile heading={"Where to Store pos data?"} imageSrc={folder} />
           <PurpleButton
             onClick={() => console.log("Button Clicked")}
             label="Choose directory"
