@@ -11,6 +11,7 @@ import ProgressBar from "../../components/progress";
 import Tile from "../../components/tile";
 import { ExternalLinks } from "../../Shared/Constants";
 import PosInfo from "../../components/pos_info";
+import { useNavigate } from "react-router-dom";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -102,13 +103,16 @@ const SelectDirectory: React.FC = () => {
   const bulb = require("../../assets/light-bulb.png");
   const navigateToDocs = () => window.open(ExternalLinks.Docs);
   const navigateToDiscord = () => window.open(ExternalLinks.Discord);
+  const navigate = useNavigate();
+  const TailoredSettings = () => navigate("/guided/TailoredSettings");
+
 
   return (
     <>
       <NavProgress>
         <ProgressBar progress={33} />
         <BackButton />
-        <ForwardButton />
+        <ForwardButton  onClick={TailoredSettings} />
       </NavProgress>
       <TextWrapper>
         <Title text="Your Path to Crypto Starts Here" />
