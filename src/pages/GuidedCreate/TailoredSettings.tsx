@@ -11,6 +11,7 @@ import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Tile from "../../components/tile";
 import PosInfo from "../../components/pos_info";
+import { useNavigate } from "react-router-dom";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -72,13 +73,15 @@ const TailoredSettings: React.FC = () => {
   const gpu = require("../../assets/graphics-card.png");
   const cpu = require("../../assets/cpu.png");
   const files = require("../../assets/duplicate.png");
+  const navigate = useNavigate();
+  const Summary= () => navigate("/guided/Summary");
 
   return (
     <>
       <NavProgress>
         <ProgressBar progress={66} />
         <BackButton />
-        <ForwardButton />
+        <ForwardButton onClick={Summary}/>
       </NavProgress>
       <TextWrapper>
         <Title text="Settings Tailored for Your Hardware" />
