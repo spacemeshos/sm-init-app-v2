@@ -54,22 +54,24 @@ const CPUWrapper = styled.div`
   height: 309px;
   width: 300px;
   position: absolute;
-  left: 112px;
+  left: 450px;
   display: flex;
   justify-content: center;
 `;
 
-const SizeWrapper = styled.div`
+const DataSizeWrapper = styled.div`
   height: 309px;
   width: 300px;
   position: absolute;
-  left: 112px;
+  left: 825px;
   display: flex;
   justify-content: center;
 `;
 
 const TailoredSettings: React.FC = () => {
   const gpu = require("../../assets/graphics-card.png");
+  const cpu = require("../../assets/cpu.png");
+  const files = require("../../assets/duplicate.png");
 
   return (
     <>
@@ -98,7 +100,23 @@ const TailoredSettings: React.FC = () => {
             EditButtonTop={96}
             EditButtonLeft={50}
           />
-        </GPUWrapper>{" "}
+        </GPUWrapper>
+        <CPUWrapper>
+        <Tile heading={"How to prove POS?"} subheader={"placeholder"} imageSrc={cpu} footer="placeholder" />
+          <EditButton
+            modalComponent={PosInfo}
+            EditButtonTop={96}
+            EditButtonLeft={50}
+          />
+        </CPUWrapper>
+        <DataSizeWrapper>
+        <Tile heading={"How much POS data?"} subheader={"placeholder"} imageSrc={files} footer="placeholder" />
+          <EditButton
+            modalComponent={PosInfo}
+            EditButtonTop={96}
+            EditButtonLeft={50}
+          />          
+        </DataSizeWrapper>
       </ContainerBottom>
     </>
   );
