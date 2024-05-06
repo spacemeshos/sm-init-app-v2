@@ -76,7 +76,7 @@ const TileImage = styled.img`
 const Footer = styled.h3`
   color: ${Colors.grayLight};
   font-family: "Source Code Pro ExtraLight", sans-serif;
-  bottom: 10%;
+  bottom: 5%;
   position: absolute;
   text-align: center;
   text-transform: uppercase;

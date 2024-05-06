@@ -115,7 +115,7 @@ const EditButton: React.FC<{
   return (
     <>
       {!isModalOpen && (
-        <EditpWrapper
+        <EditWrapper
           onClick={openTooltip}
           role="button"
           tabIndex={0}
@@ -123,7 +123,7 @@ const EditButton: React.FC<{
           left={EditButtonLeft}
         >
           <EditIcon src={pen} alt="pen" />
-        </EditpWrapper>
+        </EditWrapper>
       )}
       {isModalOpen && CustomModal ? (
         <CustomModal isOpen={isModalOpen} onClose={closeModal} />
@@ -322,7 +322,7 @@ const EditIcon = styled.img`
   width: 30px;
 `;
 
-const EditpWrapper = styled.button<{ top: number; left: number }>`
+const EditWrapper = styled.button<{ top: number; left: number }>`
   background-color: transparent;
   border: transparent;
   cursor: pointer;
