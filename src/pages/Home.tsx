@@ -30,7 +30,7 @@ const ContainerRight = styled.div`
 const CustomTitle = styled.h1`
   width: 1200px;
   height: 21px;
-  top: 50px;
+  top: 40px;
   position: absolute;
   color: ${Colors.grayLight};
   font-family: "Source Code Pro ExtraLight", sans-serif;

@@ -6,11 +6,9 @@ import AppRoutes from "./Shared/Routes";
 const AppWrapper = styled.div`
   height: 100%;
   width: 100%;
-  position: fixed;
+  position: absolute;
   display: flex;
   background-color: ${Colors.background};
-
-  }
 `;
 const FooterDivider = styled.div`
   background: linear-gradient(
@@ -20,10 +18,14 @@ const FooterDivider = styled.div`
     ${Colors.purpleDark} 100%
   );
   top: 690px;
-  left: 50px;
   height: 2px;
   width: 1100px;
   position: absolute;
+  left: 50%;
+  transform: translate(
+    -50%
+  );
+
 `;
 
 function App() {
