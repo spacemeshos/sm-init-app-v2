@@ -5,6 +5,7 @@ import Colors from "../styles/colors";
 interface TileProps {
   heading?: string;
   subheader?: string;
+  footer?: string;
   imageSrc?: string;
   children?: React.ReactNode;
   buttonText?: string;
@@ -37,7 +38,7 @@ const TileHeading = styled.h2`
   margin: 35px 15px 0px;
   text-align: center;
   text-transform: uppercase;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 100;
   letter-spacing: 3px;
   width: 100%;
@@ -49,11 +50,11 @@ const TileHeading = styled.h2`
 const SubHeader = styled.h3`
   color: ${Colors.grayLight};
   font-family: "Source Code Pro ExtraLight", sans-serif;
-  top: 15%;
+  top: 20%;
   position: absolute;
   text-align: center;
   text-transform: uppercase;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 100;
   letter-spacing: 3px;
   width: 100%;
@@ -65,19 +66,33 @@ const TileImage = styled.img`
   width: 100px;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 60%;
   transform: translate(
     -50%,
-    -50%
+    -60%
   ); // Centers the image both horizontally and vertically
 `;
 
-const Tile: React.FC<TileProps> = ({ heading, subheader, imageSrc }) => {
+const Footer = styled.h3`
+  color: ${Colors.grayLight};
+  font-family: "Source Code Pro ExtraLight", sans-serif;
+  bottom: 10%;
+  position: absolute;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: 100;
+  letter-spacing: 3px;
+  width: 100%;
+`;
+
+const Tile: React.FC<TileProps> = ({ heading, subheader, imageSrc,footer }) => {
   return (
     <TileWrapper>
       <TileHeading>{heading}</TileHeading>
       <SubHeader>{subheader}</SubHeader>
       {imageSrc && <TileImage src={imageSrc} alt="" />}
+      <Footer>{footer}</Footer>
     </TileWrapper>
   );
 };

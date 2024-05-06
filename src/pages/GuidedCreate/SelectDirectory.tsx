@@ -80,6 +80,16 @@ const HintImage = styled.img`
   top: 41px;
   left: 175px;
 `;
+
+const DirImage = styled.img`
+  aspect-ratio: 1;
+  object-fit: contain;
+  width: 100px;
+  position: absolute;
+  top: 110px;
+  left: 175px;
+`;
+
 const HintText = styled.div`
   width: 450px;
   height: 228px;
@@ -137,7 +147,8 @@ const SelectDirectory: React.FC = () => {
       </TextWrapper>
       <ContainerBottom>
         <DirWrapper>
-          <Tile heading={"Where to Store pos data?"} imageSrc={folder} />
+          <Tile heading={"Where to Store pos data?"} />
+          <DirImage src={folder} />
           <PurpleButton
             onClick={() => console.log("Button Clicked")}
             label="Choose directory"
