@@ -6,7 +6,6 @@ import {
 import Title from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
-import PosInfo from "../../components/pos_info";
 
 const NavProgress = styled.div`
   width: 1200px;
