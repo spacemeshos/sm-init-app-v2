@@ -2,9 +2,6 @@ import * as React from "react";
 import styled from "styled-components";
 import {
   BackButton,
-  EditButton,
-  ForwardButton,
-  TooltipButton,
 } from "../../components/button";
 import Title from "../../components/titles";
 import Colors from "../../styles/colors";
@@ -48,12 +45,13 @@ const Summary: React.FC = () => {
       <NavProgress>
         <ProgressBar progress={100} />
         <BackButton />
-        <ForwardButton />
       </NavProgress>
       <TextWrapper>
+        <Title  text="Summary of your Settings"/>
       </TextWrapper>
 
       <ContainerBottom>
+      
       </ContainerBottom>
     </>
   );
