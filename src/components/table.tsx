@@ -1,12 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
+// Define the types for the table's properties
 type TableProps = {
     rows: number;
     columns: number;
     customStyles?: React.CSSProperties;
 };
 
+// Styled components for Table and TableCell
 const StyledTable = styled.table`
     width: 100%;
     border-collapse: collapse;
@@ -21,7 +23,7 @@ const TableCell = styled.td`
 const TableRow = styled.tr``;
 
 // Table component
-const Table: React.FC<TableProps> = ({ rows, columns }) => {
+const Table: React.FC<TableProps> = ({ rows, columns, customStyles }) => {
     const renderCells = (n: number) => {
         return Array.from({ length: n }, (_, index) => <TableCell key={index}>Cell</TableCell>);
     };
