@@ -6,7 +6,6 @@ import {
 import Title from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
-import Table from "../../components/table";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -51,7 +50,6 @@ const Summary: React.FC = () => {
       </TextWrapper>
 
       <ContainerBottom>
-      <Table rows={4} columns={1}/>
       </ContainerBottom>
     </>
   );
