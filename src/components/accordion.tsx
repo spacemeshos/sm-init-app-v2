@@ -11,7 +11,6 @@ const MenuContainer = styled.div`
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-
   align-items: center;
   justify-content: center;
   text-align: center;

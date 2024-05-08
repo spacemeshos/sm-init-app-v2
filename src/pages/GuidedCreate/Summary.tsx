@@ -17,12 +17,6 @@ const TextWrapper = styled.div`
   height: 100px;
   top: 170px;
   position: absolute;
-  color: ${Colors.grayLight};
-  font-family: "Source Code Pro ExtraLight", monospace;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 100;
-  letter-spacing: 2px;
 `;
 
 const ContainerBottom = styled.div`
@@ -30,7 +24,7 @@ const ContainerBottom = styled.div`
   flex-direction: column;
   align-items: left;
   justify-content: flex-start;
-  top: 325px;
+  top: 290px;
   width: 1200px;
   position: absolute;
 `;
@@ -50,31 +44,31 @@ const Summary: React.FC = () => {
         <GreenFrame
           wrapperTop={0}
           wrapperLeft={75}
-          wrapperHeight={90}
+          wrapperHeight={80}
           wrapperWidth={675}
           heading="DATA"
           subheader="placeholder summary"
         />
         <GreenFrame
-          wrapperTop={90}
+          wrapperTop={80}
           wrapperLeft={75}
-          wrapperHeight={90}
+          wrapperHeight={80}
           wrapperWidth={675}
           heading="POS Directory"
           subheader="placeholder summary"
         />
         <GreenFrame
-          wrapperTop={180}
+          wrapperTop={160}
           wrapperLeft={75}
-          wrapperHeight={90}
+          wrapperHeight={80}
           wrapperWidth={675}
           heading="POS Generation"
           subheader="placeholder summary"
         />
         <GreenFrame
-          wrapperTop={270}
+          wrapperTop={240}
           wrapperLeft={75}
-          wrapperHeight={90}
+          wrapperHeight={80}
           wrapperWidth={675}
           heading="POST Proving"
           subheader="placeholder summary"
