@@ -50,9 +50,34 @@ const Summary: React.FC = () => {
         <GreenFrame
           wrapperTop={0}
           wrapperLeft={75}
-          wrapperHeight={92}
+          wrapperHeight={90}
           wrapperWidth={675}
           heading="DATA"
+          subheader="placeholder summary"
+        />
+        <GreenFrame
+          wrapperTop={90}
+          wrapperLeft={75}
+          wrapperHeight={90}
+          wrapperWidth={675}
+          heading="POS Directory"
+          subheader="placeholder summary"
+        />
+        <GreenFrame
+          wrapperTop={180}
+          wrapperLeft={75}
+          wrapperHeight={90}
+          wrapperWidth={675}
+          heading="POS Generation"
+          subheader="placeholder summary"
+        />
+        <GreenFrame
+          wrapperTop={270}
+          wrapperLeft={75}
+          wrapperHeight={90}
+          wrapperWidth={675}
+          heading="POST Proving"
+          subheader="placeholder summary"
         />
       </ContainerBottom>
     </>
