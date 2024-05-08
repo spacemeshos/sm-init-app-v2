@@ -16,7 +16,12 @@ interface FrameProps {
   wrapperWidth: number;
 }
 
-const GreenWrapper = styled.div<{ wrapperTop?: number; wrapperLeft?: number; wrapperHeight: number; wrapperWidth: number }>`
+const GreenWrapper = styled.div<{
+  wrapperTop?: number;
+  wrapperLeft?: number;
+  wrapperHeight: number;
+  wrapperWidth: number;
+}>`
   border: 1px solid transparent;
   background-color: ${Colors.background};
   position: absolute;
@@ -24,23 +29,18 @@ const GreenWrapper = styled.div<{ wrapperTop?: number; wrapperLeft?: number; wra
   left: ${({ wrapperLeft }) => wrapperLeft}px;
   height: ${({ wrapperHeight }) => wrapperHeight}px;
   width: ${({ wrapperWidth }) => wrapperWidth}px;
-
   display: flex;
   justify-content: center;
   flex-direction: row;
   align-items: center;
-
-
   /* Gradient border - example with a direction */
-  border-image:   linear-gradient(
+  border-image: linear-gradient(
     90deg,
     ${Colors.greenLight} 0%,
     ${Colors.greenDark} 50%,
     ${Colors.greenLight} 100%
   );
   border-image-slice: 1;
-
-
 `;
 
 const FrameHeading = styled.h2`
@@ -69,7 +69,12 @@ const SubHeader = styled.h3`
   width: 100%;
 `;
 
-const Image = styled.img<{ top?: number; left?: number; height?: number; width?: number }>`
+const Image = styled.img<{
+  top?: number;
+  left?: number;
+  height?: number;
+  width?: number;
+}>`
   aspect-ratio: 1;
   object-fit: contain;
   position: absolute;
@@ -92,9 +97,24 @@ const Footer = styled.h3`
   width: 100%;
 `;
 
-const GreenFrame: React.FC<FrameProps> = ({ heading, subheader, imageSrc, footer, children, wrapperHeight, wrapperLeft, wrapperTop, wrapperWidth}) => {
+const GreenFrame: React.FC<FrameProps> = ({
+  heading,
+  subheader,
+  imageSrc,
+  footer,
+  children,
+  wrapperHeight,
+  wrapperLeft,
+  wrapperTop,
+  wrapperWidth,
+}) => {
   return (
-    <GreenWrapper wrapperHeight={wrapperHeight} wrapperLeft={wrapperLeft} wrapperTop={wrapperTop} wrapperWidth={wrapperWidth}>
+    <GreenWrapper
+      wrapperHeight={wrapperHeight}
+      wrapperLeft={wrapperLeft}
+      wrapperTop={wrapperTop}
+      wrapperWidth={wrapperWidth}
+    >
       <FrameHeading>{heading}</FrameHeading>
       <SubHeader>{subheader}</SubHeader>
       {imageSrc && <Image src={imageSrc} alt="Descriptive text here" />}
