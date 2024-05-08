@@ -87,7 +87,7 @@ const Modal = ({
   height = 99,
   top = 0,
   left = 0,
-  modalZIndex = 1,
+  modalZIndex = 1, 
   onClose,
   isOpen,
 }: Props) => {

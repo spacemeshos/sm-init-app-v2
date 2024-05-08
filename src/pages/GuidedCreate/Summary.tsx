@@ -1,11 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
-import {
-  BackButton,
-} from "../../components/button";
+import { BackButton } from "../../components/button";
 import Title from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
+import GreenFrame from "../../components/frames";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -36,9 +35,7 @@ const ContainerBottom = styled.div`
   position: absolute;
 `;
 
-
 const Summary: React.FC = () => {
-
   return (
     <>
       <NavProgress>
@@ -46,10 +43,17 @@ const Summary: React.FC = () => {
         <BackButton />
       </NavProgress>
       <TextWrapper>
-        <Title  text="Summary of your Settings"/>
+        <Title text="Summary of your Settings" />
       </TextWrapper>
 
       <ContainerBottom>
+        <GreenFrame
+          wrapperTop={0}
+          wrapperLeft={75}
+          wrapperHeight={92}
+          wrapperWidth={675}
+          heading="DATA"
+        />
       </ContainerBottom>
     </>
   );
