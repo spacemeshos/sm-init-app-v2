@@ -27,6 +27,9 @@ const GreenWrapper = styled.div<{ wrapperTop?: number; wrapperLeft?: number; wra
 
   display: flex;
   justify-content: center;
+  flex-direction: row;
+  align-items: center;
+
 
   /* Gradient border - example with a direction */
   border-image:   linear-gradient(
@@ -43,8 +46,7 @@ const GreenWrapper = styled.div<{ wrapperTop?: number; wrapperLeft?: number; wra
 const FrameHeading = styled.h2`
   color: ${Colors.grayLight};
   font-family: "Source Code Pro", sans-serif;
-  margin: 35px 15px 0px;
-  left: 10px;
+  left: 20px;
   text-align: left;
   text-transform: uppercase;
   font-size: 18px;
@@ -57,10 +59,9 @@ const FrameHeading = styled.h2`
 const SubHeader = styled.h3`
   color: ${Colors.grayLight};
   font-family: "Source Code Pro ExtraLight", sans-serif;
-  top: 20%;
   position: absolute;
   text-align: right;
-  right: 10px;
+  right: 20px;
   text-transform: uppercase;
   font-size: 16px;
   font-weight: 100;
