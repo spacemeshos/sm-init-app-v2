@@ -29,8 +29,15 @@ const GreenWrapper = styled.div<{ wrapperTop?: number; wrapperLeft?: number; wra
   justify-content: center;
 
   /* Gradient border - example with a direction */
-  border-image: linear-gradient(to bottom, ${Colors.greenLight}, ${Colors.greenDark});
+  border-image:   linear-gradient(
+    90deg,
+    ${Colors.greenLight} 0%,
+    ${Colors.greenDark} 50%,
+    ${Colors.greenLight} 100%
+  );
   border-image-slice: 1;
+
+
 `;
 
 const FrameHeading = styled.h2`
@@ -53,6 +60,7 @@ const SubHeader = styled.h3`
   top: 20%;
   position: absolute;
   text-align: right;
+  right: 10px;
   text-transform: uppercase;
   font-size: 16px;
   font-weight: 100;
