@@ -14,15 +14,16 @@ interface FrameProps {
   wrapperLeft?: number;
   wrapperHeight: number;
   wrapperWidth: number;
+  borderColor?: any;
 }
 
-const GreenWrapper = styled.div<{
+const Wrapper = styled.div<{
   wrapperTop?: number;
   wrapperLeft?: number;
   wrapperHeight: number;
   wrapperWidth: number;
+  borderColor?: string;
 }>`
-  border: 1px solid transparent;
   background-color: ${Colors.background};
   position: absolute;
   top: ${({ wrapperTop }) => wrapperTop}px;
@@ -33,14 +34,16 @@ const GreenWrapper = styled.div<{
   justify-content: center;
   flex-direction: row;
   align-items: center;
-  /* Gradient border - example with a direction */
-  border-image: linear-gradient(
-    90deg,
-    ${Colors.greenLight} 0%,
-    ${Colors.greenDark} 50%,
-    ${Colors.greenLight} 100%
-  );
-  border-image-slice: 1;
+  border: 1px solid ${({ borderColor }) => borderColor || "transparent"};
+  border-image: ${({ borderColor }) =>
+    borderColor
+      ? "none"
+      : `linear-gradient(
+          90deg,
+          ${Colors.greenLight} 0%,
+          ${Colors.greenDark} 50%,
+          ${Colors.greenLight} 100%
+        ) 1`};
 `;
 
 const FrameHeading = styled.h2`
@@ -97,7 +100,7 @@ const Footer = styled.h3`
   width: 100%;
 `;
 
-const GreenFrame: React.FC<FrameProps> = ({
+const Frame: React.FC<FrameProps> = ({
   heading,
   subheader,
   imageSrc,
@@ -107,21 +110,23 @@ const GreenFrame: React.FC<FrameProps> = ({
   wrapperLeft,
   wrapperTop,
   wrapperWidth,
+  borderColor,
 }) => {
   return (
-    <GreenWrapper
-      wrapperHeight={wrapperHeight}
-      wrapperLeft={wrapperLeft}
+    <Wrapper
       wrapperTop={wrapperTop}
+      wrapperLeft={wrapperLeft}
+      wrapperHeight={wrapperHeight}
       wrapperWidth={wrapperWidth}
+      borderColor={borderColor}
     >
       <FrameHeading>{heading}</FrameHeading>
       <SubHeader>{subheader}</SubHeader>
       {imageSrc && <Image src={imageSrc} alt="Descriptive text here" />}
       <Footer>{footer}</Footer>
       {children}
-    </GreenWrapper>
+    </Wrapper>
   );
 };
 
-export default GreenFrame;
+export default Frame;
