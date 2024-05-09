@@ -90,42 +90,48 @@ const Home: React.FC = () => {
     {
       label: "Guided Mode",
       onClick: () => navigate("/guided/SelectDirectory"),
-      left: -10,
-      width: 250,
+      left: 20,
+      width: 240,
     },
     {
       label: "Advanced Mode",
       onClick: () => console.log("Button 2 clicked"),
-      left: 10,
-      width: 250,
+      left: 280,
+      width: 240,
     },
   ];
   const EditButtons = [
     {
       label: "POS data Size",
       onClick: () => console.log("Button 1 clicked"),
-      left: -10,
-      width: 250,
+      left: 20,
+      width: 240,
     },
     {
       label: "Proving Settings",
       onClick: () => console.log("Button 2 clicked"),
-      left: 10,
-      width: 250,
+      left: 280,
+      width: 240,
     },
   ];
   const CheckButtons = [
     {
       label: "Generation speed",
       onClick: () => console.log("Button 1 clicked"),
+      left: 15,
+      width: 160,
     },
     {
       label: "Proving Capacity",
       onClick: () => console.log("Button 2 clicked"),
+      left: 190,
+      width: 160,
     },
     {
       label: "POS data Validity",
       onClick: () => console.log("Button 2 clicked"),
+      left: 365,
+      width: 160,
     },
   ];
 
