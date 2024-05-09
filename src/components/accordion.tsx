@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
-import {Button} from "./button";
+import { Button } from "./button";
 
 const MenuContainer = styled.div`
   width: 600px;
@@ -57,7 +57,6 @@ interface ButtonProps {
   left?: number;
   height?: number;
   width?: number;
-
 }
 
 interface HoverAccordionMenuProps {

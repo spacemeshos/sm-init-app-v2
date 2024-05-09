@@ -79,10 +79,10 @@ const Summary: React.FC = () => {
           left={810}
           borderColor={Colors.purpleLight}
         >
-          <Subheader text={"Check twice,"} top={30}/>
-          <Subheader text={"adjust if needed,"} top={60}/>
-          <Subheader text={"and"} top={90}/>
-          <Button label={"blast off!"}  />
+          <Subheader text={"Check twice,"} top={30} />
+          <Subheader text={"adjust if needed,"} top={60} />
+          <Subheader text={"and"} top={90} />
+          <Button label={"blast off!"} />
         </Frame>
       </ContainerBottom>
     </>

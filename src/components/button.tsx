@@ -15,24 +15,43 @@ interface ButtonProps {
   height?: number;
   width?: number;
   borderColor?: any;
-  backgroundColor?: any
+  backgroundColor?: any;
 }
 
 // Standard Button component
-const Button: React.FC<ButtonProps> = ({ imageSrc, label, onClick, top, left, width, height, backgroundColor, borderColor}) => {
+const Button: React.FC<ButtonProps> = ({
+  imageSrc,
+  label,
+  onClick,
+  top,
+  left,
+  width,
+  height,
+  backgroundColor,
+  borderColor,
+}) => {
   const handleClick = () => {
     if (typeof onClick === "function") {
       onClick();
     }
   };
   return (
-    <ButtonWrapper onClick={handleClick} role="button" tabIndex={0} top={top} left={left} width={width} height={height} backgroundColor={backgroundColor} borderColor={borderColor} >
+    <ButtonWrapper
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      top={top}
+      left={left}
+      width={width}
+      height={height}
+      backgroundColor={backgroundColor}
+      borderColor={borderColor}
+    >
       {imageSrc && <ButtonImage src={imageSrc} alt="" />}
       <ButtonText>{label}</ButtonText>
     </ButtonWrapper>
   );
 };
-
 
 // BackButton component
 const BackButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
@@ -207,7 +226,8 @@ const ButtonWrapper = styled.button<{
   height: ${({ height }) => height || 60}px;
   width: ${({ width }) => width || 300}px;
 
-  background-color:${({ backgroundColor }) => backgroundColor || "transparent"};;
+  background-color:${({ backgroundColor }) =>
+    backgroundColor || "transparent"};;
   cursor: pointer;
   padding: 10px;
   z-index: 1;
@@ -330,10 +350,4 @@ const TooltipWrapper = styled.button<{ top: number; left: number }>`
   ); // Centers the image both horizontally and vertically
 `;
 
-export {
-  Button,
-  BackButton,
-  ForwardButton,
-  TooltipButton,
-  EditButton,
-};
+export { Button, BackButton, ForwardButton, TooltipButton, EditButton };
