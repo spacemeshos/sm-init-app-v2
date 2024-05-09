@@ -126,7 +126,6 @@ const SelectDirectory: React.FC = () => {
       </NavProgress>
       <TextWrapper>
         <Title text="Your Path to Crypto Starts Here" top={-20} />
-        <Subheader text={""} top={50}></Subheader>
         Whenever you feel lost, remember to read the tips,{" "}
         <a
           onClick={navigateToDocs}
@@ -154,7 +153,7 @@ const SelectDirectory: React.FC = () => {
             onClick={() => console.log("Button Clicked")}
             label="Choose directory"
             top={260}
-            left={0}
+            left={65}
             width={320}
             backgroundColor={Colors.darkerPurple}
             borderColor={Colors.purpleLight}
@@ -196,6 +195,8 @@ const SelectDirectory: React.FC = () => {
                 </a>
               </>
             }
+            modalTop={1}
+            modalLeft={1}
             TooltipButtonTop={96}
             TooltipButtonLeft={50}
           />
