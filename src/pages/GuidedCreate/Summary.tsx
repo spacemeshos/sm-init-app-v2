@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { BackButton } from "../../components/button";
-import { Title } from "../../components/titles";
+import { Subheader, Title } from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Frame from "../../components/frames";
@@ -30,6 +30,7 @@ const ContainerBottom = styled.div`
 `;
 
 const Summary: React.FC = () => {
+  const rocket = require("../../assets/rocket-circle.png");
   return (
     <>
       <NavProgress>
@@ -77,9 +78,11 @@ const Summary: React.FC = () => {
           wrapperWidth={300}
           wrapperLeft={810}
           borderColor={Colors.purpleLight}
-          subheader="placeholder summary"
         >
-          <Title text={"And blast off!"} />
+          <Title text={"blast off!"} />
+          <Subheader text={"Check twice,"} top={30}/>
+          <Subheader text={"adjust if needed,"} top={60}/>
+          <Subheader text={"and"} top={90}/>
         </Frame>
       </ContainerBottom>
     </>
