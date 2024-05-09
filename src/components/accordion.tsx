@@ -6,7 +6,7 @@ import { Button } from "./button";
 const MenuContainer = styled.div`
   width: 600px;
   padding: 30px;
-  margin-bottom: 40px;
+  margin-bottom: 45px;
   box-sizing: border-box;
   transition: all 0.3s ease;
   display: flex;
@@ -40,6 +40,7 @@ const ButtonsContainer = styled.div<{ $isHovered: boolean }>`
   align-items: center;
   width: 100%;
   height: 100px;
+  position: relative;
 `;
 
 const Icon = styled.img`
@@ -84,7 +85,7 @@ export const HoverAccordionMenu: React.FC<
             key={index}
             onClick={button.onClick}
             label={button.label}
-            top={20}
+            top={40}
             left={button.left}
             height={60}
             width={button.width}
