@@ -10,37 +10,29 @@ interface ButtonProps {
   label?: string;
   onClick?: () => void;
   children?: React.ReactNode;
+  top?: number;
+  left?: number;
+  height?: number;
+  width?: number;
+  borderColor?: any;
+  backgroundColor?: any
 }
 
 // Standard Button component
-const Button: React.FC<ButtonProps> = ({ imageSrc, label, onClick }) => {
+const Button: React.FC<ButtonProps> = ({ imageSrc, label, onClick, top, left, width, height, backgroundColor, borderColor}) => {
   const handleClick = () => {
     if (typeof onClick === "function") {
       onClick();
     }
   };
   return (
-    <ButtonWrapper onClick={handleClick} role="button" tabIndex={0}>
+    <ButtonWrapper onClick={handleClick} role="button" tabIndex={0} top={top} left={left} width={width} height={height} backgroundColor={backgroundColor} borderColor={borderColor} >
       {imageSrc && <ButtonImage src={imageSrc} alt="" />}
       <ButtonText>{label}</ButtonText>
     </ButtonWrapper>
   );
 };
 
-// Settings Buttons components
-const PurpleButton: React.FC<ButtonProps> = ({ imageSrc, label, onClick }) => {
-  const handleClick = () => {
-    if (typeof onClick === "function") {
-      onClick();
-    }
-  };
-  return (
-    <PurpleButtonWrapper onClick={handleClick} role="button" tabIndex={0}>
-      {imageSrc && <ButtonImage src={imageSrc} alt="" />}
-      <ButtonText>{label}</ButtonText>
-    </PurpleButtonWrapper>
-  );
-};
 
 // BackButton component
 const BackButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
@@ -202,43 +194,52 @@ const TooltipButton: React.FC<{
   );
 };
 
-const ButtonWrapper = styled.button`
-  border: 2px solid transparent;
-  background-color: transparent;
+const ButtonWrapper = styled.button<{
+  top?: number;
+  left?: number;
+  height?: number;
+  width?: number;
+  borderColor?: string;
+  backgroundColor?: string;
+}>`
+  top: ${({ top }) => top || 10}px;
+  left: ${({ left }) => left || 10}px;
+  height: ${({ height }) => height || 60}px;
+  width: ${({ width }) => width || 300}px;
+
+  background-color:${({ backgroundColor }) => backgroundColor || "transparent"};;
   cursor: pointer;
   padding: 15px;
-  margin: 20px;
-  transition: border-color 0.3s ease;
   z-index: 1;
-  height: 60px;
-
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
+  position: relative;
 
-  /* Gradient border */
-  border-image: linear-gradient(
-    90deg,
-    ${Colors.greenDark} 0%,
-    ${Colors.greenLight} 50%,
-    ${Colors.greenDark} 100%
-  );
+  border: 1px solid ${({ borderColor }) => borderColor || "transparent"};
   border-image-slice: 1;
-
-  @media (max-width: 991px) {
-    white-space: initial;
-  }
+  border-image: ${({ borderColor }) =>
+    borderColor
+      ? "none"
+      : `linear-gradient(
+          90deg,
+          ${Colors.greenLight} 0%,
+          ${Colors.greenDark} 50%,
+          ${Colors.greenLight} 100%
+        ) 1`};
 
   &:hover {
-    border-image: linear-gradient(
-      90deg,
-      ${Colors.greenLight} 0%,
-      ${Colors.greenDark} 50%,
-      ${Colors.greenLight} 100%
-    ); /* Disable the border-image on hover */
     border-image-slice: 1;
-  }
+    border-image: ${({ borderColor }) =>
+      borderColor
+        ? "none"
+        : `linear-gradient(
+            90deg,
+            ${Colors.greenDark} 0%,
+            ${Colors.greenLight} 50%,
+            ${Colors.greenDark} 100%
+          ) 1`};
 `;
 
 const ButtonImage = styled.img`
@@ -250,34 +251,13 @@ const ButtonImage = styled.img`
 `;
 
 const ButtonText = styled.span`
-  font-family: "Source Code Pro", sans-serif;
+  font-family: "Source Code Pro Extralight", sans-serif;
   color: ${Colors.white};
   font-size: 14px;
-  font-weight: 200;
+  font-weight: 300;
   text-transform: uppercase;
   letter-spacing: 3px;
   line-height: 20px;
-`;
-
-const PurpleButtonWrapper = styled.button`
-  border: 1px solid ${Colors.purpleLight};
-  background-color: ${Colors.darkerPurple};
-  cursor: pointer;
-  padding: 15px;
-  z-index: 1;
-  height: 50px;
-  width: 375px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  position: absolute;
-  left: 50%;
-  top: 80%;
-  transform: translate(
-    -50%,
-    -50%
-  ); // Centers the image both horizontally and vertically
 `;
 
 const BackIcon = styled.img`
@@ -352,7 +332,6 @@ const TooltipWrapper = styled.button<{ top: number; left: number }>`
 
 export {
   Button,
-  PurpleButton,
   BackButton,
   ForwardButton,
   TooltipButton,
