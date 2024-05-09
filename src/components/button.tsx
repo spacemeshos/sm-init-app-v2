@@ -209,7 +209,7 @@ const ButtonWrapper = styled.button<{
 
   background-color:${({ backgroundColor }) => backgroundColor || "transparent"};;
   cursor: pointer;
-  padding: 15px;
+  padding: 10px;
   z-index: 1;
   display: flex;
   align-items: center;

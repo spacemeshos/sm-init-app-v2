@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Button } from "../components/button";
-import {Title} from "../components/titles";
+import { Title } from "../components/titles";
 import Colors from "../styles/colors";
 import { HoverAccordionMenu } from "../components/accordion";
 import { ExternalLinks } from "../Shared/Constants";
@@ -87,14 +87,31 @@ const Home: React.FC = () => {
   const navigateToReqs = () => window.open(ExternalLinks.Requirements);
 
   const CreateButtons = [
-    { label: "Guided Mode", onClick: () => navigate("/guided/SelectDirectory") },
-    { label: "Advanced Mode", onClick: () => console.log("Button 2 clicked") },
+    {
+      label: "Guided Mode",
+      onClick: () => navigate("/guided/SelectDirectory"),
+      left: -10,
+      width: 250,
+    },
+    {
+      label: "Advanced Mode",
+      onClick: () => console.log("Button 2 clicked"),
+      left: 10,
+      width: 250,
+    },
   ];
   const EditButtons = [
-    { label: "POS data Size", onClick: () => console.log("Button 1 clicked") },
+    {
+      label: "POS data Size",
+      onClick: () => console.log("Button 1 clicked"),
+      left: -10,
+      width: 250,
+    },
     {
       label: "Proving Settings",
       onClick: () => console.log("Button 2 clicked"),
+      left: 10,
+      width: 250,
     },
   ];
   const CheckButtons = [

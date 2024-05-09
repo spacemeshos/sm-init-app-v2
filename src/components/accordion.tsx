@@ -20,7 +20,6 @@ const MenuContainer = styled.div`
 
 const MenuTitle = styled.div`
   cursor: pointer;
-  height: 30px;
   color: ${Colors.grayLight};
   font-family: "Source Code Pro", sans-serif;
   white-space: nowrap;
@@ -32,7 +31,7 @@ const MenuTitle = styled.div`
 
 const ButtonsContainer = styled.div<{ $isHovered: boolean }>`
   transition: max-height 0.5s ease, opacity 0.5s ease;
-  max-height: ${({ $isHovered }) => ($isHovered ? "100px" : "0px")};
+  max-height: ${({ $isHovered }) => ($isHovered ? "200px" : "0px")};
   opacity: ${({ $isHovered }) => ($isHovered ? "1" : "0")};
   overflow: hidden;
   display: flex;
@@ -40,6 +39,7 @@ const ButtonsContainer = styled.div<{ $isHovered: boolean }>`
   justify-content: center;
   align-items: center;
   width: 100%;
+  height: 100px;
 `;
 
 const Icon = styled.img`
@@ -53,6 +53,11 @@ const Icon = styled.img`
 interface ButtonProps {
   label: string;
   onClick: () => void;
+  top?: number;
+  left?: number;
+  height?: number;
+  width?: number;
+
 }
 
 interface HoverAccordionMenuProps {
@@ -80,6 +85,10 @@ export const HoverAccordionMenu: React.FC<
             key={index}
             onClick={button.onClick}
             label={button.label}
+            top={20}
+            left={button.left}
+            height={60}
+            width={button.width}
           ></Button>
         ))}
       </ButtonsContainer>
