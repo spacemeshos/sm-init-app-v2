@@ -9,26 +9,26 @@ interface FrameProps {
   children?: React.ReactNode;
   buttonText?: string;
   onClick?: () => void;
-  wrapperTop?: number;
-  wrapperLeft?: number;
-  wrapperHeight: number;
-  wrapperWidth: number;
+  top?: number;
+  left?: number;
+  height: number;
+  width: number;
   borderColor?: any;
 }
 
 const Wrapper = styled.div<{
-  wrapperTop?: number;
-  wrapperLeft?: number;
-  wrapperHeight: number;
-  wrapperWidth: number;
+  top?: number;
+  left?: number;
+  height: number;
+  width: number;
   borderColor?: string;
 }>`
   background-color: ${Colors.background};
   position: absolute;
-  top: ${({ wrapperTop }) => wrapperTop}px;
-  left: ${({ wrapperLeft }) => wrapperLeft}px;
-  height: ${({ wrapperHeight }) => wrapperHeight}px;
-  width: ${({ wrapperWidth }) => wrapperWidth}px;
+  top: ${({ top }) => top}px;
+  left: ${({ left }) => left}px;
+  height: ${({ height }) => height}px;
+  width: ${({ width }) => width}px;
   display: flex;
   justify-content: center;
   flex-direction: row;
@@ -89,18 +89,18 @@ const Frame: React.FC<FrameProps> = ({
   subheader,
   footer,
   children,
-  wrapperHeight,
-  wrapperLeft,
-  wrapperTop,
-  wrapperWidth,
+  height,
+  left,
+  top,
+  width,
   borderColor,
 }) => {
   return (
     <Wrapper
-      wrapperTop={wrapperTop}
-      wrapperLeft={wrapperLeft}
-      wrapperHeight={wrapperHeight}
-      wrapperWidth={wrapperWidth}
+      top={top}
+      left={left}
+      height={height}
+      width={width}
       borderColor={borderColor}
     >
       <FrameHeading>{heading}</FrameHeading>
