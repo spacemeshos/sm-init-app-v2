@@ -230,12 +230,12 @@ const ButtonWrapper = styled.button<{
     backgroundColor || "transparent"};;
   cursor: pointer;
   padding: 10px;
-  z-index: 1;
+  z-index: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  position: relative;
+  position: absolute;
 
   border: 1px solid ${({ borderColor }) => borderColor || "transparent"};
   border-image-slice: 1;
@@ -305,7 +305,7 @@ const IconButtonWrapper = styled.button<{ top: number; left: number }>`
   background-color: transparent;
   border: transparent;
   cursor: pointer;
-  z-index: 1;
+  z-index: 2;
   position: absolute;
   top: ${({ top }) => top}%;
   left: ${({ left }) => left}%;

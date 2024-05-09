@@ -2,33 +2,33 @@ import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 
-const Backdrop = styled.div<{ modalZIndex?: number }>`
+const Backdrop = styled.div<{isOpen?: boolean}>`
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: ${({ modalZIndex }) => modalZIndex || 2};
+  z-index: ${({ isOpen }) => (isOpen ? 1000 : -2)}
+  position: absolute
 `;
 
 const Wrapper = styled.div<{
-  width: number;
-  height: number;
-  modalZIndex: number;
-  top: number;
-  left: number;
+  width?: number;
+  height?: number;
+  top?: number;
+  left?: number;
+  isOpen?: boolean;
 }>`
-  position: relative;
+  position: absolute;
   top: ${({ top }) => top}%;
   left: ${({ left }) => left}%;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: ${Colors.background};
-  z-index: ${({ modalZIndex }) =>
-    modalZIndex + 1}; // Ensure modal content is above the backdrop
-  width: ${({ width }) => width}%;
-  height: ${({ height }) => height}%;
+  z-index: ${({ isOpen }) => (isOpen ? 1000 : -1)}
+  width: ${({ width }) => width || 90}%;
+  height: ${({ height }) => height || 90}%;
 `;
 
 const Header = styled.h1`
@@ -73,7 +73,6 @@ type Props = {
   height?: number;
   top?: number;
   left?: number;
-  modalZIndex?: number;
   onClose: () => void;
   isOpen: boolean;
   children?: React.ReactNode;
@@ -83,25 +82,24 @@ const Modal = ({
   header,
   text,
   children,
-  width = 99,
-  height = 99,
-  top = 0,
-  left = 0,
-  modalZIndex = 1, 
+  width,
+  height,
+  top,
+  left,
   onClose,
   isOpen,
 }: Props) => {
   if (!isOpen) return null;
 
   return (
-    <Backdrop modalZIndex={modalZIndex} onClick={onClose}>
+    <Backdrop onClick={onClose}>
       <Wrapper
         onClick={(e) => e.stopPropagation()}
         width={width}
         height={height}
         top={top}
         left={left}
-        modalZIndex={modalZIndex}
+        isOpen={isOpen}
       >
         <CloseButton onClick={onClose}>&times;</CloseButton>
         <Header>{header}</Header>
