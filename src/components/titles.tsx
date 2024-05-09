@@ -23,7 +23,7 @@ const StyledTitle = styled.h1<{
   top: ${({ top }) => top}px;
   left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
   transform: ${({ left }) => (left == null ? "translateX(-50%)" : "none")};
-  position: absolute;
+  position: relative;
 `;
 
 const StyledSubheader = styled.h2<{
@@ -41,7 +41,7 @@ const StyledSubheader = styled.h2<{
   top: ${({ top }) => top}px;
   left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
   transform: ${({ left }) => (left == null ? "translateX(-50%)" : "none")};
-  position: absolute;
+  position: relative;
 `;
 const Title: React.FC<TitleProps> = ({ text, top, left }) => {
   return (

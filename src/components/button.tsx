@@ -66,9 +66,9 @@ const BackButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
   };
 
   return (
-    <BackWrapper onClick={handleBack} role="button" tabIndex={0}>
-      <BackIcon src={back} alt="Back" />
-    </BackWrapper>
+    <NavWrapper onClick={handleBack} role="button" tabIndex={0} left={67}>
+      <NavIcon src={back} alt="Back" />
+    </NavWrapper>
   );
 };
 
@@ -85,9 +85,9 @@ const ForwardButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
   };
 
   return (
-    <ForwardkWrapper onClick={handleForward} role="button" tabIndex={0}>
-      <ForwardIcon src={next} alt="Back" />
-    </ForwardkWrapper>
+    <NavWrapper onClick={handleForward} role="button" tabIndex={0} left={1087}>
+      <NavIcon src={next} alt="Back" />
+    </NavWrapper>
   );
 };
 
@@ -126,15 +126,15 @@ const EditButton: React.FC<{
   return (
     <>
       {!isModalOpen && (
-        <EditWrapper
+        <IconButtonWrapper
           onClick={openTooltip}
           role="button"
           tabIndex={0}
           top={EditButtonTop}
           left={EditButtonLeft}
         >
-          <EditIcon src={pen} alt="pen" />
-        </EditWrapper>
+          <ButtonIcon src={pen} alt="pen" />
+        </IconButtonWrapper>
       )}
       {isModalOpen && CustomModal ? (
         <CustomModal isOpen={isModalOpen} onClose={closeModal} />
@@ -187,15 +187,15 @@ const TooltipButton: React.FC<{
   return (
     <>
       {!isModalOpen && (
-        <TooltipWrapper
+        <IconButtonWrapper
           onClick={openTooltip}
           role="button"
           tabIndex={0}
           top={TooltipButtonTop}
           left={TooltipButtonLeft}
         >
-          <HintIcon src={question} alt="question" />
-        </TooltipWrapper>
+          <ButtonIcon src={question} alt="question" />
+        </IconButtonWrapper>
       )}
       {isModalOpen && CustomModal ? (
         <CustomModal isOpen={isModalOpen} onClose={closeModal} />
@@ -280,63 +280,28 @@ const ButtonText = styled.span`
   line-height: 20px;
 `;
 
-const BackIcon = styled.img`
+const NavIcon = styled.img`
   aspect-ratio: 1;
   width: 45px;
 `;
 
-const BackWrapper = styled.button`
+const NavWrapper = styled.button<{ top?: number; left?: number }>`
+  top: ${({ top }) => top || 96}px;
+  left: ${({ left }) => left || 0}px;
   background-color: transparent;
   border: transparent;
   cursor: pointer;
   z-index: 1;
   height: 45px;
   position: absolute;
-  top: 96px;
-  left: 67px;
 `;
 
-const ForwardIcon = styled.img`
-  aspect-ratio: 1;
-  width: 45px;
-`;
-
-const ForwardkWrapper = styled.button`
-  background-color: transparent;
-  border: transparent;
-  cursor: pointer;
-  z-index: 1;
-  height: 45px;
-  position: absolute;
-  top: 96px;
-  left: 1087px;
-`;
-
-const HintIcon = styled.img`
+const ButtonIcon = styled.img`
   aspect-ratio: 1;
   width: 30px;
 `;
 
-const EditIcon = styled.img`
-  aspect-ratio: 1;
-  width: 30px;
-`;
-
-const EditWrapper = styled.button<{ top: number; left: number }>`
-  background-color: transparent;
-  border: transparent;
-  cursor: pointer;
-  z-index: 1;
-  position: absolute;
-  top: ${({ top }) => top}%;
-  left: ${({ left }) => left}%;
-  transform: translate(
-    -50%,
-    0%
-  ); // Centers the image both horizontally and vertically
-`;
-
-const TooltipWrapper = styled.button<{ top: number; left: number }>`
+const IconButtonWrapper = styled.button<{ top: number; left: number }>`
   background-color: transparent;
   border: transparent;
   cursor: pointer;
