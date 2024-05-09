@@ -202,8 +202,8 @@ const ButtonWrapper = styled.button<{
   borderColor?: string;
   backgroundColor?: string;
 }>`
-  top: ${({ top }) => top || 10}px;
-  left: ${({ left }) => left || 10}px;
+  top: ${({ top }) => top || 0}px;
+  left: ${({ left }) => left || 0}px;
   height: ${({ height }) => height || 60}px;
   width: ${({ width }) => width || 300}px;
 

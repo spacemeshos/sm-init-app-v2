@@ -3,10 +3,10 @@ import styled from "styled-components";
 import {
   BackButton,
   ForwardButton,
-  PurpleButton,
+  Button,
   TooltipButton,
 } from "../../components/button";
-import {Title} from "../../components/titles";
+import {Subheader, Title} from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Tile from "../../components/tile";
@@ -125,7 +125,8 @@ const SelectDirectory: React.FC = () => {
         <ForwardButton onClick={TailoredSettings} />
       </NavProgress>
       <TextWrapper>
-        <Title text="Your Path to Crypto Starts Here" />
+        <Title text="Your Path to Crypto Starts Here" top={-20} />
+        <Subheader text={""} top={50}></Subheader>
         Whenever you feel lost, remember to read the tips,{" "}
         <a
           onClick={navigateToDocs}
@@ -149,9 +150,14 @@ const SelectDirectory: React.FC = () => {
         <DirWrapper>
           <Tile heading={"Where to Store pos data?"} />
           <DirImage src={folder} />
-          <PurpleButton
+          <Button
             onClick={() => console.log("Button Clicked")}
             label="Choose directory"
+            top={260}
+            left={0}
+            width={320}
+            backgroundColor={Colors.darkerPurple}
+            borderColor={Colors.purpleLight}
             /* TO DO */
           />
 
