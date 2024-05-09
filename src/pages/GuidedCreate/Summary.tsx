@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { BackButton, PurpleButton } from "../../components/button";
+import { BackButton, Button } from "../../components/button";
 import { Subheader, Title } from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
@@ -82,7 +82,7 @@ const Summary: React.FC = () => {
           <Subheader text={"Check twice,"} top={30}/>
           <Subheader text={"adjust if needed,"} top={60}/>
           <Subheader text={"and"} top={90}/>
-          <PurpleButton label={"blast off!"}  />
+          <Button label={"blast off!"}  />
         </Frame>
       </ContainerBottom>
     </>
