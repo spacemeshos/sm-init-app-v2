@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { BackButton } from "../../components/button";
+import { BackButton, PurpleButton } from "../../components/button";
 import { Subheader, Title } from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
@@ -43,46 +43,46 @@ const Summary: React.FC = () => {
 
       <ContainerBottom>
         <Frame
-          wrapperLeft={75}
-          wrapperHeight={80}
-          wrapperWidth={675}
+          left={75}
+          height={80}
+          width={675}
           heading="DATA"
           subheader="placeholder summary"
         />
         <Frame
-          wrapperTop={80}
-          wrapperLeft={75}
-          wrapperHeight={80}
-          wrapperWidth={675}
+          top={80}
+          left={75}
+          height={80}
+          width={675}
           heading="POS Directory"
           subheader="placeholder summary"
         />
         <Frame
-          wrapperTop={160}
-          wrapperLeft={75}
-          wrapperHeight={80}
-          wrapperWidth={675}
+          top={160}
+          left={75}
+          height={80}
+          width={675}
           heading="POS Generation"
           subheader="placeholder summary"
         />
         <Frame
-          wrapperTop={240}
-          wrapperLeft={75}
-          wrapperHeight={80}
-          wrapperWidth={675}
+          top={240}
+          left={75}
+          height={80}
+          width={675}
           heading="POST Proving"
           subheader="placeholder summary"
         />
         <Frame
-          wrapperHeight={320}
-          wrapperWidth={300}
-          wrapperLeft={810}
+          height={320}
+          width={300}
+          left={810}
           borderColor={Colors.purpleLight}
         >
-          <Title text={"blast off!"} />
           <Subheader text={"Check twice,"} top={30}/>
           <Subheader text={"adjust if needed,"} top={60}/>
           <Subheader text={"and"} top={90}/>
+          <PurpleButton label={"blast off!"}  />
         </Frame>
       </ContainerBottom>
     </>
