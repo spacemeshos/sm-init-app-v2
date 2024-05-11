@@ -6,7 +6,6 @@ import { useState } from "react";
 import Modal from "./modal";
 
 interface ButtonProps {
-  imageSrc?: string;
   label?: string;
   onClick?: () => void;
   children?: React.ReactNode;
@@ -20,7 +19,6 @@ interface ButtonProps {
 
 // Standard Button component
 const Button: React.FC<ButtonProps> = ({
-  imageSrc,
   label,
   onClick,
   top,
@@ -47,7 +45,6 @@ const Button: React.FC<ButtonProps> = ({
       backgroundColor={backgroundColor}
       borderColor={borderColor}
     >
-      {imageSrc && <ButtonImage src={imageSrc} alt="" />}
       <ButtonText>{label}</ButtonText>
     </ButtonWrapper>
   );
@@ -262,13 +259,6 @@ const ButtonWrapper = styled.button<{
           ) 1`};
 `;
 
-const ButtonImage = styled.img`
-  aspect-ratio: 1;
-  object-fit: contain;
-  width: 30px;
-  position: absolute;
-  left: 20px;
-`;
 
 const ButtonText = styled.span`
   font-family: "Source Code Pro Extralight", sans-serif;
