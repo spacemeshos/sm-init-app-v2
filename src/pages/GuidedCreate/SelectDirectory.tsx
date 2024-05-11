@@ -4,9 +4,9 @@ import {
   BackButton,
   ForwardButton,
   Button,
-  TooltipButton,
+  IconButton,
 } from "../../components/button";
-import { Subheader, Title } from "../../components/titles";
+import { Title } from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Tile from "../../components/tile";
@@ -160,7 +160,7 @@ const SelectDirectory: React.FC = () => {
             /* TO DO */
           />
 
-          <TooltipButton
+          <IconButton
             modalText={
               <>
                 Use a reliable disk with at least 256 Gibibytes, preferring good
@@ -197,8 +197,8 @@ const SelectDirectory: React.FC = () => {
             }
             modalTop={1}
             modalLeft={1}
-            TooltipButtonTop={96}
-            TooltipButtonLeft={50}
+            IconButtonTop={96}
+            IconButtonLeft={50}
           />
         </DirWrapper>
 
@@ -208,10 +208,10 @@ const SelectDirectory: React.FC = () => {
             Next, we'll optimize your settings with a quick benchmark to boost
             your rewards and qualification chances every epoch
           </HintText>
-          <TooltipButton
+          <IconButton
             modalComponent={PosInfo}
-            TooltipButtonTop={96}
-            TooltipButtonLeft={50}
+            IconButtonTop={96}
+            IconButtonLeft={50}
           />
         </HintWrapper>
       </ContainerBottom>
