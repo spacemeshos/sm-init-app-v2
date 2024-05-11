@@ -6,6 +6,7 @@ import { useState } from "react";
 import Modal from "./modal";
 
 interface ButtonProps {
+  iconSrc?: any;
   label?: string;
   onClick?: () => void;
   children?: React.ReactNode;
@@ -150,12 +151,12 @@ const EditButton: React.FC<{
 };
 
 // Tooltip button component
-const TooltipButton: React.FC<{
+const IconButton: React.FC<{
   onClick?: () => void;
   modalHeader?: string;
   modalText?: React.ReactNode;
-  TooltipButtonTop?: number;
-  TooltipButtonLeft?: number;
+  IconButtonTop?: number;
+  IconButtonLeft?: number;
   modalTop?: number;
   modalLeft?: number;
   modalComponent?: React.ElementType;
@@ -163,8 +164,8 @@ const TooltipButton: React.FC<{
   onClick,
   modalHeader,
   modalText,
-  TooltipButtonTop = 0,
-  TooltipButtonLeft = 0,
+  IconButtonTop = 0,
+  IconButtonLeft = 0,
   modalTop,
   modalLeft,
   modalComponent: CustomModal,
@@ -188,8 +189,8 @@ const TooltipButton: React.FC<{
           onClick={openTooltip}
           role="button"
           tabIndex={0}
-          top={TooltipButtonTop}
-          left={TooltipButtonLeft}
+          top={IconButtonTop}
+          left={IconButtonLeft}
         >
           <ButtonIcon src={question} alt="question" />
         </IconButtonWrapper>
@@ -305,4 +306,4 @@ const IconButtonWrapper = styled.button<{ top: number; left: number }>`
   ); // Centers the image both horizontally and vertically
 `;
 
-export { Button, BackButton, ForwardButton, TooltipButton, EditButton };
+export { Button, BackButton, ForwardButton, IconButton, EditButton };
