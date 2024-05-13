@@ -5,6 +5,7 @@ import { Subheader, Title } from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Frame from "../../components/frames";
+import Image from "../../components/image";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -30,7 +31,7 @@ const ContainerBottom = styled.div`
 `;
 
 const Summary: React.FC = () => {
-  const rocket = require("../../assets/rocket-circle.png");
+  const rocket = require("../../assets/rocket-lunch.png");
   return (
     <>
       <NavProgress>
@@ -39,6 +40,7 @@ const Summary: React.FC = () => {
       </NavProgress>
       <TextWrapper>
         <Title text="Summary of your Settings" />
+        <Subheader text={"Check twice, adjust if needed, and blast off!"} />
       </TextWrapper>
 
       <ContainerBottom>
@@ -74,15 +76,27 @@ const Summary: React.FC = () => {
           subheader="placeholder summary"
         />
         <Frame
-          height={320}
+          top={80}
+          height={80}
           width={300}
           left={810}
-          borderColor={Colors.purpleLight}
+          borderColor={Colors.purpleDark}
         >
-          <Subheader text={"Check twice,"} top={30} />
-          <Subheader text={"adjust if needed,"} top={60} />
-          <Subheader text={"and"} top={90} />
-          <Button label={"blast off!"} />
+          <Image
+            src={rocket}
+            opacity={0.1}
+            height={520}
+            left={-150}
+            top={-150}
+          />
+          <Subheader text={"Ready?"} left={10} />
+          <Button
+            label={"start"}
+            top={80}
+            height={80}
+            borderColor={Colors.purpleLight}
+            backgroundColor={Colors.darkerPurple}
+          />
         </Frame>
       </ContainerBottom>
     </>

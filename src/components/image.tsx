@@ -1,5 +1,5 @@
-import * as React from 'react';
-import styled from 'styled-components';
+import * as React from "react";
+import styled from "styled-components";
 
 interface ImageProps {
   src: string;
@@ -8,18 +8,28 @@ interface ImageProps {
   left?: number;
   height?: number;
   width?: number;
+  opacity?: number;
 }
 
 const StyledImage = styled.img<ImageProps>`
   position: absolute;
-  top: ${({ top }) => top ? `${top}px` : 'auto'};
-  left: ${({ left }) => left ? `${left}px` : 'auto'};
-  height: ${({ height }) => height ? `${height}px` : 'auto'};
-  width: ${({ width }) => width ? `${width}px` : 'auto'};
-  object-fit: contain; // Ensures the image is resized properly
+  top: ${({ top }) => (top ? `${top}px` : "auto")};
+  left: ${({ left }) => (left ? `${left}px` : "auto")};
+  height: ${({ height }) => (height ? `${height}px` : "auto")};
+  width: ${({ width }) => (width ? `${width}px` : "auto")};
+  object-fit: contain;
+  opacity: ${({ opacity }) => (opacity ? opacity : 1)};
 `;
 
-const Image: React.FC<ImageProps> = ({ src, alt = 'Image description', top, left, height, width }) => {
+const Image: React.FC<ImageProps> = ({
+  src,
+  alt,
+  top,
+  left,
+  height,
+  width,
+  opacity,
+}) => {
   return (
     <StyledImage
       src={src}
@@ -28,6 +38,7 @@ const Image: React.FC<ImageProps> = ({ src, alt = 'Image description', top, left
       left={left}
       height={height}
       width={width}
+      opacity={opacity}
     />
   );
 };
