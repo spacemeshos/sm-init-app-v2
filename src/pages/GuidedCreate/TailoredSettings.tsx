@@ -6,7 +6,7 @@ import {
   ForwardButton,
   IconButton,
 } from "../../components/button";
-import {Title} from "../../components/titles";
+import { Title } from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Tile from "../../components/tile";
@@ -14,15 +14,21 @@ import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
 
 const NavProgress = styled.div`
-  width: 1200px;
+  width: 100%;
+  max-width: 1200px;
   height: 160px;
-  position: abslute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  position: absolute;
 `;
 
 const TextWrapper = styled.div`
   width: 1200px;
   height: 100px;
   top: 170px;
+  margin: 0 auto; 
   position: absolute;
   color: ${Colors.grayLight};
   font-family: "Source Code Pro ExtraLight", monospace;
@@ -36,7 +42,8 @@ const ContainerBottom = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
-  justify-content: flex-start;
+  justify-content: space-between;
+  margin: 10px auto 0;
   top: 325px;
   width: 1200px;
   position: absolute;
@@ -74,14 +81,14 @@ const TailoredSettings: React.FC = () => {
   const cpu = require("../../assets/cpu.png");
   const files = require("../../assets/duplicate.png");
   const navigate = useNavigate();
-  const Summary= () => navigate("/guided/Summary");
+  const navigateToSummary = () => navigate("/guided/Summary");
 
   return (
     <>
       <NavProgress>
         <ProgressBar progress={66} />
         <BackButton />
-        <ForwardButton onClick={Summary}/>
+        <ForwardButton onClick={navigateToSummary} />
       </NavProgress>
       <TextWrapper>
         <Title text="Settings Tailored for Your Hardware" />
@@ -97,7 +104,12 @@ const TailoredSettings: React.FC = () => {
 
       <ContainerBottom>
         <GPUWrapper>
-          <Tile heading={"How to create POS?"} subheader={"placeholder"} imageSrc={gpu} footer="placeholder" />
+          <Tile
+            heading={"How to create POS?"}
+            subheader={"placeholder"}
+            imageSrc={gpu}
+            footer="placeholder"
+          />
           <EditButton
             modalComponent={PosInfo}
             EditButtonTop={96}
@@ -105,7 +117,12 @@ const TailoredSettings: React.FC = () => {
           />
         </GPUWrapper>
         <CPUWrapper>
-        <Tile heading={"How to prove POS?"} subheader={"placeholder"} imageSrc={cpu} footer="placeholder" />
+          <Tile
+            heading={"How to prove POS?"}
+            subheader={"placeholder"}
+            imageSrc={cpu}
+            footer="placeholder"
+          />
           <EditButton
             modalComponent={PosInfo}
             EditButtonTop={96}
@@ -113,12 +130,17 @@ const TailoredSettings: React.FC = () => {
           />
         </CPUWrapper>
         <DataSizeWrapper>
-        <Tile heading={"How much POS data?"} subheader={"placeholder"} imageSrc={files} footer="placeholder" />
+          <Tile
+            heading={"How much POS data?"}
+            subheader={"placeholder"}
+            imageSrc={files}
+            footer="placeholder"
+          />
           <EditButton
             modalComponent={PosInfo}
             EditButtonTop={96}
             EditButtonLeft={50}
-          />          
+          />
         </DataSizeWrapper>
       </ContainerBottom>
     </>
