@@ -1983,6 +1983,11 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
+"@tauri-apps/api@^1.5.5":
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-1.5.5.tgz#6ecc147e565912648d2de862d8c495cc7c705693"
+  integrity sha512-Jgwj8BK/9YXZNzcqVDk1Al7+u5V9sWrZ8MhV41A1AKgJaicHuqlkc/qdx06sNDXvc+qprTPpBAaqnt891qOUIQ==
+
 "@tauri-apps/cli-darwin-arm64@1.5.12":
   version "1.5.12"
   resolved "https://registry.yarnpkg.com/@tauri-apps/cli-darwin-arm64/-/cli-darwin-arm64-1.5.12.tgz#0c595818cbfefec3ec9e6352d7769cb5b083d4cc"
