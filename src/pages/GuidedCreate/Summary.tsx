@@ -10,7 +10,7 @@ import Image from "../../components/image";
 const NavProgress = styled.div`
   width: 1200px;
   height: 160px;
-  position: abslute;
+  position: absolute;
 `;
 
 const TextWrapper = styled.div`
@@ -23,7 +23,7 @@ const TextWrapper = styled.div`
 const ContainerBottom = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: left;
+  align-items: flex-start;
   justify-content: flex-start;
   top: 290px;
   width: 1200px;
