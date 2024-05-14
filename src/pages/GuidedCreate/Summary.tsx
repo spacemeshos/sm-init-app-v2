@@ -87,7 +87,7 @@ const Summary: React.FC = () => {
             opacity={0.1}
             height={520}
             left={-150}
-            top={-150}
+            top={-210}
           />
           <Subheader text={"Ready?"} left={10} />
           <Button
