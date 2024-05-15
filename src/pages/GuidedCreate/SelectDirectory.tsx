@@ -13,6 +13,7 @@ import Tile from "../../components/tile";
 import { ExternalLinks } from "../../Shared/Constants";
 import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
+import { invoke } from '@tauri-apps/api';
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -116,7 +117,14 @@ const SelectDirectory: React.FC = () => {
   const navigateToDiscord = () => window.open(ExternalLinks.Discord);
   const navigate = useNavigate();
   const TailoredSettings = () => navigate("/guided/TailoredSettings");
-
+  const handleSelectDirectory = async () => {
+    try {
+      const path = await invoke<string>('open_directory_dialog');
+      alert(`Directory selected: ${path}`);
+    } catch (error) {
+      alert(`Error: ${error}`);
+    }
+  };
   return (
     <>
       <NavProgress>
@@ -150,7 +158,7 @@ const SelectDirectory: React.FC = () => {
           <Tile heading={"Where to Store pos data?"} />
           <DirImage src={folder} />
           <Button
-            onClick={() => console.log("Button Clicked")}
+            onClick={handleSelectDirectory}
             label="Choose directory"
             top={260}
             left={65}
