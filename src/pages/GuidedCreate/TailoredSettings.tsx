@@ -10,6 +10,7 @@ import { Title } from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Tile from "../../components/tile";
+import ErrorModal from "../../components/error";
 import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
 
@@ -111,7 +112,7 @@ const TailoredSettings: React.FC = () => {
             footer="placeholder"
           />
           <EditButton
-            modalComponent={PosInfo}
+            modalComponent={ErrorModal}
             EditButtonTop={96}
             EditButtonLeft={50}
           />
