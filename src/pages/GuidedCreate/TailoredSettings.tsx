@@ -29,7 +29,7 @@ const TextWrapper = styled.div`
   width: 1200px;
   height: 100px;
   top: 170px;
-  margin: 0 auto; 
+  margin: 0 auto;
   position: absolute;
   color: ${Colors.grayLight};
   font-family: "Source Code Pro ExtraLight", monospace;
@@ -78,9 +78,12 @@ const DataSizeWrapper = styled.div`
 `;
 
 const TailoredSettings: React.FC = () => {
+  // Importing image assets
   const gpu = require("../../assets/graphics-card.png");
   const cpu = require("../../assets/cpu.png");
   const files = require("../../assets/duplicate.png");
+  
+  //Hook to navigate to the next page - summary
   const navigate = useNavigate();
   const navigateToSummary = () => navigate("/guided/Summary");
 
@@ -91,6 +94,7 @@ const TailoredSettings: React.FC = () => {
         <BackButton />
         <ForwardButton onClick={navigateToSummary} />
       </NavProgress>
+      {/* Wrapper for title, subtitle and information icon button */}
       <TextWrapper>
         <Title text="Settings Tailored for Your Hardware" />
         Customise freely to match your needs. Ensure settings enhance,
@@ -102,8 +106,9 @@ const TailoredSettings: React.FC = () => {
           IconButtonLeft={50}
         />
       </TextWrapper>
-
+      {/* Container for the bottom part of the page */}
       <ContainerBottom>
+        {/* GPU settings section */}
         <GPUWrapper>
           <Tile
             heading={"How to create POS?"}
@@ -117,6 +122,7 @@ const TailoredSettings: React.FC = () => {
             EditButtonLeft={50}
           />
         </GPUWrapper>
+        {/* Post prooving processor settings section */}
         <CPUWrapper>
           <Tile
             heading={"How to prove POS?"}
@@ -130,6 +136,7 @@ const TailoredSettings: React.FC = () => {
             EditButtonLeft={50}
           />
         </CPUWrapper>
+        {/* Data size settings section */}
         <DataSizeWrapper>
           <Tile
             heading={"How much POS data?"}

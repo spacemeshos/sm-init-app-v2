@@ -82,6 +82,7 @@ const Summary: React.FC = () => {
           left={810}
           borderColor={Colors.purpleDark}
         >
+          {/* Frame for rocket image and start button */}
           <Image
             src={rocket}
             opacity={0.1}

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Colors from "../styles/colors";
 import { Button } from "./button";
 
+// Styled component for the menu container
 const MenuContainer = styled.div`
   width: 600px;
   padding: 30px;
@@ -18,6 +19,7 @@ const MenuContainer = styled.div`
   background-color: ${Colors.darkerGreen};
 `;
 
+// Styled component for the menu item/title
 const MenuTitle = styled.div`
   cursor: pointer;
   color: ${Colors.grayLight};
@@ -29,6 +31,7 @@ const MenuTitle = styled.div`
   letter-spacing: 4px;
 `;
 
+// Styled component for the container holding the buttons
 const ButtonsContainer = styled.div<{ $isHovered: boolean }>`
   transition: max-height 0.5s ease, opacity 0.5s ease;
   max-height: ${({ $isHovered }) => ($isHovered ? "200px" : "0px")};
@@ -43,6 +46,7 @@ const ButtonsContainer = styled.div<{ $isHovered: boolean }>`
   position: relative;
 `;
 
+// Styled component for the icon image
 const Icon = styled.img`
   aspect-ratio: 1;
   object-fit: contain;
@@ -51,6 +55,7 @@ const Icon = styled.img`
   left: 50px;
 `;
 
+//Buttons properties
 interface ButtonProps {
   label: string;
   onClick: () => void;
@@ -60,12 +65,14 @@ interface ButtonProps {
   width?: number;
 }
 
+// Interface for the HoverAccordionMenu component properties
 interface HoverAccordionMenuProps {
   title: string;
   buttons: ButtonProps[];
   imageSrc?: string;
 }
 
+// HoverAccordionMenu component
 export const HoverAccordionMenu: React.FC<
   HoverAccordionMenuProps & {
     $isHovered: boolean;
@@ -75,10 +82,12 @@ export const HoverAccordionMenu: React.FC<
 > = ({ title, imageSrc, buttons, $isHovered, onMouseEnter, onMouseLeave }) => {
   return (
     <MenuContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+      {/* Menu title with optional icon */}
       <MenuTitle>
         {imageSrc && <Icon src={imageSrc} alt="" />}
         {title}
       </MenuTitle>
+      {/* Container for buttons that appear on hover */}
       <ButtonsContainer $isHovered={$isHovered}>
         {buttons.map((button, index) => (
           <Button

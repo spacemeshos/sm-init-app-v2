@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Modal from "./modal";
 
+// Interface defining the properties for the Button component below
 interface ButtonProps {
   iconSrc?: any;
   label?: string;
@@ -54,7 +55,9 @@ const Button: React.FC<ButtonProps> = ({
 // BackButton component
 const BackButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
   const back = require("../assets/left-arrow.png");
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for navigation
+
+  // Handle back button click
   const handleBack = () => {
     if (onClick) {
       onClick();
@@ -109,16 +112,17 @@ const EditButton: React.FC<{
   modalLeft,
   modalComponent: CustomModal,
 }) => {
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false); // State for modal open/close
   const pen = require("../assets/edit-circle.png");
 
+  // Open modal tooltip
   const openTooltip = () => {
     setModalOpen(true);
     if (typeof onClick === "function") {
       onClick();
     }
   };
-
+  // Close modal
   const closeModal = () => setModalOpen(false);
 
   return (
@@ -173,13 +177,14 @@ const IconButton: React.FC<{
   const [isModalOpen, setModalOpen] = useState(false);
   const question = require("../assets/question.png");
 
+  // Open modal tooltip
   const openTooltip = () => {
     setModalOpen(true);
     if (typeof onClick === "function") {
       onClick();
     }
   };
-
+  // Close modal
   const closeModal = () => setModalOpen(false);
 
   return (
@@ -211,6 +216,7 @@ const IconButton: React.FC<{
   );
 };
 
+// Styled component for the standard button wrapper
 const ButtonWrapper = styled.button<{
   top?: number;
   left?: number;
@@ -260,7 +266,6 @@ const ButtonWrapper = styled.button<{
           ) 1`};
 `;
 
-
 const ButtonText = styled.span`
   font-family: "Source Code Pro Extralight", sans-serif;
   color: ${Colors.white};
@@ -271,11 +276,13 @@ const ButtonText = styled.span`
   line-height: 20px;
 `;
 
+// Styled component for the navigation icon image
 const NavIcon = styled.img`
   aspect-ratio: 1;
   width: 45px;
 `;
 
+// Styled component for the navigation button wrapper
 const NavWrapper = styled.button<{ top?: number; left?: number }>`
   top: ${({ top }) => top || 96}px;
   left: ${({ left }) => left || 0}px;
@@ -291,7 +298,7 @@ const ButtonIcon = styled.img`
   aspect-ratio: 1;
   width: 30px;
 `;
-
+// Styled component for the icon button wrapper
 const IconButtonWrapper = styled.button<{ top: number; left: number }>`
   background-color: transparent;
   border: transparent;

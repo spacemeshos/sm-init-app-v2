@@ -77,15 +77,20 @@ const VerticalDivider = styled.div`
 `;
 
 const Home: React.FC = () => {
+  // Importing image assets
   const LogoWhite = require("../assets/transparentbg.gif");
   const Add = require("../assets/plus.png");
   const Edit = require("../assets/edit.png");
   const Check = require("../assets/check.png");
-  const [hoveredMenu, setHoveredMenu] = React.useState<string | null>(null);
-  const navigate = useNavigate();
 
+  // State to track which menu is hovered
+  const [hoveredMenu, setHoveredMenu] = React.useState<string | null>(null);
+  const navigate = useNavigate(); // Hook for navigation
+
+  // Function to navigate to the prerequisites page
   const navigateToReqs = () => window.open(ExternalLinks.Requirements);
 
+  // Button configurations for the "Create" menu
   const CreateButtons = [
     {
       label: "Guided Mode",
@@ -100,6 +105,7 @@ const Home: React.FC = () => {
       width: 240,
     },
   ];
+  // Button configurations for the "Edit" menu
   const EditButtons = [
     {
       label: "POS data Size",
@@ -114,6 +120,7 @@ const Home: React.FC = () => {
       width: 240,
     },
   ];
+  // Button configurations for the "Check" menu
   const CheckButtons = [
     {
       label: "Generation speed",
@@ -139,6 +146,7 @@ const Home: React.FC = () => {
     <>
       <CustomTitle>PROOF OF SPACE-TIME MANAGER</CustomTitle>
 
+      {/* Left container with logo, divider, and button */}
       <ContainerLeft>
         <Image src={LogoWhite} />
         <VerticalDivider />
@@ -149,6 +157,8 @@ const Home: React.FC = () => {
           <Button onClick={navigateToReqs} label="Check prerequisites" />
         </PrereqButton>
       </ContainerLeft>
+
+      {/* Right container with hover accordion menus */}
       <ContainerRight>
         <HoverAccordionMenu
           $isHovered={hoveredMenu === "generate"}

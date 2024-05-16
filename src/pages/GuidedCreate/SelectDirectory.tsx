@@ -13,7 +13,7 @@ import Tile from "../../components/tile";
 import { ExternalLinks } from "../../Shared/Constants";
 import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
-import { invoke } from '@tauri-apps/api';
+import { invoke } from "@tauri-apps/api";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -113,13 +113,19 @@ const HintText = styled.div`
 const SelectDirectory: React.FC = () => {
   const folder = require("../../assets/folder.png");
   const bulb = require("../../assets/light-bulb.png");
+
+  // Functions to navigate to external links
   const navigateToDocs = () => window.open(ExternalLinks.Docs);
   const navigateToDiscord = () => window.open(ExternalLinks.Discord);
+  
+  // React Router's navigation hook
   const navigate = useNavigate();
   const TailoredSettings = () => navigate("/guided/TailoredSettings");
+
+  // Function to handle directory selection using Tauri API
   const handleSelectDirectory = async () => {
     try {
-      const path = await invoke<string>('open_directory_dialog');
+      const path = await invoke<string>("open_directory_dialog");
       alert(`Directory selected: ${path}`);
     } catch (error) {
       alert(`Error: ${error}`);
@@ -132,6 +138,7 @@ const SelectDirectory: React.FC = () => {
         <BackButton />
         <ForwardButton onClick={TailoredSettings} />
       </NavProgress>
+      {/* Text wrapper for title and links to documentation and Discord */}
       <TextWrapper>
         <Title text="Your Path to Crypto Starts Here" top={-20} />
         Whenever you feel lost, remember to read the tips,{" "}
@@ -154,6 +161,7 @@ const SelectDirectory: React.FC = () => {
         </a>
       </TextWrapper>
       <ContainerBottom>
+        {/* Directory selection section */}
         <DirWrapper>
           <Tile heading={"Where to Store pos data?"} />
           <DirImage src={folder} />
@@ -209,7 +217,7 @@ const SelectDirectory: React.FC = () => {
             IconButtonLeft={50}
           />
         </DirWrapper>
-
+        {/* Hint section for additional information */}
         <HintWrapper>
           <HintImage src={bulb} />
           <HintText>

@@ -1,7 +1,6 @@
 import ParserTypescriptEslint from "@typescript-eslint/parser";
 import PluginImport from "eslint-plugin-import";
 import globals from "globals";
-
 import path from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
@@ -16,6 +15,20 @@ const compat = new FlatCompat({
 
 export default [
   {
+    files: [
+      "src/**/**/*.ts",
+      "src/**/**/*.tsx",
+      "src/**/**/*.jsx",
+      "src/**/**/*.js",
+      "src/*.ts",
+      "src/*.tsx",
+      "src/*.jsx",
+      "src/*.js",
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "src/**/*.jsx",
+      "src/**/*.js",
+    ],
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: "module",
@@ -25,13 +38,17 @@ export default [
       },
       parser: ParserTypescriptEslint,
       parserOptions: {
-        project: ["./tsconfig.json"],
+        project: ["tsconfig.json"],
         tsconfigRootDir: __dirName,
       },
     },
     plugins: {
       import: PluginImport,
     },
+    rules: {
+      semi: "error",
+      "prefer-const": "error"
+  },
     settings: {
       "import/resolver": {
         ...PluginImport.configs.typescript.settings["import/resolver"],
@@ -41,5 +58,7 @@ export default [
       },
     },
   },
-  { ignores: ["**/dist/*", "**/node_modules/*", "eslint.config.mjs"] },
+  {
+    ignores: ["node_modules/*", "eslint.config.mjs", "node_modules/big.js"],
+  },
 ];
