@@ -13,6 +13,7 @@ import Tile from "../../components/tile";
 import ErrorModal from "../../components/error";
 import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
+import GPUedit from "../../components/GPUedit";
 
 const NavProgress = styled.div`
   width: 100%;
@@ -117,7 +118,7 @@ const TailoredSettings: React.FC = () => {
             footer="placeholder"
           />
           <EditButton
-            modalComponent={ErrorModal}
+            modalComponent={GPUedit}
             EditButtonTop={96}
             EditButtonLeft={50}
           />
@@ -131,7 +132,7 @@ const TailoredSettings: React.FC = () => {
             footer="placeholder"
           />
           <EditButton
-            modalComponent={PosInfo}
+            modalComponent={ErrorModal}
             EditButtonTop={96}
             EditButtonLeft={50}
           />
