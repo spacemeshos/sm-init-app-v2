@@ -6,8 +6,8 @@
   "author": {
     "name": "Spacemesh",
     "email": "info@spacemesh.io",
-    "url": "https://spacemesh.io/"},
-
+    "url": "https://spacemesh.io/"
+  },
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@tauri-apps/api": "^1.5.5",

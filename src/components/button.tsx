@@ -254,17 +254,8 @@ const ButtonWrapper = styled.button<{
         ) 1`};
 
   &:hover {
-    border-image-slice: 1;
-    border-image: ${({ borderColor }) =>
-      borderColor
-        ? "none"
-        : `linear-gradient(
-            90deg,
-            ${Colors.greenDark} 0%,
-            ${Colors.greenLight} 50%,
-            ${Colors.greenDark} 100%
-          ) 1`};
-`;
+    border: 1px solid ${({ borderColor }) => borderColor || Colors.greenLight};
+    `;
 
 const ButtonText = styled.span`
   font-family: "Source Code Pro Extralight", sans-serif;
