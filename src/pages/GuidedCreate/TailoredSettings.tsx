@@ -13,7 +13,7 @@ import Tile from "../../components/tile";
 import ErrorModal from "../../components/error";
 import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
-import GPUedit from "../../components/GPUedit";
+import GPUedit from "../../components/GPUedit-tbu";
 
 const NavProgress = styled.div`
   width: 100%;
