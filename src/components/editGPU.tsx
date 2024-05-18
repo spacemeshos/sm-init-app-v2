@@ -66,7 +66,7 @@ const BgImage = styled.img`
   position: absolute;
   left: 20px;
   top: 20px;
-  opacity: 0.1;
+  opacity: 0.02;
 `;
 
 const CloseButton = styled.button`
