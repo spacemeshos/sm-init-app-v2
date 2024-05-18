@@ -10,28 +10,14 @@ interface TileProps {
   children?: React.ReactNode;
   buttonText?: string;
   onClick?: () => void;
-  top?: number;
-  left?: number;
-  height?: number;
-  width?: number;
-  backgroundColor?: string;
 }
 
-const TileWrapper = styled.div<{
-  top?: number;
-  left?: number;
-  height?: number;
-  width?: number;
-  backgroundColor?: string;
-}>`
-  top: ${({ top }) => top || 0}px;
-  left: ${({ left }) => left || 0}px;
-  height: ${({ height }) => (height !== undefined ? `${height}px` : '100%')};
-  width: ${({ width }) => (width !== undefined ? `${width}px` : '100%')}
-  background-color:${({ backgroundColor }) =>
-    backgroundColor || Colors.darkerGreen}
+const TileWrapper = styled.div`
   border: 1px solid transparent;
+  background-color: ${Colors.darkerGreen};
   transition: border-color 0.3s ease;
+  height: 100%;
+  width: 100%;
   position: absolute;
 
   display: flex;
@@ -40,6 +26,10 @@ const TileWrapper = styled.div<{
   /* Gradient border */
   border-image: linear-gradient(${Colors.greenLight}, ${Colors.greenDark});
   border-image-slice: 1;
+
+  @media (max-width: 991px) {
+    white-space: initial;
+  }
 `;
 
 const TileHeading = styled.h2`
@@ -54,7 +44,8 @@ const TileHeading = styled.h2`
   width: 100%;
   top: 0px;
   position: absolute;
-`;
+
+  `;
 
 const SubHeader = styled.h3`
   color: ${Colors.grayLight};
@@ -95,19 +86,9 @@ const Footer = styled.h3`
   width: 100%;
 `;
 
-const Tile: React.FC<TileProps> = ({
-  heading,
-  subheader,
-  imageSrc,
-  footer,
-  top,
-  left,
-  height,
-  width,
-  backgroundColor
-}) => {
+const Tile: React.FC<TileProps> = ({ heading, subheader, imageSrc,footer }) => {
   return (
-    <TileWrapper top={top} left={left} width={width}  height={height} backgroundColor={backgroundColor}>
+    <TileWrapper>
       <TileHeading>{heading}</TileHeading>
       <SubHeader>{subheader}</SubHeader>
       {imageSrc && <TileImage src={imageSrc} alt="" />}

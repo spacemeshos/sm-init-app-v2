@@ -95,13 +95,12 @@ const CPUedit = ({ children, onClose, isOpen }: Props) => {
     <Backdrop onClick={onClose}>
       <Wrapper onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>&times;</CloseButton>
-        <Header>Select processor to prepare POST proofs </Header>
+        <Header>How to prepare POST proofs </Header>
         <Subheader>
-          Please note that the selected processor will be utilized once every two weeks to complete POET prooving 
+          Please note that the selected processor will be utilized once every two weeks to complete POET prooving. Depending on your settings, it might take several hours.
         </Subheader>
-        <Tile/>
         <BgImage src={cpu} />
-        <Text></Text>
+
       </Wrapper>
     </Backdrop>
   );
