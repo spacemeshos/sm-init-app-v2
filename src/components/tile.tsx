@@ -26,9 +26,8 @@ const TileWrapper = styled.div<{
 }>`
   top: ${({ top }) => top || 0}px;
   left: ${({ left }) => left || 0}px;
-  height: ${({ height }) => height || 60}px;
-  width: ${({ width }) => width || 300}px;
-
+  height: ${({ height }) => (height !== undefined ? `${height}px` : '100%')};
+  width: ${({ width }) => (width !== undefined ? `${width}px` : '100%')}
   background-color:${({ backgroundColor }) =>
     backgroundColor || Colors.darkerGreen}
   border: 1px solid transparent;
