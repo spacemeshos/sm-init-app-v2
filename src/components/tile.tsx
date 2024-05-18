@@ -12,9 +12,21 @@ interface TileProps {
   onClick?: () => void;
 }
 
-const TileWrapper = styled.div`
+const TileWrapper = styled.div<{
+  top?: number;
+  left?: number;
+  height?: number;
+  width?: number;
+  backgroundColor?: string;
+}>`
+  top: ${({ top }) => top || 0}px;
+  left: ${({ left }) => left || 0}px;
+  height: ${({ height }) => height || 60}px;
+  width: ${({ width }) => width || 300}px;
+
+  background-color:${({ backgroundColor }) =>
+    backgroundColor || Colors.darkerGreen}
   border: 1px solid transparent;
-  background-color: ${Colors.darkerGreen};
   transition: border-color 0.3s ease;
   height: 100%;
   width: 100%;
@@ -26,10 +38,6 @@ const TileWrapper = styled.div`
   /* Gradient border */
   border-image: linear-gradient(${Colors.greenLight}, ${Colors.greenDark});
   border-image-slice: 1;
-
-  @media (max-width: 991px) {
-    white-space: initial;
-  }
 `;
 
 const TileHeading = styled.h2`
