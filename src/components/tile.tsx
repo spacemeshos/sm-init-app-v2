@@ -10,6 +10,11 @@ interface TileProps {
   children?: React.ReactNode;
   buttonText?: string;
   onClick?: () => void;
+  top?: number;
+  left?: number;
+  height?: number;
+  width?: number;
+  backgroundColor?: string;
 }
 
 const TileWrapper = styled.div<{
@@ -50,8 +55,7 @@ const TileHeading = styled.h2`
   width: 100%;
   top: 0px;
   position: absolute;
-
-  `;
+`;
 
 const SubHeader = styled.h3`
   color: ${Colors.grayLight};
@@ -92,9 +96,19 @@ const Footer = styled.h3`
   width: 100%;
 `;
 
-const Tile: React.FC<TileProps> = ({ heading, subheader, imageSrc,footer }) => {
+const Tile: React.FC<TileProps> = ({
+  heading,
+  subheader,
+  imageSrc,
+  footer,
+  top,
+  left,
+  height,
+  width,
+  backgroundColor
+}) => {
   return (
-    <TileWrapper>
+    <TileWrapper top={top} left={left} width={width}  height={height} backgroundColor={backgroundColor}>
       <TileHeading>{heading}</TileHeading>
       <SubHeader>{subheader}</SubHeader>
       {imageSrc && <TileImage src={imageSrc} alt="" />}
