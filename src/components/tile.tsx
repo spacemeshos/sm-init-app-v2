@@ -26,10 +26,6 @@ const TileWrapper = styled.div`
   /* Gradient border */
   border-image: linear-gradient(${Colors.greenLight}, ${Colors.greenDark});
   border-image-slice: 1;
-
-  @media (max-width: 991px) {
-    white-space: initial;
-  }
 `;
 
 const TileHeading = styled.h2`
@@ -44,8 +40,7 @@ const TileHeading = styled.h2`
   width: 100%;
   top: 0px;
   position: absolute;
-
-  `;
+`;
 
 const SubHeader = styled.h3`
   color: ${Colors.grayLight};
@@ -86,7 +81,12 @@ const Footer = styled.h3`
   width: 100%;
 `;
 
-const Tile: React.FC<TileProps> = ({ heading, subheader, imageSrc,footer }) => {
+const Tile: React.FC<TileProps> = ({
+  heading,
+  subheader,
+  imageSrc,
+  footer,
+}) => {
   return (
     <TileWrapper>
       <TileHeading>{heading}</TileHeading>

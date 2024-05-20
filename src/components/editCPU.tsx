@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 import Tile from "./tile";
+import { Button } from "./button";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -16,9 +17,6 @@ const Wrapper = styled.div`
   position: fixed;
   top: 0px;
   left: 0px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   background-color: ${Colors.darkerGreen};
   z-index: 1000;
   width: 1200px;
@@ -48,18 +46,6 @@ const Subheader = styled.h2`
   padding: 0px 75px 10px;
 `;
 
-const Text = styled.div`
-  color: ${Colors.white};
-  padding: 20px 75px;
-  margin-top: 10px;
-  text-align: justify;
-  font-family: "Source Code Pro ExtraLight", sans-serif;
-  font-size: 16px;
-  font-weight: 100;
-  line-height: 25px;
-  white-space: pre-wrap;
-`;
-
 const BgImage = styled.img`
   aspect-ratio: 1;
   object-fit: contain;
@@ -67,7 +53,7 @@ const BgImage = styled.img`
   position: absolute;
   left: 20px;
   top: 20px;
-  opacity: 0.02;
+  opacity: 0.05;
 `;
 
 const CloseButton = styled.button`
@@ -79,6 +65,22 @@ const CloseButton = styled.button`
   color: ${Colors.purpleLight};
   cursor: pointer;
   font-size: 28px;
+`;
+
+const CPUWrapper = styled.div`
+  height: 370px;
+  width: 450px;
+  position: absolute;
+  left: 112px;
+  top: 300px;
+`;
+
+const NoncesWrapper = styled.div`
+  height: 370px;
+  width: 450px;
+  position: absolute;
+  left: 637px;
+  top: 300px;
 `;
 
 type Props = {
@@ -94,13 +96,21 @@ const CPUedit = ({ children, onClose, isOpen }: Props) => {
   return (
     <Backdrop onClick={onClose}>
       <Wrapper onClick={(e) => e.stopPropagation()}>
+        <BgImage src={cpu} />
         <CloseButton onClick={onClose}>&times;</CloseButton>
         <Header>How to prepare POST proofs </Header>
         <Subheader>
-          Please note that the selected processor will be utilized once every two weeks to complete POET prooving. Depending on your settings, it might take several hours.
+          Please note that your CPU will be utilized once every two weeks to
+          complete POET prooving. Depending on your settings, it might take
+          several hours.
         </Subheader>
-        <BgImage src={cpu} />
-
+        <CPUWrapper>
+          <Tile heading="Select number of CPU cores" footer="More CPU cores increase the proof generation speed">
+          </Tile>
+        </CPUWrapper>
+        <NoncesWrapper>
+          <Tile heading="Select number of Nonces" footer="More nonces increase the chance of generating proof on the first try"/>
+        </NoncesWrapper>
       </Wrapper>
     </Backdrop>
   );
