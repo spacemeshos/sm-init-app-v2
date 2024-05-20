@@ -41,21 +41,11 @@ const TextWrapper = styled.div`
   letter-spacing: 2px;
 `;
 
-const ContainerBottom = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  justify-content: space-between;
-  margin: 10px auto 0;
-  top: 325px;
-  width: 1200px;
-  position: absolute;
-`;
-
 const GPUWrapper = styled.div`
   height: 309px;
   width: 300px;
   position: absolute;
+  top: 325px;
   left: 75px;
   display: flex;
   justify-content: center;
@@ -65,6 +55,7 @@ const CPUWrapper = styled.div`
   height: 309px;
   width: 300px;
   position: absolute;
+  top: 325px;
   left: 450px;
   display: flex;
   justify-content: center;
@@ -74,6 +65,7 @@ const DataSizeWrapper = styled.div`
   height: 309px;
   width: 300px;
   position: absolute;
+  top: 325px;
   left: 825px;
   display: flex;
   justify-content: center;
@@ -84,7 +76,7 @@ const TailoredSettings: React.FC = () => {
   const gpu = require("../../assets/graphics-card.png");
   const cpu = require("../../assets/cpu.png");
   const files = require("../../assets/duplicate.png");
-  
+
   //Hook to navigate to the next page - summary
   const navigate = useNavigate();
   const navigateToSummary = () => navigate("/guided/Summary");
@@ -108,51 +100,49 @@ const TailoredSettings: React.FC = () => {
           IconButtonLeft={50}
         />
       </TextWrapper>
-      {/* Container for the bottom part of the page */}
-      <ContainerBottom>
-        {/* GPU settings section */}
-        <GPUWrapper>
-          <Tile
-            heading={"How to create POS?"}
-            subheader={"placeholder"}
-            imageSrc={gpu}
-            footer="placeholder"
-          />
-          <EditButton
-            modalComponent={GPUedit}
-            EditButtonTop={96}
-            EditButtonLeft={50}
-          />
-        </GPUWrapper>
-        {/* Post prooving processor settings section */}
-        <CPUWrapper>
-          <Tile
-            heading={"How to prove POS?"}
-            subheader={"placeholder"}
-            imageSrc={cpu}
-            footer="placeholder"
-          />
-          <EditButton
-            modalComponent={CPUedit}
-            EditButtonTop={96}
-            EditButtonLeft={50}
-          />
-        </CPUWrapper>
-        {/* Data size settings section */}
-        <DataSizeWrapper>
-          <Tile
-            heading={"How much POS data?"}
-            subheader={"placeholder"}
-            imageSrc={files}
-            footer="placeholder"
-          />
-          <EditButton
-            modalComponent={ErrorModal}
-            EditButtonTop={96}
-            EditButtonLeft={50}
-          />
-        </DataSizeWrapper>
-      </ContainerBottom>
+      {/*Bottom part of the page */}
+      {/* GPU settings section */}
+      <GPUWrapper>
+        <Tile
+          heading={"How to create POS?"}
+          subheader={"placeholder"}
+          imageSrc={gpu}
+          footer="placeholder"
+        />
+        <EditButton
+          modalComponent={GPUedit}
+          EditButtonTop={96}
+          EditButtonLeft={50}
+        />
+      </GPUWrapper>
+      {/* Post prooving processor settings section */}
+      <CPUWrapper>
+        <Tile
+          heading={"How to prove POS?"}
+          subheader={"placeholder"}
+          imageSrc={cpu}
+          footer="placeholder"
+        />
+        <EditButton
+          modalComponent={CPUedit}
+          EditButtonTop={96}
+          EditButtonLeft={50}
+        />
+      </CPUWrapper>
+      {/* Data size settings section */}
+      <DataSizeWrapper>
+        <Tile
+          heading={"How much POS data?"}
+          subheader={"placeholder"}
+          imageSrc={files}
+          footer="placeholder"
+        />
+        <EditButton
+          modalComponent={ErrorModal}
+          EditButtonTop={96}
+          EditButtonLeft={50}
+        />
+      </DataSizeWrapper>
     </>
   );
 };
