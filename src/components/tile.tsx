@@ -67,6 +67,19 @@ const TileImage = styled.img`
     -60%
   ); // Centers the image both horizontally and vertically
 `;
+const TileElement = styled.div `
+  aspect-ratio: 1;
+  object-fit: contain;
+  width: 100px;
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  transform: translate(
+    -50%,
+    -60%
+  ); // Centers the image both horizontally and vertically
+`;
+
 
 const Footer = styled.h3`
   color: ${Colors.grayLight};
@@ -86,6 +99,7 @@ const Tile: React.FC<TileProps> = ({
   subheader,
   imageSrc,
   footer,
+  children,
 }) => {
   return (
     <TileWrapper>
@@ -93,6 +107,7 @@ const Tile: React.FC<TileProps> = ({
       <SubHeader>{subheader}</SubHeader>
       {imageSrc && <TileImage src={imageSrc} alt="" />}
       <Footer>{footer}</Footer>
+      <TileElement>{children}</TileElement>
     </TileWrapper>
   );
 };
