@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 import Tile from "./tile";
-import NumberInput from "./numberInput";
+import CustomNumberInput from "./numberInput";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -109,15 +109,27 @@ const CPUedit = ({ children, onClose, isOpen }: Props) => {
             heading="Select number of CPU cores"
             footer="More CPU cores increase the proof generation speed"
           >
-          <NumberInput aria-label="Quantity Input" />
-
+            <CustomNumberInput
+              min={1}
+              max={16}
+              step={1}
+              value={8}
+              onChange={(val) => console.log(val)}
+            />
           </Tile>
         </CPUWrapper>
         <NoncesWrapper>
           <Tile
             heading="Select number of Nonces"
-            footer="More nonces increase the chance of generating proof on the first try"
-          />
+            footer="More nonces increase the chance of generating proof on the first try">
+                          <CustomNumberInput
+              min={16}
+              max={999}
+              step={16}
+              value={288}
+              onChange={(val) => console.log(val)}
+            />
+            </Tile>
         </NoncesWrapper>
       </Wrapper>
     </Backdrop>
