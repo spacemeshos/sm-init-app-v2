@@ -51,6 +51,14 @@ const StyledInput = styled.input<{
   min-width: 130px;
   text-align: center;
 
+  /* Hide default number input arrows buttons */
+  -moz-appearance: textfield;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
   &:hover {
     border-color: ${(props) => props.hoverBorderColor};
   }
