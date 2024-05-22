@@ -28,7 +28,7 @@ const Header = styled.h1`
   text-align: center;
   font-family: "Source Code Pro", sans-serif;
   font-size: 26px;
-  margin-top: 40px;
+  margin-top: 80px;
   font-weight: 200;
   text-transform: uppercase;
   letter-spacing: 5px;
@@ -43,7 +43,7 @@ const Subheader = styled.h2`
   text-transform: uppercase;
   letter-spacing: 3px;
   line-height: 26px;
-  padding: 0px 75px 10px;
+  padding: 10px 75px 10px;
 `;
 
 const BgImage = styled.img`
@@ -51,9 +51,9 @@ const BgImage = styled.img`
   object-fit: contain;
   width: 250px;
   position: absolute;
-  left: 20px;
-  top: 20px;
-  opacity: 0.05;
+  left: 30px;
+  top: 30px;
+  opacity: 0.03;
 `;
 
 const CloseButton = styled.button`
@@ -72,7 +72,7 @@ const CPUWrapper = styled.div`
   width: 450px;
   position: absolute;
   left: 112px;
-  top: 300px;
+  top: 260px;
 `;
 
 const NoncesWrapper = styled.div`
@@ -80,7 +80,7 @@ const NoncesWrapper = styled.div`
   width: 450px;
   position: absolute;
   left: 637px;
-  top: 300px;
+  top: 260px;
 `;
 
 type Props = {
@@ -121,15 +121,17 @@ const CPUedit = ({ children, onClose, isOpen }: Props) => {
         <NoncesWrapper>
           <Tile
             heading="Select number of Nonces"
-            footer="More nonces increase the chance of generating proof on the first try">
-                          <CustomNumberInput
+            footer="More nonces increase the chance of generating proof on the first try"
+          >
+            <CustomNumberInput
               min={16}
               max={999}
+            
               step={16}
               value={288}
               onChange={(val) => console.log(val)}
             />
-            </Tile>
+          </Tile>
         </NoncesWrapper>
       </Wrapper>
     </Backdrop>
