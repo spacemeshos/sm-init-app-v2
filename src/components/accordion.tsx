@@ -94,8 +94,8 @@ export const HoverAccordionMenu: React.FC<
             key={index}
             onClick={button.onClick}
             label={button.label}
-            top={40}
-            left={button.left}
+            buttonTop={40}
+            buttonLeft={button.left}
             height={60}
             width={button.width}
           ></Button>

@@ -93,7 +93,7 @@ const Summary: React.FC = () => {
           <Subheader text={"Ready?"} left={10} />
           <Button
             label={"start"}
-            top={80}
+            buttonTop={80}
             height={80}
             borderColor={Colors.purpleLight}
             backgroundColor={Colors.darkerPurple}

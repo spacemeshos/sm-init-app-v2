@@ -30,8 +30,8 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   buttonTop,
   buttonLeft,
-  width,
   height,
+  width,
   backgroundColor,
   borderColor,
 }) => {
@@ -104,9 +104,9 @@ const EditButton: React.FC<ButtonProps> = ({
   modalText,
   modalTop,
   modalLeft,
-  modalComponent,
-  buttonTop,
-  buttonLeft,
+  modalComponent: CustomModal,
+  buttonTop = 96,
+  buttonLeft = 50,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false); // State for modal open/close
   const pen = require("../assets/edit-circle.png");
@@ -128,8 +128,8 @@ const EditButton: React.FC<ButtonProps> = ({
           onClick={openTooltip}
           role="button"
           tabIndex={0}
-          top={buttonTop}
-          left={buttonLeft}
+          buttonTop={buttonTop}
+          buttonLeft={buttonLeft}
         >
           <ButtonIcon src={pen} alt="pen" />
         </IconButtonWrapper>
@@ -150,17 +150,15 @@ const EditButton: React.FC<ButtonProps> = ({
   );
 };
 
-// Tooltip button component
+// Icon button component
 const IconButton: React.FC<ButtonProps> = ({
   onClick,
   modalHeader,
   modalText,
   modalTop,
   modalLeft,
-  modalComponent,
-  buttonTop,
-  buttonLeft,
-}> = ({
+  buttonTop = 96,
+  buttonLeft = 50,
   modalComponent: CustomModal,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -183,8 +181,8 @@ const IconButton: React.FC<ButtonProps> = ({
           onClick={openTooltip}
           role="button"
           tabIndex={0}
-          top={buttonTop}
-          left={buttonLeft}
+          buttonTop={buttonTop}
+          buttonLeft={buttonLeft}
         >
           <ButtonIcon src={question} alt="question" />
         </IconButtonWrapper>
@@ -279,14 +277,17 @@ const ButtonIcon = styled.img`
   width: 30px;
 `;
 // Styled component for the icon button wrapper
-const IconButtonWrapper = styled.button<{ top: number; left: number }>`
+const IconButtonWrapper = styled.button<{
+  buttonTop: number;
+  buttonLeft: number;
+}>`
   background-color: transparent;
   border: transparent;
   cursor: pointer;
   z-index: 2;
   position: absolute;
-  top: ${({ top }) => top || 98}%;
-  left: ${({ left }) => left ||50}%;
+  top: ${({ buttonTop }) => buttonTop}%;
+  left: ${({ buttonLeft }) => buttonLeft}%;
   transform: translate(
     -50%,
     0%

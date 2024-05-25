@@ -168,8 +168,8 @@ const SelectDirectory: React.FC = () => {
           <Button
             onClick={handleSelectDirectory}
             label="Choose directory"
-            top={260}
-            left={65}
+            buttonTop={260}
+            buttonLeft={65}
             width={320}
             backgroundColor={Colors.darkerPurple}
             borderColor={Colors.purpleLight}
@@ -213,8 +213,8 @@ const SelectDirectory: React.FC = () => {
             }
             modalTop={1}
             modalLeft={1}
-            IconButtonTop={96}
-            IconButtonLeft={50}
+            buttonTop={96}
+            buttonLeft={50}
           />
         </DirWrapper>
         {/* Hint section for additional information */}
@@ -226,8 +226,8 @@ const SelectDirectory: React.FC = () => {
           </HintText>
           <IconButton
             modalComponent={PosInfo}
-            IconButtonTop={96}
-            IconButtonLeft={50}
+            buttonTop={96}
+            buttonLeft={50}
           />
         </HintWrapper>
       </ContainerBottom>

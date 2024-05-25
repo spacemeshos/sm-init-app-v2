@@ -96,8 +96,8 @@ const TailoredSettings: React.FC = () => {
         not hinder your smeshing experience.
         <IconButton
           modalComponent={PosInfo}
-          IconButtonTop={100}
-          IconButtonLeft={50}
+          buttonTop={100}
+          buttonLeft={50}
         />
       </TextWrapper>
       {/*Bottom part of the page */}
@@ -111,8 +111,6 @@ const TailoredSettings: React.FC = () => {
         />
         <EditButton
           modalComponent={GPUedit}
-          EditButtonTop={96}
-          EditButtonLeft={50}
         />
       </GPUWrapper>
       {/* Post prooving processor settings section */}
@@ -125,8 +123,6 @@ const TailoredSettings: React.FC = () => {
         />
         <EditButton
           modalComponent={CPUedit}
-          EditButtonTop={96}
-          EditButtonLeft={50}
         />
       </CPUWrapper>
       {/* Data size settings section */}
@@ -139,8 +135,6 @@ const TailoredSettings: React.FC = () => {
         />
         <EditButton
           modalComponent={ErrorModal}
-          EditButtonTop={96}
-          EditButtonLeft={50}
         />
       </DataSizeWrapper>
     </>
