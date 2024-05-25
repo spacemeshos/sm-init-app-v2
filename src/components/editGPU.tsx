@@ -96,9 +96,9 @@ const GPUedit = ({ children, onClose, isOpen }: Props) => {
         <CloseButton onClick={onClose}>&times;</CloseButton>
         <Header>Select processor to generate POS</Header>
         <Subheader>
-          Please note that the selected processor will be fully utilized until
-          all POS data is generated. During this time, it will not be available
-          for other tasks.
+          The selected processor will be fully utilized until all POS data is
+          generated. <br />
+          During this time, it will not be available for other tasks.
         </Subheader>
         <BgImage src={gpu} />
         <Text></Text>

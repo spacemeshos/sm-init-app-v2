@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 import Tile from "./tile";
-import CustomNumberInput from "./numberInput";
+import CustomNumberInput from "./input";
 
 const Backdrop = styled.div`
   width: 100%;
