@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Colors from "../styles/colors";
 import Tile from "./tile";
 import CustomNumberInput from "./input";
+import { IconButton } from "./button";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -107,31 +108,35 @@ const CPUedit = ({ children, onClose, isOpen }: Props) => {
         <CPUWrapper>
           <Tile
             heading="Select number of CPU cores"
-            footer="More CPU cores increase the proof generation speed"
-          >
-            <CustomNumberInput
-              min={1}
-              max={16}
-              step={1}
-              value={8}
-              onChange={(val) => console.log(val)}
-            />
-          </Tile>
+            footer="more CPU cores -> faster proof generation"
+          />
+          <CustomNumberInput
+            min={1}
+            max={16}
+            step={1}
+            value={8}
+            fontsize={36}
+            height={80}
+            onChange={(val) => console.log(val)}
+          />
+          <IconButton 
+          
+          />
         </CPUWrapper>
         <NoncesWrapper>
           <Tile
             heading="Select number of Nonces"
-            footer="More nonces increase the chance of generating proof on the first try"
-          >
-            <CustomNumberInput
-              min={16}
-              max={999}
-            
-              step={16}
-              value={288}
-              onChange={(val) => console.log(val)}
-            />
-          </Tile>
+            footer="more nonces -> more likely proof generated on the first try"
+          />
+          <CustomNumberInput
+            min={16}
+            max={999}
+            fontsize={36}
+            height={80}
+            step={16}
+            value={288}
+            onChange={(val) => console.log(val)}
+          />
         </NoncesWrapper>
       </Wrapper>
     </Backdrop>
