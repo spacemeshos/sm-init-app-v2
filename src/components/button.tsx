@@ -170,6 +170,13 @@ const SaveButton: React.FC<ButtonProps> = (props) => {
   return <IconButton {...props} iconSrc={save} />;
 };
 
+// Cancel button component
+const CancelButton: React.FC<ButtonProps> = (props) => {
+  const cancel = require("../assets/circle-x.png");
+
+  return <IconButton {...props} iconSrc={cancel} />;
+};
+
 
 // Styled component for the standard button wrapper
 const ButtonWrapper = styled.button<{
@@ -262,4 +269,4 @@ const IconButtonWrapper = styled.button<{
   ); // Centers the image both horizontally and vertically
 `;
 
-export { Button, BackButton, ForwardButton, IconButton, EditButton, TooltipButton, SaveButton};
+export { Button, BackButton, ForwardButton, IconButton, EditButton, TooltipButton, SaveButton, CancelButton};

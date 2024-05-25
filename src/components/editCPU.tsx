@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Colors from "../styles/colors";
 import Tile from "./tile";
 import CustomNumberInput from "./input";
-import { SaveButton } from "./button";
+import { SaveButton, CancelButton } from "./button";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -119,8 +119,8 @@ const CPUedit = ({ children, onClose, isOpen }: Props) => {
             height={80}
             onChange={(val) => console.log(val)}
           />
-          <SaveButton
-          />
+          <SaveButton buttonLeft={55} />
+          <CancelButton buttonLeft={45} />
         </CPUWrapper>
         <NoncesWrapper>
           <Tile
@@ -136,6 +136,8 @@ const CPUedit = ({ children, onClose, isOpen }: Props) => {
             value={288}
             onChange={(val) => console.log(val)}
           />
+          <SaveButton buttonLeft={55} />
+          <CancelButton buttonLeft={45} />
         </NoncesWrapper>
       </Wrapper>
     </Backdrop>
