@@ -16,8 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "typeRoots": ["./node_modules/@types", "./types"]
-
   },
-  "include": ["src","eslint.config.mjs"],
+  "include": ["src", "eslint.config.mjs"],
   "exclude": ["node_modules/*"]
 }

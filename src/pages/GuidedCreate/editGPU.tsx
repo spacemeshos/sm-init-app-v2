@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Colors from "../styles/colors";
+import Colors from "../../styles/colors";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -88,7 +88,7 @@ type Props = {
 
 const GPUedit = ({ children, onClose, isOpen }: Props) => {
   if (!isOpen) return null;
-  const gpu = require("../assets/graphics-card.png");
+  const gpu = require("../../assets/graphics-card.png");
 
   return (
     <Backdrop onClick={onClose}>

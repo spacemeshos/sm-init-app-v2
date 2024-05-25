@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import Colors from "../styles/colors";
-import Tile from "./tile";
-import CustomNumberInput from "./input";
-import { SaveButton, CancelButton } from "./button";
+import Colors from "../../styles/colors";
+import Tile from "../../components/tile";
+import CustomNumberInput from "../../components/input";
+import { SaveButton, CancelButton } from "../../components/button";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -92,7 +92,7 @@ type Props = {
 
 const CPUedit = ({ children, onClose, isOpen }: Props) => {
   if (!isOpen) return null;
-  const cpu = require("../assets/cpu.png");
+  const cpu = require("../../assets/cpu.png");
 
   return (
     <Backdrop onClick={onClose}>
