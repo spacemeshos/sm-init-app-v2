@@ -97,59 +97,6 @@ const ForwardButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
   );
 };
 
-// Edit button component
-const EditButton: React.FC<ButtonProps> = ({
-  onClick,
-  modalHeader,
-  modalText,
-  modalTop,
-  modalLeft,
-  modalComponent: CustomModal,
-  buttonTop = 96,
-  buttonLeft = 50,
-}) => {
-  const [isModalOpen, setModalOpen] = useState(false); // State for modal open/close
-  const pen = require("../assets/edit-circle.png");
-
-  // Open modal tooltip
-  const openTooltip = () => {
-    setModalOpen(true);
-    if (typeof onClick === "function") {
-      onClick();
-    }
-  };
-  // Close modal
-  const closeModal = () => setModalOpen(false);
-
-  return (
-    <>
-      {!isModalOpen && (
-        <IconButtonWrapper
-          onClick={openTooltip}
-          role="button"
-          tabIndex={0}
-          buttonTop={buttonTop}
-          buttonLeft={buttonLeft}
-        >
-          <ButtonIcon src={pen} alt="pen" />
-        </IconButtonWrapper>
-      )}
-      {isModalOpen && CustomModal ? (
-        <CustomModal isOpen={isModalOpen} onClose={closeModal} />
-      ) : (
-        <Modal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          header={modalHeader}
-          text={modalText}
-          top={modalTop}
-          left={modalLeft}
-        />
-      )}
-    </>
-  );
-};
-
 // Icon button component
 const IconButton: React.FC<ButtonProps> = ({
   onClick,
@@ -160,10 +107,9 @@ const IconButton: React.FC<ButtonProps> = ({
   buttonTop = 96,
   buttonLeft = 50,
   modalComponent: CustomModal,
+  iconSrc,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const question = require("../assets/question.png");
-
   // Open modal tooltip
   const openTooltip = () => {
     setModalOpen(true);
@@ -184,7 +130,7 @@ const IconButton: React.FC<ButtonProps> = ({
           buttonTop={buttonTop}
           buttonLeft={buttonLeft}
         >
-          <ButtonIcon src={question} alt="question" />
+          <ButtonIcon src={iconSrc} />
         </IconButtonWrapper>
       )}
       {isModalOpen && CustomModal ? (
@@ -202,6 +148,21 @@ const IconButton: React.FC<ButtonProps> = ({
     </>
   );
 };
+
+// Edit button component
+const EditButton: React.FC<ButtonProps> = (props) => {
+  const pen = require("../assets/edit-circle.png");
+
+  return <IconButton {...props} iconSrc={pen} />;
+};
+
+// Tooltip button component
+const TooltipButton: React.FC<ButtonProps> = (props) => {
+  const question = require("../assets/question.png");
+
+  return <IconButton {...props} iconSrc={question} />;
+};
+
 
 // Styled component for the standard button wrapper
 const ButtonWrapper = styled.button<{
