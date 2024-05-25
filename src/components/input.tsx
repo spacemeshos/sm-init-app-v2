@@ -15,12 +15,14 @@ interface CustomNumberInputProps {
   borderColor?: string;
   hoverBorderColor?: string;
   buttonHoverColor?: string;
-  size?: number;
+  fontsize?: number;
+  height?: number;
+  width?: number;
   value?: number;
   onChange?: (value: number) => void;
 }
 
-const StyledInputRoot = styled.div<{ inputColor: string; size: number }>`
+const StyledInputRoot = styled.div<{ inputColor: string; height: number; width: number }>`
   font-family: "Source Code Pro", sans-serif;
   font-weight: 400;
   color: ${(props) => props.inputColor};
@@ -29,20 +31,23 @@ const StyledInputRoot = styled.div<{ inputColor: string; size: number }>`
   justify-content: center;
   align-items: center;
   z-index: auto;
-  height: ${(props) => props.size}px;
-`;
+  height: ${(props) => props.height}px;
+  width: ${(props) => props.width}px;`;
 
 const StyledInput = styled.input<{
   inputColor: string;
-  size: number;
+  height: number;
+  width: number;
   backgroundColor: string;
   borderColor: string;
   hoverBorderColor: string;
+  fontsize: number;
 }>`
-  font-size: 15px;
-  font-family: "Source Code Pro", sans-serif;
-  font-weight: 400;
-  height: ${(props) => props.size}px;
+  font-size: ${(props) => props.fontsize}px;
+  font-family: "Source Code Pro ExtraLight", sans-serif;
+  font-weight: 200;
+  height: ${(props) => props.height}px;
+  width: ${(props) => props.width}px;
   color: ${(props) => props.inputColor};
   background: ${(props) => props.backgroundColor};
   border: 2px solid ${(props) => props.borderColor};
@@ -75,7 +80,8 @@ const StyledInput = styled.input<{
 const StyledButton = styled.button<{
   buttonColor: string;
   buttonHoverColor: string;
-  size: number;
+  height : number;
+  width : number;
   borderColor: string;
   incrementOrder: number;
 }>`
@@ -87,8 +93,8 @@ const StyledButton = styled.button<{
   border-color: ${(props) => props.borderColor};
   background: ${(props) => props.buttonColor};
   color: ${(props) => props.buttonHoverColor};
-  width: ${(props) => props.size}px;
-  height: ${(props) => props.size}px;
+  width: ${(props) => props.width}px;
+  height: ${(props) => props.height}px;
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
@@ -123,8 +129,10 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   borderColor = Colors.darkerPurple,
   hoverBorderColor = Colors.purpleDark,
   buttonHoverColor = Colors.grayLight,
-  size = 50,
+  height = 50,
+  width = 50,
   value = min,
+  fontsize = 16,
   onChange,
 }) => {
   const [inputValue, setInputValue] = React.useState<number>(value);
@@ -154,11 +162,12 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   };
 
   return (
-    <StyledInputRoot inputColor={inputColor} size={size}>
+    <StyledInputRoot inputColor={inputColor} height={height} width={width}>
       <StyledButton
         buttonColor={buttonColor}
         buttonHoverColor={buttonHoverColor}
-        size={size}
+        height={height}
+        width={width}
         borderColor={borderColor}
         onClick={handleDecrement}
         className={`decrement`}
@@ -172,16 +181,19 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
         backgroundColor={backgroundColor}
         borderColor={borderColor}
         hoverBorderColor={hoverBorderColor}
-        size={size}
+        height={height}
+        width={width}
         value={inputValue}
         onChange={handleChange}
         min={min}
         max={max}
+        fontsize={fontsize}
       />
       <StyledButton
         buttonColor={buttonColor}
         buttonHoverColor={buttonHoverColor}
-        size={size}
+        height={height}
+        width={width}
         borderColor={borderColor}
         onClick={handleIncrement}
         className={`increment`}
