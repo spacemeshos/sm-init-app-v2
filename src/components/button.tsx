@@ -163,6 +163,13 @@ const TooltipButton: React.FC<ButtonProps> = (props) => {
   return <IconButton {...props} iconSrc={question} />;
 };
 
+// Save button component
+const SaveButton: React.FC<ButtonProps> = (props) => {
+  const save = require("../assets/check-circle.png");
+
+  return <IconButton {...props} iconSrc={save} />;
+};
+
 
 // Styled component for the standard button wrapper
 const ButtonWrapper = styled.button<{
@@ -255,4 +262,4 @@ const IconButtonWrapper = styled.button<{
   ); // Centers the image both horizontally and vertically
 `;
 
-export { Button, BackButton, ForwardButton, IconButton, EditButton, TooltipButton};
+export { Button, BackButton, ForwardButton, IconButton, EditButton, TooltipButton, SaveButton};
