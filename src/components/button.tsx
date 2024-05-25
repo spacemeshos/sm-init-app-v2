@@ -11,20 +11,25 @@ interface ButtonProps {
   label?: string;
   onClick?: () => void;
   children?: React.ReactNode;
-  top?: number;
-  left?: number;
+  buttonTop?: number;
+  buttonLeft?: number;
   height?: number;
   width?: number;
   borderColor?: any;
   backgroundColor?: any;
+  modalHeader?: string;
+  modalText?: React.ReactNode;
+  modalTop?: number;
+  modalLeft?: number;
+  modalComponent?: React.ElementType;
 }
 
 // Standard Button component
 const Button: React.FC<ButtonProps> = ({
   label,
   onClick,
-  top,
-  left,
+  buttonTop,
+  buttonLeft,
   width,
   height,
   backgroundColor,
@@ -40,8 +45,8 @@ const Button: React.FC<ButtonProps> = ({
       onClick={handleClick}
       role="button"
       tabIndex={0}
-      top={top}
-      left={left}
+      top={buttonTop}
+      left={buttonLeft}
       width={width}
       height={height}
       backgroundColor={backgroundColor}
@@ -93,24 +98,15 @@ const ForwardButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
 };
 
 // Edit button component
-const EditButton: React.FC<{
-  onClick?: () => void;
-  modalHeader?: string;
-  modalText?: React.ReactNode;
-  EditButtonTop?: number;
-  EditButtonLeft?: number;
-  modalTop?: number;
-  modalLeft?: number;
-  modalComponent?: React.ElementType;
-}> = ({
+const EditButton: React.FC<ButtonProps> = ({
   onClick,
   modalHeader,
   modalText,
-  EditButtonTop = 0,
-  EditButtonLeft = 0,
   modalTop,
   modalLeft,
-  modalComponent: CustomModal,
+  modalComponent,
+  buttonTop,
+  buttonLeft,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false); // State for modal open/close
   const pen = require("../assets/edit-circle.png");
@@ -132,8 +128,8 @@ const EditButton: React.FC<{
           onClick={openTooltip}
           role="button"
           tabIndex={0}
-          top={EditButtonTop}
-          left={EditButtonLeft}
+          top={buttonTop}
+          left={buttonLeft}
         >
           <ButtonIcon src={pen} alt="pen" />
         </IconButtonWrapper>
@@ -155,23 +151,16 @@ const EditButton: React.FC<{
 };
 
 // Tooltip button component
-const IconButton: React.FC<{
-  onClick?: () => void;
-  modalHeader?: string;
-  modalText?: React.ReactNode;
-  IconButtonTop?: number;
-  IconButtonLeft?: number;
-  modalTop?: number;
-  modalLeft?: number;
-  modalComponent?: React.ElementType;
-}> = ({
+const IconButton: React.FC<ButtonProps> = ({
   onClick,
   modalHeader,
   modalText,
-  IconButtonTop = 0,
-  IconButtonLeft = 0,
   modalTop,
   modalLeft,
+  modalComponent,
+  buttonTop,
+  buttonLeft,
+}> = ({
   modalComponent: CustomModal,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -194,8 +183,8 @@ const IconButton: React.FC<{
           onClick={openTooltip}
           role="button"
           tabIndex={0}
-          top={IconButtonTop}
-          left={IconButtonLeft}
+          top={buttonTop}
+          left={buttonLeft}
         >
           <ButtonIcon src={question} alt="question" />
         </IconButtonWrapper>
@@ -296,8 +285,8 @@ const IconButtonWrapper = styled.button<{ top: number; left: number }>`
   cursor: pointer;
   z-index: 2;
   position: absolute;
-  top: ${({ top }) => top}%;
-  left: ${({ left }) => left}%;
+  top: ${({ top }) => top || 98}%;
+  left: ${({ left }) => left ||50}%;
   transform: translate(
     -50%,
     0%
