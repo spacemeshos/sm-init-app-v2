@@ -255,4 +255,4 @@ const IconButtonWrapper = styled.button<{
   ); // Centers the image both horizontally and vertically
 `;
 
-export { Button, BackButton, ForwardButton, IconButton, EditButton };
+export { Button, BackButton, ForwardButton, IconButton, EditButton, TooltipButton};

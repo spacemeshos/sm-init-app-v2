@@ -4,7 +4,7 @@ import {
   BackButton,
   ForwardButton,
   Button,
-  IconButton,
+  TooltipButton,
 } from "../../components/button";
 import { Title } from "../../components/titles";
 import Colors from "../../styles/colors";
@@ -176,7 +176,7 @@ const SelectDirectory: React.FC = () => {
             /* TO DO */
           />
 
-          <IconButton
+          <TooltipButton
             modalText={
               <>
                 Use a reliable disk with at least 256 Gibibytes, preferring good
@@ -224,7 +224,7 @@ const SelectDirectory: React.FC = () => {
             Next, we'll optimize your settings with a quick benchmark to boost
             your rewards and qualification chances every epoch
           </HintText>
-          <IconButton
+          <TooltipButton
             modalComponent={PosInfo}
             buttonTop={96}
             buttonLeft={50}

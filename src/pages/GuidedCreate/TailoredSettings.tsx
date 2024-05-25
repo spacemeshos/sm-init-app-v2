@@ -4,7 +4,7 @@ import {
   BackButton,
   EditButton,
   ForwardButton,
-  IconButton,
+  TooltipButton,
 } from "../../components/button";
 import { Title } from "../../components/titles";
 import Colors from "../../styles/colors";
@@ -94,7 +94,7 @@ const TailoredSettings: React.FC = () => {
         Customise freely to match your needs. Ensure settings enhance,
         <br />
         not hinder your smeshing experience.
-        <IconButton
+        <TooltipButton
           modalComponent={PosInfo}
           buttonTop={100}
           buttonLeft={50}
