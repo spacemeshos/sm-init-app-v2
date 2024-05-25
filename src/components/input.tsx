@@ -22,17 +22,19 @@ interface CustomNumberInputProps {
   onChange?: (value: number) => void;
 }
 
-const StyledInputRoot = styled.div<{ inputColor: string; height: number; width: number }>`
-  font-family: "Source Code Pro", sans-serif;
-  font-weight: 400;
-  color: ${(props) => props.inputColor};
+const StyledInputRoot = styled.div<{ height: number; width: number }>`
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
   z-index: auto;
-  height: ${(props) => props.height}px;
-  width: ${(props) => props.width}px;`;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  `;
 
 const StyledInput = styled.input<{
   inputColor: string;
@@ -46,9 +48,9 @@ const StyledInput = styled.input<{
   font-size: ${(props) => props.fontsize}px;
   font-family: "Source Code Pro ExtraLight", sans-serif;
   font-weight: 200;
+  color: ${(props) => props.inputColor};
   height: ${(props) => props.height}px;
   width: ${(props) => props.width}px;
-  color: ${(props) => props.inputColor};
   background: ${(props) => props.backgroundColor};
   border: 2px solid ${(props) => props.borderColor};
   margin: 0 8px;
@@ -162,7 +164,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   };
 
   return (
-    <StyledInputRoot inputColor={inputColor} height={height} width={width}>
+    <StyledInputRoot height={height} width={width}>
       <StyledButton
         buttonColor={buttonColor}
         buttonHoverColor={buttonHoverColor}
