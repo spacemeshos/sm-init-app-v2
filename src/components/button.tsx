@@ -82,6 +82,8 @@ const BackButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
 const ForwardButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
   const next = require("../assets/right-arrow.png");
   const navigate = useNavigate();
+
+  // Handle forward button click
   const handleForward = () => {
     if (onClick) {
       onClick();
@@ -177,7 +179,6 @@ const CancelButton: React.FC<ButtonProps> = (props) => {
   return <IconButton {...props} iconSrc={cancel} />;
 };
 
-
 // Styled component for the standard button wrapper
 const ButtonWrapper = styled.button<{
   top?: number;
@@ -251,6 +252,7 @@ const ButtonIcon = styled.img`
   aspect-ratio: 1;
   width: 30px;
 `;
+
 // Styled component for the icon button wrapper
 const IconButtonWrapper = styled.button<{
   buttonTop: number;
@@ -269,4 +271,13 @@ const IconButtonWrapper = styled.button<{
   ); // Centers the image both horizontally and vertically
 `;
 
-export { Button, BackButton, ForwardButton, IconButton, EditButton, TooltipButton, SaveButton, CancelButton};
+export {
+  Button,
+  BackButton,
+  ForwardButton,
+  IconButton,
+  EditButton,
+  TooltipButton,
+  SaveButton,
+  CancelButton,
+};
