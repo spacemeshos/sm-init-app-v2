@@ -143,7 +143,7 @@ const editSize = ({ children, onClose, isOpen }: Props) => {
           <Tile
             heading="Select file size"
             subheader="Mebibytes"
-            footer="POS will be generated across many files"
+            footer="POS will be stored across [XXX] files" //TODO
           />
           <CustomNumberInput
             min={10}
