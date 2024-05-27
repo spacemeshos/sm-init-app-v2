@@ -1,6 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import Colors from "../../styles/colors";
+import Tile from "../../components/tile";
+import { CancelButton, SaveButton } from "../../components/button";
+import CustomNumberInput from "../../components/input";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -80,6 +83,22 @@ const CloseButton = styled.button`
   font-size: 28px;
 `;
 
+const DataWrapper = styled.div`
+  height: 370px;
+  width: 450px;
+  position: absolute;
+  left: 112px;
+  top: 260px;
+`;
+
+const FileWrapper = styled.div`
+  height: 370px;
+  width: 450px;
+  position: absolute;
+  left: 637px;
+  top: 260px;
+`;
+
 type Props = {
   onClose: () => void;
   isOpen: boolean;
@@ -98,11 +117,46 @@ const editSize = ({ children, onClose, isOpen }: Props) => {
         <Subheader>
           Don't set too much. This data will be read through every two weeks.
           <br />
-          If your PC is not be able to prepare POST proof in a few hours,
-          you will not get any rewards.
+          If your PC can't prepare POST proof in a few hours, you won't get any
+          rewards.
         </Subheader>
         <BgImage src={size} />
-        <Text></Text>
+        <DataWrapper>
+          <Tile
+            heading="Select POS data size"
+            subheader="Gibibytes"
+            footer="more data -> more rewards, but longer data generation and proving"
+          />
+          <CustomNumberInput
+            min={256}
+            max={999999}
+            fontsize={36}
+            height={80}
+            step={64}
+            value={256}
+            onChange={(val) => console.log(val)} //TODO
+          />
+          <SaveButton buttonLeft={55} onClick={() => console.log("save")}/>
+          <CancelButton buttonLeft={45} onClick={() => console.log("cancel")} />
+        </DataWrapper>
+        <FileWrapper>
+          <Tile
+            heading="Select file size"
+            subheader="Mebibytes"
+            footer="POS will be generated across many files"
+          />
+          <CustomNumberInput
+            min={10}
+            max={99999}
+            fontsize={36}
+            height={80}
+            step={1}
+            value={4096}
+            onChange={(val) => console.log(val)} //TODO
+          />
+          <SaveButton buttonLeft={55} onClick={() => console.log("save")}/>
+          <CancelButton buttonLeft={45} onClick={() => console.log("cancel")} />
+        </FileWrapper>
       </Wrapper>
     </Backdrop>
   );
