@@ -101,7 +101,7 @@ const CPUedit = ({ children, onClose, isOpen }: Props) => {
         <CloseButton onClick={onClose}>&times;</CloseButton>
         <Header>How to prepare POST proofs </Header>
         <Subheader>
-          Please note that your CPU will be utilized once every two weeks to
+          Your CPU will be utilized once every two weeks to
           complete POET prooving. Depending on your settings, it might take
           several hours.
         </Subheader>
@@ -119,8 +119,8 @@ const CPUedit = ({ children, onClose, isOpen }: Props) => {
             height={80}
             onChange={(val) => console.log(val)}
           />
-          <SaveButton buttonLeft={55} />
-          <CancelButton buttonLeft={45} />
+          <SaveButton buttonLeft={55} onClick={() => console.log("save")}/>
+          <CancelButton buttonLeft={45} onClick={() => console.log("cancel")}/>
         </CPUWrapper>
         <NoncesWrapper>
           <Tile
@@ -136,8 +136,8 @@ const CPUedit = ({ children, onClose, isOpen }: Props) => {
             value={288}
             onChange={(val) => console.log(val)}
           />
-          <SaveButton buttonLeft={55} />
-          <CancelButton buttonLeft={45} />
+          <SaveButton buttonLeft={55} onClick={() => console.log("save")}/>
+          <CancelButton buttonLeft={45} onClick={() => console.log("cancel")}/>
         </NoncesWrapper>
       </Wrapper>
     </Backdrop>
