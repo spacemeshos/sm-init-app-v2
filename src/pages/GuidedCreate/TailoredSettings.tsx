@@ -15,6 +15,7 @@ import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
 import GPUedit from "./editGPU";
 import CPUedit from "./editCPU";
+import editSize from "./editSize";
 
 const NavProgress = styled.div`
   width: 100%;
@@ -134,7 +135,7 @@ const TailoredSettings: React.FC = () => {
           footer="placeholder"
         />
         <EditButton
-          modalComponent={ErrorModal}
+          modalComponent={editSize}
         />
       </DataSizeWrapper>
     </>
