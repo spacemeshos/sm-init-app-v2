@@ -175,7 +175,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
         className={`decrement`}
         incrementOrder={incrementOrder}
       >
-        <RemoveIcon fontSize="small" />
+        <RemoveIcon/>
       </StyledButton>
       <StyledInput
         type="number"
@@ -201,7 +201,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
         className={`increment`}
         incrementOrder={incrementOrder}
       >
-        <AddIcon fontSize="small" />
+        <AddIcon/>
       </StyledButton>
     </StyledInputRoot>
   );

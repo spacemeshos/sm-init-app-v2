@@ -50,18 +50,6 @@ const Subheader = styled.h2`
   padding: 0px 75px 10px;
 `;
 
-const Text = styled.div`
-  color: ${Colors.white};
-  padding: 20px 75px;
-  margin-top: 10px;
-  text-align: justify;
-  font-family: "Source Code Pro ExtraLight", sans-serif;
-  font-size: 16px;
-  font-weight: 100;
-  line-height: 25px;
-  white-space: pre-wrap;
-`;
-
 const BgImage = styled.img`
   aspect-ratio: 1;
   object-fit: contain;
