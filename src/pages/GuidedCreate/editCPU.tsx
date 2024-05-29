@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Colors from "../../styles/colors";
 import Tile from "../../components/tile";
@@ -84,6 +84,18 @@ const NoncesWrapper = styled.div`
   top: 260px;
 `;
 
+const SelectedValue = styled.span`
+  color: ${Colors.greenLight};
+  font-family: "Source Code Pro", sans-serif;
+  font-size: 36px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  top: 50%;
+  justify-content: center;
+  z-index: 9999;
+`;
+
 type Props = {
   onClose: () => void;
   isOpen: boolean;
@@ -91,8 +103,31 @@ type Props = {
 };
 
 const CPUedit = ({ children, onClose, isOpen }: Props) => {
+  const [cpuValue, setCpuValue] = useState(8);
+  const [noncesValue, setNoncesValue] = useState(288);
+  const [isCpuInputVisible, setIsCpuInputVisible] = useState(true);
+  const [isNoncesInputVisible, setIsNoncesInputVisible] = useState(true);
+
   if (!isOpen) return null;
   const cpu = require("../../assets/cpu.png");
+
+  const handleCancelCpu = () => {
+    setCpuValue(8); // Reset to default value
+    setIsCpuInputVisible(true);
+  };
+
+  const handleSaveCpu = () => {
+    setIsCpuInputVisible(false);
+  };
+
+  const handleCancelNonces = () => {
+    setNoncesValue(288); // Reset to default value
+    setIsNoncesInputVisible(true);
+  };
+
+  const handleSaveNonces = () => {
+    setIsNoncesInputVisible(false);
+  };
 
   return (
     <Backdrop onClick={onClose}>
@@ -101,43 +136,60 @@ const CPUedit = ({ children, onClose, isOpen }: Props) => {
         <CloseButton onClick={onClose}>&times;</CloseButton>
         <Header>How to prepare POST proofs </Header>
         <Subheader>
-          Your CPU will be utilized once every two weeks to
-          complete POET prooving. Depending on your settings, it might take
-          several hours.
+          Your CPU will be utilized once every two weeks to complete POET
+          proving. Depending on your settings, it might take several hours.
         </Subheader>
         <CPUWrapper>
           <Tile
             heading="Select number of CPU cores"
             footer="more CPU cores -> faster proof generation"
           />
-          <CustomNumberInput
-            min={1}
-            max={16}
-            step={1}
-            value={8}
-            fontsize={36}
-            height={80}
-            onChange={(val) => console.log(val)}
-          />
-          <SaveButton buttonLeft={55} onClick={() => console.log("save")}/>
-          <CancelButton buttonLeft={45} onClick={() => console.log("cancel")}/>
+          {isCpuInputVisible ? (
+            <>
+              <CustomNumberInput
+                min={1}
+                max={16}
+                step={1}
+                value={cpuValue}
+                fontsize={36}
+                height={80}
+                onChange={(val) => setCpuValue(val)}
+              />
+              <SaveButton buttonLeft={55} onClick={handleSaveCpu} />
+              <CancelButton buttonLeft={45} onClick={handleCancelCpu} />
+            </>
+          ) : (
+            <>
+              <SelectedValue>{cpuValue}</SelectedValue>
+              <CancelButton buttonLeft={50} onClick={handleCancelCpu} />
+            </>
+          )}
         </CPUWrapper>
         <NoncesWrapper>
           <Tile
             heading="Select number of Nonces"
             footer="more nonces -> more likely proof generated on the first try"
           />
-          <CustomNumberInput
-            min={16}
-            max={999}
-            fontsize={36}
-            height={80}
-            step={16}
-            value={288}
-            onChange={(val) => console.log(val)}
-          />
-          <SaveButton buttonLeft={55} onClick={() => console.log("save")}/>
-          <CancelButton buttonLeft={45} onClick={() => console.log("cancel")}/>
+          {isNoncesInputVisible ? (
+            <>
+              <CustomNumberInput
+                min={16}
+                max={999}
+                step={16}
+                value={noncesValue}
+                fontsize={36}
+                height={80}
+                onChange={(val) => setNoncesValue(val)}
+              />
+              <SaveButton buttonLeft={55} onClick={handleSaveNonces} />
+              <CancelButton buttonLeft={45} onClick={handleCancelNonces} />
+            </>
+          ) : (
+            <>
+              <SelectedValue>{noncesValue}</SelectedValue>
+              <CancelButton buttonLeft={50} onClick={handleCancelNonces} />
+            </>
+          )}
         </NoncesWrapper>
       </Wrapper>
     </Backdrop>
