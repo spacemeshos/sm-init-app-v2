@@ -11,24 +11,24 @@ interface FrameProps {
   onClick?: () => void;
   top?: number;
   left?: number;
-  height: number;
-  width: number;
+  height?: number;
+  width?: number;
   borderColor?: any;
 }
 
 const Wrapper = styled.div<{
   top?: number;
   left?: number;
-  height: number;
-  width: number;
+  height?: number;
+  width?: number;
   borderColor?: string;
 }>`
   background-color: ${Colors.background};
-  position: absolute;
+  position: relative;
   top: ${({ top }) => top}px;
   left: ${({ left }) => left}px;
-  height: ${({ height }) => height}px;
-  width: ${({ width }) => width}px;
+  height: ${({ height }) => height || 100}%;
+  width: ${({ width }) => width || 100}%;
   display: flex;
   justify-content: center;
   flex-direction: row;
