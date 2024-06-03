@@ -11,9 +11,10 @@ const ContainerLeft = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   width: 450px;
   height: 740px;
+  left: 0px;
   position: absolute;
 `;
 
@@ -27,6 +28,7 @@ const ContainerRight = styled.div`
   width: 600px;
   position: absolute;
 `;
+
 const CustomTitle = styled.h1`
   width: 1200px;
   height: 21px;
@@ -45,21 +47,14 @@ const CustomTitle = styled.h1`
 const Image = styled.img`
   width: auto;
   height: 215px;
-  top: 196px;
   position: relative;
+  margin-bottom: 10px;
 `;
 
 const TextWrapper = styled.div`
   width: 300px;
-  top: 443px;
-  position: absolute;
-`;
-
-const PrereqButton = styled.div`
-  height: 60px;
-  top: 500px;
-  width: 300px;
-  position: absolute;
+  position: relative;
+  margin-bottom: 10px;
 `;
 
 const VerticalDivider = styled.div`
@@ -69,7 +64,7 @@ const VerticalDivider = styled.div`
     ${Colors.purpleDark}
   );
   border-image-slice: 1;
-  margin-top: 150px;
+  bottom: 50px;
   left: 450px;
   height: 540px;
   width: 1px;
@@ -153,9 +148,13 @@ const Home: React.FC = () => {
         <TextWrapper>
           <Title text="ARE YOU READY?" />
         </TextWrapper>
-        <PrereqButton>
-          <Button onClick={navigateToReqs} label="Check prerequisites" />
-        </PrereqButton>
+        <Button
+          onClick={navigateToReqs}
+          label="Check prerequisites"
+          width={300}
+          height={60}
+          buttonTop={700}
+        />
       </ContainerLeft>
 
       {/* Right container with hover accordion menus */}
