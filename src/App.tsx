@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import Colors from "./styles/colors";
 import AppRoutes from "./Shared/Routes";
@@ -7,6 +6,8 @@ const AppWrapper = styled.div`
   height: 100%;
   width: 100%;
   position: absolute;
+  align-content: center;
+  justify-content: space-evenly;
   display: flex;
   background-color: ${Colors.background};
 `;
@@ -20,12 +21,7 @@ const FooterDivider = styled.div`
   top: 690px;
   height: 2px;
   width: 1100px;
-  position: absolute;
-  left: 50%;
-  transform: translate(
-    -50%
-  );
-
+  position: relative;
 `;
 
 function App() {
