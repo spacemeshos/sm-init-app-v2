@@ -6,9 +6,6 @@ const AppWrapper = styled.div`
   height: 100%;
   width: 100%;
   position: absolute;
-  align-content: center;
-  justify-content: space-evenly;
-  display: flex;
   background-color: ${Colors.background};
 `;
 const FooterDivider = styled.div`
