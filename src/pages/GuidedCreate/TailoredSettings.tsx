@@ -10,7 +10,6 @@ import { Title } from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Tile from "../../components/tile";
-import ErrorModal from "../../components/error";
 import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
 import GPUedit from "./editGPU";
@@ -42,32 +41,22 @@ const TextWrapper = styled.div`
   letter-spacing: 2px;
 `;
 
-const GPUWrapper = styled.div`
-  height: 309px;
-  width: 300px;
-  position: absolute;
+const ContainerBottom = styled.div`
+  width: 1200px;
+  height: 350px;
   top: 325px;
-  left: 75px;
   display: flex;
-  justify-content: center;
+  flex: none;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-evenly;
+  position: absolute;
 `;
 
-const CPUWrapper = styled.div`
+const TileWrapper = styled.div`
   height: 309px;
   width: 300px;
-  position: absolute;
-  top: 325px;
-  left: 450px;
-  display: flex;
-  justify-content: center;
-`;
-
-const DataSizeWrapper = styled.div`
-  height: 309px;
-  width: 300px;
-  position: absolute;
-  top: 325px;
-  left: 825px;
+  position: relative;
   display: flex;
   justify-content: center;
 `;
@@ -89,6 +78,7 @@ const TailoredSettings: React.FC = () => {
         <BackButton />
         <ForwardButton onClick={navigateToSummary} />
       </NavProgress>
+
       {/* Wrapper for title, subtitle and information icon button */}
       <TextWrapper>
         <Title text="Settings Tailored for Your Hardware" />
@@ -98,46 +88,42 @@ const TailoredSettings: React.FC = () => {
         <TooltipButton
           modalComponent={PosInfo}
           buttonTop={100}
-          buttonLeft={50}
-        />
+         />
       </TextWrapper>
+      
       {/*Bottom part of the page */}
+      <ContainerBottom>
       {/* GPU settings section */}
-      <GPUWrapper>
+      <TileWrapper>
         <Tile
           heading={"How to create POS?"}
           subheader={"placeholder"}
           imageSrc={gpu}
           footer="placeholder"
         />
-        <EditButton
-          modalComponent={GPUedit}
-        />
-      </GPUWrapper>
+        <EditButton modalComponent={GPUedit} />
+      </TileWrapper>
       {/* Post prooving processor settings section */}
-      <CPUWrapper>
+      <TileWrapper>
         <Tile
           heading={"How to prove POS?"}
           subheader={"placeholder"}
           imageSrc={cpu}
           footer="placeholder"
         />
-        <EditButton
-          modalComponent={CPUedit}
-        />
-      </CPUWrapper>
+        <EditButton modalComponent={CPUedit} />
+      </TileWrapper>
       {/* Data size settings section */}
-      <DataSizeWrapper>
+      <TileWrapper>
         <Tile
           heading={"How much POS data?"}
           subheader={"placeholder"}
           imageSrc={files}
           footer="placeholder"
         />
-        <EditButton
-          modalComponent={editSize}
-        />
-      </DataSizeWrapper>
+        <EditButton modalComponent={editSize} />
+      </TileWrapper>
+      </ContainerBottom>
     </>
   );
 };
