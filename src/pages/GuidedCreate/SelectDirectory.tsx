@@ -49,7 +49,10 @@ const DirWrapper = styled.div`
   height: 370px;
   width: 450px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-content: center;
+  align-items: center;
   position: relative;
 `;
 
@@ -83,7 +86,7 @@ const SelectDirectory: React.FC = () => {
   // Functions to navigate to external links
   const navigateToDocs = () => window.open(ExternalLinks.Docs);
   const navigateToDiscord = () => window.open(ExternalLinks.Discord);
-  
+
   // React Router's navigation hook
   const navigate = useNavigate();
   const TailoredSettings = () => navigate("/guided/TailoredSettings");
@@ -129,13 +132,16 @@ const SelectDirectory: React.FC = () => {
       <ContainerBottom>
         {/* Directory selection section */}
         <DirWrapper>
-          <Tile heading={"Where to Store pos data?"} imageSrc={folder} imageTop={40}/>
+          <Tile
+            heading={"Where to Store pos data?"}
+            imageSrc={folder}
+            imageTop={40}
+          />
           <Button
             onClick={handleSelectDirectory}
             label="Choose directory"
-            buttonTop={260}
-            buttonLeft={65}
             width={320}
+            buttonTop={100}
             backgroundColor={Colors.darkerPurple}
             borderColor={Colors.purpleLight}
             /* TO DO */

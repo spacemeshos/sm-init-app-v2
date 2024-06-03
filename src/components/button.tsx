@@ -205,7 +205,7 @@ const ButtonWrapper = styled.button<{
   align-items: center;
   justify-content: center;
   text-align: center;
-  position: absolute;
+  position: relative;
 
   border: 1px solid ${({ borderColor }) => borderColor || "transparent"};
   border-image-slice: 1;

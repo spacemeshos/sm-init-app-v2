@@ -39,7 +39,8 @@ const ButtonsContainer = styled.div<{ $isHovered: boolean }>`
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
+  align-content: center;
   align-items: center;
   width: 100%;
   height: 100px;
@@ -94,7 +95,7 @@ export const HoverAccordionMenu: React.FC<
             key={index}
             onClick={button.onClick}
             label={button.label}
-            buttonTop={40}
+            buttonTop={20}
             buttonLeft={button.left}
             height={60}
             width={button.width}
