@@ -25,7 +25,6 @@ const TextWrapper = styled.div`
   width: 1200px;
   height: 22px;
   top: 170px;
-
   position: absolute;
   color: ${Colors.grayLight};
   font-family: "Source Code Pro ExtraLight", monospace;
@@ -37,69 +36,36 @@ const TextWrapper = styled.div`
 
 const ContainerBottom = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: left;
-  justify-content: flex-start;
+  flex: none;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-evenly;
   top: 278px;
   width: 1200px;
+  height: 400px;
   position: absolute;
 `;
 const DirWrapper = styled.div`
   height: 370px;
   width: 450px;
-  position: absolute;
-  left: 112px;
   display: flex;
   justify-content: center;
+  position: relative;
 `;
 
 const HintWrapper = styled.div`
-  border: 1px solid transparent;
-  background-color: ${Colors.darkerGreen};
-  transition: border-color 0.3s ease;
   height: 370px;
   width: 450px;
-  left: 637px;
-  position: absolute;
-
   display: flex;
   justify-content: center;
-
-  /* Gradient border */
-  border-image: linear-gradient(${Colors.greenLight}, ${Colors.greenDark});
-  border-image-slice: 1;
-
-  @media (max-width: 991px) {
-    white-space: initial;
-  }
-`;
-const HintImage = styled.img`
-  aspect-ratio: 1;
-  object-fit: contain;
-  width: 100px;
-  position: absolute;
-  top: 41px;
-  left: 175px;
-`;
-
-const DirImage = styled.img`
-  aspect-ratio: 1;
-  object-fit: contain;
-  width: 100px;
-  position: absolute;
-  top: 110px;
-  left: 175px;
+  position: relative;
 `;
 
 const HintText = styled.div`
   width: 450px;
   height: 228px;
-  top: 141px;
+  top: 160px;
   position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex-shrink: 0;
   color: ${Colors.greenLight};
   font-family: "Source Code Pro", monospace;
   font-weight: 200;
@@ -163,8 +129,7 @@ const SelectDirectory: React.FC = () => {
       <ContainerBottom>
         {/* Directory selection section */}
         <DirWrapper>
-          <Tile heading={"Where to Store pos data?"} />
-          <DirImage src={folder} />
+          <Tile heading={"Where to Store pos data?"} imageSrc={folder} imageTop={40}/>
           <Button
             onClick={handleSelectDirectory}
             label="Choose directory"
@@ -175,7 +140,6 @@ const SelectDirectory: React.FC = () => {
             borderColor={Colors.purpleLight}
             /* TO DO */
           />
-
           <TooltipButton
             modalText={
               <>
@@ -219,7 +183,7 @@ const SelectDirectory: React.FC = () => {
         </DirWrapper>
         {/* Hint section for additional information */}
         <HintWrapper>
-          <HintImage src={bulb} />
+          <Tile imageSrc={bulb} imageTop={10} />
           <HintText>
             Next, we'll optimize your settings with a quick benchmark to boost
             your rewards and qualification chances every epoch
