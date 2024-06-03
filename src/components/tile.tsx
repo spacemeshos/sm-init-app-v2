@@ -7,6 +7,7 @@ interface TileProps {
   subheader?: string;
   footer?: string;
   imageSrc?: string;
+  imageTop?: number;
   children?: React.ReactNode;
   buttonText?: string;
   onClick?: () => void;
@@ -55,16 +56,17 @@ const SubHeader = styled.h3`
   width: 100%;
 `;
 
-const TileImage = styled.img`
+const TileImage = styled.img<{
+  imageTop?: number}>`
   aspect-ratio: 1;
   object-fit: contain;
   width: 100px;
   position: absolute;
   left: 50%;
-  top: 60%;
+  top: ${({ imageTop }) => imageTop || 60}%;
   transform: translate(
     -50%,
-    -60%
+    -${({ imageTop }) => imageTop || 60}%
   ); // Centers the image both horizontally and vertically
 `;
 const TileElement = styled.div `
@@ -98,6 +100,7 @@ const Tile: React.FC<TileProps> = ({
   heading,
   subheader,
   imageSrc,
+  imageTop,
   footer,
   children,
 }) => {
@@ -105,7 +108,7 @@ const Tile: React.FC<TileProps> = ({
     <TileWrapper>
       <TileHeading>{heading}</TileHeading>
       <SubHeader>{subheader}</SubHeader>
-      {imageSrc && <TileImage src={imageSrc} alt="" />}
+      {imageSrc && <TileImage src={imageSrc} imageTop={imageTop} />}
       <Footer>{footer}</Footer>
       <TileElement>{children}</TileElement>
     </TileWrapper>
