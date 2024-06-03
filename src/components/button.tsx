@@ -22,6 +22,7 @@ interface ButtonProps {
   modalTop?: number;
   modalLeft?: number;
   showModal?: boolean;
+  size?: number;
   modalComponent?: React.ElementType;
 }
 
@@ -107,6 +108,7 @@ const IconButton: React.FC<ButtonProps> = ({
   modalText,
   modalTop,
   modalLeft,
+  size,
   buttonTop = 96,
   buttonLeft = 50,
   modalComponent: CustomModal,
@@ -136,7 +138,7 @@ const IconButton: React.FC<ButtonProps> = ({
           buttonTop={buttonTop}
           buttonLeft={buttonLeft}
         >
-          <ButtonIcon src={iconSrc} />
+          <ButtonIcon src={iconSrc} size={size}/>
         </IconButtonWrapper>
       )}
       {isModalOpen && showModal && (CustomModal ? (
@@ -251,9 +253,9 @@ const NavWrapper = styled.button<{ top?: number; left?: number }>`
   position: absolute;
 `;
 
-const ButtonIcon = styled.img`
+const ButtonIcon = styled.img<{size?: number}>`
   aspect-ratio: 1;
-  width: 30px;
+  width: ${({ size }) => size || 30}px;
 `;
 
 // Styled component for the icon button wrapper
