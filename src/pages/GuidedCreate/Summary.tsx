@@ -1,11 +1,9 @@
 import * as React from "react";
 import styled from "styled-components";
-import { BackButton, Button } from "../../components/button";
+import { BackButton, IconButton } from "../../components/button";
 import { Subheader, Title } from "../../components/titles";
-import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Frame from "../../components/frames";
-import Image from "../../components/image";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -20,18 +18,29 @@ const TextWrapper = styled.div`
   position: absolute;
 `;
 
-const ContainerBottom = styled.div`
+const ContainerSummary = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  top: 290px;
-  width: 1200px;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  left: 75px;
+  top: 300px;
+  width: 675px;
+  height: 320px;
+  position: absolute;
+`;
+const ContainerStart = styled.div`
+  left: 800px;
+  top: 300px;
+  width: 300px;
+  height: 300px;
   position: absolute;
 `;
 
 const Summary: React.FC = () => {
-  const rocket = require("../../assets/rocket-lunch.png");
+  const rocketbutton = require("../../assets/blastoff.png");
+
   return (
     <>
       <NavProgress>
@@ -43,63 +52,36 @@ const Summary: React.FC = () => {
         <Subheader text={"Check twice, adjust if needed, and blast off!"} />
       </TextWrapper>
 
-      <ContainerBottom>
+      <ContainerSummary>
         <Frame
-          left={75}
-          height={80}
-          width={675}
-          heading="DATA"
+          height={25}
+          heading=" POS DATA"
           subheader="placeholder summary"
         />
         <Frame
-          top={80}
-          left={75}
-          height={80}
-          width={675}
+          height={25}
           heading="POS Directory"
           subheader="placeholder summary"
         />
         <Frame
-          top={160}
-          left={75}
-          height={80}
-          width={675}
+          height={25}
           heading="POS Generation"
           subheader="placeholder summary"
         />
         <Frame
-          top={240}
-          left={75}
-          height={80}
-          width={675}
+          height={25}
           heading="POST Proving"
           subheader="placeholder summary"
         />
-        <Frame
-          top={80}
-          height={80}
-          width={300}
-          left={810}
-          borderColor={Colors.purpleDark}
-        >
-          {/* Frame for rocket image and start button */}
-          <Image
-            src={rocket}
-            opacity={0.1}
-            height={520}
-            left={-150}
-            top={-210}
-          />
-          <Subheader text={"Ready?"} left={10} />
-          <Button
-            label={"start"}
-            buttonTop={80}
-            height={80}
-            borderColor={Colors.purpleLight}
-            backgroundColor={Colors.darkerPurple}
-          />
-        </Frame>
-      </ContainerBottom>
+      </ContainerSummary>
+      <ContainerStart>
+        <IconButton
+          iconSrc={rocketbutton}
+          buttonTop={40}
+          buttonLeft={45}
+          size={150}
+        />
+      </ContainerStart>
     </>
   );
 };
