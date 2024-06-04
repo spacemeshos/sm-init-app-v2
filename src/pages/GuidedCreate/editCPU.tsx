@@ -68,32 +68,34 @@ const CloseButton = styled.button`
   font-size: 28px;
 `;
 
-const CPUWrapper = styled.div`
-  height: 370px;
-  width: 450px;
+const BottomContainer = styled.div`
+  height: 400px;
+  width: 1200px;
   position: absolute;
-  left: 112px;
   top: 260px;
-`;
-
-const NoncesWrapper = styled.div`
-  height: 370px;
-  width: 450px;
-  position: absolute;
-  left: 637px;
-  top: 260px;
-`;
-
-const SelectedValue = styled.span`
-  color: ${Colors.greenLight};
-  font-family: "Source Code Pro", sans-serif;
-  font-size: 36px;
-  height: 80px;
+  left: 0px;
   display: flex;
-  align-items: center;
-  top: 50%;
+  justify-content: space-evenly;
+  flex-direction: row;
+`;
+
+const TileWrapper = styled.div`
+  height: 370px;
+  width: 450px;
+  position: relative;
+  display: flex;
   justify-content: center;
-  z-index: 9999;
+  align-content: center;
+  align-items: center;
+  flex-direction: row;
+`;
+
+const SelectedValue = styled.h1`
+  color: ${Colors.greenLight};
+  font-family: "Source Code Pro ExtraLight", sans-serif;
+  font-weight: 300;
+  font-size: 50px;
+  position: relative;
 `;
 
 type Props = {
@@ -102,8 +104,8 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const CPUedit = ({ children, onClose, isOpen }: Props) => {
-  const [cpuValue, setCpuValue] = useState(8);
+const CPUedit = ({ onClose, isOpen }: Props) => {
+  const [cpuValue, setCpuValue] = useState(8); //placeholder
   const [noncesValue, setNoncesValue] = useState(288);
   const [isCpuInputVisible, setIsCpuInputVisible] = useState(true);
   const [isNoncesInputVisible, setIsNoncesInputVisible] = useState(true);
@@ -139,58 +141,60 @@ const CPUedit = ({ children, onClose, isOpen }: Props) => {
           Your CPU will be utilized once every two weeks to complete POET
           proving. Depending on your settings, it might take several hours.
         </Subheader>
-        <CPUWrapper>
-          <Tile
-            heading="Select number of CPU cores"
-            footer="more CPU cores -> faster proof generation"
-          />
-          {isCpuInputVisible ? (
-            <>
-              <CustomNumberInput
-                min={1}
-                max={16}
-                step={1}
-                value={cpuValue}
-                fontsize={36}
-                height={80}
-                onChange={(val) => setCpuValue(val)}
-              />
-              <SaveButton buttonLeft={55} onClick={handleSaveCpu} />
-              <CancelButton buttonLeft={45} onClick={handleCancelCpu} />
-            </>
-          ) : (
-            <>
-              <SelectedValue>{cpuValue}</SelectedValue>
-              <CancelButton buttonLeft={50} onClick={handleCancelCpu} />
-            </>
-          )}
-        </CPUWrapper>
-        <NoncesWrapper>
-          <Tile
-            heading="Select number of Nonces"
-            footer="more nonces -> more likely proof generated on the first try"
-          />
-          {isNoncesInputVisible ? (
-            <>
-              <CustomNumberInput
-                min={16}
-                max={999}
-                step={16}
-                value={noncesValue}
-                fontsize={36}
-                height={80}
-                onChange={(val) => setNoncesValue(val)}
-              />
-              <SaveButton buttonLeft={55} onClick={handleSaveNonces} />
-              <CancelButton buttonLeft={45} onClick={handleCancelNonces} />
-            </>
-          ) : (
-            <>
-              <SelectedValue>{noncesValue}</SelectedValue>
-              <CancelButton buttonLeft={50} onClick={handleCancelNonces} />
-            </>
-          )}
-        </NoncesWrapper>
+        <BottomContainer>
+          <TileWrapper>
+            <Tile
+              heading="Select number of CPU cores"
+              footer="more CPU cores -> faster proof generation"
+            />
+            {isCpuInputVisible ? (
+              <>
+                <CustomNumberInput
+                  min={1}
+                  max={16}
+                  step={1}
+                  value={cpuValue}
+                  fontsize={36}
+                  height={80}
+                  onChange={(val) => setCpuValue(val)}
+                />
+                <SaveButton buttonLeft={55} onClick={handleSaveCpu} />
+                <CancelButton buttonLeft={45} onClick={handleCancelCpu} />
+              </>
+            ) : (
+              <>
+                <SelectedValue>{cpuValue}</SelectedValue>
+                <CancelButton buttonLeft={50} onClick={handleCancelCpu} />
+              </>
+            )}
+          </TileWrapper>
+          <TileWrapper>
+            <Tile
+              heading="Select number of Nonces"
+              footer="more nonces -> more likely proof generated on the first try"
+            />
+            {isNoncesInputVisible ? (
+              <>
+                <CustomNumberInput
+                  min={16}
+                  max={9999}
+                  step={16}
+                  value={noncesValue}
+                  fontsize={36}
+                  height={80}
+                  onChange={(val) => setNoncesValue(val)}
+                />
+                <SaveButton buttonLeft={55} onClick={handleSaveNonces} />
+                <CancelButton buttonLeft={45} onClick={handleCancelNonces} />
+              </>
+            ) : (
+              <>
+                <SelectedValue>{noncesValue}</SelectedValue>
+                <CancelButton buttonLeft={50} onClick={handleCancelNonces} />
+              </>
+            )}
+          </TileWrapper>
+        </BottomContainer>
       </Wrapper>
     </Backdrop>
   );
