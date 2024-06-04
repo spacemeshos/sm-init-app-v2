@@ -4,6 +4,7 @@ import { BackButton, IconButton } from "../../components/button";
 import { Subheader, Title } from "../../components/titles";
 import ProgressBar from "../../components/progress";
 import Frame from "../../components/frames";
+import Confirmation from "../../components/confirmation";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -80,6 +81,7 @@ const Summary: React.FC = () => {
           buttonTop={40}
           buttonLeft={45}
           size={150}
+          modalComponent={Confirmation}
         />
       </ContainerStart>
     </>
