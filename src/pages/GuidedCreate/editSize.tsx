@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Colors from "../../styles/colors";
 import Tile from "../../components/tile";
@@ -71,20 +71,34 @@ const CloseButton = styled.button`
   font-size: 28px;
 `;
 
-const DataWrapper = styled.div`
-  height: 370px;
-  width: 450px;
+const BottomContainer = styled.div`
+  height: 400px;
+  width: 1200px;
   position: absolute;
-  left: 112px;
   top: 260px;
+  left: 0px;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
 `;
 
-const FileWrapper = styled.div`
+const TileWrapper = styled.div`
   height: 370px;
   width: 450px;
-  position: absolute;
-  left: 637px;
-  top: 260px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  flex-direction: row;
+`;
+
+const SelectedValue = styled.h1`
+  color: ${Colors.greenLight};
+  font-family: "Source Code Pro ExtraLight", sans-serif;
+  font-weight: 300;
+  font-size: 50px;
+  position: relative;
 `;
 
 type Props = {
@@ -93,9 +107,32 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const editSize = ({ children, onClose, isOpen }: Props) => {
+const editSize = ({ onClose, isOpen }: Props) => {
+  const [dataSizeValue, setPOSsizeValue] = useState(256);
+  const [fileSizeValue, setFileSizeValue] = useState(4096);
+  const [isPOSInputVisible, setIsPOSInputVisible] = useState(true);
+  const [isFileInputVisible, setIsFileInputVisible] = useState(true);
+
   if (!isOpen) return null;
   const size = require("../../assets/duplicate.png");
+
+  const handleCancelCpu = () => {
+    setPOSsizeValue(256); // Reset to default value
+    setIsPOSInputVisible(true);
+  };
+
+  const handleSaveCpu = () => {
+    setIsPOSInputVisible(false);
+  };
+
+  const handleCancelNonces = () => {
+    setFileSizeValue(4096); // Reset to default value
+    setIsFileInputVisible(true);
+  };
+
+  const handleSaveNonces = () => {
+    setIsFileInputVisible(false);
+  };
 
   return (
     <Backdrop onClick={onClose}>
@@ -109,42 +146,62 @@ const editSize = ({ children, onClose, isOpen }: Props) => {
           rewards.
         </Subheader>
         <BgImage src={size} />
-        <DataWrapper>
-          <Tile
-            heading="Select POS data size"
-            subheader="Gibibytes"
-            footer="more data -> more rewards, but longer data generation and proving"
-          />
-          <CustomNumberInput
-            min={256}
-            max={999999}
-            fontsize={36}
-            height={80}
-            step={64}
-            value={256}
-            onChange={(val) => console.log(val)} //TODO
-          />
-          <SaveButton buttonLeft={55} onClick={() => console.log("save")}/>
-          <CancelButton buttonLeft={45} onClick={() => console.log("cancel")} />
-        </DataWrapper>
-        <FileWrapper>
-          <Tile
-            heading="Select file size"
-            subheader="Mebibytes"
-            footer="POS will be stored across [XXX] files" //TODO
-          />
-          <CustomNumberInput
-            min={10}
-            max={99999}
-            fontsize={36}
-            height={80}
-            step={1}
-            value={4096}
-            onChange={(val) => console.log(val)} //TODO
-          />
-          <SaveButton buttonLeft={55} onClick={() => console.log("save")}/>
-          <CancelButton buttonLeft={45} onClick={() => console.log("cancel")} />
-        </FileWrapper>
+        <BottomContainer>
+          <TileWrapper>
+            <Tile
+              heading="Select POS data size"
+              subheader="Gibibytes"
+              footer="more data -> more rewards, but longer data generation and proving"
+            />
+            {isPOSInputVisible ? (
+              <>
+                <CustomNumberInput
+                  min={256}
+                  max={999999}
+                  fontsize={36}
+                  height={80}
+                  step={64}
+                  value={256}
+                  onChange={(val) => setPOSsizeValue(val)}
+                />
+                <SaveButton buttonLeft={55} onClick={handleSaveCpu} />
+                <CancelButton buttonLeft={45} onClick={handleCancelCpu} />
+              </>
+            ) : (
+              <>
+                <SelectedValue>{dataSizeValue}</SelectedValue>
+                <CancelButton buttonLeft={50} onClick={handleCancelCpu} />
+              </>
+            )}
+          </TileWrapper>
+          <TileWrapper>
+            <Tile
+              heading="Select file size"
+              subheader="Mebibytes"
+              footer="POS will be stored across [XXX] files" //TODO
+            />
+            {isFileInputVisible ? (
+              <>
+                <CustomNumberInput
+                  min={10}
+                  max={99999}
+                  fontsize={36}
+                  height={80}
+                  step={1}
+                  value={4096}
+                  onChange={(val) => setFileSizeValue(val)}
+                />
+                <SaveButton buttonLeft={55} onClick={handleSaveNonces} />
+                <CancelButton buttonLeft={45} onClick={handleCancelNonces} />
+              </>
+            ) : (
+              <>
+                <SelectedValue>{fileSizeValue}</SelectedValue>
+                <CancelButton buttonLeft={50} onClick={handleCancelNonces} />
+              </>
+            )}
+          </TileWrapper>
+        </BottomContainer>
       </Wrapper>
     </Backdrop>
   );
