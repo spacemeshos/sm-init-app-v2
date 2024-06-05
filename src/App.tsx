@@ -18,6 +18,7 @@ const FooterDivider = styled.div`
   top: 690px;
   height: 2px;
   width: 1100px;
+  margin: 0px 50px;
   position: absolute;
 `;
 
