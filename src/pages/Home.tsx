@@ -94,7 +94,7 @@ const Home: React.FC = () => {
     },
     {
       label: "Advanced Mode",
-      onClick: () => console.log("Button 2 clicked"),
+      onClick: () => navigate("advanced/SetupSize"),
       width: 240,
     },
   ];

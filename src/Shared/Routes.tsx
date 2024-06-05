@@ -3,6 +3,8 @@ import Home from "../pages/Home";
 import SelectDirectory from "../pages/GuidedCreate/SelectDirectory";
 import TailoredSettings from "../pages/GuidedCreate/TailoredSettings";
 import Summary from "../pages/GuidedCreate/Summary";
+import {SetupSize, SetupProving} from "../components/setupPOS";
+
 
 const AppRoutes = () => (
   <BrowserRouter>
@@ -11,6 +13,8 @@ const AppRoutes = () => (
       <Route path="/guided/SelectDirectory" element={<SelectDirectory />} />
       <Route path="/guided/TailoredSettings" element={<TailoredSettings />} />
       <Route path="/guided/Summary" element={<Summary />} />
+      <Route path="/advanced/SetupSize" element={<SetupSize/>}/>
+      <Route path="/advanced/Proving" element={<SetupProving/>}/>
     </Routes>
   </BrowserRouter>
 );
