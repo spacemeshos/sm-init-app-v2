@@ -76,7 +76,7 @@ const AdvSelectDirectory: React.FC = () => {
 
   // React Router's navigation hook
   const navigate = useNavigate();
-  const TailoredSettings = () => navigate("/guided/TailoredSettings");
+  const AdvSetupSize = () => navigate("/advanced/SetupSize");
 
   // Function to handle directory selection using Tauri API
   const handleSelectDirectory = async () => {
@@ -90,9 +90,9 @@ const AdvSelectDirectory: React.FC = () => {
   return (
     <>
       <NavProgress>
-        <ProgressBar progress={33} />
+        <ProgressBar progress={25} />
         <BackButton />
-        <ForwardButton onClick={TailoredSettings} />
+        <ForwardButton onClick={AdvSetupSize} />
       </NavProgress>
       {/* Text wrapper for title and links to documentation and Discord */}
       <TextWrapper>
@@ -170,7 +170,6 @@ const AdvSelectDirectory: React.FC = () => {
             borderColor={Colors.purpleLight}
             /* TO DO */
           />
-
           <TooltipButton
             modalText={
               <>
