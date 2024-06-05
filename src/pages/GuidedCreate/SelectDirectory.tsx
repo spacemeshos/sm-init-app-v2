@@ -159,32 +159,11 @@ const SelectDirectory: React.FC = () => {
                 <br />
                 Consider a dedicated disk or no other activity during proving
                 windows for disk longevity.
-                <br />
-                <br />
-                Read more:{" "}
-                <a
-                  onClick={navigateToDocs}
-                  role="button"
-                  tabIndex={0}
-                  style={{ cursor: "pointer", textDecoration: "underline" }}
-                >
-                  Spacemesh docs
-                </a>
-                {", and "}
-                <a
-                  onClick={navigateToDiscord}
-                  role="button"
-                  tabIndex={0}
-                  style={{ cursor: "pointer", textDecoration: "underline" }}
-                >
-                  Discord FAQ
-                </a>
               </>
             }
             modalTop={1}
             modalLeft={1}
             buttonTop={96}
-            buttonLeft={50}
           />
         </DirWrapper>
         {/* Hint section for additional information */}
@@ -197,7 +176,6 @@ const SelectDirectory: React.FC = () => {
           <TooltipButton
             modalComponent={PosInfo}
             buttonTop={96}
-            buttonLeft={50}
           />
         </HintWrapper>
       </ContainerBottom>
