@@ -27,8 +27,8 @@ const Wrapper = styled.div<{
   align-items: center;
   background-color: ${Colors.background};
   z-index: ${({ isOpen }) => (isOpen ? 1000 : -1)}
-  width: ${({ width }) => width || 90}%;
-  height: ${({ height }) => height || 90}%;
+  width: ${({ width }) => width || 98}%;
+  height: ${({ height }) => height || 98}%;
 `;
 
 const Header = styled.h1`
