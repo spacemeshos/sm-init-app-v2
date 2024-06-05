@@ -88,15 +88,21 @@ const Home: React.FC = () => {
   // Button configurations for the "Create" menu
   const CreateButtons = [
     {
-      label: "Guided Mode",
+      label: "Guided Setup",
       onClick: () => navigate("/guided/SelectDirectory"),
       width: 240,
     },
     {
-      label: "Advanced Mode",
-      onClick: () => navigate("advanced/SetupSize"),
+      label: "Advanced Setup",
+      onClick: () => navigate("advanced/Directory"),
       width: 240,
     },
+    {
+      label: "Split In Subsets",
+      onClick: () => console.log("Button 2 clicked"),
+      width: 240,
+    },
+
   ];
   // Button configurations for the "Edit" menu
   const EditButtons = [
@@ -110,6 +116,12 @@ const Home: React.FC = () => {
       onClick: () => console.log("Button 2 clicked"),
       width: 240,
     },
+    {
+      label: "Find VRF Nonce",
+      onClick: () => console.log("Button 2 clicked"),
+      width: 240,
+    },
+
   ];
   // Button configurations for the "Check" menu
   const CheckButtons = [

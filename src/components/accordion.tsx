@@ -98,7 +98,7 @@ export const HoverAccordionMenu: React.FC<
             buttonTop={20}
             buttonLeft={button.left}
             height={60}
-            width={button.width}
+            width={160}
           ></Button>
         ))}
       </ButtonsContainer>
