@@ -14,6 +14,8 @@ import { ExternalLinks } from "../../Shared/Constants";
 import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
 import { invoke } from "@tauri-apps/api";
+import { open } from '@tauri-apps/api/shell';
+
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -84,8 +86,10 @@ const SelectDirectory: React.FC = () => {
   const bulb = require("../../assets/light-bulb.png");
 
   // Functions to navigate to external links
-  const navigateToDocs = () => window.open(ExternalLinks.Docs);
-  const navigateToDiscord = () => window.open(ExternalLinks.Discord);
+  const navigateToDocs = () => open(ExternalLinks.Docs);
+  const navigateToDiscord = () => open(ExternalLinks.Discord);
+
+
 
   // React Router's navigation hook
   const navigate = useNavigate();
