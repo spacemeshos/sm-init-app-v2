@@ -36,7 +36,7 @@ const TileHeading = styled.h2`
   text-align: center;
   text-transform: uppercase;
   font-size: 18px;
-  font-weight: 100;
+  font-weight: 200;
   letter-spacing: 3px;
   width: 100%;
   top: 0px;
