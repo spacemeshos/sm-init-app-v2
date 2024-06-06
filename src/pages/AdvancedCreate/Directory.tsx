@@ -90,7 +90,7 @@ const AdvSelectDirectory: React.FC = () => {
   return (
     <>
       <NavProgress>
-        <ProgressBar progress={25} />
+        <ProgressBar progress={20} />
         <BackButton />
         <ForwardButton onClick={AdvSetupSize} />
       </NavProgress>
