@@ -11,7 +11,7 @@ const BgImage = styled.img`
   width: 250px;
   position: absolute;
   left: 20px;
-  top: 20px;
+  top: -200px;
   opacity: 0.02;
 `;
 
@@ -19,7 +19,7 @@ const BottomContainer = styled.div`
   height: 400px;
   width: 1200px;
   position: absolute;
-  top: 260px;
+  top: 270px;
   left: 0px;
   display: flex;
   justify-content: space-evenly;
