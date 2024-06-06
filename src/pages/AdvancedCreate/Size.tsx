@@ -16,7 +16,7 @@ const NavProgress = styled.div`
 const TextWrapper = styled.div`
   width: 1200px;
   height: 22px;
-  top: 170px;
+  top: 150px;
   position: absolute;
   color: ${Colors.grayLight};
   font-family: "Source Code Pro ExtraLight", monospace;
@@ -26,38 +26,24 @@ const TextWrapper = styled.div`
   letter-spacing: 2px;
 `;
 
-const ContainerBottom = styled.div`
-  display: flex;
-  flex: none;
-  flex-direction: row;
-  align-content: center;
-  justify-content: space-evenly;
-  top: 278px;
-  width: 1200px;
-  height: 400px;
-  position: absolute;
-`;
 const AdvSetupSize: React.FC = () => {
   // React Router's navigation hook
   const navigate = useNavigate();
-  const SetupProvider = () => navigate("advanced/Provider");
+  const SetupProvider = () => navigate("/advanced/Proving");
 
   return (
     <>
       <NavProgress>
-        <ProgressBar progress={50} />
+        <ProgressBar progress={40} />
         <BackButton />
         <ForwardButton onClick={SetupProvider} />
       </NavProgress>
       {/* Text wrapper for title and links to documentation and Discord */}
       <TextWrapper>
-        <Title text="Set up POS data size" top={-20} />
-        Whenever you feel lost, remember to read the tips,{" "}
+        <Title text="Set up POS data size" />
+        Keep in mind your hardware maximum capabilities
       </TextWrapper>
-      <ContainerBottom>
       <SetupSize />
-
-      </ContainerBottom>
     </>
   );
 };

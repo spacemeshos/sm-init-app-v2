@@ -15,8 +15,8 @@ const NavProgress = styled.div`
 
 const TextWrapper = styled.div`
   width: 1200px;
-  height: 22px;
-  top: 170px;
+  height: 20px;
+  top: 150px;
   position: absolute;
   color: ${Colors.grayLight};
   font-family: "Source Code Pro ExtraLight", monospace;
@@ -26,38 +26,26 @@ const TextWrapper = styled.div`
   letter-spacing: 2px;
 `;
 
-const ContainerBottom = styled.div`
-  display: flex;
-  flex: none;
-  flex-direction: row;
-  align-content: center;
-  justify-content: space-evenly;
-  top: 278px;
-  width: 1200px;
-  height: 400px;
-  position: absolute;
-`;
 const AdvSetupProving: React.FC = () => {
   // React Router's navigation hook
   const navigate = useNavigate();
-  const AdvSetupProving = () => navigate("advanced/GPU");
+  const AdvSetupProving = () => navigate("/advanced/Provider");
 
   return (
     <>
       <NavProgress>
-        <ProgressBar progress={50} />
+        <ProgressBar progress={60} />
         <BackButton />
         <ForwardButton onClick={AdvSetupProving} />
       </NavProgress>
       {/* Text wrapper for title and links to documentation and Discord */}
       <TextWrapper>
-        <Title text="Set up POST proving" top={-20} />
-        Whenever you feel lost, remember to read the tips,{" "}
+        <Title text="Set up POST proving" />
+        Your CPU will be utilized once every two weeks to complete POET proving.
+        <br/>
+        Depending on your settings, it might take several hours.
       </TextWrapper>
-      <ContainerBottom>
-      <SetupProving/>
-
-      </ContainerBottom>
+      <SetupProving />
     </>
   );
 };
