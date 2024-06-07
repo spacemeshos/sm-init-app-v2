@@ -8,18 +8,18 @@
   },
   "package": {
     "productName": "sm-init-app-v2",
-    "version": "0.1.0"
+    "version": "1.2.5"
   },
   "tauri": {
     "allowlist": {
       "shell": {
-        "all": false,
-        "execute": false,
+        "all": true,
+        "execute": true,
         "open": true,
         "scope": [],
         "sidecar": false
       },
-      "all": false
+      "all": true
     },
     "bundle": {
       "active": true,
@@ -48,7 +48,7 @@
       }
     },
     "security": {
-      "csp": null
+      "csp": "default-src blob: data: filesystem: ws: http: https: 'unsafe-eval' 'unsafe-inline'"
     },
     "updater": {
       "active": false

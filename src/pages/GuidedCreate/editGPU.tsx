@@ -1,6 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import Colors from "../../styles/colors";
+import usePostCli from "../../hooks/usepostcli";
+import { Button } from "../../components/button";
+
 
 const Backdrop = styled.div`
   width: 100%;
@@ -47,18 +50,6 @@ const Subheader = styled.h2`
   padding: 0px 75px 10px;
 `;
 
-const Text = styled.div`
-  color: ${Colors.white};
-  padding: 20px 75px;
-  margin-top: 10px;
-  text-align: justify;
-  font-family: "Source Code Pro ExtraLight", sans-serif;
-  font-size: 16px;
-  font-weight: 100;
-  line-height: 25px;
-  white-space: pre-wrap;
-`;
-
 const BgImage = styled.img`
   aspect-ratio: 1;
   object-fit: contain;
@@ -86,9 +77,15 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const GPUedit = ({ children, onClose, isOpen }: Props) => {
+// GPUedit component
+const GPUedit = ({ onClose, isOpen }: Props) => {
+  const { run, response, loading, error } = usePostCli();
+
+const handleButtonClick = () => {
+    run(['-printProviders']); 
+};
   if (!isOpen) return null;
-  const gpu = require("../../assets/graphics-card.png");
+  const gpu = require('../../assets/graphics-card.png');
 
   return (
     <Backdrop onClick={onClose}>
@@ -101,7 +98,14 @@ const GPUedit = ({ children, onClose, isOpen }: Props) => {
           During this time, it will not be available for other tasks.
         </Subheader>
         <BgImage src={gpu} />
-        <Text></Text>
+        <Button onClick={handleButtonClick} label="run command" buttonTop={200} buttonLeft={60}/>
+        <div>
+            <button onClick={handleButtonClick}>Run Command</button>
+            {loading && <p>Loading...</p>}
+            {response && <p>Response: {response}</p>}
+            {error && <p>Error: {error}</p>}
+
+        </div>
       </Wrapper>
     </Backdrop>
   );
