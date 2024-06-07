@@ -11,5 +11,6 @@ export enum ExternalLinks {
     OpenCLWindowsInstallGuide = 'https://sasview.org/docs/old_docs/4.1.2/user/opencl_installation.html',
     OpenCLUbuntuInstallGuide = 'https://saturncloud.io/blog/how-to-install-cudaopencl-on-ubuntu-installed-on-a-usb-drive/#installing-opencl',
     Requirements = 'https://docs.spacemesh.io/docs/start/requirements',
-    Docs = 'https://docs.spacemesh.io/docs/start'
+    Docs = 'https://docs.spacemesh.io/docs/start',
+    Report = 'https://github.com/spacemeshos/sm-init-app-v2/issues/new'
   }
