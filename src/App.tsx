@@ -29,7 +29,7 @@ const Footer = styled.div`
   position: fixed;
   width: 1100px;
   height: 30px;
-  top: 700px;
+  top: 690px;
   left: 50px;
   display: flex;
   flex-direction: row;
