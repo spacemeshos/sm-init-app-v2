@@ -9,8 +9,6 @@
     "url": "https://spacemesh.io/"
   },
   "dependencies": {
-    "@mui/icons-material": "^5.15.18",
-    "@mui/material": "^5.15.18",
     "@tauri-apps/api": "^1.5.5",
     "@tauri-apps/cli": "^1.5.14",
     "@types/react": "^18.3.3",
@@ -19,6 +17,7 @@
     "react-router-dom": "^6.23.0",
     "react-scripts": "5.0.1",
     "styled-components": "^6.1.11",
+    "styled-icons": "^10.47.1",
     "typescript": "^5.4.5"
   },
   "resolutions": {
