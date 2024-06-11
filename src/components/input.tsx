@@ -1,6 +1,4 @@
 import * as React from "react";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
 import Colors from "../styles/colors";
 import styled from "styled-components";
 
@@ -34,7 +32,7 @@ const StyledInputRoot = styled.div<{ height: number; width: number }>`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  `;
+`;
 
 const StyledInput = styled.input<{
   inputColor: string;
@@ -82,8 +80,8 @@ const StyledInput = styled.input<{
 const StyledButton = styled.button<{
   buttonColor: string;
   buttonHoverColor: string;
-  height : number;
-  width : number;
+  height: number;
+  width: number;
   borderColor: string;
   incrementOrder: number;
 }>`
@@ -118,6 +116,14 @@ const StyledButton = styled.button<{
   &.increment {
     order: ${(props) => props.incrementOrder};
   }
+`;
+
+const Text = styled.h1`
+  color: ${Colors.grayLight};
+  font-family: "Source Code Pro", sans-serif;
+  text-align: center;
+  font-size: 26px;
+  position: relative;
 `;
 
 const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
@@ -175,7 +181,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
         className={`decrement`}
         incrementOrder={incrementOrder}
       >
-        <RemoveIcon/>
+        <Text>-</Text>
       </StyledButton>
       <StyledInput
         type="number"
@@ -201,7 +207,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
         className={`increment`}
         incrementOrder={incrementOrder}
       >
-        <AddIcon/>
+        <Text>+</Text>
       </StyledButton>
     </StyledInputRoot>
   );
