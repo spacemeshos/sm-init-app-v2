@@ -8,7 +8,7 @@
 fn run_postcli_command(args: Vec<String>) -> Result<String, String> {
     use std::process::Command;
     
-    let output = Command::new("/Users/monikasmolarek/SM/sm-init-app-v2/src-tauri/src/postcli")
+    let output = Command::new("src-tauri/src/postcli")
         .args(&args)
         .output();
 
