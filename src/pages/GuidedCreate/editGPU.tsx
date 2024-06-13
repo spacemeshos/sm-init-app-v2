@@ -1,9 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Colors from "../../styles/colors";
 import usePostCli from "../../hooks/usepostcli";
-import { Button } from "../../components/button";
-
 
 const Backdrop = styled.div`
   width: 100%;
@@ -81,11 +79,14 @@ type Props = {
 const GPUedit = ({ onClose, isOpen }: Props) => {
   const { run, response, loading, error } = usePostCli();
 
-const handleButtonClick = () => {
-    run(['-printProviders']); 
-};
+  useEffect(() => {
+    if (isOpen) {
+      run(["-printProviders"]);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
-  const gpu = require('../../assets/graphics-card.png');
+  const gpu = require("../../assets/graphics-card.png");
 
   return (
     <Backdrop onClick={onClose}>
@@ -98,13 +99,10 @@ const handleButtonClick = () => {
           During this time, it will not be available for other tasks.
         </Subheader>
         <BgImage src={gpu} />
-        <Button onClick={handleButtonClick} label="run command" buttonTop={200} buttonLeft={60}/>
         <div>
-            <button onClick={handleButtonClick}>Run Command</button>
-            {loading && <p>Loading...</p>}
-            {response && <p>Response: {response}</p>}
-            {error && <p>Error: {error}</p>}
-
+          {loading && <p>Loading...</p>}
+          {response && <p>Response: {response}</p>}
+          {error && <p>Error: {error}</p>}
         </div>
       </Wrapper>
     </Backdrop>
