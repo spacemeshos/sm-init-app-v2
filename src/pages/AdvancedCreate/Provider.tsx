@@ -5,6 +5,7 @@ import { Title } from "../../components/titles";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import { useNavigate } from "react-router-dom";
+import { SetupGPU } from "../../components/setupPOS";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -44,6 +45,7 @@ const AdvSetupProvider: React.FC = () => {
         generated. <br />
         During this time, it will not be available for other tasks.
       </TextWrapper>
+      <SetupGPU isOpen={true} />
     </>
   );
 };

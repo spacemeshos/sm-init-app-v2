@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import Colors from "../../styles/colors";
-import usePostCli from "../../hooks/usepostcli";
+import { SetupGPU } from "../../components/setupPOS";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -48,16 +48,6 @@ const Subheader = styled.h2`
   padding: 0px 75px 10px;
 `;
 
-const BgImage = styled.img`
-  aspect-ratio: 1;
-  object-fit: contain;
-  width: 250px;
-  position: absolute;
-  left: 20px;
-  top: 20px;
-  opacity: 0.02;
-`;
-
 const CloseButton = styled.button`
   position: absolute;
   top: 10px;
@@ -68,25 +58,14 @@ const CloseButton = styled.button`
   cursor: pointer;
   font-size: 28px;
 `;
-
 type Props = {
   onClose: () => void;
   isOpen: boolean;
   children?: React.ReactNode;
 };
 
-// GPUedit component
 const GPUedit = ({ onClose, isOpen }: Props) => {
-  const { run, response, loading, error } = usePostCli();
-
-  useEffect(() => {
-    if (isOpen) {
-      run(["-printProviders"]);
-    }
-  }, [isOpen]);
-
   if (!isOpen) return null;
-  const gpu = require("../../assets/graphics-card.png");
 
   return (
     <Backdrop onClick={onClose}>
@@ -98,12 +77,7 @@ const GPUedit = ({ onClose, isOpen }: Props) => {
           generated. <br />
           During this time, it will not be available for other tasks.
         </Subheader>
-        <BgImage src={gpu} />
-        <div>
-          {loading && <p>Loading...</p>}
-          {response && <p>Response: {response}</p>}
-          {error && <p>Error: {error}</p>}
-        </div>
+        <SetupGPU isOpen={true} />
       </Wrapper>
     </Backdrop>
   );

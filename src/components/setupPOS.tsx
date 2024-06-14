@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 import Tile from "./tile";
 import { CancelButton, SaveButton } from "./button";
 import CustomNumberInput from "./input";
+import usePostCli from "../hooks/usepostcli";
+import { Subheader } from "./titles";
 
 const BgImage = styled.img`
   aspect-ratio: 1;
@@ -218,4 +220,36 @@ const SetupProving: React.FC = () => {
   );
 };
 
-export { SetupSize, SetupProving };
+type Props = {
+  isOpen: boolean;
+  children?: React.ReactNode;
+};
+
+const SetupGPU = ({ isOpen }: Props) => {
+  const { run, response, loading, error } = usePostCli();
+
+  useEffect(() => {
+    if (isOpen) {
+      run(["-printProviders"]);
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+  const gpu = require("../assets/graphics-card.png");
+
+  return (
+    <BottomContainer>
+      <BgImage src={gpu} />
+      <TileWrapper>
+      {loading && <Subheader text="Loading..."/>}
+      {error && <p> Error: {error} </p>}
+      {response &&
+        response.map((provider, index) => (
+          <Tile key={index} heading={provider.Model} subheader={provider.DeviceType}/>
+        ))}
+        </TileWrapper>
+    </BottomContainer>
+  );
+};
+
+export { SetupSize, SetupProving, SetupGPU };
