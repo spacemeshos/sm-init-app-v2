@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Button } from "../components/button";
-import { Title } from "../components/titles";
+import { Title } from "../components/texts";
 import Colors from "../styles/colors";
 import { HoverAccordionMenu } from "../components/accordion";
 import { ExternalLinks } from "../Shared/Constants";

@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { BackButton, IconButton } from "../../components/button";
-import { Subheader, Title } from "../../components/titles";
+import { Subheader, Title } from "../../components/texts";
 import ProgressBar from "../../components/progress";
 import Frame from "../../components/frames";
 import Confirmation from "../../components/confirmation";

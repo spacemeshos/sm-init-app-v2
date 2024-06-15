@@ -2,10 +2,11 @@ import * as React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 
-interface TitleProps {
+interface TextProps {
   text: string;
   top?: number;
   left?: number;
+  children?: React.ReactNode;
 }
 
 const StyledTitle = styled.h1<{
@@ -22,7 +23,7 @@ const StyledTitle = styled.h1<{
   letter-spacing: 4px;
   top: ${({ top }) => top}px;
   left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
-  transform: ${({ left }) => (left == null ? "translateX(-50%)" : "none")};
+  transform: ${({ left }) => (left == null ? "translate(-50%)" : "none")};
   position: relative;
 `;
 
@@ -40,10 +41,25 @@ const StyledSubheader = styled.h2<{
   letter-spacing: 4px;
   top: ${({ top }) => top}px;
   left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
-  transform: ${({ left }) => (left == null ? "translateX(-50%)" : "none")};
+  transform: ${({ left }) => (left == null ? "translate(-50%)" : "none")};
   position: relative;
 `;
-const Title: React.FC<TitleProps> = ({ text, top, left }) => {
+
+const ErrorMsg = styled.h2<{
+  top?: number;
+  left?: number;
+}>`
+  color: ${Colors.red};
+  font-family: "Source Code Pro Extralight";
+  text-align: "center";
+  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: 200;
+  letter-spacing: 2px;
+  position: relative;
+`;
+
+const Title: React.FC<TextProps> = ({ text, top, left }) => {
   return (
     <StyledTitle top={top} left={left}>
       {text}
@@ -51,7 +67,7 @@ const Title: React.FC<TitleProps> = ({ text, top, left }) => {
   );
 };
 
-const Subheader: React.FC<TitleProps> = ({ text, top, left }) => {
+const Subheader: React.FC<TextProps> = ({ text, top, left }) => {
   return (
     <StyledSubheader top={top} left={left}>
       {text}
@@ -59,4 +75,13 @@ const Subheader: React.FC<TitleProps> = ({ text, top, left }) => {
   );
 };
 
-export { Title, Subheader };
+const ErrorMessage: React.FC<TextProps> = ({children}) => {
+  return (
+    <ErrorMsg>
+      {children}
+    </ErrorMsg>
+  );
+};
+
+
+export { Title, Subheader, ErrorMessage };

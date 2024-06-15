@@ -5,7 +5,7 @@ import Tile from "./tile";
 import { CancelButton, SaveButton } from "./button";
 import CustomNumberInput from "./input";
 import { FindProviders } from "../services/parseResponse";
-import { Subheader } from "./titles";
+import { ErrorMessage, Subheader } from "./texts";
 
 const BgImage = styled.img`
   aspect-ratio: 1;
@@ -45,11 +45,6 @@ const SelectedValue = styled.h1`
   font-weight: 300;
   font-size: 50px;
   position: relative;
-`;
-
-const ErrorText = styled.p`
-  color: red;
-  /* Additional error styles */
 `;
 
 const SetupSize: React.FC = () => {
@@ -259,7 +254,7 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
     <BottomContainer>
       <BgImage src={gpu} />
       {loading && <Subheader text="Loading..." left={0} />}
-      {error && <ErrorText>Error: {error}</ErrorText>}={" "}
+      {error && <ErrorMessage text="Error:"> {error}</ErrorMessage>}
       {response && response.length > 0 && response.map(createTile)}
     </BottomContainer>
   );
