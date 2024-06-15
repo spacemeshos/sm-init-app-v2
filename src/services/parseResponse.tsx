@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { callPostCli } from "../services/postcliService";
+import { callPostCli } from "./postcliService";
 
 interface Provider {
   ID: number;
@@ -14,7 +14,7 @@ interface UsePostCliReturn {
   loading: boolean;
 }
 
-const usePostCli = (): UsePostCliReturn => {
+const FindProviders = (): UsePostCliReturn => {
   const [response, setResponse] = useState<Provider[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -55,4 +55,4 @@ const usePostCli = (): UsePostCliReturn => {
   return { run, response, error, loading };
 };
 
-export default usePostCli;
+export {FindProviders};

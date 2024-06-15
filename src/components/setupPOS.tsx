@@ -4,7 +4,7 @@ import Colors from "../styles/colors";
 import Tile from "./tile";
 import { CancelButton, SaveButton } from "./button";
 import CustomNumberInput from "./input";
-import usePostCli from "../hooks/usepostcli";
+import { FindProviders } from "../services/parseResponse";
 import { Subheader } from "./titles";
 
 const BgImage = styled.img`
@@ -45,6 +45,11 @@ const SelectedValue = styled.h1`
   font-weight: 300;
   font-size: 50px;
   position: relative;
+`;
+
+const ErrorText = styled.p`
+  color: red;
+  /* Additional error styles */
 `;
 
 const SetupSize: React.FC = () => {
@@ -222,11 +227,11 @@ const SetupProving: React.FC = () => {
 
 type Props = {
   isOpen: boolean;
-  children?: React.ReactNode;
 };
 
-const SetupGPU = ({ isOpen }: Props) => {
-  const { run, response, loading, error } = usePostCli();
+const SetupGPU: React.FC<Props> = ({ isOpen }) => {
+  const { run, response, loading, error } = FindProviders();
+  const gpu = require("../assets/graphics-card.png");
 
   useEffect(() => {
     if (isOpen) {
@@ -234,20 +239,28 @@ const SetupGPU = ({ isOpen }: Props) => {
     }
   }, [isOpen]);
 
-  if (!isOpen) return null;
-  const gpu = require("../assets/graphics-card.png");
+  function createTile(response: {
+    ID: number;
+    Model: string;
+    DeviceType: string;
+  }) {
+    return (
+      <TileWrapper>
+        <Tile
+          key={response.ID}
+          heading={response.Model}
+          subheader={response.DeviceType}
+        />
+      </TileWrapper>
+    );
+  }
 
   return (
     <BottomContainer>
       <BgImage src={gpu} />
-      <TileWrapper>
-      {loading && <Subheader text="Loading..."/>}
-      {error && <p> Error: {error} </p>}
-      {response &&
-        response.map((provider, index) => (
-          <Tile key={index} heading={provider.Model} subheader={provider.DeviceType}/>
-        ))}
-        </TileWrapper>
+      {loading && <Subheader text="Loading..." left={0} />}
+      {error && <ErrorText>Error: {error}</ErrorText>}={" "}
+      {response && response.length > 0 && response.map(createTile)}
     </BottomContainer>
   );
 };
