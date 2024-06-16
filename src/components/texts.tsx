@@ -23,7 +23,7 @@ const StyledTitle = styled.h1<{
   letter-spacing: 4px;
   top: ${({ top }) => top}px;
   left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
-  transform: ${({ left }) => (left == null ? "translate(-50%)" : "none")};
+  transform: ${({ left }) => (left == null ? "translateX(-50%)" : "none")};
   position: relative;
 `;
 
@@ -41,7 +41,7 @@ const StyledSubheader = styled.h2<{
   letter-spacing: 4px;
   top: ${({ top }) => top}px;
   left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
-  transform: ${({ left }) => (left == null ? "translate(-50%)" : "none")};
+  transform: ${({ left }) => (left == null ? "translateX(-50%)" : "none")};
   position: relative;
 `;
 

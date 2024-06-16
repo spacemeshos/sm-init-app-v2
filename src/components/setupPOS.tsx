@@ -28,9 +28,11 @@ const BottomContainer = styled.div`
   flex-direction: row;
 `;
 
-const TileWrapper = styled.div`
+const TileWrapper = styled.div<{
+  width?: number;
+}>`
   height: 370px;
-  width: 450px;
+  width: ${({ width }) => width || 450}px;
   position: relative;
   display: flex;
   justify-content: center;
@@ -81,15 +83,13 @@ const SetupSize: React.FC = () => {
         <Tile
           heading="Select POS data size"
           subheader="Gibibytes"
-          footer="more data -> more rewards, but longer data generation and proving"
+          footer="more data -> more rewards, but longer generation and proving"
         />
         {isPOSInputVisible ? (
           <>
             <CustomNumberInput
               min={256}
               max={999999}
-              fontsize={36}
-              height={80}
               step={64}
               value={256}
               onChange={(val) => setPOSsizeValue(val)}
@@ -115,8 +115,6 @@ const SetupSize: React.FC = () => {
             <CustomNumberInput
               min={10}
               max={99999}
-              fontsize={36}
-              height={80}
               step={1}
               value={4096}
               onChange={(val) => setFileSizeValue(val)}
@@ -176,8 +174,6 @@ const SetupProving: React.FC = () => {
               max={16}
               step={1}
               value={cpuValue}
-              fontsize={36}
-              height={80}
               onChange={(val) => setCpuValue(val)}
             />
             <SaveButton buttonLeft={55} onClick={handleSaveCpu} />
@@ -202,8 +198,6 @@ const SetupProving: React.FC = () => {
               max={9999}
               step={16}
               value={noncesValue}
-              fontsize={36}
-              height={80}
               onChange={(val) => setNoncesValue(val)}
             />
             <SaveButton buttonLeft={55} onClick={handleSaveNonces} />
@@ -224,7 +218,7 @@ type Props = {
   isOpen: boolean;
 };
 
-const SetupGPU: React.FC<Props> = ({ isOpen }) => {
+const SetupGPU: React.FC<Props> = ({ isOpen}) => {
   const { run, response, loading, error } = FindProviders();
   const gpu = require("../assets/graphics-card.png");
 
@@ -240,7 +234,7 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
     DeviceType: string;
   }) {
     return (
-      <TileWrapper>
+      <TileWrapper width={350}>
         <Tile
           key={response.ID}
           heading={response.Model}
@@ -255,7 +249,11 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
       <BgImage src={gpu} />
       {loading && <Subheader text="Loading..." left={0} />}
       {error && <ErrorMessage text="Error:"> {error}</ErrorMessage>}
-      {response && response.length > 0 && response.map(createTile)}
+      {response && response.length > 0 ? (
+        response.map(createTile)
+      ) : (
+        <Subheader text={"No processors detected"} />
+      )}
     </BottomContainer>
   );
 };

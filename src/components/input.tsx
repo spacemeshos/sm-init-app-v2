@@ -137,10 +137,10 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   borderColor = Colors.darkerPurple,
   hoverBorderColor = Colors.purpleDark,
   buttonHoverColor = Colors.grayLight,
-  height = 50,
+  height = 80,
   width = 50,
   value = min,
-  fontsize = 16,
+  fontsize = 36,
   onChange,
 }) => {
   const [inputValue, setInputValue] = React.useState<number>(value);
