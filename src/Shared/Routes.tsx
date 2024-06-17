@@ -7,6 +7,7 @@ import AdvSelectDirectory from "../pages/AdvancedCreate/Directory";
 import AdvSetupSize from "../pages/AdvancedCreate/Size";
 import AdvSetupProving from "../pages/AdvancedCreate/Proving";
 import AdvSetupProvider from "../pages/AdvancedCreate/Provider";
+import Confirmation from "../components/confirmation";
 
 
 const AppRoutes = () => (
@@ -20,6 +21,8 @@ const AppRoutes = () => (
       <Route path="/advanced/SetupSize" element={<AdvSetupSize/>}/>
       <Route path="/advanced/Proving" element={<AdvSetupProving/>}/>
       <Route path="/advanced/Provider" element={<AdvSetupProvider/>}/>
+      <Route path="/guided/Confirmation" element={<Confirmation/>}/>
+
     </Routes>
   </BrowserRouter>
 );

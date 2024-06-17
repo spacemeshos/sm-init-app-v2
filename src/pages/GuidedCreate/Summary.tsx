@@ -1,10 +1,11 @@
 import * as React from "react";
 import styled from "styled-components";
-import { BackButton, IconButton } from "../../components/button";
+import { BackButton, Button } from "../../components/button";
 import { Subheader, Title } from "../../components/texts";
 import ProgressBar from "../../components/progress";
 import Frame from "../../components/frames";
-import Confirmation from "../../components/confirmation";
+import Colors from "../../styles/colors";
+import { useNavigate } from "react-router-dom";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -38,9 +39,22 @@ const ContainerStart = styled.div`
   height: 300px;
   position: absolute;
 `;
+const BgImage = styled.img`
+  aspect-ratio: 1;
+  object-fit: contain;
+  width: 550px;
+  position: absolute;
+  left: -180px;
+  top: -120px;
+  opacity: 0.02;
+  z-index: 0;
+`;
 
 const Summary: React.FC = () => {
-  const rocketbutton = require("../../assets/blastoff.png");
+  const rocket = require("../../assets/rocket.png");
+  // React Router's navigation hook
+  const navigate = useNavigate();
+  const Confirmation = () => navigate("/guided/Confirmation");
 
   return (
     <>
@@ -76,12 +90,15 @@ const Summary: React.FC = () => {
         />
       </ContainerSummary>
       <ContainerStart>
-        <IconButton
-          iconSrc={rocketbutton}
-          buttonTop={40}
-          buttonLeft={45}
-          size={150}
-          modalComponent={Confirmation}
+        <BgImage src={rocket} />
+        <Button
+          label="Start Data generation"
+          borderColor={Colors.purpleLight}
+          backgroundColor={Colors.darkerPurple}
+          buttonTop={160}
+          buttonLeft={25}
+          height={80}
+          onClick = {Confirmation}
         />
       </ContainerStart>
     </>

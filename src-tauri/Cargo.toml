@@ -1,8 +1,8 @@
 [package]
 name = "app"
 version = "1.2.5"
-description = "A Tauri App"
-authors = ["you"]
+description = "POST Init App"
+authors = ["Spacemesh"]
 license = ""
 repository = ""
 default-run = "app"
