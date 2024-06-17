@@ -218,7 +218,7 @@ type Props = {
   isOpen: boolean;
 };
 
-const SetupGPU: React.FC<Props> = ({ isOpen}) => {
+const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   const { run, response, loading, error } = FindProviders();
   const gpu = require("../assets/graphics-card.png");
 
@@ -248,8 +248,9 @@ const SetupGPU: React.FC<Props> = ({ isOpen}) => {
     <BottomContainer>
       <BgImage src={gpu} />
       {loading && <Subheader text="Loading..." left={0} />}
-      {error && <ErrorMessage text="Error:"> {error}</ErrorMessage>}
-      {response && response.length > 0 ? (
+      {error ? (
+        <ErrorMessage text="Error:"> {error}</ErrorMessage>
+      ) : response && response.length > 0 ? (
         response.map(createTile)
       ) : (
         <Subheader text={"No processors detected"} />
