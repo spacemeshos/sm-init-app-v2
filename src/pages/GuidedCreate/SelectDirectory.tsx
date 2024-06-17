@@ -14,8 +14,7 @@ import { ExternalLinks } from "../../Shared/Constants";
 import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
 import { invoke } from "@tauri-apps/api";
-import { open } from '@tauri-apps/api/shell';
-
+import { open } from "@tauri-apps/api/shell";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -89,9 +88,6 @@ const SelectDirectory: React.FC = () => {
   const navigateToDocs = () => open(ExternalLinks.Docs);
   const navigateToDiscord = () => open(ExternalLinks.Discord);
 
-
-
-  // React Router's navigation hook
   const navigate = useNavigate();
   const TailoredSettings = () => navigate("/guided/TailoredSettings");
 
@@ -177,10 +173,7 @@ const SelectDirectory: React.FC = () => {
             Next, we'll optimize your settings with a quick benchmark to boost
             your rewards and qualification chances every epoch
           </HintText>
-          <TooltipButton
-            modalComponent={PosInfo}
-            buttonTop={96}
-          />
+          <TooltipButton modalComponent={PosInfo} buttonTop={96} />
         </HintWrapper>
       </ContainerBottom>
     </>
