@@ -17,6 +17,6 @@
     "jsx": "react-jsx",
     "typeRoots": ["./node_modules/@types", "./types"]
   },
-  "include": ["src", "eslint.config.mjs"],
+  "include": ["src", "eslint.config.mjs", "setupTests.ts"],
   "exclude": ["node_modules/*"]
 }
