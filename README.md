@@ -1,51 +1,78 @@
-automatically generated 
+# Spacemesh Init App v2
 
-to be updated in the future 
+## Overview
 
+**Spacemesh Init App v2** is a user-friendly application designed to streamline the process of setting up, generating, and managing Proof of Space data\. By leveraging the Tauri framework for its frontend, this app offers a sleek and efficient user experience. At its core, it integrates the `postcli` binary, developed in Go by the Spacemesh team, to handle all essential commands and flags seamlessly. Whether you are a novice or an experienced user, Spacemesh Init App v2 simplifies the complexities of Proof of Space management, making it accessible and straightforward.
 
-# Getting Started with Create React App
+## Table of Contents
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
 
-## Available Scripts
+## Installation
 
-In the project directory, you can run:
+### Prerequisites
 
-### `npm start`
+Ensure you have the following installed:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- [Node.js](https://nodejs.org/) (version 16.x or later)
+- [Rust](https://www.rust-lang.org/tools/install) (version 1.56.0 or later)
+- [Yarn](https://classic.yarnpkg.com/en/docs/install) (version 1.22.10 or later)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Clone the Repository
 
-### `npm test`
+```sh
+git clone https://github.com/spacemeshos/sm-init-app-v2.git
+cd sm-init-app-v2
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Install Dependencies
 
-### `npm run build`
+```sh
+yarn install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Usage
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Running the Application
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To start the application in development mode, run:
 
-### `npm run eject`
+```sh
+yarn dev
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+This command will start the Tauri development environment and the React development server.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Building the Application
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+To build the application for production, run:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```sh
+yarn build
+```
 
-## Learn More
+### Running Tests
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+To run the tests, use:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```sh
+yarn test
+```
+
+## Contributing
+
+We welcome contributions to the Spacemesh Init App v2! To contribute:
+
+1. Fork the repository.
+2. Create a new branch (git checkout -b feature-branch).
+3. Make your changes.
+4. Commit your changes (git commit -m 'Add some feature').
+5. Push to the branch (git push origin feature-branch).
+6. Open a pull request.
+7. Please adhere to the Code of Conduct.
+
+## Contact
+
+For more information, visit [Spacemesh](https://spacemesh.io/) or contact us at [info@spacemesh.io]().
