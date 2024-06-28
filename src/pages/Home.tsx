@@ -4,7 +4,7 @@ import { Button } from "../components/button";
 import { Title } from "../components/texts";
 import Colors from "../styles/colors";
 import { HoverAccordionMenu } from "../components/accordion";
-import { ExternalLinks } from "../Shared/Constants";
+import { ExternalLinks } from "../shared/Constants";
 import { useNavigate } from "react-router-dom";
 
 const ContainerLeft = styled.div`
