@@ -37,14 +37,14 @@ const FindProviders = (): UsePostCliReturn => {
   const parseResponse = (response: string): Provider[] => {
     const providers: Provider[] = [];
     const regex =
-      /\(postrs\.Provider\)\s*\{\s*ID:\s*\(uint32\)\s*(\d+),\s*Model:\s*\(string\)\s*\(len=\d+\)\s*"([^"]+)",\s*DeviceType:\s*\(postrs\.DeviceClass\)\s*(\w+)\s*\}/g;
+      /\(postrs\.Provider\)\s*\{\s*ID:\s*\(uint32\)\s*(\d+),\s*Model:\s*\(string\)\s*\(len=\d+\)\s*"\[(CPU|GPU)\]\s*([^"]+)",\s*DeviceType:\s*\(postrs\.DeviceClass\)\s*(\w+)\s*\}/g;
     let match;
 
     while ((match = regex.exec(response)) !== null) {
       const provider: Provider = {
         ID: parseInt(match[1], 10),
-        Model: match[2],
-        DeviceType: match[3],
+        Model: match[3],
+        DeviceType: match[4],
       };
       providers.push(provider);
     }
@@ -55,4 +55,4 @@ const FindProviders = (): UsePostCliReturn => {
   return { run, response, error, loading };
 };
 
-export {FindProviders};
+export { FindProviders };
