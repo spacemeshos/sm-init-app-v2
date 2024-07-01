@@ -221,6 +221,7 @@ type Props = {
 const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   const { run, response, loading, error } = FindProviders();
   const gpu = require("../assets/graphics-card.png");
+  const cpu = require("../assets/cpu.png");
 
   useEffect(() => {
     if (isOpen) {
@@ -228,17 +229,21 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
     }
   }, [isOpen]);
 
-  function createTile(response: {
+  function createTile(processor: {
     ID: number;
     Model: string;
     DeviceType: string;
   }) {
+    const isFastest = processor.ID === 0;
+    const icon = processor.DeviceType === "GPU" ? gpu : cpu;
+
     return (
-      <TileWrapper width={350}>
+      <TileWrapper width={350} key={processor.ID}>
         <Tile
-          key={response.ID}
-          heading={response.Model}
-          subheader={response.DeviceType}
+          heading={processor.Model}
+          subheader={processor.DeviceType}
+          footer={isFastest ? "The Fastest" : ""}
+          imageSrc={icon}
         />
       </TileWrapper>
     );
