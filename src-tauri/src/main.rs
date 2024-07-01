@@ -13,7 +13,7 @@ fn run_postcli_command(args: Vec<String>) -> Result<String, String> {
     // Get the current working directory
     let mut path: PathBuf = env::current_dir().map_err(|e| e.to_string())?;
     // Append the relative path to the binary
-    path.push("./postcli/postcli");
+    path.push("./bin/postcli/postcli");
 
     // Convert the PathBuf to a string
     let postcli_path = path.to_str().ok_or("Invalid path")?;
