@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
+import errorIcon from "../assets/disruption.png";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -89,7 +90,6 @@ type Props = {
 
 const ErrorModal = ({ children, onClose, isOpen }: Props) => {
   if (!isOpen) return null;
-  const errorIcon = require("../assets/disruption.png");
 
   return (
     <Backdrop onClick={onClose}>
@@ -102,10 +102,9 @@ const ErrorModal = ({ children, onClose, isOpen }: Props) => {
         <Text>
           {
             <>
-            [just a placeholder]
-              Check Your Configuration: Ensure all required fields are filled
-              out correctly. Verify the paths to your storage directories are
-              accessible and have sufficient space.
+              [just a placeholder] Check Your Configuration: Ensure all required
+              fields are filled out correctly. Verify the paths to your storage
+              directories are accessible and have sufficient space.
               <br />
               Review System Requirements: Confirm your system meets the minimum
               hardware and software requirements for Spacemesh.

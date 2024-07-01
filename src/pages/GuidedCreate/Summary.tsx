@@ -6,6 +6,7 @@ import ProgressBar from "../../components/progress";
 import Frame from "../../components/frames";
 import Colors from "../../styles/colors";
 import { useNavigate } from "react-router-dom";
+import rocket from "../../assets/rocket.png";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -51,7 +52,6 @@ const BgImage = styled.img`
 `;
 
 const Summary: React.FC = () => {
-  const rocket = require("../../assets/rocket.png");
   // React Router's navigation hook
   const navigate = useNavigate();
   const Confirmation = () => navigate("/guided/Confirmation");
@@ -98,7 +98,7 @@ const Summary: React.FC = () => {
           buttonTop={160}
           buttonLeft={25}
           height={80}
-          onClick = {Confirmation}
+          onClick={Confirmation}
         />
       </ContainerStart>
     </>

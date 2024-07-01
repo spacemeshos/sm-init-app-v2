@@ -4,6 +4,12 @@ import Colors from "../styles/colors";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Modal from "./modal";
+import back from "../assets/left-arrow.png";
+import next from "../assets/right-arrow.png";
+import pen from "../assets/edit-circle.png";
+import question from "../assets/question.png";
+import save from "../assets/check-circle.png";
+import cancel from "../assets/circle-x.png";
 
 // Interface defining the properties for the Button component below
 interface ButtonProps {
@@ -61,7 +67,6 @@ const Button: React.FC<ButtonProps> = ({
 
 // BackButton component
 const BackButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
-  const back = require("../assets/left-arrow.png");
   const navigate = useNavigate(); // Hook for navigation
 
   // Handle back button click
@@ -82,7 +87,6 @@ const BackButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
 
 // Forward Arrow Button component
 const ForwardButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
-  const next = require("../assets/right-arrow.png");
   const navigate = useNavigate();
 
   // Handle forward button click
@@ -138,50 +142,45 @@ const IconButton: React.FC<ButtonProps> = ({
           buttonTop={buttonTop}
           buttonLeft={buttonLeft}
         >
-          <ButtonIcon src={iconSrc} size={size}/>
+          <ButtonIcon src={iconSrc} size={size} />
         </IconButtonWrapper>
       )}
-      {isModalOpen && showModal && (CustomModal ? (
-        <CustomModal isOpen={isModalOpen} onClose={closeModal} />
-      ) : (
-        <Modal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          header={modalHeader}
-          text={modalText}
-          top={modalTop}
-          left={modalLeft}
-        />
-      ))}
+      {isModalOpen &&
+        showModal &&
+        (CustomModal ? (
+          <CustomModal isOpen={isModalOpen} onClose={closeModal} />
+        ) : (
+          <Modal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            header={modalHeader}
+            text={modalText}
+            top={modalTop}
+            left={modalLeft}
+          />
+        ))}
     </>
   );
 };
 
 // Edit button component
 const EditButton: React.FC<ButtonProps> = (props) => {
-  const pen = require("../assets/edit-circle.png");
-
   return <IconButton {...props} iconSrc={pen} showModal />;
 };
 
 // Tooltip button component
 const TooltipButton: React.FC<ButtonProps> = (props) => {
-  const question = require("../assets/question.png");
-
   return <IconButton {...props} iconSrc={question} showModal />;
 };
 
 // Save button component
 const SaveButton: React.FC<ButtonProps> = (props) => {
-  const save = require("../assets/check-circle.png");
-
   return <IconButton {...props} iconSrc={save} showModal={false} />;
 };
 
 // Cancel button component
 const CancelButton: React.FC<ButtonProps> = (props) => {
-  const cancel = require("../assets/circle-x.png");
-  return <IconButton {...props} iconSrc={cancel} showModal={false}/>;
+  return <IconButton {...props} iconSrc={cancel} showModal={false} />;
 };
 
 // Styled component for the standard button wrapper
@@ -253,7 +252,7 @@ const NavWrapper = styled.button<{ top?: number; left?: number }>`
   position: absolute;
 `;
 
-const ButtonIcon = styled.img<{size?: number}>`
+const ButtonIcon = styled.img<{ size?: number }>`
   aspect-ratio: 1;
   width: ${({ size }) => size || 30}px;
 `;

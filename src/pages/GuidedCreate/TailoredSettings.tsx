@@ -15,9 +15,12 @@ import { useNavigate } from "react-router-dom";
 import GPUedit from "./editGPU";
 import CPUedit from "./editCPU";
 import editSize from "./editSize";
+import gpu from "../../assets/graphics-card.png";
+import cpu from "../../assets/cpu.png";
+import files from "../../assets/duplicate.png";
 
 const NavProgress = styled.div`
-  width: 100%;
+  width: 100%;Azwsed4
   max-width: 1200px;
   height: 160px;
   display: flex;
@@ -62,11 +65,6 @@ const TileWrapper = styled.div`
 `;
 
 const TailoredSettings: React.FC = () => {
-  // Importing image assets
-  const gpu = require("../../assets/graphics-card.png");
-  const cpu = require("../../assets/cpu.png");
-  const files = require("../../assets/duplicate.png");
-
   //Hook to navigate to the next page - summary
   const navigate = useNavigate();
   const navigateToSummary = () => navigate("/guided/Summary");
@@ -85,44 +83,41 @@ const TailoredSettings: React.FC = () => {
         Customise freely to match your needs. Ensure settings enhance,
         <br />
         not hinder your smeshing experience.
-        <TooltipButton
-          modalComponent={PosInfo}
-          buttonTop={100}
-         />
+        <TooltipButton modalComponent={PosInfo} buttonTop={100} />
       </TextWrapper>
-      
+
       {/*Bottom part of the page */}
       <ContainerBottom>
-      {/* GPU settings section */}
-      <TileWrapper>
-        <Tile
-          heading={"How to create POS?"}
-          subheader={"placeholder"}
-          imageSrc={gpu}
-          footer="placeholder"
-        />
-        <EditButton modalComponent={GPUedit} />
-      </TileWrapper>
-      {/* Post prooving processor settings section */}
-      <TileWrapper>
-        <Tile
-          heading={"How to prove POS?"}
-          subheader={"placeholder"}
-          imageSrc={cpu}
-          footer="placeholder"
-        />
-        <EditButton modalComponent={CPUedit} />
-      </TileWrapper>
-      {/* Data size settings section */}
-      <TileWrapper>
-        <Tile
-          heading={"How much POS data?"}
-          subheader={"placeholder"}
-          imageSrc={files}
-          footer="placeholder"
-        />
-        <EditButton modalComponent={editSize} />
-      </TileWrapper>
+        {/* GPU settings section */}
+        <TileWrapper>
+          <Tile
+            heading={"How to create POS?"}
+            subheader={"placeholder"}
+            imageSrc={gpu}
+            footer="placeholder"
+          />
+          <EditButton modalComponent={GPUedit} />
+        </TileWrapper>
+        {/* Post prooving processor settings section */}
+        <TileWrapper>
+          <Tile
+            heading={"How to prove POS?"}
+            subheader={"placeholder"}
+            imageSrc={cpu}
+            footer="placeholder"
+          />
+          <EditButton modalComponent={CPUedit} />
+        </TileWrapper>
+        {/* Data size settings section */}
+        <TileWrapper>
+          <Tile
+            heading={"How much POS data?"}
+            subheader={"placeholder"}
+            imageSrc={files}
+            footer="placeholder"
+          />
+          <EditButton modalComponent={editSize} />
+        </TileWrapper>
       </ContainerBottom>
     </>
   );

@@ -6,6 +6,10 @@ import Colors from "../styles/colors";
 import { HoverAccordionMenu } from "../components/accordion";
 import { ExternalLinks } from "../shared/Constants";
 import { useNavigate } from "react-router-dom";
+import LogoWhite from "../assets/transparentbg.gif";
+import Add from "../assets/plus.png";
+import Edit from "../assets/edit.png";
+import Check from "../assets/check.png";
 
 const ContainerLeft = styled.div`
   display: flex;
@@ -72,12 +76,6 @@ const VerticalDivider = styled.div`
 `;
 
 const Home: React.FC = () => {
-  // Importing image assets
-  const LogoWhite = require("../assets/transparentbg.gif");
-  const Add = require("../assets/plus.png");
-  const Edit = require("../assets/edit.png");
-  const Check = require("../assets/check.png");
-
   // State to track which menu is hovered
   const [hoveredMenu, setHoveredMenu] = React.useState<string | null>(null);
   const navigate = useNavigate(); // Hook for navigation
@@ -102,7 +100,6 @@ const Home: React.FC = () => {
       onClick: () => console.log("Button 2 clicked"),
       width: 240,
     },
-
   ];
   // Button configurations for the "Edit" menu
   const EditButtons = [
@@ -121,7 +118,6 @@ const Home: React.FC = () => {
       onClick: () => console.log("Button 2 clicked"),
       width: 240,
     },
-
   ];
   // Button configurations for the "Check" menu
   const CheckButtons = [

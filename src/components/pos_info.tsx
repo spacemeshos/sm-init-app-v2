@@ -1,6 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
+import gpu from "../assets/graphics-card.png";
+import files from "../assets/duplicate.png";
+import cpu from "../assets/cpu.png";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -72,7 +75,7 @@ const BgImage = styled.img<{
   left: 20px;
   top: ${({ top }) => top}px;
   left: ${({ left }) => left}px;
-  opacity: 0.2
+  opacity: 0.2;
 `;
 
 const CloseButton = styled.button`
@@ -92,11 +95,8 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const PosInfo = ({ children, onClose, isOpen}: Props) => {
+const PosInfo = ({ children, onClose, isOpen }: Props) => {
   if (!isOpen) return null;
-  const gpu = require("../assets/graphics-card.png");
-  const files = require("../assets/duplicate.png");
-  const cpu = require("../assets/cpu.png");
 
   return (
     <Backdrop onClick={onClose}>
@@ -107,9 +107,9 @@ const PosInfo = ({ children, onClose, isOpen}: Props) => {
           We run a benchmark to find the best settings for you, to maximise
           both: rewards and chances to qualify for them every epoch.
         </Subheader>
-        <BgImage src={gpu}  top={225} left={35}/>
-        <BgImage src={files}  top={340} left={35}/>
-        <BgImage src={cpu}  top={460} left={35}/>
+        <BgImage src={gpu} top={225} left={35} />
+        <BgImage src={files} top={340} left={35} />
+        <BgImage src={cpu} top={460} left={35} />
         <Text>
           {
             <>

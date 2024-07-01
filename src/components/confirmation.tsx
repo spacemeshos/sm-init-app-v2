@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
+import rocket from "../assets/rocket.png";
 
 const Header = styled.h1`
   color: ${Colors.greenLight};
@@ -51,8 +52,6 @@ const BgImage = styled.img`
 `;
 
 const Confirmation: React.FC = () => {
-  const rocket = require("../assets/rocket.png");
-
   return (
     <>
       <Header>Congratulations </Header>

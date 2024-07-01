@@ -13,8 +13,10 @@ import Tile from "../../components/tile";
 import { ExternalLinks } from "../../shared/Constants";
 import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
-import { invoke } from "@tauri-apps/api";
 import { open } from "@tauri-apps/api/shell";
+import folder from "../../assets/folder.png";
+import bulb from "../../assets/light-bulb.png";
+import { invoke } from "@tauri-apps/api/tauri";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -81,9 +83,6 @@ const HintText = styled.div`
 `;
 
 const SelectDirectory: React.FC = () => {
-  const folder = require("../../assets/folder.png");
-  const bulb = require("../../assets/light-bulb.png");
-
   // Functions to navigate to external links
   const navigateToDocs = () => open(ExternalLinks.Docs);
   const navigateToDiscord = () => open(ExternalLinks.Discord);

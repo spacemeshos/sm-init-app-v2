@@ -6,6 +6,9 @@ import { CancelButton, SaveButton } from "./button";
 import CustomNumberInput from "./input";
 import { FindProviders } from "../services/parseResponse";
 import { ErrorMessage, Subheader } from "./texts";
+import size from "../assets/duplicate.png";
+import cpu from "../assets/cpu.png";
+import gpu from "../assets/graphics-card.png";
 
 const BgImage = styled.img`
   aspect-ratio: 1;
@@ -54,8 +57,6 @@ const SetupSize: React.FC = () => {
   const [fileSizeValue, setFileSizeValue] = useState(4096);
   const [isPOSInputVisible, setIsPOSInputVisible] = useState(true);
   const [isFileInputVisible, setIsFileInputVisible] = useState(true);
-
-  const size = require("../assets/duplicate.png");
 
   const handleCancelCpu = () => {
     setPOSsizeValue(256); // Reset to default value
@@ -139,8 +140,6 @@ const SetupProving: React.FC = () => {
   const [isCpuInputVisible, setIsCpuInputVisible] = useState(true);
   const [isNoncesInputVisible, setIsNoncesInputVisible] = useState(true);
 
-  const cpu = require("../assets/cpu.png");
-
   const handleCancelCpu = () => {
     setCpuValue(8); // Reset to default value
     setIsCpuInputVisible(true);
@@ -220,8 +219,6 @@ type Props = {
 
 const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   const { run, response, loading, error } = FindProviders();
-  const gpu = require("../assets/graphics-card.png");
-  const cpu = require("../assets/cpu.png");
 
   useEffect(() => {
     if (isOpen) {

@@ -13,6 +13,8 @@ import Tile from "../../components/tile";
 import { ExternalLinks } from "../../shared/Constants";
 import { useNavigate } from "react-router-dom";
 import { invoke } from "@tauri-apps/api";
+import folder from "../../assets/folder.png";
+import key from "../../assets/key.png";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -67,9 +69,6 @@ const IDWrapper = styled.div`
 `;
 
 const AdvSelectDirectory: React.FC = () => {
-  const folder = require("../../assets/folder.png");
-  const key = require("../../assets/key.png");
-
   // Functions to navigate to external links
   const navigateToDocs = () => window.open(ExternalLinks.Docs);
   const navigateToDiscord = () => window.open(ExternalLinks.Discord);
