@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 import Tile from "./tile";
@@ -9,6 +9,7 @@ import { ErrorMessage, Subheader } from "./texts";
 import size from "../assets/duplicate.png";
 import cpu from "../assets/cpu.png";
 import gpu from "../assets/graphics-card.png";
+import { invoke } from "@tauri-apps/api/tauri";
 
 const BgImage = styled.img`
   aspect-ratio: 1;
@@ -31,9 +32,7 @@ const BottomContainer = styled.div`
   flex-direction: row;
 `;
 
-const TileWrapper = styled.div<{
-  width?: number;
-}>`
+const TileWrapper = styled.div<{ width?: number }>`
   height: 370px;
   width: ${({ width }) => width || 450}px;
   position: relative;
@@ -52,170 +51,171 @@ const SelectedValue = styled.h1`
   position: relative;
 `;
 
+interface Settings {
+  numUnits: number;
+  provider: number;
+  maxFileSize: number;
+  datadir: string;
+}
+
+const defaultSettings: Settings = {
+  numUnits: 256,
+  provider: 0,
+  maxFileSize: 4096,
+  datadir: "/Users/username/post/data",
+};
+
+interface InputSectionProps {
+  isVisible: boolean;
+  label: string;
+  minValue: number;
+  maxValue: number;
+  step: number;
+  value: number;
+  onChange: (val: number) => void;
+  onSave: () => void;
+  onCancel: () => void;
+}
+
+const InputSection: React.FC<InputSectionProps> = ({
+  isVisible,
+  label,
+  minValue,
+  maxValue,
+  step,
+  value,
+  onChange,
+  onSave,
+  onCancel,
+}) => (
+  <>
+    <TileWrapper>
+      <Tile heading={label} />
+      {isVisible ? (
+        <>
+          <CustomNumberInput
+            min={minValue}
+            max={maxValue}
+            step={step}
+            value={value}
+            onChange={onChange}
+          />
+          <SaveButton buttonLeft={55} onClick={onSave} />
+          <CancelButton buttonLeft={45} onClick={onCancel} />
+        </>
+      ) : (
+        <>
+          <SelectedValue>{value}</SelectedValue>
+          <CancelButton buttonLeft={50} onClick={onCancel} />
+        </>
+      )}
+    </TileWrapper>
+  </>
+);
+
 const SetupSize: React.FC = () => {
-  const [dataSizeValue, setPOSsizeValue] = useState(256);
-  const [fileSizeValue, setFileSizeValue] = useState(4096);
+  const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [isPOSInputVisible, setIsPOSInputVisible] = useState(true);
   const [isFileInputVisible, setIsFileInputVisible] = useState(true);
 
-  const handleCancelCpu = () => {
-    setPOSsizeValue(256); // Reset to default value
-    setIsPOSInputVisible(true);
-  };
-
-  const handleSaveCpu = () => {
+  const handleSaveSettings = useCallback(() => {
     setIsPOSInputVisible(false);
-  };
-
-  const handleCancelNonces = () => {
-    setFileSizeValue(4096); // Reset to default value
-    setIsFileInputVisible(true);
-  };
-
-  const handleSaveNonces = () => {
     setIsFileInputVisible(false);
-  };
+    invokeBinaryWithSettings(settings);
+  }, [settings]);
+
+  const handleCancel = useCallback(() => {
+    setSettings(defaultSettings);
+    setIsPOSInputVisible(true);
+    setIsFileInputVisible(true);
+  }, []);
+
+  const handleChange = useCallback((key: keyof Settings, value: number) => {
+    setSettings((prevSettings) => ({ ...prevSettings, [key]: value }));
+  }, []);
 
   return (
     <BottomContainer>
       <BgImage src={size} />
-
-      <TileWrapper>
-        <Tile
-          heading="Select POS data size"
-          subheader="Gibibytes"
-          footer="more data -> more rewards, but longer generation and proving"
-        />
-        {isPOSInputVisible ? (
-          <>
-            <CustomNumberInput
-              min={256}
-              max={999999}
-              step={64}
-              value={256}
-              onChange={(val) => setPOSsizeValue(val)}
-            />
-            <SaveButton buttonLeft={55} onClick={handleSaveCpu} />
-            <CancelButton buttonLeft={45} onClick={handleCancelCpu} />
-          </>
-        ) : (
-          <>
-            <SelectedValue>{dataSizeValue}</SelectedValue>
-            <CancelButton buttonLeft={50} onClick={handleCancelCpu} />
-          </>
-        )}
-      </TileWrapper>
-      <TileWrapper>
-        <Tile
-          heading="Select file size"
-          subheader="Mebibytes"
-          footer="POS will be stored across [XXX] files" //TODO
-        />
-        {isFileInputVisible ? (
-          <>
-            <CustomNumberInput
-              min={10}
-              max={99999}
-              step={1}
-              value={4096}
-              onChange={(val) => setFileSizeValue(val)}
-            />
-            <SaveButton buttonLeft={55} onClick={handleSaveNonces} />
-            <CancelButton buttonLeft={45} onClick={handleCancelNonces} />
-          </>
-        ) : (
-          <>
-            <SelectedValue>{fileSizeValue}</SelectedValue>
-            <CancelButton buttonLeft={50} onClick={handleCancelNonces} />
-          </>
-        )}
-      </TileWrapper>
+      <InputSection
+        isVisible={isPOSInputVisible}
+        label="Select POS data size"
+        minValue={256}
+        maxValue={999999}
+        step={64}
+        value={settings.numUnits}
+        onChange={(val) => handleChange("numUnits", val)}
+        onSave={handleSaveSettings}
+        onCancel={handleCancel}
+      />
+      <InputSection
+        isVisible={isFileInputVisible}
+        label="Select file size"
+        minValue={10}
+        maxValue={99999}
+        step={1}
+        value={settings.maxFileSize}
+        onChange={(val) => handleChange("maxFileSize", val)}
+        onSave={handleSaveSettings}
+        onCancel={handleCancel}
+      />
     </BottomContainer>
   );
 };
 
 const SetupProving: React.FC = () => {
-  const [cpuValue, setCpuValue] = useState(8); //placeholder
-  const [noncesValue, setNoncesValue] = useState(288);
+  const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [isCpuInputVisible, setIsCpuInputVisible] = useState(true);
   const [isNoncesInputVisible, setIsNoncesInputVisible] = useState(true);
 
-  const handleCancelCpu = () => {
-    setCpuValue(8); // Reset to default value
-    setIsCpuInputVisible(true);
-  };
-
-  const handleSaveCpu = () => {
+  const handleSaveSettings = useCallback(() => {
     setIsCpuInputVisible(false);
-  };
-
-  const handleCancelNonces = () => {
-    setNoncesValue(288); // Reset to default value
-    setIsNoncesInputVisible(true);
-  };
-
-  const handleSaveNonces = () => {
     setIsNoncesInputVisible(false);
-  };
+    invokeBinaryWithSettings(settings);
+  }, [settings]);
+
+  const handleCancel = useCallback(() => {
+    setSettings(defaultSettings);
+    setIsCpuInputVisible(true);
+    setIsNoncesInputVisible(true);
+  }, []);
+
+  const handleChange = useCallback((key: keyof Settings, value: number) => {
+    setSettings((prevSettings) => ({ ...prevSettings, [key]: value }));
+  }, []);
 
   return (
     <BottomContainer>
       <BgImage src={cpu} />
-      <TileWrapper>
-        <Tile
-          heading="Select number of CPU cores"
-          footer="more CPU cores -> faster proof generation"
-        />
-        {isCpuInputVisible ? (
-          <>
-            <CustomNumberInput
-              min={1}
-              max={16}
-              step={1}
-              value={cpuValue}
-              onChange={(val) => setCpuValue(val)}
-            />
-            <SaveButton buttonLeft={55} onClick={handleSaveCpu} />
-            <CancelButton buttonLeft={45} onClick={handleCancelCpu} />
-          </>
-        ) : (
-          <>
-            <SelectedValue>{cpuValue}</SelectedValue>
-            <CancelButton buttonLeft={50} onClick={handleCancelCpu} />
-          </>
-        )}
-      </TileWrapper>
-      <TileWrapper>
-        <Tile
-          heading="Select number of Nonces"
-          footer="more nonces -> more likely proof generated on the first try"
-        />
-        {isNoncesInputVisible ? (
-          <>
-            <CustomNumberInput
-              min={16}
-              max={9999}
-              step={16}
-              value={noncesValue}
-              onChange={(val) => setNoncesValue(val)}
-            />
-            <SaveButton buttonLeft={55} onClick={handleSaveNonces} />
-            <CancelButton buttonLeft={45} onClick={handleCancelNonces} />
-          </>
-        ) : (
-          <>
-            <SelectedValue>{noncesValue}</SelectedValue>
-            <CancelButton buttonLeft={50} onClick={handleCancelNonces} />
-          </>
-        )}
-      </TileWrapper>
+      <InputSection
+        isVisible={isCpuInputVisible}
+        label="Select number of CPU cores"
+        minValue={1}
+        maxValue={16}
+        step={1}
+        value={settings.provider}
+        onChange={(val) => handleChange("provider", val)}
+        onSave={handleSaveSettings}
+        onCancel={handleCancel}
+      />
+      <InputSection
+        isVisible={isNoncesInputVisible}
+        label="Select number of Nonces"
+        minValue={16}
+        maxValue={9999}
+        step={16}
+        value={settings.maxFileSize}
+        onChange={(val) => handleChange("maxFileSize", val)}
+        onSave={handleSaveSettings}
+        onCancel={handleCancel}
+      />
     </BottomContainer>
   );
 };
 
-type Props = {
+interface Props {
   isOpen: boolean;
-};
+}
 
 const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   const { run, response, loading, error } = FindProviders();
@@ -224,27 +224,26 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
     if (isOpen) {
       run(["-printProviders"]);
     }
-  }, [isOpen]);
+  }, [isOpen, run]);
 
-  function createTile(processor: {
-    ID: number;
-    Model: string;
-    DeviceType: string;
-  }) {
-    const isFastest = processor.ID === 0;
-    const icon = processor.DeviceType === "GPU" ? gpu : cpu;
+  const createTile = useCallback(
+    (processor: { ID: number; Model: string; DeviceType: string }) => {
+      const isFastest = processor.ID === 0;
+      const icon = processor.DeviceType === "GPU" ? gpu : cpu;
 
-    return (
-      <TileWrapper width={350} key={processor.ID}>
-        <Tile
-          heading={processor.Model}
-          subheader={processor.DeviceType}
-          footer={isFastest ? "The Fastest" : ""}
-          imageSrc={icon}
-        />
-      </TileWrapper>
-    );
-  }
+      return (
+        <TileWrapper width={350} key={processor.ID}>
+          <Tile
+            heading={processor.Model}
+            subheader={processor.DeviceType}
+            footer={isFastest ? "The Fastest" : ""}
+            imageSrc={icon}
+          />
+        </TileWrapper>
+      );
+    },
+    []
+  );
 
   return (
     <BottomContainer>
@@ -259,6 +258,18 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
       )}
     </BottomContainer>
   );
+};
+
+const invokeBinaryWithSettings = (settings: Settings) => {
+  const { numUnits, provider, maxFileSize, datadir } = settings;
+  const command = `postcli -numUnits ${numUnits} -provider ${provider} -maxFileSize ${maxFileSize} -datadir ${datadir}`;
+  invoke("execute_command", { command })
+    .then((response) => {
+      console.log("Command executed successfully:", response);
+    })
+    .catch((error) => {
+      console.error("Error executing command:", error);
+    });
 };
 
 export { SetupSize, SetupProving, SetupGPU };
