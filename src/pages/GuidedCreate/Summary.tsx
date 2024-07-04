@@ -35,7 +35,9 @@ const Summary: React.FC = () => {
         <Subheader text={"Check twice, adjust if needed, and blast off!"} />
       </TextWrapper>
 
-      <SetupSummary />
+      <SetupSummary onStart={function (): void {
+        throw new Error("Function not implemented.");
+      } } />
     </>
   );
 };

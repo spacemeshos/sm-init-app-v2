@@ -11,7 +11,8 @@ import cpu from "../assets/cpu.png";
 import gpu from "../assets/graphics-card.png";
 import Frame from "./frames";
 import { useNavigate } from "react-router-dom";
-import rocket from "../../assets/rocket.png";
+import rocket from "../assets/rocket.png";
+import { useSettings } from "../state/SettingsContext";
 
 const BgImage = styled.img`
   aspect-ratio: 1;
@@ -86,34 +87,39 @@ interface Settings {
   provider?: number; //default 0
 }
 
+/*
+_____________________________________________________________________________________________
+Usage of ./postcli:
+-maxFileSize  uint  max file size (default 4294967296)
+-numUnits  uint  number of units (required)
+*/
+
 const SetupSize: React.FC = () => {
+  const { settings, setSettings } = useSettings();
   const [isPOSInputVisible, setIsPOSInputVisible] = useState(true);
   const [isFileInputVisible, setIsFileInputVisible] = useState(true);
-  const [dataSizeValue, setPOSsizeValue] = useState(256);
-  const [fileSizeValue, setFileSizeValue] = useState(4096);
-
-  const handleCancelDataSize = () => {
-    setPOSsizeValue(256); // Reset to default value
-    setIsPOSInputVisible(true);
-  };
 
   const handleSaveDataSize = () => {
     setIsPOSInputVisible(false);
-  };
-
-  const handleCancelFileSize = () => {
-    setFileSizeValue(4096); // Reset to default value
-    setIsFileInputVisible(true);
   };
 
   const handleSaveFileSize = () => {
     setIsFileInputVisible(false);
   };
 
+  const handleCancelDataSize = () => {
+    setSettings((prev) => ({ ...prev, numUnits: 4 })); // Reset to default value
+    setIsPOSInputVisible(true);
+  };
+
+  const handleCancelFileSize = () => {
+    setSettings((prev) => ({ ...prev, maxFileSize: 4096 })); // Reset to default value
+    setIsFileInputVisible(true);
+  };
+
   return (
     <BottomContainer>
       <BgImage src={size} />
-
       <TileWrapper>
         <Tile
           heading="Select POS data size"
@@ -124,17 +130,19 @@ const SetupSize: React.FC = () => {
           <>
             <CustomNumberInput
               min={256}
-              max={999999}
+              max={99999999999999}
               step={64}
-              value={dataSizeValue}
-              onChange={(val) => setPOSsizeValue(val)}
+              value={settings.numUnits ? settings.numUnits * 64 : 256}
+              onChange={(val) =>
+                setSettings((prev) => ({ ...prev, numUnits: val / 64 }))
+              }
             />
             <SaveButton buttonLeft={55} onClick={handleSaveDataSize} />
             <CancelButton buttonLeft={45} onClick={handleCancelDataSize} />
           </>
         ) : (
           <>
-            <SelectedValue>{dataSizeValue}</SelectedValue>
+            <SelectedValue>{(settings.numUnits ?? 256) * 64}</SelectedValue>
             <CancelButton buttonLeft={50} onClick={handleCancelDataSize} />
           </>
         )}
@@ -143,23 +151,25 @@ const SetupSize: React.FC = () => {
         <Tile
           heading="Select file size"
           subheader="Mebibytes"
-          footer="POS will be stored across [XXX] files" //TODO
+          footer="POS will be stored across [XXX] files"
         />
         {isFileInputVisible ? (
           <>
             <CustomNumberInput
               min={10}
-              max={99999}
+              max={9999999}
               step={1}
-              value={fileSizeValue}
-              onChange={(val) => setFileSizeValue(val)}
+              value={settings.maxFileSize}
+              onChange={(val) =>
+                setSettings((prev) => ({ ...prev, maxFileSize: val }))
+              }
             />
             <SaveButton buttonLeft={55} onClick={handleSaveFileSize} />
             <CancelButton buttonLeft={45} onClick={handleCancelFileSize} />
           </>
         ) : (
           <>
-            <SelectedValue>{fileSizeValue}</SelectedValue>
+            <SelectedValue>{settings.maxFileSize}</SelectedValue>
             <CancelButton buttonLeft={50} onClick={handleCancelFileSize} />
           </>
         )}
@@ -168,8 +178,16 @@ const SetupSize: React.FC = () => {
   );
 };
 
-export default SetupSize;
+/* 
+_____________________________________________________________________________________________ 
+Setting up the proving opts
+CPU cores should default to the 3/4 of the User's CPU
+Nonces number should be 288 or higher to assure finding the proof on the first read
 
+These values are not used in the postcli command
+they should be saved in the config file to simplify smeshing setup
+
+*/
 const SetupProving: React.FC = () => {
   const [cpuValue, setCpuValue] = useState(8); //placeholder
   const [noncesValue, setNoncesValue] = useState(288);
@@ -253,6 +271,14 @@ type Props = {
   isOpen: boolean;
 };
 
+/*
+_____________________________________________________________________________________________
+Usage of ./postcli:
+-provider  uint  compute provider id (required)
+
+By default the fastest marked as 0 and is chosen automatically 
+*/
+
 const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   const { run, response, loading, error } = FindProviders();
 
@@ -298,36 +324,51 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   );
 };
 
-const SetupSummary: React.FC = () => {
-  const navigate = useNavigate();
-  const Confirmation = () => navigate("/guided/Confirmation");
+/*
+_____________________________________________________________________________________________
+Show summary and compose command
+
+Usage of ./postcli:
+-commitmentAtxId   string  commitment atx id, in hex (required)
+-datadir  string  filesystem datadir path (default "/Users/monikasmolarek/post/data")
+-id   string  miner's id (public key), in hex (will be auto-generated if not provided)
+-maxFileSize  uint  max file size (default 4294967296)
+-numUnits   uint  number of units (required)
+-printConfig  print the used config and options
+-printNumFiles  print the total number of files that would be initialized
+-printProviders  print the list of compute providers
+-provider  uint  compute provider id (required)
+*/
+
+const SetupSummary: React.FC<{ onStart: () => void }> = ({ onStart }) => {
+  const { settings } = useSettings();
 
   return (
     <>
       <ContainerSummary>
+        <BgImage src={rocket} />
         <Frame
           height={25}
-          heading=" POS DATA" //numUnits + maxFileSize
-          subheader="placeholder summary"
+          heading="POS DATA"
+          subheader={`${(settings.numUnits ?? 256) * 64} Gibibytes, ${settings.maxFileSize} MiB file size`} //TODO convert dynamically GiB TiB PiB etc
         />
         <Frame
           height={25}
-          heading="POS Directory" //dataDir
-          subheader="placeholder summary"
+          heading="POS Directory"
+          subheader={settings.datadir}
         />
         <Frame
           height={25}
-          heading="POS Generation" //provider
-          subheader="placeholder summary"
+          heading="POS Generation"
+          subheader={`Provider ID: ${settings.provider}`}
         />
         <Frame
           height={25}
-          heading="POST Proving" //numCores + numNonces
-          subheader="placeholder summary"
+          heading="POST Proving"
+          subheader={`${settings.numCores} cores, ${settings.numNonces} nonces`}
         />
       </ContainerSummary>
       <ContainerStart>
-        <BgImage src={rocket} />
         <Button
           label="Start Data generation"
           borderColor={Colors.purpleLight}
@@ -335,7 +376,7 @@ const SetupSummary: React.FC = () => {
           buttonTop={160}
           buttonLeft={25}
           height={80}
-          onClick={Confirmation} //implement running the postcli command with the collected flags
+          onClick={onStart}
         />
       </ContainerStart>
     </>
