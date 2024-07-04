@@ -52,27 +52,37 @@ const SelectedValue = styled.h1`
   position: relative;
 `;
 
+interface Settings {
+  datadir?: string; //default "/Users/username/post/data"
+  pubKey?: string; //optional, id/public key, if not provided, it will be generated automatically
+  numUnits?: number; //to be set by user: one unit = 64GiB, minimum to be set is 4 units (256GiB)
+  maxFileSize?: number; //default 4096
+  numCores?: number; //default 3/4 of the user's CPU -to be detected and calculated
+  numNonces?: number; //default 288
+  provider?: number; //default 0
+}
+
 const SetupSize: React.FC = () => {
-  const [dataSizeValue, setPOSsizeValue] = useState(256);
-  const [fileSizeValue, setFileSizeValue] = useState(4096);
   const [isPOSInputVisible, setIsPOSInputVisible] = useState(true);
   const [isFileInputVisible, setIsFileInputVisible] = useState(true);
+  const [dataSizeValue, setPOSsizeValue] = useState(256);
+  const [fileSizeValue, setFileSizeValue] = useState(4096);
 
-  const handleCancelCpu = () => {
+  const handleCancelDataSize = () => {
     setPOSsizeValue(256); // Reset to default value
     setIsPOSInputVisible(true);
   };
 
-  const handleSaveCpu = () => {
+  const handleSaveDataSize = () => {
     setIsPOSInputVisible(false);
   };
 
-  const handleCancelNonces = () => {
+  const handleCancelFileSize = () => {
     setFileSizeValue(4096); // Reset to default value
     setIsFileInputVisible(true);
   };
 
-  const handleSaveNonces = () => {
+  const handleSaveFileSize = () => {
     setIsFileInputVisible(false);
   };
 
@@ -92,16 +102,16 @@ const SetupSize: React.FC = () => {
               min={256}
               max={999999}
               step={64}
-              value={256}
+              value={dataSizeValue}
               onChange={(val) => setPOSsizeValue(val)}
             />
-            <SaveButton buttonLeft={55} onClick={handleSaveCpu} />
-            <CancelButton buttonLeft={45} onClick={handleCancelCpu} />
+            <SaveButton buttonLeft={55} onClick={handleSaveDataSize} />
+            <CancelButton buttonLeft={45} onClick={handleCancelDataSize} />
           </>
         ) : (
           <>
             <SelectedValue>{dataSizeValue}</SelectedValue>
-            <CancelButton buttonLeft={50} onClick={handleCancelCpu} />
+            <CancelButton buttonLeft={50} onClick={handleCancelDataSize} />
           </>
         )}
       </TileWrapper>
@@ -117,22 +127,24 @@ const SetupSize: React.FC = () => {
               min={10}
               max={99999}
               step={1}
-              value={4096}
+              value={fileSizeValue}
               onChange={(val) => setFileSizeValue(val)}
             />
-            <SaveButton buttonLeft={55} onClick={handleSaveNonces} />
-            <CancelButton buttonLeft={45} onClick={handleCancelNonces} />
+            <SaveButton buttonLeft={55} onClick={handleSaveFileSize} />
+            <CancelButton buttonLeft={45} onClick={handleCancelFileSize} />
           </>
         ) : (
           <>
             <SelectedValue>{fileSizeValue}</SelectedValue>
-            <CancelButton buttonLeft={50} onClick={handleCancelNonces} />
+            <CancelButton buttonLeft={50} onClick={handleCancelFileSize} />
           </>
         )}
       </TileWrapper>
     </BottomContainer>
   );
 };
+
+export default SetupSize;
 
 const SetupProving: React.FC = () => {
   const [cpuValue, setCpuValue] = useState(8); //placeholder
