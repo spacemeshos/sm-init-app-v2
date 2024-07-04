@@ -10,7 +10,6 @@ import size from "../assets/duplicate.png";
 import cpu from "../assets/cpu.png";
 import gpu from "../assets/graphics-card.png";
 import Frame from "./frames";
-import { useNavigate } from "react-router-dom";
 import rocket from "../assets/rocket.png";
 import { useSettings } from "../state/SettingsContext";
 
@@ -77,17 +76,7 @@ const SelectedValue = styled.h1`
   position: relative;
 `;
 
-interface Settings {
-  datadir?: string; //default "/Users/username/post/data"
-  pubKey?: string; //optional, id/public key, if not provided, it will be generated automatically
-  numUnits?: number; //to be set by user: one unit = 64GiB, minimum to be set is 4 units (256GiB)
-  maxFileSize?: number; //default 4096
-  numCores?: number; //default 3/4 of the user's CPU -to be detected and calculated
-  numNonces?: number; //default 288
-  provider?: number; //default 0
-}
-
-/*
+/*  --------- POS SIZE ---------
 _____________________________________________________________________________________________
 Usage of ./postcli:
 -maxFileSize  uint  max file size (default 4294967296)
@@ -178,7 +167,7 @@ const SetupSize: React.FC = () => {
   );
 };
 
-/* 
+/* --------- Proving - CPU & Nonces ---------
 _____________________________________________________________________________________________ 
 Setting up the proving opts
 CPU cores should default to the 3/4 of the User's CPU
@@ -271,7 +260,7 @@ type Props = {
   isOpen: boolean;
 };
 
-/*
+/* --------- Provider - GPU ---------
 _____________________________________________________________________________________________
 Usage of ./postcli:
 -provider  uint  compute provider id (required)
@@ -324,7 +313,7 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   );
 };
 
-/*
+/* --------- Summary ---------
 _____________________________________________________________________________________________
 Show summary and compose command
 
