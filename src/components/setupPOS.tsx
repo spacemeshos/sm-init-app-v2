@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 import Tile from "./tile";
-import { CancelButton, SaveButton } from "./button";
+import { Button, CancelButton, SaveButton } from "./button";
 import CustomNumberInput from "./input";
 import { FindProviders } from "../services/parseResponse";
 import { ErrorMessage, Subheader } from "./texts";
 import size from "../assets/duplicate.png";
 import cpu from "../assets/cpu.png";
 import gpu from "../assets/graphics-card.png";
+import Frame from "./frames";
+import { useNavigate } from "react-router-dom";
+import rocket from "../../assets/rocket.png";
 
 const BgImage = styled.img`
   aspect-ratio: 1;
@@ -29,6 +32,27 @@ const BottomContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
   flex-direction: row;
+`;
+
+const ContainerSummary = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  left: 75px;
+  top: 300px;
+  width: 675px;
+  height: 320px;
+  position: absolute;
+`;
+
+const ContainerStart = styled.div`
+  left: 800px;
+  top: 300px;
+  width: 300px;
+  height: 300px;
+  position: absolute;
 `;
 
 const TileWrapper = styled.div<{
@@ -253,6 +277,7 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
           subheader={processor.DeviceType}
           footer={isFastest ? "The Fastest" : ""}
           imageSrc={icon}
+          //implement onCLick: select the clicked provider - save it's ID to pass to the binary as a -provider flag
         />
       </TileWrapper>
     );
@@ -273,4 +298,48 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   );
 };
 
-export { SetupSize, SetupProving, SetupGPU };
+const SetupSummary: React.FC = () => {
+  const navigate = useNavigate();
+  const Confirmation = () => navigate("/guided/Confirmation");
+
+  return (
+    <>
+      <ContainerSummary>
+        <Frame
+          height={25}
+          heading=" POS DATA" //numUnits + maxFileSize
+          subheader="placeholder summary"
+        />
+        <Frame
+          height={25}
+          heading="POS Directory" //dataDir
+          subheader="placeholder summary"
+        />
+        <Frame
+          height={25}
+          heading="POS Generation" //provider
+          subheader="placeholder summary"
+        />
+        <Frame
+          height={25}
+          heading="POST Proving" //numCores + numNonces
+          subheader="placeholder summary"
+        />
+      </ContainerSummary>
+      <ContainerStart>
+        <BgImage src={rocket} />
+        <Button
+          label="Start Data generation"
+          borderColor={Colors.purpleLight}
+          backgroundColor={Colors.darkerPurple}
+          buttonTop={160}
+          buttonLeft={25}
+          height={80}
+          onClick={Confirmation} //implement running the postcli command with the collected flags
+        />
+      </ContainerStart>
+    </>
+  );
+};
+
+export { SetupSize, SetupProving, SetupGPU, SetupSummary };
