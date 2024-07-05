@@ -1,4 +1,6 @@
-# Spacemesh Init App v2
+# Spacemesh Init App
+
+TO BE UPDATED
 
 ## Overview
 
