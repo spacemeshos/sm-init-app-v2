@@ -7,7 +7,7 @@
 use std::env;
 use std::path::PathBuf;
 use std::process::Command;
-use sys_info::disk_info;
+// use sys_info::disk_info;
 use tauri::api::dialog::FileDialogBuilder;
 
 #[tauri::command]
@@ -27,15 +27,19 @@ async fn select_directory() -> Result<String, String> {
         .map_err(|_| "Failed to receive directory".to_string())?
         .ok_or("No directory selected".to_string())?;
 
-    let disk_info = disk_info().map_err(|_| "Failed to get disk info".to_string())?;
+    // let disk_info = disk_info().map_err(|_| "Failed to get disk info".to_string())?;
 
-    if disk_info.free < 256 * 1024 * 1024 * 1024 {
-        return Err("Selected directory does not have enough free space".into());
-    }
-
+    // // Check if free disk space is less than 256 GB
+    // if disk_info.free < 256 * 1024 * 1024 * 1024 {
+    //     // Convert free space to a more readable format (e.g., GB)
+    //     let free_space_gb = disk_info.free as f64 / (1024 * 1024 * 1024) as f64;
+    //     return Err(format!(
+    //         "Selected directory does not have enough free space. Available space: {:.2} GB",
+    //         free_space_gb
+    //     ));
+    // }
     Ok(selected_dir)
 }
-
 
 #[tauri::command]
 fn run_postcli_command(args: Vec<String>) -> Result<String, String> {
