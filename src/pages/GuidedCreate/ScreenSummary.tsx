@@ -19,7 +19,7 @@ const TextWrapper = styled.div`
   position: absolute;
 `;
 
-const Summary: React.FC = () => {
+const ScreenSummary: React.FC = () => {
   // React Router's navigation hook
   const navigate = useNavigate();
   const Confirmation = () => navigate("/guided/Confirmation");
@@ -42,4 +42,4 @@ const Summary: React.FC = () => {
   );
 };
 
-export default Summary;
+export default ScreenSummary;

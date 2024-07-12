@@ -26,7 +26,7 @@ const TextWrapper = styled.div`
   letter-spacing: 2px;
 `;
 
-const AdvSetupProving: React.FC = () => {
+const ScreenAdvProving: React.FC = () => {
   // React Router's navigation hook
   const navigate = useNavigate();
   const AdvSetupProving = () => navigate("/advanced/Provider");
@@ -42,7 +42,7 @@ const AdvSetupProving: React.FC = () => {
       <TextWrapper>
         <Title text="Set up POST proving" />
         Your CPU will be utilized once every two weeks to complete POET proving.
-        <br/>
+        <br />
         Depending on your settings, it might take several hours.
       </TextWrapper>
       <SetupProving />
@@ -50,4 +50,4 @@ const AdvSetupProving: React.FC = () => {
   );
 };
 
-export default AdvSetupProving;
+export default ScreenAdvProving;

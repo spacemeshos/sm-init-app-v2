@@ -26,7 +26,7 @@ const TextWrapper = styled.div`
   letter-spacing: 2px;
 `;
 
-const AdvSetupProvider: React.FC = () => {
+const ScreenAdvProvider: React.FC = () => {
   // React Router's navigation hook
   const navigate = useNavigate();
   const SetupProving = () => navigate("/guided/Summary");
@@ -50,4 +50,4 @@ const AdvSetupProvider: React.FC = () => {
   );
 };
 
-export default AdvSetupProvider;
+export default ScreenAdvProvider;

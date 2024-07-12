@@ -11,12 +11,10 @@ import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Tile from "../../components/tile";
 import { ExternalLinks } from "../../shared/Constants";
-import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
-import { open } from "@tauri-apps/api/shell";
+import { invoke } from "@tauri-apps/api";
 import folder from "../../assets/folder.png";
-import bulb from "../../assets/light-bulb.png";
-import { invoke } from "@tauri-apps/api/tauri";
+import key from "../../assets/key.png";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -59,36 +57,25 @@ const DirWrapper = styled.div`
   position: relative;
 `;
 
-const HintWrapper = styled.div`
+const IDWrapper = styled.div`
   height: 370px;
   width: 450px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-content: center;
+  align-items: center;
   position: relative;
 `;
 
-const HintText = styled.div`
-  width: 450px;
-  height: 228px;
-  top: 160px;
-  position: absolute;
-  color: ${Colors.greenLight};
-  font-family: "Source Code Pro", monospace;
-  font-weight: 200;
-  text-align: center;
-  font-size: 22px;
-  line-height: 35px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-`;
-
-const SelectDirectory: React.FC = () => {
+const ScreenAdvDirectory: React.FC = () => {
   // Functions to navigate to external links
-  const navigateToDocs = () => open(ExternalLinks.Docs);
-  const navigateToDiscord = () => open(ExternalLinks.Discord);
+  const navigateToDocs = () => window.open(ExternalLinks.Docs);
+  const navigateToDiscord = () => window.open(ExternalLinks.Discord);
 
+  // React Router's navigation hook
   const navigate = useNavigate();
-  const TailoredSettings = () => navigate("/guided/TailoredSettings");
+  const ScreenAdvSize = () => navigate("/advanced/SetupSize");
 
   // Function to handle directory selection using Tauri API
   const handleSelectDirectory = async () => {
@@ -102,9 +89,9 @@ const SelectDirectory: React.FC = () => {
   return (
     <>
       <NavProgress>
-        <ProgressBar progress={33} />
+        <ProgressBar progress={20} />
         <BackButton />
-        <ForwardButton onClick={TailoredSettings} />
+        <ForwardButton onClick={ScreenAdvSize} />
       </NavProgress>
       {/* Text wrapper for title and links to documentation and Discord */}
       <TextWrapper>
@@ -134,7 +121,7 @@ const SelectDirectory: React.FC = () => {
           <Tile
             heading={"Where to Store pos data?"}
             imageSrc={folder}
-            imageTop={40}
+            imageTop={45}
           />
           <Button
             onClick={handleSelectDirectory}
@@ -166,17 +153,45 @@ const SelectDirectory: React.FC = () => {
           />
         </DirWrapper>
         {/* Hint section for additional information */}
-        <HintWrapper>
-          <Tile imageSrc={bulb} imageTop={10} />
-          <HintText>
-            Next, we'll optimize your settings with a quick benchmark to boost
-            your rewards and qualification chances every epoch
-          </HintText>
-          <TooltipButton modalComponent={PosInfo} buttonTop={96} />
-        </HintWrapper>
+        <IDWrapper>
+          <Tile
+            heading="Add existing identity"
+            subheader="(optional)"
+            imageSrc={key}
+            imageTop={45}
+          />
+          <Button
+            onClick={handleSelectDirectory}
+            label="Choose Identity.key file"
+            width={320}
+            buttonTop={100}
+            backgroundColor={Colors.darkerPurple}
+            borderColor={Colors.purpleLight}
+            /* TO DO */
+          />
+          <TooltipButton
+            modalText={
+              <>
+                The POS Data is valid only for one Identity. You can add your
+                existing identity.key here.
+                <br />
+                <br />
+                You can skip this step. Then a new identity.key will be
+                automatically created.
+                <br />
+                <br />
+                If you will be moving the POS data elsewhere, remember to
+                include identity.key file.
+              </>
+            }
+            modalTop={1}
+            modalLeft={1}
+            buttonTop={96}
+          />
+        </IDWrapper>
       </ContainerBottom>
     </>
   );
 };
 
-export default SelectDirectory;
+export default ScreenAdvDirectory;

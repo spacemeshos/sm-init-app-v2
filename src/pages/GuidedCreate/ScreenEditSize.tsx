@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Colors from "../../styles/colors";
-import { SetupGPU } from "../../components/setupPOS";
+import { SetupSize } from "../../components/setupPOS";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -58,29 +58,30 @@ const CloseButton = styled.button`
   cursor: pointer;
   font-size: 28px;
 `;
+
 type Props = {
   onClose: () => void;
   isOpen: boolean;
   children?: React.ReactNode;
 };
 
-const GPUedit = ({ onClose, isOpen }: Props) => {
+const ScreenEditSize = ({ onClose, isOpen }: Props) => {
   if (!isOpen) return null;
-
   return (
     <Backdrop onClick={onClose}>
       <Wrapper onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>&times;</CloseButton>
-        <Header>Select processor to generate POS</Header>
+        <Header>Set up POS size</Header>
         <Subheader>
-          The selected processor will be fully utilized until all POS data is
-          generated. <br />
-          During this time, it will not be available for other tasks.
+          Don't set too much. This data will be read through every two weeks.
+          <br />
+          If your PC can't prepare POST proof in a few hours, you won't get any
+          rewards.
         </Subheader>
-        <SetupGPU isOpen={true} />
+        <SetupSize />
       </Wrapper>
     </Backdrop>
   );
 };
 
-export default GPUedit;
+export default ScreenEditSize;

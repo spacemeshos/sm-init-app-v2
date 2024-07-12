@@ -61,8 +61,7 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const CPUedit = ({ onClose, isOpen }: Props) => {
-
+const ScreenEditCPU = ({ onClose, isOpen }: Props) => {
   if (!isOpen) return null;
 
   return (
@@ -74,10 +73,10 @@ const CPUedit = ({ onClose, isOpen }: Props) => {
           Your CPU will be utilized once every two weeks to complete POET
           proving. Depending on your settings, it might take several hours.
         </Subheader>
-        <SetupProving/>
+        <SetupProving />
       </Wrapper>
     </Backdrop>
   );
 };
 
-export default CPUedit;
+export default ScreenEditCPU;
