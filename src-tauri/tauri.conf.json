@@ -12,14 +12,14 @@
   },
   "tauri": {
     "allowlist": {
+      "all": true,
       "shell": {
         "all": true,
         "execute": true,
         "open": true,
         "scope": [],
         "sidecar": false
-      },
-      "all": true
+      }
     },
     "bundle": {
       "active": true,

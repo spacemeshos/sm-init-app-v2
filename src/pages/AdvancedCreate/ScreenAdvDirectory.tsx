@@ -12,9 +12,8 @@ import ProgressBar from "../../components/progress";
 import Tile from "../../components/tile";
 import { ExternalLinks } from "../../shared/Constants";
 import { useNavigate } from "react-router-dom";
-import { invoke } from "@tauri-apps/api";
-import folder from "../../assets/folder.png";
 import key from "../../assets/key.png";
+import SelectDirectory from "../../components/selectDir";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -77,15 +76,6 @@ const ScreenAdvDirectory: React.FC = () => {
   const navigate = useNavigate();
   const ScreenAdvSize = () => navigate("/advanced/SetupSize");
 
-  // Function to handle directory selection using Tauri API
-  const handleSelectDirectory = async () => {
-    try {
-      const path = await invoke<string>("open_directory_dialog");
-      alert(`Directory selected: ${path}`);
-    } catch (error) {
-      alert(`Error: ${error}`);
-    }
-  };
   return (
     <>
       <NavProgress>
@@ -117,41 +107,7 @@ const ScreenAdvDirectory: React.FC = () => {
       </TextWrapper>
       <ContainerBottom>
         {/* Directory selection section */}
-        <DirWrapper>
-          <Tile
-            heading={"Where to Store pos data?"}
-            imageSrc={folder}
-            imageTop={45}
-          />
-          <Button
-            onClick={handleSelectDirectory}
-            label="Choose directory"
-            width={320}
-            buttonTop={100}
-            backgroundColor={Colors.darkerPurple}
-            borderColor={Colors.purpleLight}
-            /* TO DO */
-          />
-          <TooltipButton
-            modalText={
-              <>
-                Use a reliable disk with at least 256 Gibibytes, preferring good
-                read speed (HDDs suffice).
-                <br />
-                <br />
-                Ensure PoS files remain accessible, as they're checked every 2
-                weeks.
-                <br />
-                <br />
-                Consider a dedicated disk or no other activity during proving
-                windows for disk longevity.
-              </>
-            }
-            modalTop={1}
-            modalLeft={1}
-            buttonTop={96}
-          />
-        </DirWrapper>
+        <SelectDirectory/>
         {/* Hint section for additional information */}
         <IDWrapper>
           <Tile
@@ -161,7 +117,7 @@ const ScreenAdvDirectory: React.FC = () => {
             imageTop={45}
           />
           <Button
-            onClick={handleSelectDirectory}
+            //onClick=  TODO
             label="Choose Identity.key file"
             width={320}
             buttonTop={100}
