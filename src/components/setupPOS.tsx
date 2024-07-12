@@ -85,17 +85,20 @@ Usage of ./postcli:
 */
 const SelectDirectory: React.FC = () => {
   const { settings, setSettings } = useSettings();
+  const [error, setError] = useState<string | null>(null);
 
   const handleSelectDirectory = async () => {
     try {
       const dir = await invoke<string>("select_directory");
-      setSettings((prevSettings) => ({
-        ...prevSettings,
+      setSettings((settings) => ({
+        ...settings,
         selectedDir: dir,
       }));
       console.log("Selected directory:", dir);
-    } catch (error) {
+      setError(null); // Clear any previous errors
+    } catch (error: any) {
       console.error("Failed to select directory:", error);
+      setError(error); // Set the error message
     }
   };
 
@@ -106,7 +109,9 @@ const SelectDirectory: React.FC = () => {
           heading={"Where to Store pos data?"}
           imageSrc={folder}
           imageTop={40}
+          errmsg={error ? `${error}` : undefined}
         />
+
         <Button
           onClick={handleSelectDirectory}
           label="Choose directory"

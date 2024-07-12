@@ -24,10 +24,10 @@ async fn select_directory() -> Result<String, String> {
 
     let selected_dir = receiver
         .recv()
-        .map_err(|_| "Failed to receive directory")?
-        .ok_or("No directory selected")?;
+        .map_err(|_| "Failed to receive directory".to_string())?
+        .ok_or("No directory selected".to_string())?;
 
-    let disk_info = disk_info().map_err(|_| "Failed to get disk info")?;
+    let disk_info = disk_info().map_err(|_| "Failed to get disk info".to_string())?;
 
     if disk_info.free < 256 * 1024 * 1024 * 1024 {
         return Err("Selected directory does not have enough free space".into());
@@ -35,6 +35,7 @@ async fn select_directory() -> Result<String, String> {
 
     Ok(selected_dir)
 }
+
 
 #[tauri::command]
 fn run_postcli_command(args: Vec<String>) -> Result<String, String> {
