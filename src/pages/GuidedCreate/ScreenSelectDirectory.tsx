@@ -46,16 +46,6 @@ const ContainerBottom = styled.div`
   height: 400px;
   position: absolute;
 `;
-const DirWrapper = styled.div`
-  height: 370px;
-  width: 450px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  position: relative;
-`;
 
 const HintWrapper = styled.div`
   height: 370px;
@@ -119,7 +109,7 @@ const ScreenSelectDirectory: React.FC = () => {
       </TextWrapper>
       <ContainerBottom>
         {/* Directory selection section */}
-        <SelectDirectory/>
+        <SelectDirectory />
         {/* Hint section for additional information */}
         <HintWrapper>
           <Tile imageSrc={bulb} imageTop={10} />

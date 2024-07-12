@@ -45,16 +45,6 @@ const ContainerBottom = styled.div`
   height: 400px;
   position: absolute;
 `;
-const DirWrapper = styled.div`
-  height: 370px;
-  width: 450px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  position: relative;
-`;
 
 const IDWrapper = styled.div`
   height: 370px;
