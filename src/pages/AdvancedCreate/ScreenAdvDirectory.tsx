@@ -13,7 +13,7 @@ import Tile from "../../components/tile";
 import { ExternalLinks } from "../../shared/Constants";
 import { useNavigate } from "react-router-dom";
 import key from "../../assets/key.png";
-import SelectDirectory from "../../components/selectDir";
+import { SelectDirectory } from "../../components/setupPOS";
 
 const NavProgress = styled.div`
   width: 1200px;

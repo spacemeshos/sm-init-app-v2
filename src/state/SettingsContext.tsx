@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface Settings {
-  datadir?: string;
   pubKey?: string;
   numUnits?: number;
   maxFileSize?: number;
   numCores?: number;
   numNonces?: number;
   provider?: number;
+  selectedDir?: string;
 }
 
 interface SettingsContextProps {
@@ -23,12 +23,12 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [settings, setSettings] = useState<Settings>({
-    datadir: "/Users/username/post/data", //TODO
     numUnits: 4,
     maxFileSize: 4096,
     numCores: 8,
     numNonces: 288,
     provider: 0,
+    selectedDir: undefined,
   });
 
   return (

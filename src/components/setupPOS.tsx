@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 import Tile from "./tile";
-import { Button, CancelButton, SaveButton } from "./button";
+import { Button, CancelButton, SaveButton, TooltipButton } from "./button";
 import CustomNumberInput from "./input";
 import { FindProviders } from "../services/parseResponse";
 import { ErrorMessage, Subheader } from "./texts";
@@ -11,6 +11,8 @@ import cpu from "../assets/cpu.png";
 import gpu from "../assets/graphics-card.png";
 import Frame from "./frames";
 import rocket from "../assets/rocket.png";
+import folder from "../assets/folder.png";
+import { invoke } from "@tauri-apps/api";
 import { useSettings } from "../state/SettingsContext";
 
 const BgImage = styled.img`
@@ -75,6 +77,67 @@ const SelectedValue = styled.h1`
   font-size: 50px;
   position: relative;
 `;
+
+/*  --------- SELECT DIRECTORY ---------
+_____________________________________________________________________________________________
+Usage of ./postcli:
+
+*/
+const SelectDirectory: React.FC = () => {
+  const { settings, setSettings } = useSettings();
+
+  const handleSelectDirectory = async () => {
+    try {
+      const dir = await invoke<string>("select_directory");
+      setSettings((prevSettings) => ({
+        ...prevSettings,
+        selectedDir: dir,
+      }));
+      console.log("Selected directory:", dir);
+    } catch (error) {
+      console.error("Failed to select directory:", error);
+    }
+  };
+
+  return (
+    <>
+      <TileWrapper>
+        <Tile
+          heading={"Where to Store pos data?"}
+          imageSrc={folder}
+          imageTop={40}
+        />
+        <Button
+          onClick={handleSelectDirectory}
+          label="Choose directory"
+          width={320}
+          buttonTop={100}
+          backgroundColor={Colors.darkerPurple}
+          borderColor={Colors.purpleLight}
+        />
+        <TooltipButton
+          modalText={
+            <>
+              Use a reliable disk with at least 256 Gibibytes, preferring good
+              read speed (HDDs suffice).
+              <br />
+              <br />
+              Ensure PoS files remain accessible, as they're checked every 2
+              weeks.
+              <br />
+              <br />
+              Consider a dedicated disk or no other activity during proving
+              windows for disk longevity.
+            </>
+          }
+          modalTop={1}
+          modalLeft={1}
+          buttonTop={96}
+        />
+      </TileWrapper>
+    </>
+  );
+};
 
 /*  --------- POS SIZE ---------
 _____________________________________________________________________________________________
@@ -331,7 +394,6 @@ Usage of ./postcli:
 
 const SetupSummary: React.FC<{ onStart: () => void }> = ({ onStart }) => {
   const { settings } = useSettings();
-
   return (
     <>
       <ContainerSummary>
@@ -339,12 +401,14 @@ const SetupSummary: React.FC<{ onStart: () => void }> = ({ onStart }) => {
         <Frame
           height={25}
           heading="POS DATA"
-          subheader={`${(settings.numUnits ?? 256) * 64} Gibibytes, ${settings.maxFileSize} MiB file size`} //TODO convert dynamically GiB TiB PiB etc
+          subheader={`${(settings.numUnits ?? 256) * 64} Gibibytes, ${
+            settings.maxFileSize
+          } MiB file size`} //TODO convert dynamically GiB TiB PiB etc
         />
         <Frame
           height={25}
           heading="POS Directory"
-          subheader={settings.datadir}
+          subheader={settings.selectedDir}
         />
         <Frame
           height={25}
@@ -372,4 +436,4 @@ const SetupSummary: React.FC<{ onStart: () => void }> = ({ onStart }) => {
   );
 };
 
-export { SetupSize, SetupProving, SetupGPU, SetupSummary };
+export { SelectDirectory, SetupSize, SetupProving, SetupGPU, SetupSummary };

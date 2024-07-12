@@ -14,7 +14,7 @@ import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
 import { open } from "@tauri-apps/api/shell";
 import bulb from "../../assets/light-bulb.png";
-import SelectDirectory from "../../components/selectDir";
+import { SelectDirectory } from "../../components/setupPOS";
 
 const NavProgress = styled.div`
   width: 1200px;
