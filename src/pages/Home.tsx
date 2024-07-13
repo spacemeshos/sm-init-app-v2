@@ -33,21 +33,6 @@ const ContainerRight = styled.div`
   position: absolute;
 `;
 
-const CustomTitle = styled.h1`
-  width: 1200px;
-  height: 21px;
-  top: 40px;
-  position: absolute;
-  color: ${Colors.grayLight};
-  font-family: "Source Code Pro ExtraLight", sans-serif;
-  text-align: center;
-  white-space: nowrap;
-  text-transform: uppercase;
-  font-size: 28px;
-  font-weight: 100;
-  letter-spacing: 5px;
-`;
-
 const Image = styled.img`
   width: auto;
   height: 215px;
@@ -140,8 +125,6 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <CustomTitle>PROOF OF SPACE-TIME MANAGER</CustomTitle>
-
       {/* Left container with logo, divider, and button */}
       <ContainerLeft>
         <Image src={LogoWhite} />
