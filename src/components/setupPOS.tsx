@@ -260,27 +260,26 @@ they should be saved in the config file to simplify smeshing setup
 
 */
 const SetupProving: React.FC = () => {
-  const [cpuValue, setCpuValue] = useState(8); //placeholder
-  const [noncesValue, setNoncesValue] = useState(288);
+  const { settings, setSettings } = useSettings();
   const [isCpuInputVisible, setIsCpuInputVisible] = useState(true);
   const [isNoncesInputVisible, setIsNoncesInputVisible] = useState(true);
 
-  const handleCancelCpu = () => {
-    setCpuValue(8); // Reset to default value
-    setIsCpuInputVisible(true);
-  };
-
-  const handleSaveCpu = () => {
+  const handleSaveCPU = () => {
     setIsCpuInputVisible(false);
-  };
-
-  const handleCancelNonces = () => {
-    setNoncesValue(288); // Reset to default value
-    setIsNoncesInputVisible(true);
   };
 
   const handleSaveNonces = () => {
     setIsNoncesInputVisible(false);
+  };
+
+  const handleCancelCPU = () => {
+    setSettings((prev) => ({ ...prev, numCores: 8 })); // TODO: calculate the 3/4 of the user's cpu
+    setIsCpuInputVisible(true);
+  };
+
+  const handleCancelNonces = () => {
+    setSettings((prev) => ({ ...prev, numNonces: 288 })); // Reset to default value
+    setIsNoncesInputVisible(true);
   };
 
   return (
@@ -297,16 +296,18 @@ const SetupProving: React.FC = () => {
               min={1}
               max={16}
               step={1}
-              value={cpuValue}
-              onChange={(val) => setCpuValue(val)}
+              value={settings.numCores}
+              onChange={(val) =>
+                setSettings((prev) => ({ ...prev, numCores: val }))
+              }
             />
-            <SaveButton buttonLeft={55} onClick={handleSaveCpu} />
-            <CancelButton buttonLeft={45} onClick={handleCancelCpu} />
+            <SaveButton buttonLeft={55} onClick={handleSaveCPU} />
+            <CancelButton buttonLeft={45} onClick={handleCancelCPU} />
           </>
         ) : (
           <>
-            <SelectedValue>{cpuValue}</SelectedValue>
-            <CancelButton buttonLeft={50} onClick={handleCancelCpu} />
+            <SelectedValue>{settings.numCores}</SelectedValue>
+            <CancelButton buttonLeft={50} onClick={handleCancelCPU} />
           </>
         )}
       </TileWrapper>
@@ -321,15 +322,17 @@ const SetupProving: React.FC = () => {
               min={16}
               max={9999}
               step={16}
-              value={noncesValue}
-              onChange={(val) => setNoncesValue(val)}
+              value={settings.numNonces}
+              onChange={(val) =>
+                setSettings((prev) => ({ ...prev, numNonces: val }))
+              }
             />
             <SaveButton buttonLeft={55} onClick={handleSaveNonces} />
             <CancelButton buttonLeft={45} onClick={handleCancelNonces} />
           </>
         ) : (
           <>
-            <SelectedValue>{noncesValue}</SelectedValue>
+            <SelectedValue>{settings.numNonces}</SelectedValue>
             <CancelButton buttonLeft={50} onClick={handleCancelNonces} />
           </>
         )}
