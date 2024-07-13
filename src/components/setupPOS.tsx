@@ -87,8 +87,8 @@ const shortenPath = (path: string, maxLength: number) => {
   if (path.length <= maxLength) {
     return path;
   }
-  const start = path.slice(1,5); // First 3 characters
-  const end = path.slice(-maxLength + 10); // Last characters to make up the rest, considering 3 dots
+  const start = path.slice(1, 5); // First 4 characters
+  const end = path.slice(-maxLength + 10);
   return `${start}...${end}`;
 };
 
@@ -126,9 +126,7 @@ const SelectDirectory: React.FC = () => {
           onClick={handleSelectDirectory}
           label={
             selectedDir
-              ? `Selected: ${shortenPath(selectedDir, 20
-
-              )}`
+              ? `Selected: ${shortenPath(selectedDir, 20)}`
               : "Choose directory"
           } // Use the shortened path
           width={320}
@@ -159,12 +157,6 @@ const SelectDirectory: React.FC = () => {
     </>
   );
 };
-
-
-
-
-
-
 
 /*  --------- POS SIZE ---------
 _____________________________________________________________________________________________
