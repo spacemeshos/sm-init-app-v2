@@ -80,12 +80,22 @@ const SelectedValue = styled.h1`
 
 /*  --------- SELECT DIRECTORY ---------
 _____________________________________________________________________________________________
-Usage of ./postcli:
-
 */
+
+// Utility function to shorten the directory path
+const shortenPath = (path: string, maxLength: number) => {
+  if (path.length <= maxLength) {
+    return path;
+  }
+  const start = path.slice(1,5); // First 3 characters
+  const end = path.slice(-maxLength + 10); // Last characters to make up the rest, considering 3 dots
+  return `${start}...${end}`;
+};
+
 const SelectDirectory: React.FC = () => {
-  const { settings, setSettings } = useSettings();
+  const { setSettings } = useSettings();
   const [error, setError] = useState<string | null>(null);
+  const [selectedDir, setSelectedDir] = useState<string | null>(null);
 
   const handleSelectDirectory = async () => {
     try {
@@ -94,6 +104,7 @@ const SelectDirectory: React.FC = () => {
         ...settings,
         selectedDir: dir,
       }));
+      setSelectedDir(dir);
       console.log("Selected directory:", dir);
       setError(null); // Clear any previous errors
     } catch (error: any) {
@@ -111,10 +122,15 @@ const SelectDirectory: React.FC = () => {
           imageTop={40}
           errmsg={error ? `${error}` : undefined}
         />
-
         <Button
           onClick={handleSelectDirectory}
-          label="Choose directory"
+          label={
+            selectedDir
+              ? `Selected: ${shortenPath(selectedDir, 20
+
+              )}`
+              : "Choose directory"
+          } // Use the shortened path
           width={320}
           buttonTop={100}
           backgroundColor={Colors.darkerPurple}
@@ -143,6 +159,12 @@ const SelectDirectory: React.FC = () => {
     </>
   );
 };
+
+
+
+
+
+
 
 /*  --------- POS SIZE ---------
 _____________________________________________________________________________________________
