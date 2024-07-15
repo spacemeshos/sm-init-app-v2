@@ -263,6 +263,8 @@ const SetupProving: React.FC = () => {
   const { settings, setSettings } = useSettings();
   const [isCpuInputVisible, setIsCpuInputVisible] = useState(true);
   const [isNoncesInputVisible, setIsNoncesInputVisible] = useState(true);
+  const [cpuCores, setCpuCores] = useState<number>(0);
+  const [maxCores, setMaxCores] = useState<number>(0);
 
   const handleSaveCPU = () => {
     setIsCpuInputVisible(false);
@@ -282,6 +284,15 @@ const SetupProving: React.FC = () => {
     setIsNoncesInputVisible(true);
   };
 
+  useEffect(() => {
+    invoke<number>("get_cpu_cores").then((cores) => {
+      setMaxCores(cores);
+      const defaultCores = Math.floor((3 / 4) * cores);
+      setCpuCores(defaultCores);
+      setSettings((prev) => ({ ...prev, numCores: defaultCores }));
+    });
+  }, [setSettings]);
+
   return (
     <BottomContainer>
       <BgImage src={cpu} />
@@ -294,7 +305,7 @@ const SetupProving: React.FC = () => {
           <>
             <CustomNumberInput
               min={1}
-              max={16}
+              max={maxCores}
               step={1}
               value={settings.numCores}
               onChange={(val) =>
