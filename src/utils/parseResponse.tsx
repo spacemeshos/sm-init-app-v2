@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { callPostCli } from "./postcliService";
+import { callPostCli } from "../services/postcliService";
 
 interface Provider {
   ID: number;

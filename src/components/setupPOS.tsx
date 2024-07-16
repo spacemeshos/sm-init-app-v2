@@ -14,6 +14,8 @@ import folder from "../assets/folder.png";
 import { invoke } from "@tauri-apps/api";
 import { useSettings } from "../state/SettingsContext";
 import { FindProviders } from "../utils/parseResponse";
+import { shortenPath } from "../utils/pathUtils";
+
 
 const BgImage = styled.img`
   aspect-ratio: 1;
@@ -82,16 +84,6 @@ const SelectedValue = styled.h1`
 _____________________________________________________________________________________________
 */
 
-// Utility function to shorten the directory path
-const shortenPath = (path: string, maxLength: number) => {
-  if (path.length <= maxLength) {
-    return path;
-  }
-  const start = path.slice(1, 5); // First 4 characters
-  const end = path.slice(-maxLength + 10);
-  return `${start}...${end}`;
-};
-
 const SelectDirectory: React.FC = () => {
   const { setSettings } = useSettings();
   const [error, setError] = useState<string | null>(null);
@@ -126,7 +118,7 @@ const SelectDirectory: React.FC = () => {
           onClick={handleSelectDirectory}
           label={
             selectedDir
-              ? `Selected: ${shortenPath(selectedDir, 20)}`
+              ? `Selected: ${shortenPath(selectedDir, 10)}`
               : "Choose directory"
           } // Use the shortened path
           width={320}
