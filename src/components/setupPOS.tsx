@@ -4,7 +4,6 @@ import Colors from "../styles/colors";
 import Tile from "./tile";
 import { Button, CancelButton, SaveButton, TooltipButton } from "./button";
 import CustomNumberInput from "./input";
-import { FindProviders } from "../services/parseResponse";
 import { ErrorMessage, Subheader } from "./texts";
 import size from "../assets/duplicate.png";
 import cpu from "../assets/cpu.png";
@@ -14,6 +13,7 @@ import rocket from "../assets/rocket.png";
 import folder from "../assets/folder.png";
 import { invoke } from "@tauri-apps/api";
 import { useSettings } from "../state/SettingsContext";
+import { FindProviders } from "../utils/parseResponse";
 
 const BgImage = styled.img`
   aspect-ratio: 1;
