@@ -16,7 +16,6 @@ import { useSettings } from "../state/SettingsContext";
 import { FindProviders } from "../utils/parseResponse";
 import { shortenPath } from "../utils/pathUtils";
 
-
 const BgImage = styled.img`
   aspect-ratio: 1;
   object-fit: contain;
@@ -83,7 +82,6 @@ const SelectedValue = styled.h1`
 /*  --------- SELECT DIRECTORY ---------
 _____________________________________________________________________________________________
 */
-
 const SelectDirectory: React.FC = () => {
   const { setSettings } = useSettings();
   const [error, setError] = useState<string | null>(null);
@@ -99,9 +97,11 @@ const SelectDirectory: React.FC = () => {
       setSelectedDir(dir);
       console.log("Selected directory:", dir);
       setError(null); // Clear any previous errors
-    } catch (error: any) {
-      console.error("Failed to select directory:", error);
-      setError(error); // Set the error message
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Unknown error occurred";
+      console.error("Failed to select directory:", errorMessage);
+      setError(errorMessage); // Set the error message
     }
   };
 
@@ -112,13 +112,13 @@ const SelectDirectory: React.FC = () => {
           heading={"Where to Store pos data?"}
           imageSrc={folder}
           imageTop={40}
-          errmsg={error ? `${error}` : undefined}
+          errmsg={error ?? undefined}
         />
         <Button
           onClick={handleSelectDirectory}
           label={
             selectedDir
-              ? `Selected: ${shortenPath(selectedDir, 10)}`
+              ? `Selected: ${shortenPath(selectedDir)}`
               : "Choose directory"
           } // Use the shortened path
           width={320}
@@ -251,6 +251,9 @@ These values are not used in the postcli command
 they should be saved in the config file to simplify smeshing setup
 
 */
+const DEFAULT_CORES = 8;
+const DEFAULT_NONCES = 288;
+
 const SetupProving: React.FC = () => {
   const { settings, setSettings } = useSettings();
   const [isCpuInputVisible, setIsCpuInputVisible] = useState(true);
@@ -267,85 +270,106 @@ const SetupProving: React.FC = () => {
   };
 
   const handleCancelCPU = () => {
-    setSettings((prev) => ({ ...prev, numCores: 8 })); // TODO: calculate the 3/4 of the user's cpu
+    setSettings((prev) => ({ ...prev, numCores: DEFAULT_CORES }));
     setIsCpuInputVisible(true);
   };
 
   const handleCancelNonces = () => {
-    setSettings((prev) => ({ ...prev, numNonces: 288 })); // Reset to default value
+    setSettings((prev) => ({ ...prev, numNonces: DEFAULT_NONCES }));
     setIsNoncesInputVisible(true);
   };
 
   useEffect(() => {
-    invoke<number>("get_cpu_cores").then((cores) => {
-      setMaxCores(cores);
-      const defaultCores = Math.floor((3 / 4) * cores);
-      setCpuCores(defaultCores);
-      setSettings((prev) => ({ ...prev, numCores: defaultCores }));
-    });
+    const fetchCpuCores = async () => {
+      try {
+        const cores = await invoke<number>("get_cpu_cores");
+        setMaxCores(cores);
+        const defaultCores = Math.floor((3 / 4) * cores);
+        setCpuCores(defaultCores);
+        setSettings((prev) => ({ ...prev, numCores: defaultCores }));
+      } catch (error) {
+        console.error("Error fetching CPU cores:", error);
+      }
+    };
+
+    fetchCpuCores();
   }, [setSettings]);
+
+  const InputSection: React.FC<{
+    heading: string;
+    footer: string;
+    isVisible: boolean;
+    value: number;
+    min: number;
+    max: number;
+    step: number;
+    handleSave: () => void;
+    handleCancel: () => void;
+    onChange: (val: number) => void;
+  }> = ({
+    heading,
+    footer,
+    isVisible,
+    value,
+    min,
+    max,
+    step,
+    handleSave,
+    handleCancel,
+    onChange,
+  }) => (
+    <TileWrapper>
+      <Tile heading={heading} footer={footer} />
+      {isVisible ? (
+        <>
+          <CustomNumberInput
+            min={min}
+            max={max}
+            step={step}
+            value={value}
+            onChange={onChange}
+          />
+          <SaveButton buttonLeft={55} onClick={handleSave} />
+          <CancelButton buttonLeft={45} onClick={handleCancel} />
+        </>
+      ) : (
+        <>
+          <SelectedValue>{value}</SelectedValue>
+          <CancelButton buttonLeft={50} onClick={handleCancel} />
+        </>
+      )}
+    </TileWrapper>
+  );
 
   return (
     <BottomContainer>
       <BgImage src={cpu} />
-      <TileWrapper>
-        <Tile
-          heading="Select number of CPU cores"
-          footer="more CPU cores -> faster proof generation"
-        />
-        {isCpuInputVisible ? (
-          <>
-            <CustomNumberInput
-              min={1}
-              max={maxCores}
-              step={1}
-              value={settings.numCores}
-              onChange={(val) =>
-                setSettings((prev) => ({ ...prev, numCores: val }))
-              }
-            />
-            <SaveButton buttonLeft={55} onClick={handleSaveCPU} />
-            <CancelButton buttonLeft={45} onClick={handleCancelCPU} />
-          </>
-        ) : (
-          <>
-            <SelectedValue>{settings.numCores}</SelectedValue>
-            <CancelButton buttonLeft={50} onClick={handleCancelCPU} />
-          </>
-        )}
-      </TileWrapper>
-      <TileWrapper>
-        <Tile
-          heading="Select number of Nonces"
-          footer="more nonces -> more likely proof generated on the first try"
-        />
-        {isNoncesInputVisible ? (
-          <>
-            <CustomNumberInput
-              min={16}
-              max={9999}
-              step={16}
-              value={settings.numNonces}
-              onChange={(val) =>
-                setSettings((prev) => ({ ...prev, numNonces: val }))
-              }
-            />
-            <SaveButton buttonLeft={55} onClick={handleSaveNonces} />
-            <CancelButton buttonLeft={45} onClick={handleCancelNonces} />
-          </>
-        ) : (
-          <>
-            <SelectedValue>{settings.numNonces}</SelectedValue>
-            <CancelButton buttonLeft={50} onClick={handleCancelNonces} />
-          </>
-        )}
-      </TileWrapper>
+      <InputSection
+        heading="Select number of CPU cores"
+        footer="more CPU cores -> faster proof generation"
+        isVisible={isCpuInputVisible}
+        value={settings.numCores ? settings.numCores : DEFAULT_CORES}
+        min={1}
+        max={maxCores}
+        step={1}
+        handleSave={handleSaveCPU}
+        handleCancel={handleCancelCPU}
+        onChange={(val) => setSettings((prev) => ({ ...prev, numCores: val }))}
+      />
+      <InputSection
+        heading="Select number of Nonces"
+        footer="more nonces -> more likely proof generated on the first try"
+        isVisible={isNoncesInputVisible}
+        value={settings.numNonces ? settings.numNonces : DEFAULT_NONCES}
+        min={16}
+        max={9999}
+        step={16}
+        handleSave={handleSaveNonces}
+        handleCancel={handleCancelNonces}
+        onChange={(val) => setSettings((prev) => ({ ...prev, numNonces: val }))}
+      />
     </BottomContainer>
   );
-};
-
-type Props = {
-  isOpen: boolean;
 };
 
 /* --------- Provider - GPU ---------
@@ -355,6 +379,9 @@ Usage of ./postcli:
 
 By default the fastest marked as 0 and is chosen automatically 
 */
+type Props = {
+  isOpen: boolean;
+};
 
 const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   const { run, response, loading, error } = FindProviders();
