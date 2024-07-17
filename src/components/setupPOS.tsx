@@ -460,7 +460,7 @@ const SetupSummary: React.FC<{ onStart: () => void }> = ({ onStart }) => {
         <Frame
           height={25}
           heading="POS Directory"
-          subheader={settings.selectedDir}
+          subheader={shortenPath(settings.selectedDir ?? "")}
         />
         <Frame
           height={25}
