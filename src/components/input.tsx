@@ -13,7 +13,7 @@ interface CustomNumberInputProps {
   borderColor?: string;
   hoverBorderColor?: string;
   buttonHoverColor?: string;
-  fontsize?: number;
+  fontSize?: number;
   height?: number;
   width?: number;
   value?: number;
@@ -41,9 +41,9 @@ const StyledInput = styled.input<{
   backgroundColor: string;
   borderColor: string;
   hoverBorderColor: string;
-  fontsize: number;
+  fontSize: number;
 }>`
-  font-size: ${(props) => props.fontsize}px;
+  font-size: ${(props) => props.fontSize}px;
   font-family: "Source Code Pro ExtraLight", sans-serif;
   font-weight: 200;
   color: ${(props) => props.inputColor};
@@ -140,7 +140,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   height = 80,
   width = 50,
   value = min,
-  fontsize = 36,
+  fontSize = 36,
   onChange,
 }) => {
   const [inputValue, setInputValue] = React.useState<number>(value);
@@ -195,7 +195,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
         onChange={handleChange}
         min={min}
         max={max}
-        fontsize={fontsize}
+        fontSize={fontSize}
       />
       <StyledButton
         buttonColor={buttonColor}
