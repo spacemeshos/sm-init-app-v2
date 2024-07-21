@@ -6,7 +6,6 @@ interface CustomNumberInputProps {
   min?: number;
   max?: number;
   step?: number;
-  incrementOrder?: number;
   inputColor?: string;
   buttonColor?: string;
   backgroundColor?: string;
@@ -20,37 +19,37 @@ interface CustomNumberInputProps {
   onChange?: (value: number) => void;
 }
 
-const StyledInputRoot = styled.div<{ height: number; width: number }>`
+const StyledInputRoot = styled.div<{ height?: number; width?: number }>`
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
   z-index: auto;
   position: absolute;
-  height: 100%;
-  width: 100%;
+  height: ${({ height = 100 }) => height}px;
+  width: ${({ width = 500 }) => width}px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 `;
 
 const StyledInput = styled.input<{
-  inputColor: string;
-  height: number;
-  width: number;
-  backgroundColor: string;
-  borderColor: string;
-  hoverBorderColor: string;
-  fontSize: number;
+  inputColor?: string;
+  height?: number;
+  width?: number;
+  backgroundColor?: string;
+  borderColor?: string;
+  hoverBorderColor?: string;
+  fontSize?: number;
 }>`
-  font-size: ${(props) => props.fontSize}px;
+  font-size: ${({ fontSize = 36 }) => fontSize}px;
   font-family: "Source Code Pro ExtraLight", sans-serif;
   font-weight: 200;
-  color: ${(props) => props.inputColor};
-  height: ${(props) => props.height}px;
-  width: ${(props) => props.width}px;
-  background: ${(props) => props.backgroundColor};
-  border: 2px solid ${(props) => props.borderColor};
+  color: ${({ inputColor = Colors.grayLight }) => inputColor};
+  height: ${({ height = 100 }) => height}px;
+  width: ${({ width = 200 }) => width}px;
+  background: ${({ backgroundColor = Colors.background }) => backgroundColor};
+  border: 2px solid ${({ borderColor = Colors.darkerPurple }) => borderColor};
   margin: 0 8px;
   padding: 0px 12px;
   min-width: 130px;
@@ -65,36 +64,28 @@ const StyledInput = styled.input<{
   }
 
   &:hover {
-    border-color: ${(props) => props.hoverBorderColor};
+    border-color: ${({ hoverBorderColor = Colors.purpleDark }) =>
+      hoverBorderColor};
   }
-
-  &:focus {
-    border-color: ${(props) => props.hoverBorderColor};
-  }
-
   &:focus-visible {
     outline: 0;
   }
 `;
 
 const StyledButton = styled.button<{
-  buttonColor: string;
-  buttonHoverColor: string;
-  height: number;
-  width: number;
-  borderColor: string;
-  incrementOrder: number;
+  buttonColor?: string;
+  height?: number;
+  width?: number;
 }>`
   font-family: "Source Code Pro", sans-serif;
-  font-size: 0.875rem;
+  font-size: 36px;
   box-sizing: border-box;
   line-height: 1.5;
-  border: 1px solid;
-  border-color: ${(props) => props.borderColor};
-  background: ${(props) => props.buttonColor};
-  color: ${(props) => props.buttonHoverColor};
-  width: ${(props) => props.width}px;
-  height: ${(props) => props.height}px;
+  border: none;
+  background: ${({ buttonColor = Colors.purpleDark }) => buttonColor};
+  color: ${Colors.grayLight};
+  height: ${({ height = 100 }) => height}px;
+  width: ${({ width = 70 }) => width}px;
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
@@ -105,16 +96,10 @@ const StyledButton = styled.button<{
 
   &:hover {
     cursor: pointer;
-    background: ${(props) => props.buttonColor};
-    color: ${(props) => props.buttonHoverColor};
   }
 
   &:focus-visible {
     outline: 0;
-  }
-
-  &.increment {
-    order: ${(props) => props.incrementOrder};
   }
 `;
 
@@ -130,17 +115,15 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   min = 1,
   max = 99,
   step = 1,
-  incrementOrder = 1,
-  inputColor = Colors.grayLight,
-  buttonColor = Colors.purpleDark,
-  backgroundColor = Colors.background,
-  borderColor = Colors.darkerPurple,
-  hoverBorderColor = Colors.purpleDark,
-  buttonHoverColor = Colors.grayLight,
-  height = 80,
-  width = 50,
+  inputColor,
+  buttonColor,
+  backgroundColor,
+  borderColor,
+  hoverBorderColor,
+  height,
+  width,
   value = min,
-  fontSize = 36,
+  fontSize,
   onChange,
 }) => {
   const [inputValue, setInputValue] = React.useState<number>(value);
@@ -149,7 +132,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
     if (inputValue < max) {
       const newValue = inputValue + step;
       setInputValue(newValue);
-      onChange && onChange(newValue);
+      onChange?.(newValue);
     }
   };
 
@@ -157,7 +140,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
     if (inputValue > min) {
       const newValue = inputValue - step;
       setInputValue(newValue);
-      onChange && onChange(newValue);
+      onChange?.(newValue);
     }
   };
 
@@ -165,7 +148,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
     const newValue = parseInt(e.target.value, 10);
     if (!isNaN(newValue) && newValue >= min && newValue <= max) {
       setInputValue(newValue);
-      onChange && onChange(newValue);
+      onChange?.(newValue);
     }
   };
 
@@ -173,13 +156,10 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
     <StyledInputRoot height={height} width={width}>
       <StyledButton
         buttonColor={buttonColor}
-        buttonHoverColor={buttonHoverColor}
         height={height}
         width={width}
-        borderColor={borderColor}
         onClick={handleDecrement}
-        className={`decrement`}
-        incrementOrder={incrementOrder}
+        className="decrement"
       >
         <Text>-</Text>
       </StyledButton>
@@ -199,13 +179,10 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
       />
       <StyledButton
         buttonColor={buttonColor}
-        buttonHoverColor={buttonHoverColor}
         height={height}
         width={width}
-        borderColor={borderColor}
         onClick={handleIncrement}
-        className={`increment`}
-        incrementOrder={incrementOrder}
+        className="increment"
       >
         <Text>+</Text>
       </StyledButton>
