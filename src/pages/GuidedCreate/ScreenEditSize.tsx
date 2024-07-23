@@ -73,10 +73,11 @@ const ScreenEditSize = ({ onClose, isOpen }: Props) => {
         <CloseButton onClick={onClose}>&times;</CloseButton>
         <Header>Set up POS size</Header>
         <Subheader>
-          Don't set too much. This data will be read through every two weeks.
+          Don&apos;t set too much. This data will be read through every two
+          weeks.
           <br />
-          If your PC can't prepare POST proof in a few hours, you won't get any
-          rewards.
+          If your PC can&apos;t prepare POST proof in a few hours, you
+          won&apos;t get any rewards.
         </Subheader>
         <SetupSize />
       </Wrapper>

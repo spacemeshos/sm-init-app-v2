@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { BackButton } from "../../components/button";
 import { Subheader, Title } from "../../components/texts";
 import ProgressBar from "../../components/progress";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { SetupSummary } from "../../components/setupPOS";
 
 const NavProgress = styled.div`

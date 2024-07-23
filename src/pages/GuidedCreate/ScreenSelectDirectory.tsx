@@ -114,8 +114,8 @@ const ScreenSelectDirectory: React.FC = () => {
         <HintWrapper>
           <Tile imageSrc={bulb} imageTop={10} />
           <HintText>
-            Next, we'll optimize your settings with a quick benchmark to boost
-            your rewards and qualification chances every epoch
+            Next, we&apos;ll optimize your settings with a quick benchmark to
+            boost your rewards and qualification chances every epoch
           </HintText>
           <TooltipButton modalComponent={PosInfo} buttonTop={96} />
         </HintWrapper>

@@ -22,10 +22,12 @@ const FindProviders = (): UsePostCliReturn => {
   const run = async (args: string[]): Promise<void> => {
     setLoading(true);
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const result: any = await callPostCli(args);
       const parsedResult = parseResponse(result);
       setResponse(parsedResult);
       setError(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
       setResponse(null);
