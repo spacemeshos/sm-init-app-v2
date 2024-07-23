@@ -21,8 +21,8 @@ const TextWrapper = styled.div`
 
 const ScreenSummary: React.FC = () => {
   // React Router's navigation hook
-  const navigate = useNavigate();
-  const Confirmation = () => navigate("/guided/Confirmation");
+  // const navigate = useNavigate();
+  // const Confirmation = () => navigate("/guided/Confirmation");
 
   return (
     <>

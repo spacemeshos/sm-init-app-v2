@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
 import SelectDirectory from "../pages/GuidedCreate/ScreenSelectDirectory";

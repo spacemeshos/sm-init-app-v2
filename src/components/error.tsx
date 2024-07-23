@@ -88,7 +88,7 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const ErrorModal = ({ children, onClose, isOpen }: Props) => {
+const ErrorModal = ({ onClose, isOpen }: Props) => {
   if (!isOpen) return null;
 
   return (

@@ -95,7 +95,7 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const PosInfo = ({ children, onClose, isOpen }: Props) => {
+const PosInfo = ({ onClose, isOpen }: Props) => {
   if (!isOpen) return null;
 
   return (

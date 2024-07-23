@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import "@testing-library/jest-dom";
 import CustomNumberInput from "../input";
 import { render, fireEvent } from "@testing-library/react";

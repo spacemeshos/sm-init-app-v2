@@ -13,7 +13,7 @@ import cancel from "../assets/circle-x.png";
 
 // Interface defining the properties for the Button component below
 interface ButtonProps {
-  iconSrc?: any;
+  iconSrc?: string;
   label?: string;
   onClick?: () => void;
   children?: React.ReactNode;
@@ -21,8 +21,8 @@ interface ButtonProps {
   buttonLeft?: number;
   height?: number;
   width?: number;
-  borderColor?: any;
-  backgroundColor?: any;
+  borderColor?: string;
+  backgroundColor?: string;
   modalHeader?: string;
   modalText?: React.ReactNode;
   modalTop?: number;

@@ -1,64 +1,13 @@
-import ParserTypescriptEslint from "@typescript-eslint/parser";
-import PluginImport from "eslint-plugin-import";
 import globals from "globals";
-import path from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
 import pluginJs from "@eslint/js";
+import tseslint from "typescript-eslint";
+import pluginReact from "eslint-plugin-react";
 
-const __fileName = fileURLToPath(import.meta.url);
-const __dirName = path.dirname(__fileName);
-const compat = new FlatCompat({
-  baseDirectory: __dirName,
-  recommendedConfig: pluginJs.configs.recommended,
-});
 
 export default [
-  {
-    files: [
-      "src/**/**/*.ts",
-      "src/**/**/*.tsx",
-      "src/**/**/*.jsx",
-      "src/**/**/*.js",
-      "src/*.ts",
-      "src/*.tsx",
-      "src/*.jsx",
-      "src/*.js",
-      "src/**/*.ts",
-      "src/**/*.tsx",
-      "src/**/*.jsx",
-      "src/**/*.js",
-    ],
-    languageOptions: {
-      ecmaVersion: 2021,
-      sourceType: "module",
-      globals: {
-        ...globals.browser,
-        ...globals.es2021,
-      },
-      parser: ParserTypescriptEslint,
-      parserOptions: {
-        project: ["tsconfig.json"],
-        tsconfigRootDir: __dirName,
-      },
-    },
-    plugins: {
-      import: PluginImport,
-    },
-    rules: {
-      semi: "error",
-      "prefer-const": "error"
-  },
-    settings: {
-      "import/resolver": {
-        ...PluginImport.configs.typescript.settings["import/resolver"],
-        typescript: {
-          project: ["tsconfig.json"],
-        },
-      },
-    },
-  },
-  {
-    ignores: ["node_modules/*", "eslint.config.mjs", "node_modules/big.js"],
-  },
+  {files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"]},
+  {languageOptions: { globals: globals.browser }},
+  pluginJs.configs.recommended,
+  ...tseslint.configs.recommended,
+  pluginReact.configs.flat.recommended,
 ];
