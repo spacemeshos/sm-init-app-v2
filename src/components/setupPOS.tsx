@@ -133,8 +133,8 @@ const SelectDirectory: React.FC = () => {
               read speed (HDDs suffice).
               <br />
               <br />
-              Ensure PoS files remain accessible, as they're checked every 2
-              weeks.
+              Ensure PoS files remain accessible, as they&apos;re checked every
+              2 weeks.
               <br />
               <br />
               Consider a dedicated disk or no other activity during proving
@@ -258,7 +258,6 @@ const SetupProving: React.FC = () => {
   const { settings, setSettings } = useSettings();
   const [isCpuInputVisible, setIsCpuInputVisible] = useState(true);
   const [isNoncesInputVisible, setIsNoncesInputVisible] = useState(true);
-  const [cpuCores, setCpuCores] = useState<number>(0);
   const [maxCores, setMaxCores] = useState<number>(0);
 
   const handleSaveCPU = () => {
@@ -285,7 +284,6 @@ const SetupProving: React.FC = () => {
         const cores = await invoke<number>("get_cpu_cores");
         setMaxCores(cores);
         const defaultCores = Math.floor((3 / 4) * cores);
-        setCpuCores(defaultCores);
         setSettings((prev) => ({ ...prev, numCores: defaultCores }));
       } catch (error) {
         console.error("Error fetching CPU cores:", error);
@@ -294,6 +292,7 @@ const SetupProving: React.FC = () => {
 
     fetchCpuCores();
   }, [setSettings]);
+
 
   const InputSection: React.FC<{
     heading: string;

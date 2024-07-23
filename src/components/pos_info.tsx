@@ -95,7 +95,7 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const PosInfo = ({ children, onClose, isOpen }: Props) => {
+const PosInfo = ({ onClose, isOpen }: Props) => {
   if (!isOpen) return null;
 
   return (
@@ -113,10 +113,10 @@ const PosInfo = ({ children, onClose, isOpen }: Props) => {
         <Text>
           {
             <>
-              You'll create Proof of Space (PoS) data just once, then it has to
-              be accessible for a regular check every two weeks. Hashing it is a
-              long and laborious process. By default, your fastest GPU will do
-              the job.
+              You&apos;ll create Proof of Space (PoS) data just once, then it
+              has to be accessible for a regular check every two weeks. Hashing
+              it is a long and laborious process. By default, your fastest GPU
+              will do the job.
               <br />
               <br />
               The minimum you can allocate is 256 GiB, which equals 4 Space

@@ -13,7 +13,7 @@ interface FrameProps {
   left?: number;
   height?: number;
   width?: number;
-  borderColor?: any;
+  borderColor?: string;
 }
 
 const Wrapper = styled.div<{
