@@ -9,7 +9,7 @@ const AppWrapper = styled.div`
   height: 100%;
   width: 100%;
   position: absolute;
-  background-color: black;
+  background-color: ${Colors.background};
 `;
 
 const FooterDivider = styled.div`
