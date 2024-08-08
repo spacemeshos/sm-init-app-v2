@@ -25,12 +25,12 @@ const NavProgress = styled.div`
 const TextWrapper = styled.div`
   width: 1200px;
   height: 22px;
-  top: 170px;
+  top: 160px;
   position: absolute;
-  color: ${Colors.grayLight};
+  color: ${Colors.grayMedium};
   font-family: "Source Code Pro ExtraLight", monospace;
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 100;
   letter-spacing: 2px;
 `;
@@ -48,7 +48,7 @@ const ContainerBottom = styled.div`
 `;
 
 const HintWrapper = styled.div`
-  height: 370px;
+  height: 350px;
   width: 450px;
   display: flex;
   justify-content: center;
@@ -56,15 +56,15 @@ const HintWrapper = styled.div`
 `;
 
 const HintText = styled.div`
-  width: 450px;
-  height: 228px;
-  top: 160px;
+  width: 425px;
+  height: 230px;
+  top: 170px;
   position: absolute;
   color: ${Colors.greenLight};
   font-family: "Source Code Pro", monospace;
   font-weight: 200;
   text-align: center;
-  font-size: 22px;
+  font-size: 18px;
   line-height: 35px;
   letter-spacing: 2px;
   text-transform: uppercase;

@@ -20,24 +20,10 @@ const FooterDivider = styled.div`
     ${Colors.purpleDark} 100%
   );
   top: 690px;
-  height: 2px;
+  height: 1px;
   width: 1100px;
   margin: 0px 50px;
   position: absolute;
-`;
-
-const CustomTitle = styled.h1`
-  width: 1200px;
-  height: 21px;
-  top: 30px;
-  position: absolute;
-  color: ${Colors.grayLight};
-  font-family: "Source Code Pro ExtraLight", sans-serif;
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 22px;
-  font-weight: 100;
-  letter-spacing: 5px;
 `;
 
 const Footer = styled.div`
@@ -64,7 +50,6 @@ function App() {
   return (
     <AppWrapper>
       <AppRoutes />
-      <CustomTitle>PROOF OF SPACE-TIME MANAGER</CustomTitle>
       <FooterDivider />
       <Footer>
         <a
