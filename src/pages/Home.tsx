@@ -19,15 +19,16 @@ const Image = styled.img`
 const MenuContainer = styled.div`
   position: absolute;
   width: 400px;
-  height: 300px;
-  left: 100px;
-  top: 100px;
+  height: 200px;
+  left: 10%;
+  top: 40%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-content: center;
   align-items: center;
-  `;
+  z-index: 1;
+`;
 
 const Home: React.FC = () => {
   // State to track which menu is hovered
@@ -84,7 +85,6 @@ const Home: React.FC = () => {
           imageSrc={Check}
           title="check"
           buttons={CheckButtons}
-          buttonsBorderColor="transparent"
         />
         <HoverAccordionMenu
           $isHovered={hoveredMenu === "generate"}
