@@ -19,6 +19,7 @@ interface ButtonProps {
   children?: React.ReactNode;
   buttonTop?: number;
   buttonLeft?: number;
+  buttonMargin?: number;
   height?: number;
   width?: number;
   borderColor?: string;
@@ -38,6 +39,7 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   buttonTop,
   buttonLeft,
+  buttonMargin,
   height,
   width,
   backgroundColor,
@@ -53,8 +55,9 @@ const Button: React.FC<ButtonProps> = ({
       onClick={handleClick}
       role="button"
       tabIndex={0}
-      top={buttonTop}
-      left={buttonLeft}
+      buttonTop={buttonTop}
+      buttonLeft={buttonLeft}
+      buttonMargin={buttonMargin}
       width={width}
       height={height}
       backgroundColor={backgroundColor}
@@ -185,44 +188,36 @@ const CancelButton: React.FC<ButtonProps> = (props) => {
 
 // Styled component for the standard button wrapper
 const ButtonWrapper = styled.button<{
-  top?: number;
-  left?: number;
+  buttonTop?: number;
+  buttonLeft?: number;
   height?: number;
   width?: number;
+  buttonMargin?: number;
   borderColor?: string;
   backgroundColor?: string;
 }>`
-  top: ${({ top }) => top || 0}px;
-  left: ${({ left }) => left || 0}px;
+  top: ${({ buttonTop }) => buttonTop || 0}px;
+  left: ${({ buttonLeft }) => buttonLeft || 0}px;
   height: ${({ height }) => height || 60}px;
   width: ${({ width }) => width || 300}px;
-
-  background-color:${({ backgroundColor }) =>
-    backgroundColor || "transparent"};;
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor || "transparent"};
   cursor: pointer;
   padding: 10px;
+  margin: ${({ buttonMargin }) => buttonMargin || 0}px;
   z-index: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   position: relative;
-
-  border: 1px solid ${({ borderColor }) => borderColor || "transparent"};
-  border-image-slice: 1;
-  border-image: ${({ borderColor }) =>
-    borderColor
-      ? "none"
-      : `linear-gradient(
-          90deg,
-          ${Colors.greenLight} 0%,
-          ${Colors.greenDark} 50%,
-          ${Colors.greenLight} 100%
-        ) 1`};
+  border-radius: 50px;
+  border: 1px solid ${({ borderColor }) => borderColor || Colors.greenDark};
 
   &:hover {
     border: 1px solid ${({ borderColor }) => borderColor || Colors.greenLight};
-    `;
+  }
+`;
 
 const ButtonText = styled.span`
   font-family: "Source Code Pro Extralight", sans-serif;
