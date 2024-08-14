@@ -6,13 +6,10 @@ import { Button } from "./button";
 // Styled component for the menu container
 const MenuContainer = styled.div<{
   width?: number;
-  top?: number;
-  menuBorderColor?: string;
   backgroundColor?: string;
   $isHovered: boolean;
 }>`
-  width: ${({ $isHovered }) => ($isHovered ? "500px" : "300px")};
-  top: ${({ top }) => top || 100}px;
+  width: auto;
   position: relative;
   padding: 25px;
   box-sizing: border-box;
@@ -23,22 +20,32 @@ const MenuContainer = styled.div<{
   justify-content: center;
   text-align: center;
   border-radius: 50px;
-  border: 1px solid
-    ${({ menuBorderColor }) => menuBorderColor || Colors.greenDark};
   background-color: ${({ backgroundColor }) =>
     backgroundColor || "transparent"};
 `;
 
 // Styled component for the menu item/title
-const MenuTitle = styled.span`
+const MenuTitle = styled.span<{ $isHovered: boolean }>`
   cursor: pointer;
   color: ${Colors.grayLight};
   font-family: "Source Code Pro", sans-serif;
   white-space: nowrap;
+  padding: 20px 30px;
   text-transform: uppercase;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 100;
   letter-spacing: 4px;
+  border-radius: 50px;
+  border: 1px solid
+    ${({ $isHovered }) => ($isHovered ? "transparent" : Colors.greenDark)};
+`;
+
+// Wrapper for the ButtonsContainer to keep the border intact
+const ButtonsWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 // Styled component for the container holding the buttons
@@ -57,7 +64,7 @@ const ButtonsContainer = styled.div<{ $isHovered: boolean }>`
 `;
 
 // Styled component for the icon image
-const Icon = styled.img<{ $isHovered: boolean }>`
+const Icon = styled.img`
   aspect-ratio: 1;
   object-fit: contain;
   width: 30px;
@@ -65,7 +72,7 @@ const Icon = styled.img<{ $isHovered: boolean }>`
   padding-right: 30px;
 `;
 
-//Buttons properties
+// Buttons properties
 interface ButtonProps {
   label: string;
   onClick: () => void;
@@ -85,7 +92,6 @@ interface HoverAccordionMenuProps {
   menuBorderColor?: string;
   buttonsBorderColor?: string;
   backgroundColor?: string;
-  top?: number;
   $isHovered: boolean;
 }
 
@@ -104,8 +110,6 @@ export const HoverAccordionMenu: React.FC<
   onMouseEnter,
   onMouseLeave,
   width,
-  top,
-  menuBorderColor,
   buttonsBorderColor,
   backgroundColor,
 }) => {
@@ -115,29 +119,28 @@ export const HoverAccordionMenu: React.FC<
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         width={width}
-        menuBorderColor={menuBorderColor}
         backgroundColor={backgroundColor}
-        top={top}
         $isHovered={$isHovered}
       >
-        <MenuTitle>
-          {imageSrc && <Icon $isHovered={$isHovered} src={imageSrc} />}
-          {title}
-        </MenuTitle>
-        <ButtonsContainer $isHovered={$isHovered}>
-          {buttons.map((button, index) => (
-            <Button
-              key={index}
-              onClick={button.onClick}
-              label={button.label}
-              buttonTop={20}
-              buttonLeft={button.left}
-              height={60}
-              width={160}
-              borderColor={buttonsBorderColor}
-            ></Button>
-          ))}
-        </ButtonsContainer>
+        {imageSrc && <Icon src={imageSrc} />}
+        <MenuTitle $isHovered={$isHovered}>{title}</MenuTitle>
+        <ButtonsWrapper>
+          <ButtonsContainer $isHovered={$isHovered}>
+            {buttons.map((button, index) => (
+              <Button
+                key={index}
+                onClick={button.onClick}
+                label={button.label}
+                buttonTop={20}
+                buttonLeft={button.left}
+                buttonMargin={5}
+                height={60}
+                width={160}
+                borderColor={buttonsBorderColor}
+              ></Button>
+            ))}
+          </ButtonsContainer>
+        </ButtonsWrapper>
       </MenuContainer>
       {/* Container for buttons that appear on hover */}
     </>
