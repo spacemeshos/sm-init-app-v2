@@ -38,6 +38,25 @@ const Home: React.FC = () => {
   // Function to navigate to the prerequisites page
   const navigateToReqs = () => window.open(ExternalLinks.Requirements);
 
+  // Button configurations for the "Check" menu
+  const CheckButtons = [
+    {
+      label: "Requirements",
+      onClick: () => navigateToReqs(),
+      width: 300,
+    },
+    {
+      label: "Generation speed",
+      onClick: () => console.log("Button 1 clicked"),
+      width: 300,
+    },
+    {
+      label: "Proving Capacity",
+      onClick: () => console.log("Button 2 clicked"),
+      width: 300,
+    },
+  ];
+
   // Button configurations for the "Create" menu
   const CreateButtons = [
     {
@@ -56,25 +75,6 @@ const Home: React.FC = () => {
       width: 240,
     },
   ];
-  // Button configurations for the "Check" menu
-  const CheckButtons = [
-    {
-      label: "Requirements",
-      onClick: () => navigateToReqs,
-      width: 300,
-    },
-    {
-      label: "Generation speed",
-      onClick: () => console.log("Button 1 clicked"),
-      width: 300,
-    },
-    {
-      label: "Proving Capacity",
-      onClick: () => console.log("Button 2 clicked"),
-      width: 300,
-    },
-  ];
-
   return (
     <>
       <MenuContainer>

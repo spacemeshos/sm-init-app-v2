@@ -15,17 +15,16 @@ interface TileProps {
 }
 
 const TileWrapper = styled.div`
-  border: 1px solid transparent;
   background-color: ${Colors.darkerGreen};
-  transition: border-color 0.3s ease;
   height: 100%;
   width: 100%;
   position: absolute;
-
   display: flex;
   justify-content: center;
 
   /* Gradient border */
+  border: 1px solid transparent;
+  transition: border-color 0.3s ease;
   border-image: linear-gradient(${Colors.greenLight}, ${Colors.greenDark});
   border-image-slice: 1;
 `;
@@ -92,10 +91,7 @@ const TileElement = styled.div`
   position: absolute;
   left: 50%;
   top: 60%;
-  transform: translate(
-    -50%,
-    -60%
-  );
+  transform: translate(-50%, -60%);
 `;
 
 const Footer = styled.h3`
