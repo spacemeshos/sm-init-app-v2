@@ -57,7 +57,7 @@ const ContainerBottom = styled.div`
 `;
 
 const TileWrapper = styled.div`
-  height: 309px;
+  height: 300px;
   width: 300px;
   position: relative;
   display: flex;

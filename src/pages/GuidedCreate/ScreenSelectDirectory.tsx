@@ -43,12 +43,11 @@ const ContainerBottom = styled.div`
   justify-content: space-evenly;
   top: 278px;
   width: 1200px;
-  height: 400px;
+  height: 350px;
   position: absolute;
 `;
 
 const HintWrapper = styled.div`
-  height: 350px;
   width: 450px;
   display: flex;
   justify-content: center;

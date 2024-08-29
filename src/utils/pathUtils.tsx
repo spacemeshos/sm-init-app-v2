@@ -4,7 +4,7 @@
  * @param maxLength - The maximum length of the shortened path.
  * @returns The shortened path.
  */
-export const shortenPath = (path: string, maxLength: number = 15): string => {
+export const shortenPath = (path: string, maxLength: number): string => {
   if (path.length <= maxLength) {
     return path;
   }

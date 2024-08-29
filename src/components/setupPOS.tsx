@@ -61,7 +61,7 @@ const ContainerStart = styled.div`
 const TileWrapper = styled.div<{
   width?: number;
 }>`
-  height: 370px;
+  height: 100%;
   width: ${({ width }) => width || 450}px;
   position: relative;
   display: flex;
@@ -118,7 +118,7 @@ const SelectDirectory: React.FC = () => {
           onClick={handleSelectDirectory}
           label={
             selectedDir
-              ? `Selected: ${shortenPath(selectedDir)}`
+              ? `Selected: ${shortenPath(selectedDir, 15)}`
               : "Choose directory"
           } // Use the shortened path
           width={320}
@@ -459,7 +459,7 @@ const SetupSummary: React.FC<{ onStart: () => void }> = ({ onStart }) => {
         <Frame
           height={25}
           heading="POS Directory"
-          subheader={shortenPath(settings.selectedDir ?? "")}
+          subheader={shortenPath(settings.selectedDir ?? "", 20)}
         />
         <Frame
           height={25}
