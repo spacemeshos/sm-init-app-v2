@@ -1,11 +1,11 @@
 import * as React from "react";
 import styled from "styled-components";
 import { HoverAccordionMenu } from "../components/accordion";
-import { ExternalLinks } from "../shared/Constants";
-import { useNavigate } from "react-router-dom";
 import BackgroundImage from "../assets/dev-summary.png";
 import Add from "../assets/plus.png";
 import Check from "../assets/check.png";
+import { ExternalLinks } from "../Shared/Constants";
+import { useNavigate } from "react-router-dom";
 
 const Image = styled.img`
   width: auto;

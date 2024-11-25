@@ -9,7 +9,7 @@ import { Title } from "../../components/texts";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Tile from "../../components/tile";
-import { ExternalLinks } from "../../shared/Constants";
+import { ExternalLinks } from "../../Shared/Constants";
 import PosInfo from "../../components/pos_info";
 import { useNavigate } from "react-router-dom";
 import { open } from "@tauri-apps/api/shell";

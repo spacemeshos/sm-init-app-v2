@@ -1,8 +1,8 @@
 /* eslint-disable react/react-in-jsx-scope */
 import styled from "styled-components";
 import Colors from "./styles/colors";
-import AppRoutes from "./shared/Routes";
-import { ExternalLinks } from "./shared/Constants";
+import AppRoutes from "./Shared/Routes";
+import { ExternalLinks } from "./Shared/Constants";
 import { open } from "@tauri-apps/api/shell";
 
 const AppWrapper = styled.div`
