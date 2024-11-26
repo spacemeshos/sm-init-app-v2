@@ -2,9 +2,9 @@
 
 ## User flow chart
 
-Figma file accessible under this link: [Init app flowchart](https://www.figma.com/design/cfVEVNhyQfteBFyrXJs02O/Init-App-Wireframes?node-id=5-13&t=vmhJDuXshZ5yUP83-1)
+Figma file accessible under this link: [Init app flowchart](https://www.figma.com/design/cfVEVNhyQfteBFyrXJs02O/Init-App-Wireframes?node-id=72-2&t=Pw8vDoi12uNBGBJ8-1)
 
-![User_Flow](user-flow.png)
+![user-flow-chart](user-flow-chart.png)
 
 ## App sitemap
 
