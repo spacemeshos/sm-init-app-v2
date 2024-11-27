@@ -19,6 +19,13 @@
 .env.production.local
 .yarnclean
 
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Binary files
+src-tauri/bin/post-rs/*
+src-tauri/bin/postcli/*
+!src-tauri/bin/post-rs/.gitkeep
+!src-tauri/bin/postcli/.gitkeep
