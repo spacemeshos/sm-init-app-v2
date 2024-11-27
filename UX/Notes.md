@@ -13,4 +13,4 @@ Figma file accessible under this link: [Init app sitemap
 
 Each explanations and info to put as well as the errors to cover will be added in detail later on.
 
-![Sitemap](sitemap.png)
+![Sitemap](Sitemap.png)
