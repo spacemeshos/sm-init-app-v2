@@ -1,0 +1,47 @@
+name: PR Build
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+        cache: 'yarn'
+
+    - name: Setup Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
+
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Create binary directories
+      run: |
+        mkdir -p src-tauri/bin/post-rs
+        mkdir -p src-tauri/bin/postcli
+
+    - name: Download post-rs binaries
+      run: |
+        curl -L https://github.com/spacemeshos/post-rs/releases/latest/download/post-rs-linux.tar.gz | tar xz -C src-tauri/bin/post-rs
+
+    - name: Download postcli binaries
+      run: |
+        curl -L https://github.com/spacemeshos/post/releases/latest/download/postcli-linux.tar.gz | tar xz -C src-tauri/bin/postcli
+
+    - name: Run tests
+      run: yarn test
+
+    - name: Build
+      run: yarn build
