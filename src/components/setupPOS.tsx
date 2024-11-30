@@ -4,7 +4,7 @@ import Colors from "../styles/colors";
 import Tile from "./tile";
 import { Button, CancelButton, SaveButton, TooltipButton } from "./button";
 import CustomNumberInput from "./input";
-import { ErrorMessage, Subheader } from "./texts";
+import { ErrorMessage, Subheader } from "../styles/texts";
 import size from "../assets/duplicate.png";
 import cpu from "../assets/cpu.png";
 import gpu from "../assets/graphics-card.png";

@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { BackButton, ForwardButton } from "../../components/button";
-import { Title } from "../../components/texts";
+import { Title } from "../../styles/texts";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import { useNavigate } from "react-router-dom";

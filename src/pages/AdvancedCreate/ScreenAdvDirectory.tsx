@@ -6,7 +6,7 @@ import {
   Button,
   TooltipButton,
 } from "../../components/button";
-import { Title } from "../../components/texts";
+import { Title } from "../../styles/texts";
 import Colors from "../../styles/colors";
 import ProgressBar from "../../components/progress";
 import Tile from "../../components/tile";
