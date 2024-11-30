@@ -9,11 +9,13 @@ import AdvSetupSize from "../pages/AdvancedCreate/ScreenAdvSize";
 import AdvSetupProving from "../pages/AdvancedCreate/ScreenAdvProving";
 import AdvSetupProvider from "../pages/AdvancedCreate/ScreenAdvProvider";
 import Confirmation from "../components/confirmation";
+import Generate from "../pages/Generate";
 
 const AppRoutes = () => (
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/generate" element={<Generate />} />
       <Route path="/guided/SelectDirectory" element={<SelectDirectory />} />
       <Route path="/guided/TailoredSettings" element={<TailoredSettings />} />
       <Route path="/guided/Summary" element={<Summary />} />
