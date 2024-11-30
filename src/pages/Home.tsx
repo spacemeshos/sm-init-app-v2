@@ -1,15 +1,13 @@
 import * as React from "react";
 import styled from "styled-components";
 import { HoverAccordionMenu } from "../components/accordion";
-import BackgroundImage from "../assets/dev-summary.png";
+import BackgroundImage from "../assets/lines.png";
 import Add from "../assets/plus.png";
 import Check from "../assets/check.png";
 import { ExternalLinks } from "../Shared/Constants";
 import { useNavigate } from "react-router-dom";
 
 const Image = styled.img`
-  width: auto;
-  height: 550px;
   position: absolute;
   margin-bottom: 10px;
   right: 0px;
@@ -20,8 +18,8 @@ const MenuContainer = styled.div`
   position: absolute;
   width: 400px;
   height: 200px;
-  left: 10%;
-  top: 40%;
+  right: 20%;
+  top: 50%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -61,7 +59,7 @@ const Home: React.FC = () => {
   const CreateButtons = [
     {
       label: "Guided Setup",
-      onClick: () => navigate("/guided/SelectDirectory"),
+      onClick: () => navigate("/generate"),
       width: 240,
     },
     {
