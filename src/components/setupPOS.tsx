@@ -8,6 +8,7 @@ import { ErrorMessage, Subheader } from "../styles/texts";
 import size from "../assets/duplicate.png";
 import cpu from "../assets/cpu.png";
 import gpu from "../assets/graphics-card.png";
+import key from "../assets/key.png";
 import Frame from "./frames";
 import rocket from "../assets/rocket.png";
 import folder from "../assets/folder.png";
@@ -79,9 +80,42 @@ const SelectedValue = styled.h1`
   position: relative;
 `;
 
-/*  --------- SELECT DIRECTORY ---------
-_____________________________________________________________________________________________
-*/
+const FileInput = styled.input`
+  display: none;
+`;
+
+const FileInputLabel = styled.label`
+  cursor: pointer;
+  color: ${Colors.white};
+  text-decoration: underline;
+`;
+
+const HexInput = styled.input`
+  background-color: ${Colors.darkerGreen};
+  color: ${Colors.white};
+  border: 1px solid ${Colors.greenLight};
+  padding: 10px;
+  width: 300px;
+  border-radius: 4px;
+  font-family: 'Source Code Pro', monospace;
+  margin-top: 10px;
+
+  &:focus {
+    outline: none;
+    border-color: ${Colors.greenLight};
+  }
+
+  &::placeholder {
+    color: ${Colors.grayMedium};
+  }
+`;
+
+interface FileInputEvent extends React.ChangeEvent<HTMLInputElement> {
+  target: HTMLInputElement & {
+    files: FileList;
+  };
+}
+
 const SelectDirectory: React.FC = () => {
   const { setSettings } = useSettings();
   const [error, setError] = useState<string | null>(null);
@@ -96,88 +130,64 @@ const SelectDirectory: React.FC = () => {
       }));
       setSelectedDir(dir);
       console.log("Selected directory:", dir);
-      setError(null); // Clear any previous errors
+      setError(null);
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : "Unknown error occurred";
       console.error("Failed to select directory:", errorMessage);
-      setError(errorMessage); // Set the error message
+      setError(errorMessage);
     }
   };
 
   return (
-    <>
-      <TileWrapper>
-        <Tile
-          heading={"Where to Store pos data?"}
-          imageSrc={folder}
-          imageTop={40}
-          errmsg={error ?? undefined}
-        />
-        <Button
-          onClick={handleSelectDirectory}
-          label={
-            selectedDir
-              ? `Selected: ${shortenPath(selectedDir, 15)}`
-              : "Choose directory"
-          } // Use the shortened path
-          width={320}
-          buttonTop={100}
-          backgroundColor={Colors.darkerPurple}
-          borderColor={Colors.purpleLight}
-        />
-        <TooltipButton
-          modalText={
-            <>
-              Use a reliable disk with at least 256 Gibibytes, preferring good
-              read speed (HDDs suffice).
-              <br />
-              <br />
-              Ensure PoS files remain accessible, as they&apos;re checked every
-              2 weeks.
-              <br />
-              <br />
-              Consider a dedicated disk or no other activity during proving
-              windows for disk longevity.
-            </>
-          }
-          modalTop={1}
-          modalLeft={1}
-          buttonTop={96}
-        />
-      </TileWrapper>
-    </>
+    <TileWrapper>
+      <Tile
+        heading={"Where to Store pos data?"}
+        imageSrc={folder}
+        imageTop={40}
+        errmsg={error ?? undefined}
+      />
+      <Button
+        onClick={handleSelectDirectory}
+        label={
+          selectedDir
+            ? `Selected: ${shortenPath(selectedDir, 15)}`
+            : "Choose directory"
+        }
+        width={320}
+        buttonTop={100}
+        backgroundColor={Colors.darkerPurple}
+        borderColor={Colors.purpleLight}
+      />
+      <TooltipButton
+        modalText={
+          <>
+            Select a directory where the POS data files will be stored.
+            <br />
+            <br />
+            Make sure you have enough free space in the selected directory.
+          </>
+        }
+        modalTop={1}
+        modalLeft={1}
+        buttonTop={96}
+      />
+    </TileWrapper>
   );
 };
 
-/*  --------- POS SIZE ---------
-_____________________________________________________________________________________________
-Usage of ./postcli:
--maxFileSize  uint  max file size (default 4294967296)
--numUnits  uint  number of units (required)
-*/
-
 const SetupSize: React.FC = () => {
   const { settings, setSettings } = useSettings();
-  const [isPOSInputVisible, setIsPOSInputVisible] = useState(true);
-  const [isFileInputVisible, setIsFileInputVisible] = useState(true);
+  const [isSpaceUnitsVisible, setIsSpaceUnitsVisible] = useState(true);
+  const MIN_SPACE_UNITS = 4;
 
-  const handleSaveDataSize = () => {
-    setIsPOSInputVisible(false);
+  const handleSaveSpaceUnits = () => {
+    setIsSpaceUnitsVisible(false);
   };
 
-  const handleSaveFileSize = () => {
-    setIsFileInputVisible(false);
-  };
-
-  const handleCancelDataSize = () => {
-    setSettings((prev) => ({ ...prev, numUnits: 4 })); // Reset to default value
-    setIsPOSInputVisible(true);
-  };
-
-  const handleCancelFileSize = () => {
-    setSettings((prev) => ({ ...prev, maxFileSize: 4096 })); // Reset to default value
-    setIsFileInputVisible(true);
+  const handleCancelSpaceUnits = () => {
+    setSettings((prev) => ({ ...prev, numUnits: MIN_SPACE_UNITS }));
+    setIsSpaceUnitsVisible(true);
   };
 
   return (
@@ -185,55 +195,28 @@ const SetupSize: React.FC = () => {
       <BgImage src={size} />
       <TileWrapper>
         <Tile
-          heading="Select POS data size"
-          subheader="Gibibytes"
-          footer="more data -> more rewards, but longer generation and proving"
+          heading="Select Space Units"
+          subheader="1 Space Unit = 64 GiB"
+          footer="Minimum: 4 Space Units (256 GiB)"
         />
-        {isPOSInputVisible ? (
+        {isSpaceUnitsVisible ? (
           <>
             <CustomNumberInput
-              min={256}
-              max={99999999999999}
-              step={64}
-              value={settings.numUnits ? settings.numUnits * 64 : 256}
-              onChange={(val) =>
-                setSettings((prev) => ({ ...prev, numUnits: val / 64 }))
-              }
-            />
-            <SaveButton buttonLeft={55} onClick={handleSaveDataSize} />
-            <CancelButton buttonLeft={45} onClick={handleCancelDataSize} />
-          </>
-        ) : (
-          <>
-            <SelectedValue>{(settings.numUnits ?? 256) * 64}</SelectedValue>
-            <CancelButton buttonLeft={50} onClick={handleCancelDataSize} />
-          </>
-        )}
-      </TileWrapper>
-      <TileWrapper>
-        <Tile
-          heading="Select file size"
-          subheader="Mebibytes"
-          footer="POS will be stored across [XXX] files"
-        />
-        {isFileInputVisible ? (
-          <>
-            <CustomNumberInput
-              min={10}
-              max={9999999}
+              min={MIN_SPACE_UNITS}
+              max={999}
               step={1}
-              value={settings.maxFileSize}
+              value={settings.numUnits || MIN_SPACE_UNITS}
               onChange={(val) =>
-                setSettings((prev) => ({ ...prev, maxFileSize: val }))
+                setSettings((prev) => ({ ...prev, numUnits: val }))
               }
             />
-            <SaveButton buttonLeft={55} onClick={handleSaveFileSize} />
-            <CancelButton buttonLeft={45} onClick={handleCancelFileSize} />
+            <SaveButton buttonLeft={55} onClick={handleSaveSpaceUnits} />
+            <CancelButton buttonLeft={45} onClick={handleCancelSpaceUnits} />
           </>
         ) : (
           <>
-            <SelectedValue>{settings.maxFileSize}</SelectedValue>
-            <CancelButton buttonLeft={50} onClick={handleCancelFileSize} />
+            <SelectedValue>{settings.numUnits || MIN_SPACE_UNITS}</SelectedValue>
+            <CancelButton buttonLeft={50} onClick={handleCancelSpaceUnits} />
           </>
         )}
       </TileWrapper>
@@ -241,24 +224,12 @@ const SetupSize: React.FC = () => {
   );
 };
 
-/* --------- Proving - CPU & Nonces ---------
-_____________________________________________________________________________________________ 
-Setting up the proving opts
-CPU cores should default to the 3/4 of the User's CPU
-Nonces number should be 288 or higher to assure finding the proof on the first read
-
-These values are not used in the postcli command
-they should be saved in the config file to simplify smeshing setup
-
-*/
-const DEFAULT_CORES = 8;
-const DEFAULT_NONCES = 288;
-
 const SetupProving: React.FC = () => {
   const { settings, setSettings } = useSettings();
   const [isCpuInputVisible, setIsCpuInputVisible] = useState(true);
   const [isNoncesInputVisible, setIsNoncesInputVisible] = useState(true);
   const [maxCores, setMaxCores] = useState<number>(0);
+  const DEFAULT_NONCES = 288;
 
   const handleSaveCPU = () => {
     setIsCpuInputVisible(false);
@@ -269,7 +240,8 @@ const SetupProving: React.FC = () => {
   };
 
   const handleCancelCPU = () => {
-    setSettings((prev) => ({ ...prev, numCores: DEFAULT_CORES }));
+    const defaultCores = Math.floor((3 / 4) * maxCores);
+    setSettings((prev) => ({ ...prev, numCores: defaultCores }));
     setIsCpuInputVisible(true);
   };
 
@@ -292,7 +264,6 @@ const SetupProving: React.FC = () => {
 
     fetchCpuCores();
   }, [setSettings]);
-
 
   const InputSection: React.FC<{
     heading: string;
@@ -345,9 +316,9 @@ const SetupProving: React.FC = () => {
       <BgImage src={cpu} />
       <InputSection
         heading="Select number of CPU cores"
-        footer="more CPU cores -> faster proof generation"
+        footer={`Default: ${Math.floor((3 / 4) * maxCores)} cores (3/4 of total cores)`}
         isVisible={isCpuInputVisible}
-        value={settings.numCores ? settings.numCores : DEFAULT_CORES}
+        value={settings.numCores || Math.floor((3 / 4) * maxCores)}
         min={1}
         max={maxCores}
         step={1}
@@ -357,9 +328,9 @@ const SetupProving: React.FC = () => {
       />
       <InputSection
         heading="Select number of Nonces"
-        footer="more nonces -> more likely proof generated on the first try"
+        footer={`Default: ${DEFAULT_NONCES} nonces`}
         isVisible={isNoncesInputVisible}
-        value={settings.numNonces ? settings.numNonces : DEFAULT_NONCES}
+        value={settings.numNonces || DEFAULT_NONCES}
         min={16}
         max={9999}
         step={16}
@@ -371,25 +342,32 @@ const SetupProving: React.FC = () => {
   );
 };
 
-/* --------- Provider - GPU ---------
-_____________________________________________________________________________________________
-Usage of ./postcli:
--provider  uint  compute provider id (required)
-
-By default the fastest marked as 0 and is chosen automatically 
-*/
-type Props = {
+interface Props {
   isOpen: boolean;
-};
+}
 
 const SetupGPU: React.FC<Props> = ({ isOpen }) => {
+  const { setSettings } = useSettings();
   const { run, response, loading, error } = FindProviders();
+  const [selectedProvider, setSelectedProvider] = useState<number>(0);
 
   useEffect(() => {
     if (isOpen) {
       run(["-printProviders"]);
     }
-  }, [isOpen]);
+  }, [isOpen, run]);
+
+  useEffect(() => {
+    if (response && response.length > 0) {
+      setSelectedProvider(0);
+      setSettings((prev) => ({ ...prev, provider: 0 }));
+    }
+  }, [response, setSettings]);
+
+  function handleProviderSelect(providerId: number) {
+    setSelectedProvider(providerId);
+    setSettings((prev) => ({ ...prev, provider: providerId }));
+  }
 
   function createTile(processor: {
     ID: number;
@@ -397,16 +375,18 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
     DeviceType: string;
   }) {
     const isFastest = processor.ID === 0;
+    const isSelected = processor.ID === selectedProvider;
     const icon = processor.DeviceType === "GPU" ? gpu : cpu;
 
     return (
       <TileWrapper width={350} key={processor.ID}>
         <Tile
           heading={processor.Model}
-          subheader={processor.DeviceType}
-          footer={isFastest ? "The Fastest" : ""}
+          subheader={`${processor.DeviceType}${isFastest ? " (Fastest)" : ""}`}
+          footer={isSelected ? "Selected" : "Click to select"}
           imageSrc={icon}
-          //implement onCLick: select the clicked provider - save it's ID to pass to the binary as a -provider flag
+          onClick={() => handleProviderSelect(processor.ID)}
+          selected={isSelected}
         />
       </TileWrapper>
     );
@@ -427,21 +407,74 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   );
 };
 
-/* --------- Summary ---------
-_____________________________________________________________________________________________
-Show summary and compose command
+const SelectIdentity: React.FC = () => {
+  const { setSettings } = useSettings();
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [atxId, setAtxId] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
 
-Usage of ./postcli:
--commitmentAtxId   string  commitment atx id, in hex (required)
--datadir  string  filesystem datadir path (default "/Users/monikasmolarek/post/data")
--id   string  miner's id (public key), in hex (will be auto-generated if not provided)
--maxFileSize  uint  max file size (default 4294967296)
--numUnits   uint  number of units (required)
--printConfig  print the used config and options
--printNumFiles  print the total number of files that would be initialized
--printProviders  print the list of compute providers
--provider  uint  compute provider id (required)
-*/
+  const handleFileChange = (event: FileInputEvent) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file.name);
+      setSettings((prev) => ({ ...prev, identityFile: file.name }));
+    }
+  };
+
+  const handleAtxIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    if (/^[0-9a-fA-F]*$/.test(value) && value.length <= 64) {
+      setAtxId(value);
+      setSettings((prev) => ({ ...prev, atxId: value }));
+      setError(null);
+    } else {
+      setError("ATX ID must be a valid 256-bit hexadecimal value");
+    }
+  };
+
+  return (
+    <BottomContainer>
+      <BgImage src={key} />
+      <TileWrapper>
+        <Tile
+          heading="Identity File (Optional)"
+          subheader="Select identity.key file"
+          footer={selectedFile || "No file selected"}
+          errmsg={error ?? undefined}
+        />
+        <FileInput
+          type="file"
+          id="identity-file"
+          accept=".key"
+          onChange={handleFileChange}
+        />
+        <FileInputLabel htmlFor="identity-file">
+          <Button
+            label={selectedFile ? "Change File" : "Select File"}
+            width={320}
+            buttonTop={100}
+            backgroundColor={Colors.darkerPurple}
+            borderColor={Colors.purpleLight}
+          />
+        </FileInputLabel>
+      </TileWrapper>
+      <TileWrapper>
+        <Tile
+          heading="ATX ID (Optional)"
+          subheader="256-bit hexadecimal value"
+          footer="Enter your ATX ID"
+        />
+        <HexInput
+          type="text"
+          value={atxId}
+          onChange={handleAtxIdChange}
+          placeholder="Enter ATX ID (hex)"
+          maxLength={64}
+        />
+      </TileWrapper>
+    </BottomContainer>
+  );
+};
 
 const SetupSummary: React.FC<{ onStart: () => void }> = ({ onStart }) => {
   const { settings } = useSettings();
@@ -451,26 +484,38 @@ const SetupSummary: React.FC<{ onStart: () => void }> = ({ onStart }) => {
         <BgImage src={rocket} />
         <Frame
           height={25}
-          heading="POS DATA"
-          subheader={`${(settings.numUnits ?? 256) * 64} Gibibytes, ${
-            settings.maxFileSize
-          } MiB file size`} //TODO convert dynamically GiB TiB PiB etc
+          heading="Space Units"
+          subheader={`${settings.numUnits || 4} Units (${(settings.numUnits || 4) * 64} GiB)`}
         />
         <Frame
           height={25}
-          heading="POS Directory"
+          heading="Directory"
           subheader={shortenPath(settings.selectedDir ?? "", 20)}
         />
         <Frame
           height={25}
-          heading="POS Generation"
-          subheader={`Provider ID: ${settings.provider}`}
+          heading="Provider"
+          subheader={`ID: ${settings.provider || 0} (${settings.provider === 0 ? 'Fastest' : 'Manual Selection'})`}
         />
         <Frame
           height={25}
-          heading="POST Proving"
-          subheader={`${settings.numCores} cores, ${settings.numNonces} nonces`}
+          heading="Proving Setup"
+          subheader={`${settings.numCores} cores, ${settings.numNonces || 288} nonces`}
         />
+        {settings.identityFile && (
+          <Frame
+            height={25}
+            heading="Identity"
+            subheader={`File: ${shortenPath(settings.identityFile, 20)}`}
+          />
+        )}
+        {settings.atxId && (
+          <Frame
+            height={25}
+            heading="ATX ID"
+            subheader={`${settings.atxId.substring(0, 10)}...`}
+          />
+        )}
       </ContainerSummary>
       <ContainerStart>
         <Button
@@ -487,4 +532,4 @@ const SetupSummary: React.FC<{ onStart: () => void }> = ({ onStart }) => {
   );
 };
 
-export { SelectDirectory, SetupSize, SetupProving, SetupGPU, SetupSummary };
+export { SelectDirectory, SetupSize, SetupProving, SetupGPU, SelectIdentity, SetupSummary };
