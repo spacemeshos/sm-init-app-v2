@@ -1,7 +1,7 @@
 const Colors = {
-  greenLight: "#4CB963",
-  greenDark: "#22532C",
-  background: "#141a17",
+  greenLight: "#3AFFA7",
+  greenDark: "#061A14",
+  background: "#061A14",
   white: "#FFFFFF",
   purpleLight: "#AA58B1",
   grayLight: "#dddddd",
