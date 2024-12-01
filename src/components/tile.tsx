@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 
-interface TileProps {
+export interface TileProps {
   heading?: string;
   subheader?: string;
   footer?: string;
@@ -12,21 +12,34 @@ interface TileProps {
   children?: React.ReactNode;
   buttonText?: string;
   onClick?: () => void;
+  selected?: boolean;
 }
 
-const TileWrapper = styled.div`
-  background-color: ${Colors.darkerGreen};
+const TileWrapper = styled.div<{ selected?: boolean }>`
+  background-color: ${({ selected }) => selected ? Colors.darkerPurple : Colors.darkerGreen};
   height: 100%;
   width: 100%;
   position: absolute;
   display: flex;
   justify-content: center;
+  cursor: ${({ onClick }) => onClick ? 'pointer' : 'default'};
 
   /* Gradient border */
   border: 1px solid transparent;
   transition: border-color 0.3s ease;
-  border-image: linear-gradient(${Colors.greenLight}, ${Colors.greenDark});
+  border-image: linear-gradient(
+    ${({ selected }) => selected ? Colors.purpleLight : Colors.greenLight}, 
+    ${({ selected }) => selected ? Colors.purpleDark : Colors.greenDark}
+  );
   border-image-slice: 1;
+
+  &:hover {
+    border-image: linear-gradient(
+      ${({ selected }) => selected ? Colors.purpleLight : Colors.greenLight}, 
+      ${({ selected }) => selected ? Colors.purpleLight : Colors.greenLight}
+    );
+    border-image-slice: 1;
+  }
 `;
 
 const TileHeading = styled.h2`
@@ -54,7 +67,6 @@ const SubHeader = styled.h3`
   font-weight: 100;
   letter-spacing: 3px;
   width: 95%;
-  //TODO: make sure a longer text doesn't collide with other elements
 `;
 
 const ErrorMessage = styled.h3`
@@ -105,7 +117,6 @@ const Footer = styled.h3`
   font-weight: 100;
   letter-spacing: 3px;
   width: 95%;
-  //TODO: make sure a longer text doesn't collide with other elements
 `;
 
 const Tile: React.FC<TileProps> = ({
@@ -116,9 +127,11 @@ const Tile: React.FC<TileProps> = ({
   footer,
   errmsg,
   children,
+  onClick,
+  selected,
 }) => {
   return (
-    <TileWrapper>
+    <TileWrapper onClick={onClick} selected={selected}>
       <TileHeading>{heading}</TileHeading>
       {!errmsg && <SubHeader>{subheader}</SubHeader>}
       {errmsg && <ErrorMessage>{errmsg}</ErrorMessage>}
