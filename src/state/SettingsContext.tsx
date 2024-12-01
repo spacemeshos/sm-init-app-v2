@@ -8,6 +8,8 @@ interface Settings {
   numNonces?: number;
   provider?: number;
   selectedDir?: string;
+  identityFile?: string;
+  atxId?: string;
 }
 
 interface SettingsContextProps {
@@ -29,6 +31,8 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
     numNonces: 288,
     provider: 0,
     selectedDir: undefined,
+    identityFile: undefined,
+    atxId: undefined,
   });
 
   return (
