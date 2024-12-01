@@ -4,25 +4,37 @@ import BackgroundImage from "../assets/lines.png";
 import { useState } from "react";
 import Colors from "../styles/colors";
 import { Subheader, Title } from "../styles/texts";
-
+import {
+  SelectDirectory,
+  SetupGPU,
+  SetupProving,
+  SetupSize,
+  SelectIdentity,
+  SetupSummary
+} from "../components/setupPOS";
 
 const Image = styled.img`
   height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
   z-index: -1;
-`; //image to be updated with smth high-res
+  object-fit: cover;
+`;
 
 const BottomContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100vw;
+  height: 100vh;
 `;
 
 const SetupContainer = styled.div`
   width: 960px;
   height: 480px;
-  position: absolute;
-  bottom: 100px;
+  position: relative;
   border: 0.5px solid rgba(255, 255, 255, 0.05);
   background-color: rgba(255, 255, 255, 0.01);
   backdrop-filter: blur(8px);
@@ -32,10 +44,6 @@ const SetupContainer = styled.div`
   border-radius: 10px;
   box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
 `;
-
-type ContainerProps = {
-  children?: React.ReactNode;
-};
 
 const MenuContainer = styled.div`
   position: absolute;
@@ -58,27 +66,25 @@ const ButtonColumn = styled.div`
 
 const TextWrapper = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
-  top: 10px;
-  left: 0px;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 80%;
-  height: 60px
 `;
 
-
-const StyledButton = styled.button`
+const StyledButton = styled.button<{ $isActive?: boolean }>`
   width: 200px;
   height: 60px;
   font-size: 16px;
-  color: ${Colors.grayLight};
   cursor: pointer;
-  border: 0.5px solid rgba(255, 255, 255, 0.05);
-  background-color: rgba(255, 255, 255, 0.05);
+  border: 0.5px solid ${props => props.$isActive ? Colors.greenLight : 'rgba(255, 255, 255, 0.05)'};
+  background-color: ${props => props.$isActive ? 'rgba(0, 255, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)'};
   border-radius: 10px;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   font-family: "Source Code Pro Extralight", sans-serif;
   color: ${Colors.white};
   font-size: 14px;
@@ -86,71 +92,100 @@ const StyledButton = styled.button`
   text-transform: uppercase;
   letter-spacing: 3px;
   line-height: 20px;
+
   &:hover {
-    background-color: rgba(255, 255, 255, 0);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 `;
 
-const SelectDirectory: React.FC = () => <div>Select Directory Component</div>;
-const SetupGPU: React.FC = () => <div>Setup GPU Component</div>;
-const SetupProving: React.FC = () => <div>Setup Proving Component</div>;
-const SetupSize: React.FC = () => <div>Setup Size Component</div>;
-const SelectIdentity: React.FC = () => <div>Select Identity Component</div>;
+const ContentContainer = styled.div`
+  width: calc(100% - 250px);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+`;
 
-const Generate: React.FC<ContainerProps> = () => {
-  const [selectedComponent, setSelectedComponent] =
-    useState<React.ReactNode>(null);
+const Generate: React.FC = () => {
+  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [showSummary, setShowSummary] = useState<boolean>(false);
 
-  // Button configuration
-  const buttons = [
+  const steps = [
     {
       label: "Pick Directory",
-      onClick: () => setSelectedComponent(<SelectDirectory />),
+      component: <SelectDirectory />,
     },
     {
       label: "Select Processor",
-      onClick: () => setSelectedComponent(<SetupGPU />),
+      component: <SetupGPU isOpen={true} />,
     },
     {
       label: "Set up Proving",
-      onClick: () => setSelectedComponent(<SetupProving />),
+      component: <SetupProving />,
     },
     {
       label: "Set up POS Size",
-      onClick: () => setSelectedComponent(<SetupSize />),
+      component: <SetupSize />,
     },
     {
       label: "Select Identity",
-      onClick: () => setSelectedComponent(<SelectIdentity />),
+      component: <SelectIdentity />,
     },
   ];
+
+  const handleStepChange = (index: number) => {
+    setCurrentStep(index);
+    setShowSummary(false);
+  };
+
+  const handleStartGeneration = () => {
+    console.log("Starting POS data generation...");
+  };
+
+  const renderContent = () => {
+    if (showSummary) {
+      return <SetupSummary onStart={handleStartGeneration} />;
+    }
+    return steps[currentStep].component;
+  };
 
   return (
     <>
       <Image src={BackgroundImage} />
       <BottomContainer>
         <SetupContainer>
-          <MenuContainer>
-            {/* Button Column */}
-            <ButtonColumn>
-              {buttons.map((button, index) => (
-                <StyledButton key={index} onClick={button.onClick}>
-                  {button.label}
-                </StyledButton>
-              ))}
-            </ButtonColumn>
-          </MenuContainer>
-          {/* Rendered Component */}
           <TextWrapper>
-            {" "}
-            <Title text="Summary of your Settings" />
-            <Subheader text={"Check twice, adjust if needed, and blast off!"} />
+            <Title text={showSummary ? "Summary of your Settings" : steps[currentStep].label} />
+            {showSummary && (
+              <Subheader text="Check twice, adjust if needed, and blast off!" />
+            )}
           </TextWrapper>
 
-          <div style={{ marginTop: "20px", width: "100%" }}>
-            {selectedComponent || <div>Please select an option above</div>}
-          </div>
+          <ContentContainer>
+            {renderContent()}
+          </ContentContainer>
+
+          <MenuContainer>
+            <ButtonColumn>
+              {steps.map((step, index) => (
+                <StyledButton
+                  key={index}
+                  onClick={() => handleStepChange(index)}
+                  $isActive={currentStep === index}
+                >
+                  {step.label}
+                </StyledButton>
+              ))}
+              <StyledButton
+                onClick={() => setShowSummary(true)}
+                $isActive={showSummary}
+              >
+                Summary
+              </StyledButton>
+            </ButtonColumn>
+          </MenuContainer>
         </SetupContainer>
       </BottomContainer>
     </>

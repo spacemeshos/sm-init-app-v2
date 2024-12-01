@@ -350,13 +350,20 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   const { setSettings } = useSettings();
   const { run, response, loading, error } = FindProviders();
   const [selectedProvider, setSelectedProvider] = useState<number>(0);
+  const [hasInitialized, setHasInitialized] = useState(false);
 
+  // First effect to handle initial provider detection
   useEffect(() => {
-    if (isOpen) {
-      run(["-printProviders"]);
+    if (isOpen && !hasInitialized) {
+      const detectProviders = async () => {
+        await run(["-printProviders"]);
+        setHasInitialized(true);
+      };
+      detectProviders();
     }
-  }, [isOpen, run]);
+  }, [isOpen, hasInitialized]); // Remove run from dependencies
 
+  // Second effect to handle provider selection
   useEffect(() => {
     if (response && response.length > 0) {
       setSelectedProvider(0);
@@ -364,16 +371,23 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
     }
   }, [response, setSettings]);
 
-  function handleProviderSelect(providerId: number) {
+  // Reset initialization when component closes
+  useEffect(() => {
+    if (!isOpen) {
+      setHasInitialized(false);
+    }
+  }, [isOpen]);
+
+  const handleProviderSelect = (providerId: number) => {
     setSelectedProvider(providerId);
     setSettings((prev) => ({ ...prev, provider: providerId }));
-  }
+  };
 
-  function createTile(processor: {
+  const createTile = (processor: {
     ID: number;
     Model: string;
     DeviceType: string;
-  }) {
+  }) => {
     const isFastest = processor.ID === 0;
     const isSelected = processor.ID === selectedProvider;
     const icon = processor.DeviceType === "GPU" ? gpu : cpu;
@@ -390,14 +404,16 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
         />
       </TileWrapper>
     );
-  }
+  };
+
+  if (!isOpen) return null;
 
   return (
     <BottomContainer>
       <BgImage src={gpu} />
       {loading && <Subheader text="Loading..." left={0} />}
       {error ? (
-        <ErrorMessage text="Error:"> {error}</ErrorMessage>
+        <ErrorMessage text="Error detecting processors:"> {error}</ErrorMessage>
       ) : response && response.length > 0 ? (
         response.map(createTile)
       ) : (
