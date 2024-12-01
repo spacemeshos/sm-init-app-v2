@@ -9,13 +9,12 @@ import size from "../assets/duplicate.png";
 import cpu from "../assets/cpu.png";
 import gpu from "../assets/graphics-card.png";
 import key from "../assets/key.png";
-import Frame from "./frames";
-import rocket from "../assets/rocket.png";
 import folder from "../assets/folder.png";
 import { invoke } from "@tauri-apps/api";
 import { useSettings } from "../state/SettingsContext";
 import { FindProviders } from "../utils/parseResponse";
 import { shortenPath } from "../utils/pathUtils";
+import POSSummary from "./POSSummary";
 
 const BgImage = styled.img`
   aspect-ratio: 1;
@@ -36,27 +35,6 @@ const BottomContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
   flex-direction: row;
-`;
-
-const ContainerSummary = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  left: 75px;
-  top: 300px;
-  width: 675px;
-  height: 320px;
-  position: absolute;
-`;
-
-const ContainerStart = styled.div`
-  left: 800px;
-  top: 300px;
-  width: 300px;
-  height: 300px;
-  position: absolute;
 `;
 
 const TileWrapper = styled.div<{
@@ -493,59 +471,7 @@ const SelectIdentity: React.FC = () => {
 };
 
 const SetupSummary: React.FC<{ onStart: () => void }> = ({ onStart }) => {
-  const { settings } = useSettings();
-  return (
-    <>
-      <ContainerSummary>
-        <BgImage src={rocket} />
-        <Frame
-          height={25}
-          heading="Space Units"
-          subheader={`${settings.numUnits || 4} Units (${(settings.numUnits || 4) * 64} GiB)`}
-        />
-        <Frame
-          height={25}
-          heading="Directory"
-          subheader={shortenPath(settings.selectedDir ?? "", 20)}
-        />
-        <Frame
-          height={25}
-          heading="Provider"
-          subheader={`ID: ${settings.provider || 0} (${settings.provider === 0 ? 'Fastest' : 'Manual Selection'})`}
-        />
-        <Frame
-          height={25}
-          heading="Proving Setup"
-          subheader={`${settings.numCores} cores, ${settings.numNonces || 288} nonces`}
-        />
-        {settings.identityFile && (
-          <Frame
-            height={25}
-            heading="Identity"
-            subheader={`File: ${shortenPath(settings.identityFile, 20)}`}
-          />
-        )}
-        {settings.atxId && (
-          <Frame
-            height={25}
-            heading="ATX ID"
-            subheader={`${settings.atxId.substring(0, 10)}...`}
-          />
-        )}
-      </ContainerSummary>
-      <ContainerStart>
-        <Button
-          label="Start Data generation"
-          borderColor={Colors.purpleLight}
-          backgroundColor={Colors.darkerPurple}
-          buttonTop={160}
-          buttonLeft={25}
-          height={80}
-          onClick={onStart}
-        />
-      </ContainerStart>
-    </>
-  );
+  return <POSSummary onProceed={onStart} />;
 };
 
 export { SelectDirectory, SetupSize, SetupProving, SetupGPU, SelectIdentity, SetupSummary };
