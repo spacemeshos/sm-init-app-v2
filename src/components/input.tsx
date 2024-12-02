@@ -8,10 +8,6 @@ interface CustomNumberInputProps {
   step?: number;
   inputColor?: string;
   buttonColor?: string;
-  backgroundColor?: string;
-  borderColor?: string;
-  hoverBorderColor?: string;
-  buttonHoverColor?: string;
   fontSize?: number;
   height?: number;
   width?: number;
@@ -34,22 +30,16 @@ const StyledInputRoot = styled.div<{ height?: number; width?: number }>`
 `;
 
 const StyledInput = styled.input<{
-  inputColor?: string;
-  height?: number;
-  width?: number;
-  backgroundColor?: string;
-  borderColor?: string;
-  hoverBorderColor?: string;
   fontSize?: number;
 }>`
   font-size: ${({ fontSize = 36 }) => fontSize}px;
   font-family: "Source Code Pro ExtraLight", sans-serif;
   font-weight: 200;
-  color: ${({ inputColor = Colors.grayLight }) => inputColor};
-  height: ${({ height = 100 }) => height}px;
-  width: ${({ width = 200 }) => width}px;
-  background: ${({ backgroundColor = Colors.background }) => backgroundColor};
-  border: 2px solid ${({ borderColor = Colors.darkerPurple }) => borderColor};
+  color: ${Colors.white};
+  height: 56px;
+  width: 130px;
+  background: ${Colors.greenLightOpaque};
+  border: 2px solid ${Colors.whiteOpaque};
   margin: 0 8px;
   padding: 0px 12px;
   min-width: 130px;
@@ -62,18 +52,9 @@ const StyledInput = styled.input<{
     -webkit-appearance: none;
     margin: 0;
   }
-
-  &:hover {
-    border-color: ${({ hoverBorderColor = Colors.purpleDark }) =>
-      hoverBorderColor};
-  }
-  &:focus-visible {
-    outline: 0;
-  }
 `;
 
 const StyledButton = styled.button<{
-  buttonColor?: string;
   height?: number;
   width?: number;
 }>`
@@ -82,10 +63,10 @@ const StyledButton = styled.button<{
   box-sizing: border-box;
   line-height: 1.5;
   border: none;
-  background: ${({ buttonColor = Colors.purpleDark }) => buttonColor};
-  color: ${Colors.grayLight};
-  height: ${({ height = 100 }) => height}px;
-  width: ${({ width = 70 }) => width}px;
+  background: ${Colors.whiteOpaque};
+  color: ${Colors.white};
+  height: 56px;
+  width: 56px;
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
@@ -115,11 +96,6 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   min = 1,
   max = 99,
   step = 1,
-  inputColor,
-  buttonColor,
-  backgroundColor,
-  borderColor,
-  hoverBorderColor,
   height,
   width,
   value = min,
@@ -155,7 +131,6 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   return (
     <StyledInputRoot height={height} width={width}>
       <StyledButton
-        buttonColor={buttonColor}
         height={height}
         width={width}
         onClick={handleDecrement}
@@ -165,12 +140,6 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
       </StyledButton>
       <StyledInput
         type="number"
-        inputColor={inputColor}
-        backgroundColor={backgroundColor}
-        borderColor={borderColor}
-        hoverBorderColor={hoverBorderColor}
-        height={height}
-        width={width}
         value={inputValue}
         onChange={handleChange}
         min={min}
@@ -178,7 +147,6 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
         fontSize={fontSize}
       />
       <StyledButton
-        buttonColor={buttonColor}
         height={height}
         width={width}
         onClick={handleIncrement}
