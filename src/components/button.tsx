@@ -31,6 +31,7 @@ interface ButtonProps {
   showModal?: boolean;
   size?: number;
   modalComponent?: React.ElementType;
+  $isActive?: boolean;
 }
 
 // Standard Button component
@@ -44,6 +45,7 @@ const Button: React.FC<ButtonProps> = ({
   width,
   backgroundColor,
   borderColor,
+  $isActive,
 }) => {
   const handleClick = () => {
     if (typeof onClick === "function") {
@@ -51,7 +53,7 @@ const Button: React.FC<ButtonProps> = ({
     }
   };
   return (
-    <ButtonWrapper
+    <StandardButton
       onClick={handleClick}
       role="button"
       tabIndex={0}
@@ -62,9 +64,10 @@ const Button: React.FC<ButtonProps> = ({
       height={height}
       backgroundColor={backgroundColor}
       borderColor={borderColor}
+      $isActive={$isActive}
     >
       <ButtonText>{label}</ButtonText>
-    </ButtonWrapper>
+    </StandardButton>
   );
 };
 
@@ -138,7 +141,7 @@ const IconButton: React.FC<ButtonProps> = ({
   return (
     <>
       {!isModalOpen && (
-        <IconButtonWrapper
+        <IconStandardButton
           onClick={handleClick}
           role="button"
           tabIndex={0}
@@ -146,7 +149,7 @@ const IconButton: React.FC<ButtonProps> = ({
           buttonLeft={buttonLeft}
         >
           <ButtonIcon src={iconSrc} size={size} />
-        </IconButtonWrapper>
+        </IconStandardButton>
       )}
       {isModalOpen &&
         showModal &&
@@ -187,7 +190,7 @@ const CancelButton: React.FC<ButtonProps> = (props) => {
 };
 
 // Styled component for the standard button wrapper
-const ButtonWrapper = styled.button<{
+const StandardButton = styled.button<{
   buttonTop?: number;
   buttonLeft?: number;
   height?: number;
@@ -195,14 +198,15 @@ const ButtonWrapper = styled.button<{
   buttonMargin?: number;
   borderColor?: string;
   backgroundColor?: string;
+  $isActive?: boolean;
 }>`
   top: ${({ buttonTop }) => buttonTop || 0}px;
   left: ${({ buttonLeft }) => buttonLeft || 0}px;
   height: ${({ height }) => height || 60}px;
   width: ${({ width }) => width || 300}px;
-  background-color: ${({ backgroundColor }) =>
-    backgroundColor || "transparent"};
+  background-color: ${Colors.whiteOpaque};
   cursor: pointer;
+  transition: all 0.2s ease;
   padding: 10px;
   margin: ${({ buttonMargin }) => buttonMargin || 0}px;
   z-index: auto;
@@ -211,11 +215,14 @@ const ButtonWrapper = styled.button<{
   justify-content: center;
   text-align: center;
   position: relative;
-  border-radius: 50px;
-  border: 1px solid ${({ borderColor }) => borderColor || Colors.greenDark};
+  border-radius: 45px;
+  border: 0.5px solid
+    ${(props) =>
+      props.$isActive ? Colors.whiteOpaque : Colors.greenLightOpaque};
 
   &:hover {
-    border: 1px solid ${({ borderColor }) => borderColor || Colors.greenLight};
+    background-color: ${Colors.greenLightOpaque};
+    border: 1px solid ${Colors.whiteOpaque};
   }
 `;
 
@@ -253,7 +260,7 @@ const ButtonIcon = styled.img<{ size?: number }>`
 `;
 
 // Styled component for the icon button wrapper
-const IconButtonWrapper = styled.button<{
+const IconStandardButton = styled.button<{
   buttonTop: number;
   buttonLeft: number;
 }>`
