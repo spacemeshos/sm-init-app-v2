@@ -7,8 +7,6 @@ export interface TileProps {
   subheader?: string;
   footer?: string;
   errmsg?: string;
-  imageSrc?: string;
-  imageTop?: number;
   children?: React.ReactNode;
   buttonText?: string;
   onClick?: () => void;
@@ -76,20 +74,6 @@ const ErrorMessage = styled.h3`
   width: 95%;
 `;
 
-const TileImage = styled.img<{
-  imageTop?: number;
-  isError: boolean;
-}>`
-  aspect-ratio: 1;
-  object-fit: contain;
-  width: 100px;
-  position: absolute;
-  left: 50%;
-  top: ${({ imageTop }) => imageTop || 60}%;
-  transform: translate(-50%, -${({ imageTop }) => imageTop || 60}%);
-  opacity: ${({ isError }) => (isError ? 0.05 : 1)};
-`;
-
 const TileElement = styled.div`
   aspect-ratio: 1;
   object-fit: contain;
@@ -116,8 +100,6 @@ const Footer = styled.h3`
 const Tile: React.FC<TileProps> = ({
   heading,
   subheader,
-  imageSrc,
-  imageTop,
   footer,
   errmsg,
   children,
@@ -129,9 +111,6 @@ const Tile: React.FC<TileProps> = ({
       <TileHeading>{heading}</TileHeading>
       {!errmsg && <SubHeader>{subheader}</SubHeader>}
       {errmsg && <ErrorMessage>{errmsg}</ErrorMessage>}
-      {imageSrc && (
-        <TileImage src={imageSrc} imageTop={imageTop} isError={!!errmsg} />
-      )}
       <Footer>{footer}</Footer>
       <TileElement>{children}</TileElement>
     </TileWrapper>
