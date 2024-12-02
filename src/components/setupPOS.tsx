@@ -11,7 +11,6 @@ import { FindProviders } from "../utils/parseResponse";
 import { shortenPath } from "../utils/pathUtils";
 import POSSummary from "./POSSummary";
 
-
 const BottomContainer = styled.div`
   height: 80%;
   width: 100%;
@@ -61,7 +60,7 @@ const HexInput = styled.input`
   padding: 10px;
   width: 300px;
   border-radius: 4px;
-  font-family: 'Source Code Pro', monospace;
+  font-family: "Source Code Pro", monospace;
   margin-top: 10px;
 
   &:focus {
@@ -104,22 +103,24 @@ const SelectDirectory: React.FC = () => {
   };
 
   return (
-    <TileWrapper>
-      <Tile
-        heading="Select where the POS data will be stored"
-        errmsg={error ?? undefined}
-      />
-      <Button
-        onClick={handleSelectDirectory}
-        label={
-          selectedDir
-            ? `Selected: ${shortenPath(selectedDir, 15)}`
-            : "Choose directory"
-        }
-        width={320}
-        buttonTop={100}
-      />
-    </TileWrapper>
+    <BottomContainer>
+      <TileWrapper>
+        <Tile
+          heading="Select where the POS data will be stored"
+          errmsg={error ?? undefined}
+        />
+        <Button
+          onClick={handleSelectDirectory}
+          label={
+            selectedDir
+              ? `Selected: ${shortenPath(selectedDir, 15)}`
+              : "Choose directory"
+          }
+          width={320}
+          buttonTop={50}
+        />
+      </TileWrapper>
+    </BottomContainer>
   );
 };
 
@@ -161,7 +162,9 @@ const SetupSize: React.FC = () => {
           </>
         ) : (
           <>
-            <SelectedValue>{settings.numUnits || MIN_SPACE_UNITS}</SelectedValue>
+            <SelectedValue>
+              {settings.numUnits || MIN_SPACE_UNITS}
+            </SelectedValue>
             <CancelButton buttonLeft={50} onClick={handleCancelSpaceUnits} />
           </>
         )}
@@ -261,7 +264,9 @@ const SetupProving: React.FC = () => {
     <BottomContainer>
       <InputSection
         heading="Select number of CPU cores"
-        footer={`Default: ${Math.floor((3 / 4) * maxCores)} cores (3/4 of total cores)`}
+        footer={`Default: ${Math.floor(
+          (3 / 4) * maxCores
+        )} cores (3/4 of total cores)`}
         isVisible={isCpuInputVisible}
         value={settings.numCores || Math.floor((3 / 4) * maxCores)}
         min={1}
@@ -437,4 +442,11 @@ const SetupSummary: React.FC<{ onStart: () => void }> = ({ onStart }) => {
   return <POSSummary onProceed={onStart} />;
 };
 
-export { SelectDirectory, SetupSize, SetupProving, SetupGPU, SelectIdentity, SetupSummary };
+export {
+  SelectDirectory,
+  SetupSize,
+  SetupProving,
+  SetupGPU,
+  SelectIdentity,
+  SetupSummary,
+};
