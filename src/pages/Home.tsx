@@ -4,12 +4,12 @@ import { HoverAccordionMenu } from "../components/accordion";
 import BackgroundImage from "../assets/lines.png";
 import { ExternalLinks } from "../Shared/Constants";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../components/button";
 
 const Image = styled.img`
   position: absolute;
   margin-bottom: 10px;
-  right: 0px;
-  top: 0px;
+  width: 100vw;
 `;
 
 const MenuContainer = styled.div`
@@ -53,40 +53,20 @@ const Home: React.FC = () => {
     },
   ];
 
-  // Button configurations for the "Create" menu
-  const CreateButtons = [
-    {
-      label: "Guided Setup",
-      onClick: () => navigate("/generate"),
-      width: 240,
-    },
-    {
-      label: "Advanced Setup",
-      onClick: () => navigate("advanced/Directory"),
-      width: 240,
-    },
-    {
-      label: "Split In Subsets",
-      onClick: () => console.log("Button 2 clicked"),
-      width: 240,
-    },
-  ];
   return (
     <>
       <MenuContainer>
+        <Button
+          onClick={() => navigate("advanced/Directory")}
+          width={250}
+          label="Generate"
+        />
         <HoverAccordionMenu
           $isHovered={hoveredMenu === "check"}
           onMouseEnter={() => setHoveredMenu("check")}
           onMouseLeave={() => setHoveredMenu(null)}
           title="check"
           buttons={CheckButtons}
-        />
-        <HoverAccordionMenu
-          $isHovered={hoveredMenu === "generate"}
-          onMouseEnter={() => setHoveredMenu("generate")}
-          onMouseLeave={() => setHoveredMenu(null)}
-          title="Generate"
-          buttons={CreateButtons}
         />
       </MenuContainer>
       <Image src={BackgroundImage} />
