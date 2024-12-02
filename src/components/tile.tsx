@@ -16,30 +16,24 @@ export interface TileProps {
 }
 
 const TileWrapper = styled.div<{ selected?: boolean }>`
-  background-color: ${({ selected }) => selected ? Colors.darkerPurple : Colors.darkerGreen};
+  background-color: ${({ selected }) =>
+    selected ? Colors.greenLightOpaque : Colors.whiteOpaque};
   height: 100%;
   width: 100%;
   position: absolute;
   display: flex;
   justify-content: center;
-  cursor: ${({ onClick }) => onClick ? 'pointer' : 'default'};
+  cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
 
   /* Gradient border */
   border: 1px solid transparent;
   transition: border-color 0.3s ease;
   border-image: linear-gradient(
-    ${({ selected }) => selected ? Colors.purpleLight : Colors.greenLight}, 
-    ${({ selected }) => selected ? Colors.purpleDark : Colors.greenDark}
+    45deg,
+    ${Colors.greenLightOpaque},
+    ${Colors.whiteOpaque}
   );
   border-image-slice: 1;
-
-  &:hover {
-    border-image: linear-gradient(
-      ${({ selected }) => selected ? Colors.purpleLight : Colors.greenLight}, 
-      ${({ selected }) => selected ? Colors.purpleLight : Colors.greenLight}
-    );
-    border-image-slice: 1;
-  }
 `;
 
 const TileHeading = styled.h2`
