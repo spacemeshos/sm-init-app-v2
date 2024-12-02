@@ -40,7 +40,6 @@ const MenuTitle = styled.span<{ $isHovered: boolean }>`
     ${({ $isHovered }) => ($isHovered ? "transparent" : Colors.greenDark)};
 `;
 
-// Wrapper for the ButtonsContainer to keep the border intact
 const ButtonsWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -61,15 +60,6 @@ const ButtonsContainer = styled.div<{ $isHovered: boolean }>`
   align-content: center;
   align-items: center;
   position: relative;
-`;
-
-// Styled component for the icon image
-const Icon = styled.img`
-  aspect-ratio: 1;
-  object-fit: contain;
-  width: 30px;
-  position: relative;
-  padding-right: 30px;
 `;
 
 // Buttons properties
@@ -104,7 +94,6 @@ export const HoverAccordionMenu: React.FC<
   }
 > = ({
   title,
-  imageSrc,
   buttons,
   $isHovered,
   onMouseEnter,
@@ -122,8 +111,11 @@ export const HoverAccordionMenu: React.FC<
         backgroundColor={backgroundColor}
         $isHovered={$isHovered}
       >
-        {imageSrc && <Icon src={imageSrc} />}
-        <MenuTitle $isHovered={$isHovered}>{title}</MenuTitle>
+        <MenuTitle $isHovered={$isHovered}>
+          <Button
+            label={title}
+            />
+            </MenuTitle>
         <ButtonsWrapper>
           <ButtonsContainer $isHovered={$isHovered}>
             {buttons.map((button, index) => (
@@ -142,7 +134,6 @@ export const HoverAccordionMenu: React.FC<
           </ButtonsContainer>
         </ButtonsWrapper>
       </MenuContainer>
-      {/* Container for buttons that appear on hover */}
     </>
   );
 };
