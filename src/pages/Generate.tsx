@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import BackgroundImage from "../assets/lines.png";
+import BackgroundImage from "../assets/wave.png";
 import { useState } from "react";
 import Colors from "../styles/colors";
 import { Subheader, Title } from "../styles/texts";
@@ -10,8 +10,15 @@ import {
   SetupProving,
   SetupSize,
   SelectIdentity,
-  SetupSummary
+  SetupSummary,
 } from "../components/setupPOS";
+import { BackButton } from "../components/button";
+
+const NavProgress = styled.div`
+  width: 1200px;
+  height: 160px;
+  position: abslute;
+`;
 
 const Image = styled.img`
   height: 100vh;
@@ -27,8 +34,7 @@ const BottomContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100vw;
-  height: 100vh;
+  width: 1200px;
 `;
 
 const SetupContainer = styled.div`
@@ -81,8 +87,10 @@ const StyledButton = styled.button<{ $isActive?: boolean }>`
   height: 60px;
   font-size: 16px;
   cursor: pointer;
-  border: 0.5px solid ${props => props.$isActive ? Colors.greenLight : 'rgba(255, 255, 255, 0.05)'};
-  background-color: ${props => props.$isActive ? 'rgba(0, 255, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)'};
+  border: 0.5px solid
+    ${(props) =>
+      props.$isActive ? Colors.whiteOpaque : Colors.greenLightOpaque};
+  background-color: ${Colors.whiteOpaque};
   border-radius: 10px;
   transition: all 0.2s ease;
   font-family: "Source Code Pro Extralight", sans-serif;
@@ -94,14 +102,14 @@ const StyledButton = styled.button<{ $isActive?: boolean }>`
   line-height: 20px;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: ${Colors.greenLightOpaque};
+    border: 1px solid ${Colors.whiteOpaque};
   }
 `;
 
 const ContentContainer = styled.div`
-  width: calc(100% - 250px);
-  height: 100%;
+  width: 960px;
+  height: 480px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -153,19 +161,26 @@ const Generate: React.FC = () => {
 
   return (
     <>
+      <NavProgress>
+        <BackButton />
+      </NavProgress>
       <Image src={BackgroundImage} />
       <BottomContainer>
         <SetupContainer>
           <TextWrapper>
-            <Title text={showSummary ? "Summary of your Settings" : steps[currentStep].label} />
+            <Title
+              text={
+                showSummary
+                  ? "Summary of your Settings"
+                  : steps[currentStep].label
+              }
+            />
             {showSummary && (
               <Subheader text="Check twice, adjust if needed, and blast off!" />
             )}
           </TextWrapper>
 
-          <ContentContainer>
-            {renderContent()}
-          </ContentContainer>
+          <ContentContainer>{renderContent()}</ContentContainer>
 
           <MenuContainer>
             <ButtonColumn>
