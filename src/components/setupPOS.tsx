@@ -2,35 +2,21 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 import Tile from "./tile";
-import { Button, CancelButton, SaveButton, TooltipButton } from "./button";
+import { Button, CancelButton, SaveButton } from "./button";
 import CustomNumberInput from "./input";
 import { ErrorMessage, Subheader } from "../styles/texts";
-import size from "../assets/duplicate.png";
-import cpu from "../assets/cpu.png";
-import gpu from "../assets/graphics-card.png";
-import key from "../assets/key.png";
-import folder from "../assets/folder.png";
 import { invoke } from "@tauri-apps/api";
 import { useSettings } from "../state/SettingsContext";
 import { FindProviders } from "../utils/parseResponse";
 import { shortenPath } from "../utils/pathUtils";
 import POSSummary from "./POSSummary";
 
-const BgImage = styled.img`
-  aspect-ratio: 1;
-  object-fit: contain;
-  width: 250px;
-  position: absolute;
-  left: 20px;
-  top: -200px;
-  opacity: 0.02;
-`;
 
 const BottomContainer = styled.div`
-  height: 400px;
-  width: 1200px;
+  height: 80%;
+  width: 100%;
   position: absolute;
-  top: 270px;
+  top: 100px;
   left: 0px;
   display: flex;
   justify-content: space-evenly;
@@ -40,7 +26,7 @@ const BottomContainer = styled.div`
 const TileWrapper = styled.div<{
   width?: number;
 }>`
-  height: 100%;
+  height: 90%;
   width: ${({ width }) => width || 450}px;
   position: relative;
   display: flex;
@@ -120,9 +106,7 @@ const SelectDirectory: React.FC = () => {
   return (
     <TileWrapper>
       <Tile
-        heading={"Where to Store pos data?"}
-        imageSrc={folder}
-        imageTop={40}
+        heading="Select where the POS data will be stored"
         errmsg={error ?? undefined}
       />
       <Button
@@ -134,21 +118,6 @@ const SelectDirectory: React.FC = () => {
         }
         width={320}
         buttonTop={100}
-        backgroundColor={Colors.darkerPurple}
-        borderColor={Colors.purpleLight}
-      />
-      <TooltipButton
-        modalText={
-          <>
-            Select a directory where the POS data files will be stored.
-            <br />
-            <br />
-            Make sure you have enough free space in the selected directory.
-          </>
-        }
-        modalTop={1}
-        modalLeft={1}
-        buttonTop={96}
       />
     </TileWrapper>
   );
@@ -170,7 +139,6 @@ const SetupSize: React.FC = () => {
 
   return (
     <BottomContainer>
-      <BgImage src={size} />
       <TileWrapper>
         <Tile
           heading="Select Space Units"
@@ -291,7 +259,6 @@ const SetupProving: React.FC = () => {
 
   return (
     <BottomContainer>
-      <BgImage src={cpu} />
       <InputSection
         heading="Select number of CPU cores"
         footer={`Default: ${Math.floor((3 / 4) * maxCores)} cores (3/4 of total cores)`}
@@ -368,7 +335,6 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   }) => {
     const isFastest = processor.ID === 0;
     const isSelected = processor.ID === selectedProvider;
-    const icon = processor.DeviceType === "GPU" ? gpu : cpu;
 
     return (
       <TileWrapper width={350} key={processor.ID}>
@@ -376,7 +342,6 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
           heading={processor.Model}
           subheader={`${processor.DeviceType}${isFastest ? " (Fastest)" : ""}`}
           footer={isSelected ? "Selected" : "Click to select"}
-          imageSrc={icon}
           onClick={() => handleProviderSelect(processor.ID)}
           selected={isSelected}
         />
@@ -388,7 +353,6 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
 
   return (
     <BottomContainer>
-      <BgImage src={gpu} />
       {loading && <Subheader text="Loading..." left={0} />}
       {error ? (
         <ErrorMessage text="Error detecting processors:"> {error}</ErrorMessage>
@@ -428,7 +392,6 @@ const SelectIdentity: React.FC = () => {
 
   return (
     <BottomContainer>
-      <BgImage src={key} />
       <TileWrapper>
         <Tile
           heading="Identity File (Optional)"
