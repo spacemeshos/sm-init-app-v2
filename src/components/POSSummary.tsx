@@ -5,7 +5,6 @@ import Frame from "./frames";
 import { Button } from "./button";
 import { useSettings } from "../state/SettingsContext";
 import { shortenPath } from "../utils/pathUtils";
-import rocket from "../assets/rocket.png";
 
 const Container = styled.div`
   display: flex;
@@ -33,16 +32,6 @@ const Title = styled.h1`
   margin-bottom: 40px;
 `;
 
-const BgImage = styled.img`
-  aspect-ratio: 1;
-  object-fit: contain;
-  width: 250px;
-  position: absolute;
-  right: 50px;
-  top: 50px;
-  opacity: 0.1;
-`;
-
 const ButtonContainer = styled.div`
   position: absolute;
   bottom: 40px;
@@ -67,7 +56,6 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
 
   return (
     <Container>
-      <BgImage src={rocket} alt="Rocket" />
       <Title>Setup Summary</Title>
 
       <SummarySection>
@@ -82,7 +70,9 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
         <Frame
           height={60}
           heading="Space Configuration"
-          subheader={`${settings.numUnits || 4} Space Units (${calculateTotalSize()})`}
+          subheader={`${
+            settings.numUnits || 4
+          } Space Units (${calculateTotalSize()})`}
         />
       </SummarySection>
 
@@ -90,9 +80,9 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
         <Frame
           height={60}
           heading="Processing Setup"
-          subheader={`Provider ID: ${settings.provider || 0} | ${settings.numCores || 8} CPU Cores | ${
-            settings.numNonces || 288
-          } Nonces`}
+          subheader={`Provider ID: ${settings.provider || 0} | ${
+            settings.numCores || 8
+          } CPU Cores | ${settings.numNonces || 288} Nonces`}
         />
       </SummarySection>
 

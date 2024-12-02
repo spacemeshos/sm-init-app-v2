@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
-import rocket from "../assets/rocket.png";
 
 const Header = styled.h1`
   color: ${Colors.greenLight};
@@ -41,22 +40,11 @@ const Text = styled.div`
   width: 550px;
 `;
 
-const BgImage = styled.img`
-  aspect-ratio: 1;
-  object-fit: contain;
-  width: 600px;
-  position: absolute;
-  left: 30px;
-  top: 80px;
-  opacity: 0.02;
-`;
-
 const Confirmation: React.FC = () => {
   return (
     <>
       <Header>Congratulations </Header>
       <Subheader>on launching your first proof of space</Subheader>
-      <BgImage src={rocket} />
       <Text>
         {
           <>

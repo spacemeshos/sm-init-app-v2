@@ -2,8 +2,6 @@ import * as React from "react";
 import styled from "styled-components";
 import { HoverAccordionMenu } from "../components/accordion";
 import BackgroundImage from "../assets/lines.png";
-import Add from "../assets/plus.png";
-import Check from "../assets/check.png";
 import { ExternalLinks } from "../Shared/Constants";
 import { useNavigate } from "react-router-dom";
 
@@ -80,7 +78,6 @@ const Home: React.FC = () => {
           $isHovered={hoveredMenu === "check"}
           onMouseEnter={() => setHoveredMenu("check")}
           onMouseLeave={() => setHoveredMenu(null)}
-          imageSrc={Check}
           title="check"
           buttons={CheckButtons}
         />
@@ -88,7 +85,6 @@ const Home: React.FC = () => {
           $isHovered={hoveredMenu === "generate"}
           onMouseEnter={() => setHoveredMenu("generate")}
           onMouseLeave={() => setHoveredMenu(null)}
-          imageSrc={Add}
           title="Generate"
           buttons={CreateButtons}
         />
