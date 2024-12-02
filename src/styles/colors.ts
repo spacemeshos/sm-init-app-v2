@@ -1,8 +1,10 @@
 const Colors = {
   greenLight: "#3AFFA7",
+  greenLightOpaque: "rgba(58, 255, 167, 0.05)",
   greenDark: "#061A14",
   background: "#061A14",
   white: "#FFFFFF",
+  whiteOpaque: "rgba(255, 255, 255, 0.05)",
   purpleLight: "#AA58B1",
   grayLight: "#dddddd",
   grayDark: "#585858",
