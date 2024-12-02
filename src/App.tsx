@@ -12,20 +12,6 @@ const AppWrapper = styled.div`
   background-color: ${Colors.background};
 `;
 
-const FooterDivider = styled.div`
-  background: linear-gradient(
-    90deg,
-    ${Colors.purpleDark} 0%,
-    ${Colors.purpleLight} 50%,
-    ${Colors.purpleDark} 100%
-  );
-  top: 690px;
-  height: 1px;
-  width: 1100px;
-  margin: 0px 50px;
-  position: absolute;
-`;
-
 const Footer = styled.div`
   position: fixed;
   width: 1100px;
@@ -50,7 +36,6 @@ function App() {
   return (
     <AppWrapper>
       <AppRoutes />
-      <FooterDivider />
       <Footer>
         <a
           onClick={navigateToIssue}
