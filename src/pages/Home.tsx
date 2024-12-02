@@ -57,7 +57,7 @@ const Home: React.FC = () => {
     <>
       <MenuContainer>
         <Button
-          onClick={() => navigate("advanced/Directory")}
+          onClick={() => navigate("/generate")}
           width={250}
           label="Generate"
         />
