@@ -27,16 +27,6 @@ const MenuContainer = styled.div<{
 // Styled component for the menu item/title
 const MenuTitle = styled.span<{ $isHovered: boolean }>`
   cursor: pointer;
-  color: ${Colors.grayLight};
-  font-family: "Source Code Pro", sans-serif;
-  white-space: nowrap;
-  padding: 20px 30px;
-  text-transform: uppercase;
-  font-size: 18px;
-  font-weight: 100;
-  letter-spacing: 4px;
-  border-radius: 50px;
-  border: 1px solid
     ${({ $isHovered }) => ($isHovered ? "transparent" : Colors.greenDark)};
 `;
 
