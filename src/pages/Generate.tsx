@@ -3,7 +3,6 @@ import styled from "styled-components";
 import BackgroundImage from "../assets/wave.png";
 import { useState } from "react";
 import Colors from "../styles/colors";
-import { Subheader, Title } from "../styles/texts";
 import {
   SelectDirectory,
   SetupGPU,
@@ -13,6 +12,7 @@ import {
   SetupSummary,
 } from "../components/setupPOS";
 import { BackButton, Button } from "../components/button";
+import { Title } from "../styles/texts";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -95,7 +95,7 @@ const TextWrapper = styled.div`
   flex-direction: row;
   justify-content: center;
   position: relative;
-  top: 10px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
 `;
@@ -106,6 +106,7 @@ const ContentContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 20px;
 `;
 
 const Generate: React.FC = () => {
@@ -167,32 +168,27 @@ const Generate: React.FC = () => {
                   : steps[currentStep].label
               }
             />
-            {showSummary && (
-              <Subheader text="Check twice, adjust if needed, and blast off!" />
-            )}
           </TextWrapper>
 
           <ContentContainer>{renderContent()}</ContentContainer>
         </SetupContainer>
-          <ButtonColumn>
-            {steps.map((step, index) => (
-              <Button
-                key={index}
-                onClick={() => handleStepChange(index)}
-                $isActive={currentStep === index}
-                label={step.label}
-                width={250}
-              ></Button>
-            ))}
+        <ButtonColumn>
+          {steps.map((step, index) => (
             <Button
-              onClick={() => setShowSummary(true)}
-              $isActive={showSummary}
+              key={index}
+              onClick={() => handleStepChange(index)}
+              $isActive={currentStep === index}
+              label={step.label}
               width={250}
-              label="Summary"
-            >
-              Summary
-            </Button>
-          </ButtonColumn>
+            ></Button>
+          ))}
+          <Button
+            onClick={() => setShowSummary(true)}
+            $isActive={showSummary}
+            width={250}
+            label="Summary"
+          ></Button>
+        </ButtonColumn>
       </BottomContainer>
     </>
   );
