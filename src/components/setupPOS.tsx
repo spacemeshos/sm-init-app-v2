@@ -20,6 +20,8 @@ const BottomContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
   flex-direction: row;
+  align-items: center;
+  gap: 20px;
 `;
 
 const TileWrapper = styled.div<{
@@ -32,7 +34,7 @@ const TileWrapper = styled.div<{
   justify-content: center;
   align-content: center;
   align-items: center;
-  flex-direction: row;
+  flex-direction: column;
 `;
 
 const SelectedValue = styled.h1`
@@ -104,20 +106,17 @@ const SelectDirectory: React.FC = () => {
 
   return (
     <BottomContainer>
-      <TileWrapper>
-        <Tile
-          heading="Select where the POS data will be stored"
-          errmsg={error ?? undefined}
-        />
+      <TileWrapper width={600}>
+        <Subheader text="Select where the POS data will be stored" />
+        {error && <ErrorMessage text={error} />}
+        {selectedDir && (
+          <Subheader text={`Selected: ${shortenPath(selectedDir, 35)}`} />
+        )}
         <Button
           onClick={handleSelectDirectory}
-          label={
-            selectedDir
-              ? `Selected: ${shortenPath(selectedDir, 15)}`
-              : "Choose directory"
-          }
+          label="Choose directory"
           width={320}
-          buttonTop={50}
+          buttonTop={30}
         />
       </TileWrapper>
     </BottomContainer>
@@ -364,7 +363,7 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
       ) : response && response.length > 0 ? (
         response.map(createTile)
       ) : (
-        <Subheader text={"No processors detected"} />
+        <Subheader text="No processors detected" />
       )}
     </BottomContainer>
   );

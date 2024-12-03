@@ -75,6 +75,7 @@ const SetupContainer = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  margin: 20px;
 `;
 
 const ButtonColumn = styled.div`
