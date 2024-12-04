@@ -22,8 +22,8 @@ const StyledInputRoot = styled.div<{ height?: number; width?: number }>`
   align-items: center;
   z-index: auto;
   position: absolute;
-  height: ${({ height = 100 }) => height}px;
-  width: ${({ width = 500 }) => width}px;
+  height: 100px;
+  width: 80%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -103,6 +103,11 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   onChange,
 }) => {
   const [inputValue, setInputValue] = React.useState<number>(value);
+
+  // Add effect to sync external value with internal state
+  React.useEffect(() => {
+    setInputValue(value);
+  }, [value]);
 
   const handleIncrement = () => {
     if (inputValue < max) {
