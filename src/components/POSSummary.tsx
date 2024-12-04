@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import Colors from "../styles/colors";
 import Frame from "./frames";
 import { Button } from "./button";
 import { useSettings } from "../state/SettingsContext";
@@ -85,8 +84,6 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
         onClick={onProceed}
         width={250}
         height={56}
-        backgroundColor={Colors.darkerPurple}
-        borderColor={Colors.purpleLight}
       />
     </Container>
   );
