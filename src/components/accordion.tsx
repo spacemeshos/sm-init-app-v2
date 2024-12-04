@@ -27,7 +27,7 @@ const MenuContainer = styled.div<{
 // Styled component for the menu item/title
 const MenuTitle = styled.span<{ $isHovered: boolean }>`
   cursor: pointer;
-    ${({ $isHovered }) => ($isHovered ? "transparent" : Colors.greenDark)};
+  ${({ $isHovered }) => ($isHovered ? "transparent" : Colors.greenDark)};
 `;
 
 const ButtonsWrapper = styled.div`
@@ -102,10 +102,8 @@ export const HoverAccordionMenu: React.FC<
         $isHovered={$isHovered}
       >
         <MenuTitle $isHovered={$isHovered}>
-          <Button
-            label={title}
-            />
-            </MenuTitle>
+          <Button label={title} />
+        </MenuTitle>
         <ButtonsWrapper>
           <ButtonsContainer $isHovered={$isHovered}>
             {buttons.map((button, index) => (
@@ -113,9 +111,9 @@ export const HoverAccordionMenu: React.FC<
                 key={index}
                 onClick={button.onClick}
                 label={button.label}
-                buttonTop={20}
-                buttonLeft={button.left}
-                buttonMargin={5}
+                top={20}
+                left={button.left}
+                margin={5}
                 height={60}
                 width={160}
                 borderColor={buttonsBorderColor}

@@ -94,14 +94,14 @@ const SelectDirectory: React.FC = () => {
     try {
       setIsValidating(true);
       setError(null);
-      
+
       const dir = await invoke<string>("select_directory");
-      
+
       // Validate the selected directory
       const validationResult = await validateDirectory(dir);
-      
+
       if (!validationResult.isValid) {
-        setError(validationResult.error || 'Invalid directory selected');
+        setError(validationResult.error || "Invalid directory selected");
         return;
       }
 
@@ -110,7 +110,6 @@ const SelectDirectory: React.FC = () => {
         ...settings,
         selectedDir: dir,
       }));
-      
     } catch (err: unknown) {
       const errorMessage = handleDirectoryError(err);
       console.error("Directory selection failed:", errorMessage);
@@ -129,7 +128,7 @@ const SelectDirectory: React.FC = () => {
         />
         {selectedDir && (
           <>
-            <Subheader text="Selected:"/>
+            <Subheader text="Selected:" />
             <BodyText text={`${shortenPath(selectedDir, 30)}`} />
           </>
         )}
@@ -137,7 +136,7 @@ const SelectDirectory: React.FC = () => {
           onClick={handleSelectDirectory}
           label={isValidating ? "Validating..." : "Choose directory"}
           width={320}
-          buttonTop={30}
+          top={30}
           disabled={isValidating}
         />
       </TileWrapper>
@@ -178,15 +177,15 @@ const SetupSize: React.FC = () => {
                 setSettings((prev) => ({ ...prev, numUnits: val }))
               }
             />
-            <SaveButton buttonLeft={55} onClick={handleSaveSpaceUnits} />
-            <CancelButton buttonLeft={45} onClick={handleCancelSpaceUnits} />
+            <SaveButton left={55} onClick={handleSaveSpaceUnits} />
+            <CancelButton left={45} onClick={handleCancelSpaceUnits} />
           </>
         ) : (
           <>
             <SelectedValue>
               {settings.numUnits || MIN_SPACE_UNITS}
             </SelectedValue>
-            <CancelButton buttonLeft={50} onClick={handleCancelSpaceUnits} />
+            <CancelButton left={50} onClick={handleCancelSpaceUnits} />
           </>
         )}
       </TileWrapper>
@@ -269,13 +268,13 @@ const SetupProving: React.FC = () => {
             value={value}
             onChange={onChange}
           />
-          <SaveButton buttonLeft={55} onClick={handleSave} />
-          <CancelButton buttonLeft={45} onClick={handleCancel} />
+          <SaveButton left={55} onClick={handleSave} />
+          <CancelButton left={45} onClick={handleCancel} />
         </>
       ) : (
         <>
           <SelectedValue>{value}</SelectedValue>
-          <CancelButton buttonLeft={50} onClick={handleCancel} />
+          <CancelButton left={50} onClick={handleCancel} />
         </>
       )}
     </TileWrapper>
@@ -417,8 +416,8 @@ const SelectIdentity: React.FC = () => {
     <BottomContainer>
       <TileWrapper>
         <Tile
-          heading="Identity File (Optional)"
-          subheader="Select identity.key file"
+          heading="Identity.key File"
+          subheader="(Optional)"
           footer={selectedFile || "No file selected"}
           errmsg={error ?? undefined}
         />
@@ -432,16 +431,14 @@ const SelectIdentity: React.FC = () => {
           <Button
             label={selectedFile ? "Change File" : "Select File"}
             width={320}
-            buttonTop={100}
-            backgroundColor={Colors.darkerPurple}
-            borderColor={Colors.purpleLight}
+            top={100}
           />
         </FileInputLabel>
       </TileWrapper>
       <TileWrapper>
         <Tile
-          heading="ATX ID (Optional)"
-          subheader="256-bit hexadecimal value"
+          heading="ATX ID"
+          subheader="(Optional)"
           footer="Enter your ATX ID"
         />
         <HexInput
