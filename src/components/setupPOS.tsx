@@ -14,6 +14,7 @@ import {
   shortenPath,
 } from "../utils/directoryUtils";
 import POSSummary from "./POSSummary";
+import { open } from '@tauri-apps/api/dialog';
 
 const BottomContainer = styled.div`
   height: 80%;
@@ -48,16 +49,6 @@ const SelectedValue = styled.h1`
   position: relative;
 `;
 
-const FileInput = styled.input`
-  display: none;
-`;
-
-const FileInputLabel = styled.label`
-  cursor: pointer;
-  color: ${Colors.white};
-  text-decoration: underline;
-`;
-
 const HexInput = styled.input`
   background-color: ${Colors.darkerGreen};
   color: ${Colors.white};
@@ -77,12 +68,6 @@ const HexInput = styled.input`
     color: ${Colors.grayMedium};
   }
 `;
-
-interface FileInputEvent extends React.ChangeEvent<HTMLInputElement> {
-  target: HTMLInputElement & {
-    files: FileList;
-  };
-}
 
 const SelectDirectory: React.FC = () => {
   const { setSettings } = useSettings();
@@ -393,11 +378,25 @@ const SelectIdentity: React.FC = () => {
   const [atxId, setAtxId] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
-  const handleFileChange = (event: FileInputEvent) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file.name);
-      setSettings((prev) => ({ ...prev, identityFile: file.name }));
+  const handleFileSelect = async () => {
+    try {
+      const selected = await open({
+        multiple: false,
+        filters: [{
+          name: 'Identity Key',
+          extensions: ['key']
+        }]
+      });
+      
+      if (selected && typeof selected === 'string') {
+        const fileName = selected.split('/').pop() || selected;
+        setSelectedFile(fileName);
+        setSettings((prev) => ({ ...prev, identityFile: selected })); // Store full path
+        setError(null);
+      }
+    } catch (err) {
+      console.error('Error selecting file:', err);
+      setError('Failed to select file');
     }
   };
 
@@ -421,19 +420,12 @@ const SelectIdentity: React.FC = () => {
           footer={selectedFile || "No file selected"}
           errmsg={error ?? undefined}
         />
-        <FileInput
-          type="file"
-          id="identity-file"
-          accept=".key"
-          onChange={handleFileChange}
+        <Button
+          onClick={handleFileSelect}
+          label={selectedFile ? "Change File" : "Select File"}
+          width={320}
+          top={100}
         />
-        <FileInputLabel htmlFor="identity-file">
-          <Button
-            label={selectedFile ? "Change File" : "Select File"}
-            width={320}
-            top={100}
-          />
-        </FileInputLabel>
       </TileWrapper>
       <TileWrapper>
         <Tile
