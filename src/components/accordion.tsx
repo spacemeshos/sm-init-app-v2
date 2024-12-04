@@ -69,8 +69,6 @@ interface HoverAccordionMenuProps {
   imageSrc?: string;
   height?: number;
   width?: number;
-  menuBorderColor?: string;
-  buttonsBorderColor?: string;
   backgroundColor?: string;
   $isHovered: boolean;
 }
@@ -89,7 +87,6 @@ export const HoverAccordionMenu: React.FC<
   onMouseEnter,
   onMouseLeave,
   width,
-  buttonsBorderColor,
   backgroundColor,
 }) => {
   return (
@@ -116,7 +113,6 @@ export const HoverAccordionMenu: React.FC<
                 margin={5}
                 height={60}
                 width={160}
-                borderColor={buttonsBorderColor}
               ></Button>
             ))}
           </ButtonsContainer>
