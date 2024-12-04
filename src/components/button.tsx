@@ -23,6 +23,7 @@ interface ButtonProps {
   modalComponent?: React.ElementType;
   $isActive?: boolean;
   disabled?: boolean;
+  rounded?: number;
 }
 
 // Standard Button component
@@ -36,6 +37,7 @@ const Button: React.FC<ButtonProps> = ({
   width,
   $isActive,
   disabled,
+  rounded,
 }) => {
   const handleClick = () => {
     if (!disabled && typeof onClick === "function") {
@@ -54,6 +56,7 @@ const Button: React.FC<ButtonProps> = ({
       height={height}
       $isActive={$isActive}
       disabled={disabled}
+      rounded={rounded}
     >
       <ButtonText disabled={disabled}>{label}</ButtonText>
     </StandardButton>
@@ -155,6 +158,7 @@ const StandardButton = styled.button<{
   margin?: number;
   $isActive?: boolean;
   disabled?: boolean;
+  rounded?: number;
 }>`
   top: ${({ top }) => top || 0}px;
   left: ${({ left }) => left || 0}px;
@@ -172,7 +176,7 @@ const StandardButton = styled.button<{
   justify-content: center;
   text-align: center;
   position: relative;
-  border-radius: 45px;
+  border-radius: ${({ rounded }) => rounded || 45}px;
   border: 0.5px solid
     ${(props) =>
       props.$isActive ? Colors.whiteOpaque : Colors.greenLightOpaque};
