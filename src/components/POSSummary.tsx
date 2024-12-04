@@ -4,7 +4,7 @@ import Colors from "../styles/colors";
 import Frame from "./frames";
 import { Button } from "./button";
 import { useSettings } from "../state/SettingsContext";
-import { shortenPath } from "../utils/pathUtils";
+import { shortenPath } from "../utils/directoryUtils";
 
 const Container = styled.div`
   display: flex;
@@ -47,7 +47,7 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
         <Frame
           height={20}
           heading="POS Location"
-          subheader={shortenPath(settings.selectedDir || "", 30)}
+          subheader={shortenPath(settings.selectedDir || "", 20)}
         />
         <Frame
           height={20}

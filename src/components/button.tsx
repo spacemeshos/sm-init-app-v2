@@ -32,6 +32,7 @@ interface ButtonProps {
   size?: number;
   modalComponent?: React.ElementType;
   $isActive?: boolean;
+  disabled?: boolean;
 }
 
 // Standard Button component
@@ -46,9 +47,10 @@ const Button: React.FC<ButtonProps> = ({
   backgroundColor,
   borderColor,
   $isActive,
+  disabled,
 }) => {
   const handleClick = () => {
-    if (typeof onClick === "function") {
+    if (!disabled && typeof onClick === "function") {
       onClick();
     }
   };
@@ -65,8 +67,9 @@ const Button: React.FC<ButtonProps> = ({
       backgroundColor={backgroundColor}
       borderColor={borderColor}
       $isActive={$isActive}
+      disabled={disabled}
     >
-      <ButtonText>{label}</ButtonText>
+      <ButtonText disabled={disabled}>{label}</ButtonText>
     </StandardButton>
   );
 };
@@ -199,13 +202,14 @@ const StandardButton = styled.button<{
   borderColor?: string;
   backgroundColor?: string;
   $isActive?: boolean;
+  disabled?: boolean;
 }>`
   top: ${({ buttonTop }) => buttonTop || 0}px;
   left: ${({ buttonLeft }) => buttonLeft || 0}px;
   height: ${({ height }) => height || 60}px;
   width: ${({ width }) => width || 300}px;
-  background-color: ${Colors.whiteOpaque};
-  cursor: pointer;
+  background-color: ${({ disabled }) => disabled ? Colors.grayMedium : Colors.whiteOpaque};
+  cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
   transition: all 0.2s ease;
   padding: 10px;
   margin: ${({ buttonMargin }) => buttonMargin || 0}px;
@@ -219,16 +223,18 @@ const StandardButton = styled.button<{
   border: 0.5px solid
     ${(props) =>
       props.$isActive ? Colors.whiteOpaque : Colors.greenLightOpaque};
+  opacity: ${({ disabled }) => disabled ? 0.7 : 1};
 
   &:hover {
-    background-color: ${Colors.greenLightOpaque};
+    background-color: ${({ disabled }) => 
+      disabled ? Colors.grayMedium : Colors.greenLightOpaque};
     border: 1px solid ${Colors.whiteOpaque};
   }
 `;
 
-const ButtonText = styled.span`
+const ButtonText = styled.span<{ disabled?: boolean }>`
   font-family: "Source Code Pro Extralight", sans-serif;
-  color: ${Colors.white};
+  color: ${({ disabled }) => disabled ? Colors.grayLight : Colors.white};
   font-size: 14px;
   font-weight: 300;
   text-transform: uppercase;
@@ -271,10 +277,7 @@ const IconStandardButton = styled.button<{
   position: absolute;
   top: ${({ buttonTop }) => buttonTop}%;
   left: ${({ buttonLeft }) => buttonLeft}%;
-  transform: translate(
-    -50%,
-    0%
-  ); // Centers the image both horizontally and vertically
+  transform: translate(-50%, 0%);
 `;
 
 export {

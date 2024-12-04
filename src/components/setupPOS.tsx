@@ -4,24 +4,27 @@ import Colors from "../styles/colors";
 import Tile from "./tile";
 import { Button, CancelButton, SaveButton } from "./button";
 import CustomNumberInput from "./input";
-import { ErrorMessage, Subheader } from "../styles/texts";
+import { BodyText, ErrorMessage, Subheader } from "../styles/texts";
 import { invoke } from "@tauri-apps/api";
 import { useSettings } from "../state/SettingsContext";
 import { FindProviders } from "../utils/parseResponse";
-import { shortenPath } from "../utils/pathUtils";
+import {
+  validateDirectory,
+  handleDirectoryError,
+  shortenPath,
+} from "../utils/directoryUtils";
 import POSSummary from "./POSSummary";
 
 const BottomContainer = styled.div`
   height: 80%;
   width: 100%;
   position: absolute;
-  top: 100px;
+  top: 70px;
   left: 0px;
   display: flex;
   justify-content: space-evenly;
   flex-direction: row;
   align-items: center;
-  gap: 20px;
 `;
 
 const TileWrapper = styled.div<{
@@ -85,38 +88,57 @@ const SelectDirectory: React.FC = () => {
   const { setSettings } = useSettings();
   const [error, setError] = useState<string | null>(null);
   const [selectedDir, setSelectedDir] = useState<string | null>(null);
+  const [isValidating, setIsValidating] = useState(false);
 
   const handleSelectDirectory = async () => {
     try {
+      setIsValidating(true);
+      setError(null);
+      
       const dir = await invoke<string>("select_directory");
+      
+      // Validate the selected directory
+      const validationResult = await validateDirectory(dir);
+      
+      if (!validationResult.isValid) {
+        setError(validationResult.error || 'Invalid directory selected');
+        return;
+      }
+
+      setSelectedDir(dir);
       setSettings((settings) => ({
         ...settings,
         selectedDir: dir,
       }));
-      setSelectedDir(dir);
-      console.log("Selected directory:", dir);
-      setError(null);
+      
     } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Unknown error occurred";
-      console.error("Failed to select directory:", errorMessage);
+      const errorMessage = handleDirectoryError(err);
+      console.error("Directory selection failed:", errorMessage);
       setError(errorMessage);
+    } finally {
+      setIsValidating(false);
     }
   };
 
   return (
     <BottomContainer>
-      <TileWrapper width={600}>
-        <Subheader text="Select where the POS data will be stored" />
-        {error && <ErrorMessage text={error} />}
+      <TileWrapper width={500}>
+        <Tile
+          heading="Select where to store POS data"
+          errmsg={error ?? undefined}
+        />
         {selectedDir && (
-          <Subheader text={`Selected: ${shortenPath(selectedDir, 35)}`} />
+          <>
+            <Subheader text="Selected:"/>
+            <BodyText text={`${shortenPath(selectedDir, 30)}`} />
+          </>
         )}
         <Button
           onClick={handleSelectDirectory}
-          label="Choose directory"
+          label={isValidating ? "Validating..." : "Choose directory"}
           width={320}
           buttonTop={30}
+          disabled={isValidating}
         />
       </TileWrapper>
     </BottomContainer>
@@ -301,7 +323,6 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   const [selectedProvider, setSelectedProvider] = useState<number>(0);
   const [hasInitialized, setHasInitialized] = useState(false);
 
-  // First effect to handle initial provider detection
   useEffect(() => {
     if (isOpen && !hasInitialized) {
       const detectProviders = async () => {
@@ -310,9 +331,8 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
       };
       detectProviders();
     }
-  }, [isOpen, hasInitialized]); // Remove run from dependencies
+  }, [isOpen, hasInitialized]);
 
-  // Second effect to handle provider selection
   useEffect(() => {
     if (response && response.length > 0) {
       setSelectedProvider(0);
@@ -320,7 +340,6 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
     }
   }, [response, setSettings]);
 
-  // Reset initialization when component closes
   useEffect(() => {
     if (!isOpen) {
       setHasInitialized(false);

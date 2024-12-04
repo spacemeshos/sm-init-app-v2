@@ -10,6 +10,9 @@ fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             commands::file_dialog::select_directory,
+            commands::file_dialog::verify_directory,
+            commands::file_dialog::check_directory_space,
+            commands::file_dialog::check_write_permission,
             commands::postcli::run_postcli_command,
             commands::cpu::get_cpu_cores
         ])
