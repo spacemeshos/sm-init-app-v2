@@ -4,6 +4,7 @@ import Frame from "./frames";
 import { Button } from "./button";
 import { useSettings } from "../state/SettingsContext";
 import { shortenPath } from "../utils/directoryUtils";
+import { truncateHex } from "../utils/hexUtils";
 
 const Container = styled.div`
   display: flex;
@@ -44,38 +45,47 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
     <Container>
       <SummarySection>
         <Frame
-          height={20}
+          height={16}
           heading="POS Location"
           subheader={shortenPath(settings.selectedDir || "", 20)}
         />
         <Frame
-          height={20}
+          height={16}
           heading="POS Size"
           subheader={`${
             settings.numUnits || 4
           } Space Units (${calculateTotalSize()})`}
         />
         <Frame
-          height={20}
+          height={16}
           heading="POS Provider"
           subheader={`Provider ID: ${settings.provider || 0}`}
         />
         <Frame
-          height={20}
+          height={16}
           heading="Proving Setup"
           subheader={`${settings.numCores || 8} CPU Cores | ${
             settings.numNonces || 288
           } Nonces`}
         />
         <Frame
-          height={20}
+          height={16}
           heading="Identity Configuration"
           subheader={
             settings.identityFile
               ? `File: ${shortenPath(settings.identityFile, 20)}`
-              : settings.atxId
-              ? `ATX ID: ${settings.atxId.substring(0, 10)}...`
-              : ""
+              : settings.privateKey
+              ? `Key: ${truncateHex(settings.privateKey, 8)}`
+              : "New Identity will be created"
+          }
+        />
+        <Frame
+          height={16}
+          heading="ATX ID"
+          subheader={
+            settings.atxId
+              ? `ATX: ${shortenPath(settings.atxId, 20)}`
+              : "Default - Highest"
           }
         />
       </SummarySection>
