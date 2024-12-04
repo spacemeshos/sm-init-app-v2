@@ -2,12 +2,9 @@ import * as React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import Modal from "./modal";
 import back from "../assets/left-arrow.png";
 import next from "../assets/right-arrow.png";
 import pen from "../assets/edit-circle.png";
-import question from "../assets/question.png";
 import save from "../assets/check-circle.png";
 import cancel from "../assets/circle-x.png";
 
@@ -17,18 +14,11 @@ interface ButtonProps {
   label?: string;
   onClick?: () => void;
   children?: React.ReactNode;
-  buttonTop?: number;
-  buttonLeft?: number;
-  buttonMargin?: number;
+  top?: number;
+  left?: number;
+  margin?: number;
   height?: number;
   width?: number;
-  borderColor?: string;
-  backgroundColor?: string;
-  modalHeader?: string;
-  modalText?: React.ReactNode;
-  modalTop?: number;
-  modalLeft?: number;
-  showModal?: boolean;
   size?: number;
   modalComponent?: React.ElementType;
   $isActive?: boolean;
@@ -39,13 +29,11 @@ interface ButtonProps {
 const Button: React.FC<ButtonProps> = ({
   label,
   onClick,
-  buttonTop,
-  buttonLeft,
-  buttonMargin,
+  top,
+  left,
+  margin,
   height,
   width,
-  backgroundColor,
-  borderColor,
   $isActive,
   disabled,
 }) => {
@@ -59,13 +47,11 @@ const Button: React.FC<ButtonProps> = ({
       onClick={handleClick}
       role="button"
       tabIndex={0}
-      buttonTop={buttonTop}
-      buttonLeft={buttonLeft}
-      buttonMargin={buttonMargin}
+      top={top}
+      left={left}
+      margin={margin}
       width={width}
       height={height}
-      backgroundColor={backgroundColor}
-      borderColor={borderColor}
       $isActive={$isActive}
       disabled={disabled}
     >
@@ -117,102 +103,69 @@ const ForwardButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
 // Icon button component
 const IconButton: React.FC<ButtonProps> = ({
   onClick,
-  modalHeader,
-  modalText,
-  modalTop,
-  modalLeft,
   size,
-  buttonTop = 96,
-  buttonLeft = 50,
-  modalComponent: CustomModal,
+  top = 96,
+  left = 50,
   iconSrc,
-  showModal = true, // Default to true for buttons that need modals
 }) => {
-  const [isModalOpen, setModalOpen] = useState(false);
-
   const handleClick = () => {
-    if (showModal) {
-      setModalOpen(true);
-    }
     if (typeof onClick === "function") {
       onClick();
     }
   };
 
-  const closeModal = () => setModalOpen(false);
-
   return (
     <>
-      {!isModalOpen && (
-        <IconStandardButton
-          onClick={handleClick}
-          role="button"
-          tabIndex={0}
-          buttonTop={buttonTop}
-          buttonLeft={buttonLeft}
-        >
-          <ButtonIcon src={iconSrc} size={size} />
-        </IconStandardButton>
-      )}
-      {isModalOpen &&
-        showModal &&
-        (CustomModal ? (
-          <CustomModal isOpen={isModalOpen} onClose={closeModal} />
-        ) : (
-          <Modal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            header={modalHeader}
-            text={modalText}
-            top={modalTop}
-            left={modalLeft}
-          />
-        ))}
+      <IconStandardButton
+        onClick={handleClick}
+        role="button"
+        tabIndex={0}
+        top={top}
+        left={left}
+      >
+        <ButtonIcon src={iconSrc} size={size} />
+      </IconStandardButton>
     </>
   );
 };
 
 // Edit button component
 const EditButton: React.FC<ButtonProps> = (props) => {
-  return <IconButton {...props} iconSrc={pen} showModal />;
+  return <IconButton {...props} iconSrc={pen} />;
 };
 
 // Tooltip button component
-const TooltipButton: React.FC<ButtonProps> = (props) => {
-  return <IconButton {...props} iconSrc={question} showModal />;
-};
 
 // Save button component
 const SaveButton: React.FC<ButtonProps> = (props) => {
-  return <IconButton {...props} iconSrc={save} showModal={false} />;
+  return <IconButton {...props} iconSrc={save} />;
 };
 
 // Cancel button component
 const CancelButton: React.FC<ButtonProps> = (props) => {
-  return <IconButton {...props} iconSrc={cancel} showModal={false} />;
+  return <IconButton {...props} iconSrc={cancel} />;
 };
 
 // Styled component for the standard button wrapper
 const StandardButton = styled.button<{
-  buttonTop?: number;
-  buttonLeft?: number;
+  top?: number;
+  left?: number;
   height?: number;
   width?: number;
-  buttonMargin?: number;
-  borderColor?: string;
-  backgroundColor?: string;
+  margin?: number;
   $isActive?: boolean;
   disabled?: boolean;
 }>`
-  top: ${({ buttonTop }) => buttonTop || 0}px;
-  left: ${({ buttonLeft }) => buttonLeft || 0}px;
+  top: ${({ top }) => top || 0}px;
+  left: ${({ left }) => left || 0}px;
   height: ${({ height }) => height || 60}px;
   width: ${({ width }) => width || 300}px;
-  background-color: ${({ disabled }) => disabled ? Colors.grayMedium : Colors.whiteOpaque};
-  cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
+  background-color: ${({ disabled }) =>
+    disabled ? Colors.grayMedium : Colors.whiteOpaque};
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   transition: all 0.2s ease;
   padding: 10px;
-  margin: ${({ buttonMargin }) => buttonMargin || 0}px;
+  margin: ${({ margin }) => margin || 0}px;
   z-index: auto;
   display: flex;
   align-items: center;
@@ -223,10 +176,10 @@ const StandardButton = styled.button<{
   border: 0.5px solid
     ${(props) =>
       props.$isActive ? Colors.whiteOpaque : Colors.greenLightOpaque};
-  opacity: ${({ disabled }) => disabled ? 0.7 : 1};
+  opacity: ${({ disabled }) => (disabled ? 0.7 : 1)};
 
   &:hover {
-    background-color: ${({ disabled }) => 
+    background-color: ${({ disabled }) =>
       disabled ? Colors.grayMedium : Colors.greenLightOpaque};
     border: 1px solid ${Colors.whiteOpaque};
   }
@@ -234,7 +187,7 @@ const StandardButton = styled.button<{
 
 const ButtonText = styled.span<{ disabled?: boolean }>`
   font-family: "Source Code Pro Extralight", sans-serif;
-  color: ${({ disabled }) => disabled ? Colors.grayLight : Colors.white};
+  color: ${({ disabled }) => (disabled ? Colors.grayLight : Colors.white)};
   font-size: 14px;
   font-weight: 300;
   text-transform: uppercase;
@@ -267,16 +220,16 @@ const ButtonIcon = styled.img<{ size?: number }>`
 
 // Styled component for the icon button wrapper
 const IconStandardButton = styled.button<{
-  buttonTop: number;
-  buttonLeft: number;
+  top: number;
+  left: number;
 }>`
   background-color: transparent;
   border: transparent;
   cursor: pointer;
   z-index: 2;
   position: absolute;
-  top: ${({ buttonTop }) => buttonTop}%;
-  left: ${({ buttonLeft }) => buttonLeft}%;
+  top: ${({ top }) => top}%;
+  left: ${({ left }) => left}%;
   transform: translate(-50%, 0%);
 `;
 
@@ -286,7 +239,6 @@ export {
   ForwardButton,
   IconButton,
   EditButton,
-  TooltipButton,
   SaveButton,
   CancelButton,
 };
