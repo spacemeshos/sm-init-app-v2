@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Colors from "../styles/colors";
 
 interface TextProps {
-  text: string;
+  text?: string;
   top?: number;
   left?: number;
   children?: React.ReactNode;
@@ -40,12 +40,25 @@ const StyledSubheader = styled.h2<{
   font-weight: 100;
   letter-spacing: 4px;
   top: ${({ top }) => top}px;
-  left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
-  transform: ${({ left }) => (left == null ? "translateX(-50%)" : "none")};
+  position: relative;
+`;
+const StyledBody = styled.h3<{
+  top?: number;
+  left?: number;
+}>`
+  color: ${Colors.white};
+  font-family: "Source Code Pro Extralight";
+  text-align: "center";
+  white-space: nowrap;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 100;
+  letter-spacing: 2px;
+  top: ${({ top }) => top}px;
   position: relative;
 `;
 
-const ErrorMsg = styled.h2<{
+const ErrorMsg = styled.h3<{
   top?: number;
   left?: number;
 }>`
@@ -75,13 +88,21 @@ const Subheader: React.FC<TextProps> = ({ text, top, left }) => {
   );
 };
 
-const ErrorMessage: React.FC<TextProps> = ({children}) => {
+const BodyText: React.FC<TextProps> = ({ text, top, left }) => {
+  return (
+    <StyledBody top={top} left={left}>
+      {text}
+    </StyledBody>
+  );
+};
+
+const ErrorMessage: React.FC<TextProps> = ({ text, children }) => {
   return (
     <ErrorMsg>
+      {text}
       {children}
     </ErrorMsg>
   );
 };
 
-
-export { Title, Subheader, ErrorMessage };
+export { Title, Subheader, BodyText, ErrorMessage };
