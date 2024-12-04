@@ -15,6 +15,18 @@ interface CustomNumberInputProps {
   onChange?: (value: number) => void;
 }
 
+interface HexInputProps {
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  fontSize?: number;
+  height?: number;
+  width?: number;
+  placeholder?: string;
+  maxLength?: number;
+  className?: string;
+  type?: string;
+}
+
 const StyledInputRoot = styled.div<{ height?: number; width?: number }>`
   display: flex;
   flex-flow: row nowrap;
@@ -31,18 +43,17 @@ const StyledInputRoot = styled.div<{ height?: number; width?: number }>`
 
 const StyledInput = styled.input<{
   fontSize?: number;
+  isValid?: boolean;
 }>`
   font-size: ${({ fontSize = 36 }) => fontSize}px;
   font-family: "Source Code Pro ExtraLight", sans-serif;
   font-weight: 200;
   color: ${Colors.white};
-  height: 56px;
-  width: 130px;
+  height: 40px;
+  width: 300px;
   background: ${Colors.greenLightOpaque};
-  border: 2px solid ${Colors.whiteOpaque};
-  margin: 0 8px;
-  padding: 0px 12px;
-  min-width: 130px;
+  border: 2px solid ${props => props.isValid === false ? Colors.red : Colors.whiteOpaque};
+  padding: 5px;
   text-align: center;
 
   /* Hide default number input arrows buttons */
@@ -51,6 +62,10 @@ const StyledInput = styled.input<{
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+  }
+
+  &.error {
+    border-color: ${Colors.red};
   }
 `;
 
@@ -65,7 +80,7 @@ const StyledButton = styled.button<{
   border: none;
   background: ${Colors.whiteOpaque};
   color: ${Colors.white};
-  height: 56px;
+  height: 40px;
   width: 56px;
   display: flex;
   flex-flow: row nowrap;
@@ -91,6 +106,32 @@ const Text = styled.h1`
   font-size: 26px;
   position: relative;
 `;
+
+const HexInput: React.FC<HexInputProps> = ({
+  value = '',
+  onChange,
+  fontSize,
+  height,
+  width,
+  placeholder,
+  maxLength,
+  className,
+  type = 'text'
+}) => {
+  return (
+    <StyledInputRoot height={height} width={width}>
+      <StyledInput
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        maxLength={maxLength}
+        fontSize={fontSize}
+        className={className}
+      />
+    </StyledInputRoot>
+  );
+};
 
 const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   min = 1,
@@ -163,4 +204,4 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   );
 };
 
-export default CustomNumberInput;
+export { CustomNumberInput as default, HexInput };

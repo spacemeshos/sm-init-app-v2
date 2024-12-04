@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Colors from "../styles/colors";
 import Tile from "./tile";
 import { Button, CancelButton, SaveButton } from "./button";
-import CustomNumberInput from "./input";
+import CustomNumberInput, { HexInput } from "./input";
 import { BodyText, ErrorMessage, Subheader } from "../styles/texts";
 import { invoke } from "@tauri-apps/api";
 import { useSettings } from "../state/SettingsContext";
@@ -13,8 +13,9 @@ import {
   handleDirectoryError,
   shortenPath,
 } from "../utils/directoryUtils";
+import { truncateHex, isValidHex } from "../utils/hexUtils";
 import POSSummary from "./POSSummary";
-import { open } from '@tauri-apps/api/dialog';
+import { open } from "@tauri-apps/api/dialog";
 
 const BottomContainer = styled.div`
   height: 80%;
@@ -47,26 +48,6 @@ const SelectedValue = styled.h1`
   font-weight: 300;
   font-size: 50px;
   position: relative;
-`;
-
-const HexInput = styled.input`
-  background-color: ${Colors.darkerGreen};
-  color: ${Colors.white};
-  border: 1px solid ${Colors.greenLight};
-  padding: 10px;
-  width: 300px;
-  border-radius: 4px;
-  font-family: "Source Code Pro", monospace;
-  margin-top: 10px;
-
-  &:focus {
-    outline: none;
-    border-color: ${Colors.greenLight};
-  }
-
-  &::placeholder {
-    color: ${Colors.grayMedium};
-  }
 `;
 
 const SelectDirectory: React.FC = () => {
@@ -375,63 +356,123 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
 const SelectIdentity: React.FC = () => {
   const { setSettings } = useSettings();
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [atxId, setAtxId] = useState<string>("");
+  const [privateKey, setPrivateKey] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [privateKeyError, setPrivateKeyError] = useState<string | null>(null);
 
   const handleFileSelect = async () => {
     try {
       const selected = await open({
         multiple: false,
-        filters: [{
-          name: 'Identity Key',
-          extensions: ['key']
-        }]
+        filters: [
+          {
+            name: "Identity Key",
+            extensions: ["key"],
+          },
+        ],
       });
-      
-      if (selected && typeof selected === 'string') {
-        const fileName = selected.split('/').pop() || selected;
+
+      if (selected && typeof selected === "string") {
+        const fileName = selected.split("/").pop() || selected;
         setSelectedFile(fileName);
-        setSettings((prev) => ({ ...prev, identityFile: selected })); // Store full path
+        setSettings((prev) => ({
+          ...prev,
+          identityFile: selected,
+          privateKey: undefined,
+        }));
         setError(null);
+        setPrivateKey("");
+        setPrivateKeyError(null);
       }
     } catch (err) {
-      console.error('Error selecting file:', err);
-      setError('Failed to select file');
+      console.error("Error selecting file:", err);
+      setError("Failed to select file");
     }
   };
 
+  const handlePrivateKeyChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value.toLowerCase();
+    setPrivateKey(value);
+
+    if (value === "") {
+      setPrivateKeyError(null);
+      setSettings((prev) => ({ ...prev, privateKey: undefined }));
+    } else if (!isValidHex(value, 64)) {
+      setPrivateKeyError(
+        "Private key must be a 64-character hexadecimal string"
+      );
+      setSettings((prev) => ({ ...prev, privateKey: undefined }));
+    } else {
+      setPrivateKeyError(null);
+      setSettings((prev) => ({
+        ...prev,
+        privateKey: value,
+        identityFile: undefined,
+      }));
+      setSelectedFile(null);
+      setError(null);
+    }
+  };
+
+  const displayValue = privateKey ? `Key: ${truncateHex(privateKey, 8)}` : (selectedFile || "Otherwise, a new ID will be created");
+
+  return (
+    <BottomContainer>
+      <TileWrapper width={660}>
+        <Tile
+          heading="Identity"
+          subheader="Enter your Private Key or select identity file"
+          footer={displayValue}
+          errmsg={error ?? privateKeyError ?? undefined}
+        />
+        <HexInput
+          type="text"
+          fontSize={12}
+          value={privateKey}
+          onChange={handlePrivateKeyChange}
+          placeholder="Enter private key (hex)"
+          maxLength={64}
+          className={privateKeyError ? "error" : ""}
+        />
+        <Button
+          onClick={handleFileSelect}
+          label={selectedFile ? "Change File" : "Select identity.key File"}
+          width={320}
+          top={70}
+        />
+      </TileWrapper>
+    </BottomContainer>
+  );
+};
+
+const SelectATX: React.FC = () => {
+  const { setSettings } = useSettings();
+  const [atxId, setAtxId] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+
   const handleAtxIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    if (/^[0-9a-fA-F]*$/.test(value) && value.length <= 64) {
+    const value = event.target.value.toLowerCase();
+    if (value === "" || isValidHex(value)) {
       setAtxId(value);
       setSettings((prev) => ({ ...prev, atxId: value }));
       setError(null);
     } else {
-      setError("ATX ID must be a valid 256-bit hexadecimal value");
+      setError("ATX ID must be a valid hexadecimal value");
     }
   };
+
+  const displayValue = atxId ? `ID: ${truncateHex(atxId, 6)}` : "Enter your ATX ID";
 
   return (
     <BottomContainer>
       <TileWrapper>
         <Tile
-          heading="Identity.key File"
-          subheader="(Optional)"
-          footer={selectedFile || "No file selected"}
-          errmsg={error ?? undefined}
-        />
-        <Button
-          onClick={handleFileSelect}
-          label={selectedFile ? "Change File" : "Select File"}
-          width={320}
-          top={100}
-        />
-      </TileWrapper>
-      <TileWrapper>
-        <Tile
           heading="ATX ID"
           subheader="(Optional)"
-          footer="Enter your ATX ID"
+          footer={displayValue}
+          errmsg={error ?? undefined}
         />
         <HexInput
           type="text"
@@ -455,5 +496,6 @@ export {
   SetupProving,
   SetupGPU,
   SelectIdentity,
+  SelectATX,
   SetupSummary,
 };
