@@ -10,6 +10,7 @@ import {
   SetupSize,
   SelectIdentity,
   SetupSummary,
+  SelectATX,
 } from "../components/setupPOS";
 import { BackButton, Button } from "../components/button";
 import { Title } from "../styles/texts";
@@ -86,7 +87,6 @@ const ButtonColumn = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
   justify-content: space-evenly;
   padding-right: 10px;
 `;
@@ -134,6 +134,10 @@ const Generate: React.FC = () => {
     {
       label: "Select Identity",
       component: <SelectIdentity />,
+    },
+    {
+      label: "Select ATX ID",
+      component: <SelectATX />,
     },
   ];
 
