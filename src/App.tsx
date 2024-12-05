@@ -4,12 +4,13 @@ import Colors from "./styles/colors";
 import AppRoutes from "./Shared/Routes";
 import { ExternalLinks } from "./Shared/Constants";
 import { open } from "@tauri-apps/api/shell";
+import GlobalStyles from "./styles/globalStyles";
 
 const AppWrapper = styled.div`
   height: 100%;
   width: 100%;
   position: absolute;
-  background-color: ${Colors.background};
+  background-color: ${Colors.greenDark};
 `;
 
 const Footer = styled.div`
@@ -35,6 +36,7 @@ function App() {
 
   return (
     <AppWrapper>
+      <GlobalStyles />
       <AppRoutes />
       <Footer>
         <a

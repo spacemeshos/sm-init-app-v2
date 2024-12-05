@@ -14,10 +14,9 @@ const StyledTitle = styled.h1<{
   left?: number;
 }>`
   color: ${Colors.grayLight};
-  font-family: "UNIVERS LT W01 65 BOLD";
+  font-family: 'Univers65', sans-serif;
   text-align: ${({ left }) => (left == null ? "center" : "left")};
   white-space: nowrap;
-  text-transform: uppercase;
   font-size: 20px;
   letter-spacing: 1px;
   top: ${({ top }) => top}px;
@@ -31,23 +30,22 @@ const StyledSubheader = styled.h2<{
   left?: number;
 }>`
   color: ${Colors.grayLight};
-  font-family: "UNIVERS LT W01 55 ROMAN";
+  font-family: 'Univers55', sans-serif;
   text-align: ${({ left }) => (left == null ? "center" : "left")};
   white-space: nowrap;
-  text-transform: uppercase;
   font-size: 16px;
   top: ${({ top }) => top}px;
   position: relative;
 `;
+
 const StyledBody = styled.h3<{
   top?: number;
   left?: number;
 }>`
   color: ${Colors.white};
-  font-family: "UNIVERS LT W01 45 LIGHT";
+  font-family: 'Univers45', sans-serif;
   text-align: "center";
   white-space: nowrap;
-  text-transform: uppercase;
   font-size: 14px;
   top: ${({ top }) => top}px;
   position: relative;
