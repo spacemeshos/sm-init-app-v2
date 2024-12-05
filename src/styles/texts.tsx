@@ -14,13 +14,12 @@ const StyledTitle = styled.h1<{
   left?: number;
 }>`
   color: ${Colors.grayLight};
-  font-family: "Source Code Pro", sans-serif;
+  font-family: "UNIVERS LT W01 65 BOLD";
   text-align: ${({ left }) => (left == null ? "center" : "left")};
   white-space: nowrap;
   text-transform: uppercase;
-  font-size: 21px;
-  font-weight: 400;
-  letter-spacing: 4px;
+  font-size: 20px;
+  letter-spacing: 1px;
   top: ${({ top }) => top}px;
   left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
   transform: ${({ left }) => (left == null ? "translateX(-50%)" : "none")};
@@ -32,13 +31,11 @@ const StyledSubheader = styled.h2<{
   left?: number;
 }>`
   color: ${Colors.grayLight};
-  font-family: "Source Code Pro Extralight";
+  font-family: "UNIVERS LT W01 55 ROMAN";
   text-align: ${({ left }) => (left == null ? "center" : "left")};
   white-space: nowrap;
   text-transform: uppercase;
-  font-size: 18px;
-  font-weight: 100;
-  letter-spacing: 4px;
+  font-size: 16px;
   top: ${({ top }) => top}px;
   position: relative;
 `;
@@ -47,13 +44,11 @@ const StyledBody = styled.h3<{
   left?: number;
 }>`
   color: ${Colors.white};
-  font-family: "Source Code Pro Extralight";
+  font-family: "UNIVERS LT W01 45 LIGHT";
   text-align: "center";
   white-space: nowrap;
   text-transform: uppercase;
   font-size: 14px;
-  font-weight: 100;
-  letter-spacing: 2px;
   top: ${({ top }) => top}px;
   position: relative;
 `;
