@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 import errorIcon from "../assets/disruption.png";
+import { BodyText, Subheader, Title } from "../styles/texts";
+import { CloseButton } from "./button";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -20,44 +22,10 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: ${Colors.darkerPurple};
+  background-color: ${Colors.greenDark};
   z-index: 1000;
   width: 800px;
   height: 500px;
-`;
-
-const Header = styled.h1`
-  color: ${Colors.white};
-  text-align: center;
-  font-family: "Source Code Pro", sans-serif;
-  font-size: 26px;
-  margin-top: 60px;
-  font-weight: 200;
-  text-transform: uppercase;
-  letter-spacing: 5px;
-`;
-
-const Subheader = styled.h2`
-  color: ${Colors.purpleLight};
-  text-align: center;
-  font-family: "Source Code Pro", sans-serif;
-  font-size: 18px;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  line-height: 23px;
-  padding: 00px 75px 0px;
-`;
-
-const Text = styled.div`
-  color: ${Colors.white};
-  padding: 15px 75px;
-  text-align: justify;
-  font-family: "Source Code Pro ExtraLight", sans-serif;
-  font-size: 16px;
-  font-weight: 100;
-  line-height: 25px;
-  white-space: pre-wrap;
 `;
 
 const BgImage = styled.img`
@@ -69,17 +37,6 @@ const BgImage = styled.img`
   top: 5%;
   left: 5%;
   opacity: 0.1;
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  color: ${Colors.purpleLight};
-  cursor: pointer;
-  font-size: 28px;
 `;
 
 type Props = {
@@ -94,12 +51,12 @@ const ErrorModal = ({ onClose, isOpen }: Props) => {
   return (
     <Backdrop onClick={onClose}>
       <Wrapper onClick={(e) => e.stopPropagation()}>
-        <CloseButton onClick={onClose}>&times;</CloseButton>
-        <Header>Oops!</Header>
+        <CloseButton onClick={onClose} top={2} left={97} />
+        <Title>Oops!</Title>
         <Subheader>Something Went Wrong</Subheader>
-        <Text>Error Code: [Error_Code_Placeholder]</Text>
+        <BodyText>Error Code: [Error_Code_Placeholder]</BodyText>
         <BgImage src={errorIcon} />
-        <Text>
+        <BodyText>
           {
             <>
               [just a placeholder] Check Your Configuration: Ensure all required
@@ -117,7 +74,7 @@ const ErrorModal = ({ onClose, isOpen }: Props) => {
               <br />
             </>
           }
-        </Text>
+        </BodyText>
       </Wrapper>
     </Backdrop>
   );

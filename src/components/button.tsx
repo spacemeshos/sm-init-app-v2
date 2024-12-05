@@ -2,11 +2,13 @@ import * as React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 import { useNavigate } from "react-router-dom";
-import back from "../assets/left-arrow.png";
+import back from "../assets/back.png";
 import next from "../assets/right-arrow.png";
 import pen from "../assets/edit-circle.png";
 import save from "../assets/check-circle.png";
 import cancel from "../assets/circle-x.png";
+import close from "../assets/x.png";
+
 
 // Interface defining the properties for the Button component below
 interface ButtonProps {
@@ -137,8 +139,6 @@ const EditButton: React.FC<ButtonProps> = (props) => {
   return <IconButton {...props} iconSrc={pen} />;
 };
 
-// Tooltip button component
-
 // Save button component
 const SaveButton: React.FC<ButtonProps> = (props) => {
   return <IconButton {...props} iconSrc={save} />;
@@ -147,6 +147,11 @@ const SaveButton: React.FC<ButtonProps> = (props) => {
 // Cancel button component
 const CancelButton: React.FC<ButtonProps> = (props) => {
   return <IconButton {...props} iconSrc={cancel} />;
+};
+
+// Close button component
+const CloseButton: React.FC<ButtonProps> = (props) => {
+  return <IconButton {...props} iconSrc={close} size={24} />;
 };
 
 // Styled component for the standard button wrapper
@@ -209,8 +214,8 @@ const NavIcon = styled.img`
 const NavWrapper = styled.button<{ top?: number; left?: number }>`
   top: ${({ top }) => top || 96}px;
   left: ${({ left }) => left || 0}px;
-  background-color: transparent;
   border: transparent;
+  background: transparent;
   cursor: pointer;
   z-index: 1;
   height: 45px;
@@ -245,4 +250,5 @@ export {
   EditButton,
   SaveButton,
   CancelButton,
+  CloseButton,
 };

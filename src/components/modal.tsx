@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
+import { CloseButton } from "./button";
 
-const Backdrop = styled.div<{isOpen?: boolean}>`
+const Backdrop = styled.div<{ isOpen?: boolean }>`
   width: 100%;
   height: 100%;
   display: flex;
@@ -25,7 +26,7 @@ const Wrapper = styled.div<{
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: ${Colors.background};
+  background-color: ${Colors.greenDark};
   z-index: ${({ isOpen }) => (isOpen ? 1000 : -1)}
   width: ${({ width }) => width || 98}%;
   height: ${({ height }) => height || 98}%;
@@ -52,23 +53,12 @@ const Text = styled.div`
   font-size: 16px;
   font-weight: 100;
   line-height: 25px;
-  white-space: pre-wrap
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  color: ${Colors.purpleLight};
-  cursor: pointer;
-  font-size: 28px;
+  white-space: pre-wrap;
 `;
 
 type Props = {
   header?: string;
-  text?:  React.ReactNode;
+  text?: React.ReactNode;
   width?: number;
   height?: number;
   top?: number;
@@ -101,7 +91,7 @@ const Modal = ({
         left={left}
         isOpen={isOpen}
       >
-        <CloseButton onClick={onClose}>&times;</CloseButton>
+        <CloseButton onClick={onClose} top={2} left={97} />
         <Header>{header}</Header>
         <Text>{text}</Text>
         {children}

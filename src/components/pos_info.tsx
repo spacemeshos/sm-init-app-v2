@@ -4,6 +4,7 @@ import Colors from "../styles/colors";
 import gpu from "../assets/graphics-card.png";
 import files from "../assets/duplicate.png";
 import cpu from "../assets/cpu.png";
+import { CloseButton } from "./button";
 
 const Backdrop = styled.div`
   width: 100%;
@@ -21,7 +22,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: ${Colors.background};
+  background-color: ${Colors.greenDark};
   z-index: 1000;
   width: 1080px;
   height: 630px;
@@ -78,16 +79,6 @@ const BgImage = styled.img<{
   opacity: 0.2;
 `;
 
-const CloseButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  color: ${Colors.purpleLight};
-  cursor: pointer;
-  font-size: 28px;
-`;
 
 type Props = {
   onClose: () => void;
@@ -101,7 +92,7 @@ const PosInfo = ({ onClose, isOpen }: Props) => {
   return (
     <Backdrop onClick={onClose}>
       <Wrapper onClick={(e) => e.stopPropagation()}>
-        <CloseButton onClick={onClose}>&times;</CloseButton>
+        <CloseButton onClick={onClose} top={2} left={97} />
         <Header>Proof of space data Setup</Header>
         <Subheader>
           We run a benchmark to find the best settings for you, to maximise
