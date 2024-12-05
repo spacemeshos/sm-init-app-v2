@@ -36,13 +36,11 @@ const TileWrapper = styled.div<{ selected?: boolean }>`
 
 const TileHeading = styled.h2`
   color: ${Colors.grayLight};
-  font-family: "Source Code Pro", sans-serif;
+  font-family: "Univers55", sans-serif;
   margin: 35px 15px 0px;
   text-align: center;
   text-transform: uppercase;
-  font-size: 18px;
-  font-weight: 200;
-  letter-spacing: 3px;
+  font-size: 16px;
   width: 95%;
   top: 0px;
   position: absolute;
@@ -50,51 +48,33 @@ const TileHeading = styled.h2`
 
 const SubHeader = styled.h3`
   color: ${Colors.grayLight};
-  font-family: "Source Code Pro ExtraLight", sans-serif;
-  top: 20%;
-  position: absolute;
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 16px;
-  font-weight: 100;
-  letter-spacing: 3px;
-  width: 95%;
-`;
-
-const ErrorMessage = styled.h3`
-  color: ${Colors.red};
-  font-family: "Source Code Pro ExtraLight", sans-serif;
+  font-family: "Univers45", sans-serif;
   top: 20%;
   position: absolute;
   text-align: center;
   text-transform: uppercase;
   font-size: 14px;
-  font-weight: 200;
-  letter-spacing: 2px;
-  width: 95%;
+  font-weight: 100;
 `;
 
-const TileElement = styled.div`
-  aspect-ratio: 1;
-  object-fit: contain;
-  width: 100px;
+const ErrorMessage = styled.h3`
+  color: ${Colors.red};
+  font-family: "Univers55", sans-serif;
+  top: 20%;
   position: absolute;
-  left: 50%;
-  top: 60%;
-  transform: translate(-50%, -60%);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 200;
 `;
 
 const Footer = styled.h3`
   color: ${Colors.grayLight};
-  font-family: "Source Code Pro ExtraLight", sans-serif;
+  font-family: "Univers45", sans-serif;
   bottom: 5%;
   position: absolute;
   text-align: center;
-  text-transform: uppercase;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 100;
-  letter-spacing: 3px;
-  width: 95%;
 `;
 
 const Tile: React.FC<TileProps> = ({
@@ -112,7 +92,7 @@ const Tile: React.FC<TileProps> = ({
       {!errmsg && <SubHeader>{subheader}</SubHeader>}
       {errmsg && <ErrorMessage>{errmsg}</ErrorMessage>}
       <Footer>{footer}</Footer>
-      <TileElement>{children}</TileElement>
+      {children}
     </TileWrapper>
   );
 };
