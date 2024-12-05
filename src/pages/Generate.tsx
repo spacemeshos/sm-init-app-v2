@@ -12,7 +12,7 @@ import {
   SetupSummary,
   SelectATX,
 } from "../components/setupPOS";
-import { BackButton, Button } from "../components/button";
+import { BackButton, TransparentButton } from "../components/button";
 import { Title } from "../styles/texts";
 
 const NavProgress = styled.div`
@@ -179,20 +179,20 @@ const Generate: React.FC = () => {
         </SetupContainer>
         <ButtonColumn>
           {steps.map((step, index) => (
-            <Button
+            <TransparentButton
               key={index}
               onClick={() => handleStepChange(index)}
               $isActive={currentStep === index}
               label={step.label}
               width={250}
-            ></Button>
+            ></TransparentButton>
           ))}
-          <Button
+          <TransparentButton
             onClick={() => setShowSummary(true)}
             $isActive={showSummary}
             width={250}
             label="Summary"
-          ></Button>
+          ></TransparentButton>
         </ButtonColumn>
       </BottomContainer>
     </>
