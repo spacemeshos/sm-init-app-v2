@@ -25,7 +25,7 @@ interface ButtonProps {
   modalComponent?: React.ElementType;
   $isActive?: boolean;
   disabled?: boolean;
-  rounded?: number;
+  transparent?: boolean;
 }
 
 // Standard Button component
@@ -39,7 +39,6 @@ const Button: React.FC<ButtonProps> = ({
   width,
   $isActive,
   disabled,
-  rounded,
 }) => {
   const handleClick = () => {
     if (!disabled && typeof onClick === "function") {
@@ -58,10 +57,44 @@ const Button: React.FC<ButtonProps> = ({
       height={height}
       $isActive={$isActive}
       disabled={disabled}
-      rounded={rounded}
     >
       <ButtonText disabled={disabled}>{label}</ButtonText>
     </StandardButton>
+  );
+};
+
+// Transparent, rectangle Button component
+const TransparentButton: React.FC<ButtonProps> = ({
+  label,
+  onClick,
+  top,
+  left,
+  margin,
+  height,
+  width,
+  $isActive,
+  disabled,
+}) => {
+  const handleClick = () => {
+    if (!disabled && typeof onClick === "function") {
+      onClick();
+    }
+  };
+  return (
+    <TransparentRectangle
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      top={top}
+      left={left}
+      margin={margin}
+      width={width}
+      height={height}
+      $isActive={$isActive}
+      disabled={disabled}
+    >
+      <ButtonText disabled={disabled} transparent>{label}</ButtonText>
+    </TransparentRectangle>
   );
 };
 
@@ -163,14 +196,15 @@ const StandardButton = styled.button<{
   margin?: number;
   $isActive?: boolean;
   disabled?: boolean;
-  rounded?: number;
 }>`
   top: ${({ top }) => top || 0}px;
   left: ${({ left }) => left || 0}px;
-  height: ${({ height }) => height || 60}px;
-  width: ${({ width }) => width || 300}px;
-  background-color: ${({ disabled }) =>
-    disabled ? Colors.grayMedium : Colors.whiteOpaque};
+  height: ${({ height }) => height || 42}px;
+  width: ${({ width }) => width || 200}px;
+  background: ${({ disabled }) =>
+    disabled
+      ? Colors.grayMedium
+      : Colors.gradientGB};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   transition: all 0.2s ease;
   padding: 10px;
@@ -181,7 +215,7 @@ const StandardButton = styled.button<{
   justify-content: center;
   text-align: center;
   position: relative;
-  border-radius: ${({ rounded }) => rounded || 45}px;
+  border-radius: 30px;
   border: 0.5px solid
     ${(props) =>
       props.$isActive ? Colors.whiteOpaque : Colors.greenLightOpaque};
@@ -194,13 +228,49 @@ const StandardButton = styled.button<{
   }
 `;
 
-const ButtonText = styled.span<{ disabled?: boolean }>`
-  font-family: "Source Code Pro Extralight", sans-serif;
-  color: ${({ disabled }) => (disabled ? Colors.grayLight : Colors.white)};
-  font-size: 14px;
-  font-weight: 300;
+const TransparentRectangle = styled.button<{
+  top?: number;
+  left?: number;
+  height?: number;
+  width?: number;
+  margin?: number;
+  $isActive?: boolean;
+  disabled?: boolean;
+}>`
+  top: ${({ top }) => top || 0}px;
+  left: ${({ left }) => left || 0}px;
+  height: ${({ height }) => height || 56}px;
+  width: ${({ width }) => width || 200}px;
+  background: ${({ disabled }) =>
+    disabled ? Colors.grayMedium : "transparent"};
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+  transition: all 0.2s ease;
+  padding: 10px;
+  margin: ${({ margin }) => margin || 0}px;
+  z-index: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  border: none;
+
+  &:hover {
+    background-color: ${({ disabled }) =>
+      disabled ? Colors.grayMedium : Colors.greenLightOpaque};
+  }
+`;
+
+const ButtonText = styled.span<{ disabled?: boolean; transparent?: boolean }>`
+  font-family: "Univers55", sans-serif;
+  color: ${({ disabled, transparent }) => {
+    if (disabled) return Colors.grayLight;
+    if (transparent) return Colors.white;
+    return Colors.greenDark;
+  }};
+  font-size: 16px;
   text-transform: uppercase;
-  letter-spacing: 3px;
+  font-weight: 100;
   line-height: 20px;
 `;
 
@@ -244,6 +314,7 @@ const IconStandardButton = styled.button<{
 
 export {
   Button,
+  TransparentButton,
   BackButton,
   ForwardButton,
   IconButton,
