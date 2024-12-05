@@ -3,10 +3,9 @@ import styled from "styled-components";
 import Colors from "../styles/colors";
 import { useNavigate } from "react-router-dom";
 import back from "../assets/back.png";
-import next from "../assets/right-arrow.png";
-import pen from "../assets/edit-circle.png";
-import save from "../assets/check-circle.png";
-import cancel from "../assets/circle-x.png";
+import next from "../assets/next.png";
+import pen from "../assets/edit.png";
+import save from "../assets/check.png";
 import close from "../assets/x.png";
 
 
@@ -179,7 +178,7 @@ const SaveButton: React.FC<ButtonProps> = (props) => {
 
 // Cancel button component
 const CancelButton: React.FC<ButtonProps> = (props) => {
-  return <IconButton {...props} iconSrc={cancel} />;
+  return <IconButton {...props} iconSrc={close} />;
 };
 
 // Close button component
