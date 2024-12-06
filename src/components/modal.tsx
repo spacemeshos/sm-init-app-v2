@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 import { CloseButton } from "./button";
+import { BodyText, Header } from "../styles/texts";
 
 const Backdrop = styled.div<{ isOpen?: boolean }>`
   position: fixed;
@@ -37,28 +38,13 @@ const Wrapper = styled.div<{
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
-const Header = styled.h1`
-  color: ${Colors.white};
-  text-align: center;
-  font-family: "Source Code Pro ExtraLight", sans-serif;
-  font-size: 16px;
+const Head = styled.div`
   margin-top: 20px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  line-height: 20px;
 `;
 
 const Text = styled.div`
-  color: ${Colors.white};
   padding: 10px;
   margin-top: 10px;
-  text-align: center;
-  font-family: "Source Code Pro ExtraLight", sans-serif;
-  font-size: 16px;
-  font-weight: 100;
-  line-height: 25px;
-  white-space: pre-wrap;
 `;
 
 type Props = {
@@ -93,8 +79,8 @@ const Modal = ({
         isOpen={isOpen}
       >
         <CloseButton onClick={onClose} top={2} left={97} />
-        <Header>{header}</Header>
-        <Text>{text}</Text>
+        <Head><Header text={header}/></Head>
+        <Text><BodyText text={text}/></Text>
         {children}
       </Wrapper>
     </Backdrop>

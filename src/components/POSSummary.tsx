@@ -7,6 +7,7 @@ import { shortenPath } from "../utils/directoryUtils";
 import { truncateHex, isValidHex } from "../utils/hexUtils";
 import Colors from "../styles/colors";
 import Modal from "./modal";
+import { List } from "../styles/texts";
 
 const Container = styled.div`
   display: flex;
@@ -51,35 +52,16 @@ const ErrorText = styled.div`
   background-color: rgba(255, 0, 0, 0.1);
   border-radius: 4px;
   max-width: 600px;
+  font-family: "Univers45", sans-serif;
+  font-weight: 100;
 `;
 
 const LoadingText = styled.div`
   color: white;
   font-size: 1.2em;
   margin-bottom: 10px;
-`;
-
-const ValidationList = styled.ul`
-  list-style-type: none;
-  padding: 0;
-  margin: 20px 0;
-  text-align: left;
-  width: 80%;
-  max-width: 400px;
-`;
-
-const ValidationItem = styled.li`
-  color: ${Colors.white};
-  margin: 12px 0;
-  padding-left: 20px;
-  font-family: "Source Code Pro ExtraLight", sans-serif;
-  position: relative;
-  &::before {
-    content: "•";
-    color: ${Colors.red};
-    position: absolute;
-    left: 0;
-  }
+  font-family: "Univers45", sans-serif;
+  font-weight: 100;
 `;
 
 interface POSSummaryProps {
@@ -162,11 +144,13 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed, isGenerating = false
         text={
           <>
             Please configure the following required parameters:
-            <ValidationList>
-              {validationErrors.map((error, index) => (
-                <ValidationItem key={index}>{error}</ValidationItem>
-              ))}
-            </ValidationList>
+            <List 
+              items={validationErrors}
+              bulletColor={Colors.red}
+              itemColor={Colors.white}
+              width="80%"
+              maxWidth="400px"
+            />
           </>
         }
       />
