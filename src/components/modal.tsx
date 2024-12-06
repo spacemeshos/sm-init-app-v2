@@ -4,16 +4,16 @@ import Colors from "../styles/colors";
 import { CloseButton } from "./button";
 
 const Backdrop = styled.div<{ isOpen?: boolean }>`
-  position: fixed; // Changed from absolute to fixed
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw; // Changed from 100% to 100vw
-  height: 100vh; // Changed from 100% to 100vh
+  width: 100%; 
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5); // Added semi-transparent background
-  z-index: ${({ isOpen }) => (isOpen ? 9999 : -1)}; // Increased z-index
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: ${({ isOpen }) => (isOpen ? 9999 : -1)};
 `;
 
 const Wrapper = styled.div<{
@@ -23,15 +23,18 @@ const Wrapper = styled.div<{
   left?: number;
   isOpen?: boolean;
 }>`
-  position: relative; // Changed from absolute to relative
+  position: absolute;
+  top: ${({ top }) => top || 50}%;
+  left: ${({ left }) => left || 50}%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: ${Colors.greenDark};
-  width: ${({ width }) => width || 98}%;
-  height: ${({ height }) => height || 98}%;
-  border-radius: 8px; // Added border radius
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Added shadow
+  width: ${({ width }) => width || 500}px;
+  height: ${({ height }) => height || 80}%;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 const Header = styled.h1`

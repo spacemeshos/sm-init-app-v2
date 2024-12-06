@@ -169,8 +169,6 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed, isGenerating = false
             </ValidationList>
           </>
         }
-        width={40}
-        height={50}
       />
 
       <Container>
