@@ -33,7 +33,7 @@ const Wrapper = styled.div<{
   align-items: center;
   background-color: ${Colors.greenDark};
   width: ${({ width }) => width || 500}px;
-  height: ${({ height }) => height || 80}%;
+  height: ${({ height }) => height || 60}%;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;

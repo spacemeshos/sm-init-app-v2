@@ -45,7 +45,7 @@ const StyledHeader = styled.h1<{
   text-align: ${({ left }) => (left == null ? "center" : "left")};
   white-space: nowrap;
   font-size: 20px;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   font-weight: 300;
   top: ${({ top }) => top}px;
   left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
@@ -63,6 +63,7 @@ const StyledSubheader = styled.h2<{
   text-align: ${({ left }) => (left == null ? "center" : "left")};
   white-space: nowrap;
   font-size: 16px;
+  letter-spacing: 1px;
   top: ${({ top }) => top}px;
   position: relative;
 `;
@@ -77,6 +78,7 @@ const StyledBody = styled.h3<{
   white-space: pre-wrap;
   font-size: 14px;
   font-weight: 100;
+  letter-spacing: 1px;
   top: ${({ top }) => top}px;
   position: relative;
 `;
