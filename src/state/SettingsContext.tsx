@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-interface Settings {
+export interface Settings {
   pubKey?: string;
   numUnits?: number;
   maxFileSize?: number;
