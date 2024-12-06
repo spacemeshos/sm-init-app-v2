@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
+import { Header, Subheader } from "../styles/texts";
 
 interface FrameProps {
   heading?: string;
@@ -33,30 +34,18 @@ const Wrapper = styled.div<{
   border: 0.5px solid ${Colors.greenLightOpaque};
 `;
 
-const FrameHeading = styled.h2`
-  color: ${Colors.white};
-  font-family: "Source Code Pro", sans-serif;
+const FrameHeading = styled.div`
+  position: absolute;
   left: 20px;
   text-align: left;
-  text-transform: uppercase;
-  font-size: 16px;
-  font-weight: 100;
-  letter-spacing: 3px;
-  width: 100%;
-  position: absolute;
+  width: auto;
 `;
 
-const SubHeader = styled.h3`
-  color: ${Colors.white};
-  font-family: "Source Code Pro ExtraLight", sans-serif;
+const Details = styled.div`
   position: absolute;
   text-align: right;
   right: 20px;
-  text-transform: uppercase;
-  font-size: 14px;
-  font-weight: 100;
-  letter-spacing: 3px;
-  width: 100%;
+  width: auto;
 `;
 
 const Frame: React.FC<FrameProps> = ({
@@ -69,14 +58,13 @@ const Frame: React.FC<FrameProps> = ({
   width,
 }) => {
   return (
-    <Wrapper
-      top={top}
-      left={left}
-      height={height}
-      width={width}
-    >
-      <FrameHeading>{heading}</FrameHeading>
-      <SubHeader>{subheader}</SubHeader>
+    <Wrapper top={top} left={left} height={height} width={width}>
+      <FrameHeading>
+        <Header text={heading} />
+      </FrameHeading>
+      <Details>
+        <Subheader text={subheader} />
+      </Details>
       {children}
     </Wrapper>
   );
