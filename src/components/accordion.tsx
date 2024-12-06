@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
-import { Button } from "./button";
+import { Button, TransparentButton } from "./button";
 
 // Styled component for the menu container
 const MenuContainer = styled.div<{
@@ -104,7 +104,7 @@ export const HoverAccordionMenu: React.FC<
         <ButtonsWrapper>
           <ButtonsContainer $isHovered={$isHovered}>
             {buttons.map((button, index) => (
-              <Button
+              <TransparentButton
                 key={index}
                 onClick={button.onClick}
                 label={button.label}
@@ -112,8 +112,8 @@ export const HoverAccordionMenu: React.FC<
                 left={button.left}
                 margin={5}
                 height={60}
-                width={160}
-              ></Button>
+                width={180}
+              ></TransparentButton>
             ))}
           </ButtonsContainer>
         </ButtonsWrapper>

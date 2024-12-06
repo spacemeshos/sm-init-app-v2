@@ -14,6 +14,23 @@ const StyledTitle = styled.h1<{
   left?: number;
 }>`
   color: ${Colors.grayLight};
+  font-family: "Univers93", sans-serif;
+  text-align: ${({ left }) => (left == null ? "center" : "left")};
+  white-space: nowrap;
+  font-size: 30px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  top: ${({ top }) => top}px;
+  left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
+  transform: ${({ left }) => (left == null ? "translateX(-50%)" : "none")};
+  position: relative;
+`;
+
+const StyledHeader = styled.h1<{
+  top?: number;
+  left?: number;
+}>`
+  color: ${Colors.grayLight};
   font-family: 'Univers65', sans-serif;
   text-align: ${({ left }) => (left == null ? "center" : "left")};
   white-space: nowrap;
@@ -58,7 +75,6 @@ const ErrorMsg = styled.h3<{
   color: ${Colors.red};
   font-family: "Source Code Pro Extralight";
   text-align: "center";
-  text-transform: uppercase;
   font-size: 18px;
   font-weight: 200;
   letter-spacing: 2px;
@@ -70,6 +86,14 @@ const Title: React.FC<TextProps> = ({ text, top, left }) => {
     <StyledTitle top={top} left={left}>
       {text}
     </StyledTitle>
+  );
+};
+
+const Header: React.FC<TextProps> = ({ text, top, left }) => {
+  return (
+    <StyledHeader top={top} left={left}>
+      {text}
+    </StyledHeader>
   );
 };
 
@@ -98,4 +122,4 @@ const ErrorMessage: React.FC<TextProps> = ({ text, children }) => {
   );
 };
 
-export { Title, Subheader, BodyText, ErrorMessage };
+export {Title, Header, Subheader, BodyText, ErrorMessage };

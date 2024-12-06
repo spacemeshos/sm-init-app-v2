@@ -269,7 +269,7 @@ const ButtonText = styled.span<{ disabled?: boolean; transparent?: boolean }>`
   }};
   font-size: 16px;
   text-transform: uppercase;
-  font-weight: 100;
+  font-weight: 300;
   line-height: 20px;
 `;
 

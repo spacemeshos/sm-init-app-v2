@@ -13,7 +13,7 @@ import {
   SelectATX,
 } from "../components/setupPOS";
 import { BackButton, TransparentButton } from "../components/button";
-import { Title } from "../styles/texts";
+import { Header } from "../styles/texts";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -166,7 +166,7 @@ const Generate: React.FC = () => {
       <BottomContainer>
         <SetupContainer>
           <TextWrapper>
-            <Title
+            <Header
               text={
                 showSummary
                   ? "Summary of your Settings"

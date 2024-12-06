@@ -40,8 +40,8 @@ const TileHeading = styled.h2`
   margin: 35px 15px 0px;
   text-align: center;
   text-transform: uppercase;
+  font-weight: 100;
   font-size: 16px;
-  width: 95%;
   top: 0px;
   position: absolute;
 `;

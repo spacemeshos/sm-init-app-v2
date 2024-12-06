@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
 import errorIcon from "../assets/disruption.png";
-import { BodyText, Subheader, Title } from "../styles/texts";
+import { BodyText, Header, Subheader } from "../styles/texts";
 import { CloseButton } from "./button";
 
 const Backdrop = styled.div`
@@ -52,7 +52,7 @@ const ErrorModal = ({ onClose, isOpen }: Props) => {
     <Backdrop onClick={onClose}>
       <Wrapper onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose} top={2} left={97} />
-        <Title>Oops!</Title>
+        <Header>Oops!</Header>
         <Subheader>Something Went Wrong</Subheader>
         <BodyText>Error Code: [Error_Code_Placeholder]</BodyText>
         <BgImage src={errorIcon} />
