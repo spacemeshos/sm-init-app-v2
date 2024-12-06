@@ -4,13 +4,16 @@ import Colors from "../styles/colors";
 import { CloseButton } from "./button";
 
 const Backdrop = styled.div<{ isOpen?: boolean }>`
-  width: 100%;
-  height: 100%;
+  position: fixed; // Changed from absolute to fixed
+  top: 0;
+  left: 0;
+  width: 100vw; // Changed from 100% to 100vw
+  height: 100vh; // Changed from 100% to 100vh
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: ${({ isOpen }) => (isOpen ? 1000 : -2)}
-  position: absolute
+  background-color: rgba(0, 0, 0, 0.5); // Added semi-transparent background
+  z-index: ${({ isOpen }) => (isOpen ? 9999 : -1)}; // Increased z-index
 `;
 
 const Wrapper = styled.div<{
@@ -20,16 +23,15 @@ const Wrapper = styled.div<{
   left?: number;
   isOpen?: boolean;
 }>`
-  position: absolute;
-  top: ${({ top }) => top}%;
-  left: ${({ left }) => left}%;
+  position: relative; // Changed from absolute to relative
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: ${Colors.greenDark};
-  z-index: ${({ isOpen }) => (isOpen ? 1000 : -1)}
   width: ${({ width }) => width || 98}%;
   height: ${({ height }) => height || 98}%;
+  border-radius: 8px; // Added border radius
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Added shadow
 `;
 
 const Header = styled.h1`
@@ -74,21 +76,17 @@ const Modal = ({
   children,
   width,
   height,
-  top,
-  left,
   onClose,
   isOpen,
 }: Props) => {
   if (!isOpen) return null;
 
   return (
-    <Backdrop onClick={onClose}>
+    <Backdrop onClick={onClose} isOpen={isOpen}>
       <Wrapper
         onClick={(e) => e.stopPropagation()}
         width={width}
         height={height}
-        top={top}
-        left={left}
         isOpen={isOpen}
       >
         <CloseButton onClick={onClose} top={2} left={97} />
