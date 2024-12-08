@@ -24,7 +24,7 @@ const FindProviders = (): UsePostCliReturn => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const result: any = await callPostCli(args);
-      const parsedResult = parseResponse(result);
+      const parsedResult = parseResponse(result.stdout);
       setResponse(parsedResult);
       setError(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,8 +38,7 @@ const FindProviders = (): UsePostCliReturn => {
 
   const parseResponse = (response: string): Provider[] => {
     const providers: Provider[] = [];
-    const regex =
-      /\(postrs\.Provider\)\s*\{\s*ID:\s*\(uint32\)\s*(\d+),\s*Model:\s*\(string\)\s*\(len=\d+\)\s*"\[(CPU|GPU)\]\s*([^"]+)",\s*DeviceType:\s*\(postrs\.DeviceClass\)\s*(\w+)\s*\}/g;
+    const regex = /ID:\s*\(uint32\)\s*(\d+),[\s\S]*?Model:\s*\(string\)\s*\(len=\d+\)\s*"\[(CPU|GPU)\]\s*([^"]+)",[\s\S]*?DeviceType:\s*\(postrs\.DeviceClass\)\s*(\w+)/g;
     let match;
 
     while ((match = regex.exec(response)) !== null) {
