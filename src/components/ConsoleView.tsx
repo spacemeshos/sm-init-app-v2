@@ -33,6 +33,25 @@ const ConsoleContainer = styled.div`
   }
 `;
 
+const ClearButton = styled.button`
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: ${Colors.black};
+  border: 1px solid ${Colors.greenLight};
+  color: ${Colors.greenLight};
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  cursor: pointer;
+  font-family: 'Courier New', Courier, monospace;
+  z-index: 1;
+
+  &:hover {
+    background-color: ${Colors.greenLight}20;
+  }
+`;
+
 const CommandGroup = styled.div`
   margin-bottom: 16px;
 `;
@@ -91,7 +110,7 @@ const Timestamp = styled.span`
 `;
 
 const ConsoleView: React.FC = () => {
-  const { entries } = useConsole();
+  const { entries, clearConsole } = useConsole();
   const consoleRef = useRef<HTMLDivElement>(null);
   const prevEntriesLengthRef = useRef(entries.length);
 
@@ -151,7 +170,12 @@ const ConsoleView: React.FC = () => {
   };
 
   return (
-    <ConsoleContainer ref={consoleRef}>{renderContent()}</ConsoleContainer>
+    <ConsoleContainer ref={consoleRef}>
+      {entries.length > 0 && (
+        <ClearButton onClick={clearConsole}>Clear</ClearButton>
+      )}
+      {renderContent()}
+    </ConsoleContainer>
   );
 };
 
