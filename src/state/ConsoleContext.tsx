@@ -1,8 +1,13 @@
 import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
 
-interface ConsoleState {
+interface ConsoleEntry {
   command: string;
   output: string;
+  timestamp: string;
+}
+
+interface ConsoleState {
+  entries: ConsoleEntry[];
 }
 
 type ConsoleAction = 
@@ -16,8 +21,7 @@ interface ConsoleContextType extends ConsoleState {
 }
 
 const initialState: ConsoleState = {
-  command: '',
-  output: ''
+  entries: []
 };
 
 function consoleReducer(state: ConsoleState, action: ConsoleAction): ConsoleState {
@@ -26,19 +30,18 @@ function consoleReducer(state: ConsoleState, action: ConsoleAction): ConsoleStat
   switch (action.type) {
     case 'UPDATE': {
       const timestamp = new Date().toLocaleTimeString();
-      const newEntry = `[${timestamp}] ${action.output}`;
-      const newOutput = state.output 
-        ? `${state.output}\n${newEntry}`
-        : newEntry;
+      const newEntry: ConsoleEntry = {
+        command: action.command,
+        output: action.output,
+        timestamp
+      };
       
       console.log('New state after update:', {
-        command: action.command,
-        output: newOutput
+        entries: [...state.entries, newEntry]
       });
       
       return {
-        command: action.command,
-        output: newOutput
+        entries: [...state.entries, newEntry]
       };
     }
       
@@ -48,8 +51,11 @@ function consoleReducer(state: ConsoleState, action: ConsoleAction): ConsoleStat
     case 'INITIALIZE': {
       const timestamp = new Date().toLocaleTimeString();
       return {
-        ...state,
-        output: `[${timestamp}] Console initialized`
+        entries: [{
+          command: '',
+          output: 'Console initialized',
+          timestamp
+        }]
       };
     }
       
@@ -110,10 +116,8 @@ export const useConsole = () => {
 // Debug helper
 export const debugConsoleState = (state: ConsoleState) => {
   console.log('Current console state:', {
-    command: state.command,
-    output: state.output,
-    outputLength: state.output.length,
-    hasContent: Boolean(state.output),
-    lines: state.output.split('\n').length
+    entries: state.entries,
+    entryCount: state.entries.length,
+    hasContent: state.entries.length > 0
   });
 };

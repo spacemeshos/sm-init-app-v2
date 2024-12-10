@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import styled from 'styled-components';
-import Colors from '../styles/colors';
-import { useConsole } from '../state/ConsoleContext';
+import React, { useEffect, useRef } from "react";
+import styled from "styled-components";
+import Colors from "../styles/colors";
+import { useConsole } from "../state/ConsoleContext";
 
 const ConsoleContainer = styled.div`
   background-color: ${Colors.black};
@@ -33,17 +33,35 @@ const ConsoleContainer = styled.div`
   }
 `;
 
+const CommandGroup = styled.div`
+  margin-bottom: 16px;
+`;
+
 const CommandLine = styled.div`
   color: ${Colors.greenLight};
   margin-bottom: 8px;
   font-weight: bold;
 `;
 
-const Output = styled.pre`
-  margin: 0;
+interface OutputProps {
+  $content: string;
+}
+
+const Output = styled.pre<OutputProps>`
+  margin: 0 0 8px 0;
   white-space: pre-wrap;
   word-wrap: break-word;
   font-family: 'Courier New', Courier, monospace;
+  color: ${(props) => {
+    const content = props.$content;
+    if (content.includes("Error") || content.includes("error")) {
+      return Colors.red;
+    }
+    if (content.includes("Success") || content.includes("success")) {
+      return Colors.greenLight;
+    }
+    return Colors.white;
+  }};
 `;
 
 const EmptyState = styled.div`
@@ -68,73 +86,72 @@ const Cursor = styled.span`
   }
 `;
 
+const Timestamp = styled.span`
+  color: ${Colors.grayLight};
+`;
+
 const ConsoleView: React.FC = () => {
-  const { command, output } = useConsole();
+  const { entries } = useConsole();
   const consoleRef = useRef<HTMLDivElement>(null);
-  const prevOutputRef = useRef(output);
+  const prevEntriesLengthRef = useRef(entries.length);
 
   // Debug logging
   useEffect(() => {
-    console.log('ConsoleView rendered with:', { command, output });
-  }, [command, output]);
+    console.log("ConsoleView rendered with:", { entries });
+  }, [entries]);
 
-  // Auto-scroll to bottom when output changes
+  // Auto-scroll to bottom when entries change
   useEffect(() => {
-    if (consoleRef.current && output !== prevOutputRef.current) {
+    if (consoleRef.current && entries.length !== prevEntriesLengthRef.current) {
       consoleRef.current.scrollTop = consoleRef.current.scrollHeight;
-      prevOutputRef.current = output;
-      console.log('Scrolled to bottom, new output:', output);
+      prevEntriesLengthRef.current = entries.length;
+      console.log("Scrolled to bottom, new entries length:", entries.length);
     }
-  }, [output]);
+  }, [entries]);
 
-  const renderLine = (line: string, index: number) => {
-    // Check if line contains timestamp
-    const timestampMatch = line.match(/^\[([\d:]+(?:\s?[AP]M)?)\]/);
-    if (timestampMatch) {
-      const [fullTimestamp] = timestampMatch;
-      const content = line.slice(fullTimestamp.length);
-      
-      // Determine text color based on content
-      let contentColor = Colors.white;
-      if (content.includes('Error') || content.includes('error')) {
-        contentColor = Colors.red;
-      } else if (content.includes('Success') || content.includes('success')) {
-        contentColor = Colors.greenLight;
+  const groupEntriesByCommand = () => {
+    const grouped = new Map<string, { timestamp: string; output: string }[]>();
+
+    entries.forEach((entry) => {
+      if (!grouped.has(entry.command)) {
+        grouped.set(entry.command, []);
       }
+      grouped
+        .get(entry.command)
+        ?.push({ timestamp: entry.timestamp, output: entry.output });
+    });
 
-      return (
-        <div key={index}>
-          <span style={{ color: Colors.grayLight }}>{fullTimestamp}</span>
-          <span style={{ color: contentColor }}>{content}</span>
-        </div>
-      );
-    }
-    return <div key={index}>{line}</div>;
+    return grouped;
   };
 
   const renderContent = () => {
-    if (!output && !command) {
+    if (entries.length === 0) {
       return (
         <EmptyState>
-          Initializing console<Cursor />
+          Initializing console
+          <Cursor />
         </EmptyState>
       );
     }
 
-    return (
-      <>
-        {command && <CommandLine>{command}</CommandLine>}
-        <Output>
-          {output.split('\n').map((line, index) => renderLine(line, index))}
-        </Output>
-      </>
+    const groupedEntries = groupEntriesByCommand();
+
+    return Array.from(groupedEntries.entries()).map(
+      ([command, outputs], groupIndex) => (
+        <CommandGroup key={groupIndex}>
+          <CommandLine>{command}</CommandLine>
+          {outputs.map((output, index) => (
+            <Output key={index} $content={output.output}>
+              <Timestamp>[{output.timestamp}]</Timestamp> {output.output}
+            </Output>
+          ))}
+        </CommandGroup>
+      )
     );
   };
 
   return (
-    <ConsoleContainer ref={consoleRef}>
-      {renderContent()}
-    </ConsoleContainer>
+    <ConsoleContainer ref={consoleRef}>{renderContent()}</ConsoleContainer>
   );
 };
 
