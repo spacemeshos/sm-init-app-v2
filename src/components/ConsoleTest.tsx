@@ -62,11 +62,8 @@ const ConsoleTest: React.FC = () => {
       updateConsole('test', 'Starting command test...');
       
       // First try a version command
-      await callPostCli(['-version'], updateConsole);
-      
-      // Then try a help command
-      await callPostCli(['-help'], updateConsole);
-      
+      await callPostCli(['--help'], updateConsole);
+            
       updateConsole('test', 'Command test completed successfully');
     } catch (err) {
       console.error('Command test failed:', err);
