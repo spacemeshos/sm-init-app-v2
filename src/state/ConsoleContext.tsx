@@ -8,20 +8,24 @@ interface ConsoleEntry {
 
 interface ConsoleState {
   entries: ConsoleEntry[];
+  isExpanded: boolean;
 }
 
 type ConsoleAction = 
   | { type: 'UPDATE'; command: string; output: string }
   | { type: 'CLEAR' }
-  | { type: 'INITIALIZE' };
+  | { type: 'INITIALIZE' }
+  | { type: 'TOGGLE_EXPAND' };
 
 interface ConsoleContextType extends ConsoleState {
   updateConsole: (command: string, output: string) => void;
   clearConsole: () => void;
+  toggleExpand: () => void;
 }
 
 const initialState: ConsoleState = {
-  entries: []
+  entries: [],
+  isExpanded: false
 };
 
 function consoleReducer(state: ConsoleState, action: ConsoleAction): ConsoleState {
@@ -37,20 +41,26 @@ function consoleReducer(state: ConsoleState, action: ConsoleAction): ConsoleStat
       };
       
       console.log('New state after update:', {
+        ...state,
         entries: [...state.entries, newEntry]
       });
       
       return {
+        ...state,
         entries: [...state.entries, newEntry]
       };
     }
       
     case 'CLEAR':
-      return initialState;
+      return {
+        ...state,
+        entries: []
+      };
       
     case 'INITIALIZE': {
       const timestamp = new Date().toLocaleTimeString();
       return {
+        ...state,
         entries: [{
           command: '',
           output: 'Console initialized',
@@ -58,6 +68,12 @@ function consoleReducer(state: ConsoleState, action: ConsoleAction): ConsoleStat
         }]
       };
     }
+
+    case 'TOGGLE_EXPAND':
+      return {
+        ...state,
+        isExpanded: !state.isExpanded
+      };
       
     default:
       return state;
@@ -85,6 +101,11 @@ export const ConsoleProvider: React.FC<{ children: React.ReactNode }> = ({ child
     dispatch({ type: 'CLEAR' });
   }, []);
 
+  const toggleExpand = useCallback(() => {
+    console.log('toggleExpand called');
+    dispatch({ type: 'TOGGLE_EXPAND' });
+  }, []);
+
   // Debug log state changes
   useEffect(() => {
     console.log('Console state:', state);
@@ -93,8 +114,9 @@ export const ConsoleProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const value = React.useMemo(() => ({
     ...state,
     updateConsole,
-    clearConsole
-  }), [state, updateConsole, clearConsole]);
+    clearConsole,
+    toggleExpand
+  }), [state, updateConsole, clearConsole, toggleExpand]);
 
   return (
     <ConsoleContext.Provider value={value}>
@@ -118,6 +140,7 @@ export const debugConsoleState = (state: ConsoleState) => {
   console.log('Current console state:', {
     entries: state.entries,
     entryCount: state.entries.length,
-    hasContent: state.entries.length > 0
+    hasContent: state.entries.length > 0,
+    isExpanded: state.isExpanded
   });
 };
