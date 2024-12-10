@@ -7,7 +7,6 @@ import { open } from "@tauri-apps/api/shell";
 import GlobalStyles from "./styles/globalStyles";
 import { ConsoleProvider } from "./state/ConsoleContext";
 import ConsoleView from "./components/ConsoleView";
-import ConsoleTest from "./components/ConsoleTest";
 
 const AppWrapper = styled.div`
   height: 100%;
@@ -18,21 +17,11 @@ const AppWrapper = styled.div`
 
 const ConsoleWrapper = styled.div`
   position: fixed;
-  bottom: 40px;
-  left: 50px;
-  right: 50px;
-  z-index: 1000;
-  background-color: ${Colors.black}80;
-  padding: 10px;
-  border-radius: 8px;
+  left: 0px;
+  bottom: 0px;
+  width: 1000px;
+  z-index: 1;
   pointer-events: auto;
-`;
-
-const TestWrapper = styled.div`
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
 `;
 
 const Footer = styled.div`
@@ -61,14 +50,12 @@ const AppContent: React.FC = () => {
   return (
     <AppWrapper>
       <GlobalStyles />
-      <TestWrapper>
-        <ConsoleTest />
-      </TestWrapper>
       <AppRoutes />
-      <ConsoleWrapper>
-        <ConsoleView />
-      </ConsoleWrapper>
       <Footer>
+        <ConsoleWrapper>
+          <ConsoleView />
+        </ConsoleWrapper>
+
         <a
           onClick={navigateToIssue}
           role="button"

@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import BackgroundImage from "../assets/wave.png";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Colors from "../styles/colors";
 import {
   SelectDirectory,
@@ -15,7 +15,7 @@ import {
 import { BackButton, TransparentButton } from "../components/button";
 import { Header } from "../styles/texts";
 import { useConsole } from "../state/ConsoleContext";
-import { executePostCli, callPostCli } from "../services/postcliService";
+import { executePostCli } from "../services/postcliService";
 import { useSettings } from "../state/SettingsContext";
 
 const NavProgress = styled.div`
@@ -130,25 +130,6 @@ const Generate: React.FC = () => {
   const { updateConsole } = useConsole();
   const { settings } = useSettings();
 
-  // Test console functionality when component mounts
-  useEffect(() => {
-    const testConsole = async () => {
-      console.log("Testing console functionality...");
-      updateConsole("test", "Testing console output");
-      
-      try {
-        // Try to execute a simple postcli command
-        const result = await callPostCli(["-version"], updateConsole);
-        console.log("Test command result:", result);
-      } catch (err) {
-        console.error("Test command error:", err);
-        updateConsole("test", `Error executing test command: ${err}`);
-      }
-    };
-
-    testConsole();
-  }, [updateConsole]);
-
   const steps = [
     {
       label: "Pick Directory",
@@ -180,7 +161,6 @@ const Generate: React.FC = () => {
     setCurrentStep(index);
     setShowSummary(false);
     setError(null);
-    updateConsole("navigation", `Switched to step: ${steps[index].label}`);
   };
 
   const handleStartGeneration = async () => {
@@ -189,12 +169,18 @@ const Generate: React.FC = () => {
 
     try {
       updateConsole("generation", "Starting POS data generation...");
-      updateConsole("settings", `Using settings: ${JSON.stringify(settings, null, 2)}`);
-      
+      updateConsole(
+        "settings",
+        `Using settings: ${JSON.stringify(settings, null, 2)}`
+      );
+
       const result = await executePostCli(settings, updateConsole);
-      
-      updateConsole("result", `Generation result: ${JSON.stringify(result, null, 2)}`);
-      
+
+      updateConsole(
+        "result",
+        `Generation result: ${JSON.stringify(result, null, 2)}`
+      );
+
       if (!result.success) {
         const errorMsg = result.stderr || "Failed to generate POS data";
         setError(errorMsg);
@@ -203,7 +189,8 @@ const Generate: React.FC = () => {
         updateConsole("success", result.stdout);
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
+      const errorMessage =
+        err instanceof Error ? err.message : "An unknown error occurred";
       setError(errorMessage);
       updateConsole("error", `Generation error: ${errorMessage}`);
     }
@@ -213,11 +200,7 @@ const Generate: React.FC = () => {
 
   const renderContent = () => {
     if (showSummary) {
-      return (
-        <SetupSummary 
-          onStart={handleStartGeneration}
-        />
-      );
+      return <SetupSummary onStart={handleStartGeneration} />;
     }
     return steps[currentStep].component;
   };
@@ -257,7 +240,6 @@ const Generate: React.FC = () => {
           <TransparentButton
             onClick={() => {
               setShowSummary(true);
-              updateConsole("navigation", "Switched to Summary view");
             }}
             $isActive={showSummary}
             width={250}

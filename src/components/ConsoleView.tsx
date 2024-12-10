@@ -5,15 +5,12 @@ import { useConsole } from '../state/ConsoleContext';
 
 const ConsoleContainer = styled.div`
   background-color: ${Colors.black};
-  padding: 16px;
-  margin: 10px 0;
   font-family: 'Courier New', Courier, monospace;
-  min-height: 100px;
-  max-height: 200px;
+  min-height: 20px;
+  max-height: 60px;
   overflow-y: auto;
-  color: ${Colors.white};
-  border-radius: 4px;
-  font-size: 14px;
+  color: ${Colors.greenVeryLight};
+  font-size: 12px;
   line-height: 1.4;
   position: relative;
 
@@ -40,10 +37,6 @@ const CommandLine = styled.div`
   color: ${Colors.greenLight};
   margin-bottom: 8px;
   font-weight: bold;
-  &:before {
-    content: '$ ';
-    opacity: 0.7;
-  }
 `;
 
 const Output = styled.pre`
