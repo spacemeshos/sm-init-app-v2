@@ -16,6 +16,7 @@ import {
 import { truncateHex, isValidHex } from "../utils/hexUtils";
 import POSSummary from "./POSSummary";
 import { open } from "@tauri-apps/api/dialog";
+import { useConsole } from "../state/ConsoleContext";
 
 const BottomContainer = styled.div`
   height: 80%;
@@ -284,6 +285,7 @@ interface Props {
 
 const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   const { setSettings } = useSettings();
+  const { updateConsole } = useConsole();
   const { run, response, loading, error } = FindProviders();
   const [selectedProvider, setSelectedProvider] = useState<number>(0);
   const [hasInitialized, setHasInitialized] = useState(false);
@@ -291,12 +293,12 @@ const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   useEffect(() => {
     if (isOpen && !hasInitialized) {
       const detectProviders = async () => {
-        await run(["-printProviders"]);
+        await run(["-printProviders"], updateConsole);
         setHasInitialized(true);
       };
       detectProviders();
     }
-  }, [isOpen, hasInitialized]);
+  }, [isOpen, hasInitialized, updateConsole]);
 
   useEffect(() => {
     if (response && response.length > 0) {

@@ -1,10 +1,12 @@
-/* eslint-disable react/react-in-jsx-scope */
+import React from "react";
 import styled from "styled-components";
 import Colors from "./styles/colors";
 import AppRoutes from "./Shared/Routes";
 import { ExternalLinks } from "./Shared/Constants";
 import { open } from "@tauri-apps/api/shell";
 import GlobalStyles from "./styles/globalStyles";
+import { ConsoleProvider } from "./state/ConsoleContext";
+import ConsoleView from "./components/ConsoleView";
 
 const AppWrapper = styled.div`
   height: 100%;
@@ -13,11 +15,20 @@ const AppWrapper = styled.div`
   background-color: ${Colors.greenDark};
 `;
 
+const ConsoleWrapper = styled.div`
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+  width: 1000px;
+  z-index: 1;
+  pointer-events: auto;
+`;
+
 const Footer = styled.div`
   position: fixed;
   width: 1100px;
   height: 30px;
-  top: 690px;
+  bottom: 10px;
   left: 50px;
   display: flex;
   flex-direction: row;
@@ -29,9 +40,11 @@ const Footer = styled.div`
   font-size: 12px;
   font-weight: 100;
   letter-spacing: 1px;
+  z-index: 1001;
 `;
 
-function App() {
+// Wrapper component to use hooks
+const AppContent: React.FC = () => {
   const navigateToIssue = () => open(ExternalLinks.Report);
 
   return (
@@ -39,6 +52,10 @@ function App() {
       <GlobalStyles />
       <AppRoutes />
       <Footer>
+        <ConsoleWrapper>
+          <ConsoleView />
+        </ConsoleWrapper>
+
         <a
           onClick={navigateToIssue}
           role="button"
@@ -49,6 +66,14 @@ function App() {
         </a>
       </Footer>
     </AppWrapper>
+  );
+};
+
+function App() {
+  return (
+    <ConsoleProvider>
+      <AppContent />
+    </ConsoleProvider>
   );
 }
 

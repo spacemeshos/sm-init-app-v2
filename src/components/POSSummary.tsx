@@ -28,49 +28,13 @@ const SummarySection = styled.div`
   position: relative;
 `;
 
-const GeneratingOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  color: white;
-  border-radius: 10px;
-  z-index: 10;
-`;
-
-const ErrorText = styled.div`
-  color: ${Colors.red};
-  margin-top: 10px;
-  text-align: center;
-  padding: 10px;
-  background-color: rgba(255, 0, 0, 0.1);
-  border-radius: 4px;
-  max-width: 600px;
-  font-family: "Univers45", sans-serif;
-  font-weight: 100;
-`;
-
-const LoadingText = styled.div`
-  color: white;
-  font-size: 1.2em;
-  margin-bottom: 10px;
-  font-family: "Univers45", sans-serif;
-  font-weight: 100;
-`;
-
 interface POSSummaryProps {
   onProceed: () => void;
   isGenerating?: boolean;
   error?: string | null;
 }
 
-const POSSummary: React.FC<POSSummaryProps> = ({ onProceed, isGenerating = false, error = null }) => {
+const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
   const { settings } = useSettings();
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -157,12 +121,6 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed, isGenerating = false
 
       <Container>
         <SummarySection>
-          {isGenerating && (
-            <GeneratingOverlay>
-              <LoadingText>Generating POS Data...</LoadingText>
-              <LoadingText>This may take several days or weeks</LoadingText>
-            </GeneratingOverlay>
-          )}
           <Frame
             height={16}
             heading="POS Location"
@@ -206,13 +164,11 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed, isGenerating = false
             }
           />
         </SummarySection>
-        {error && <ErrorText>{error}</ErrorText>}
         <Button
-          label={isGenerating ? "Generating..." : "Generate POS Data"}
+          label="Generate POS Data"
           onClick={handleGenerateClick}
           width={250}
           height={56}
-          disabled={isGenerating}
         />
       </Container>
     </>

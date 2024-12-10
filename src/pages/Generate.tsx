@@ -9,11 +9,14 @@ import {
   SetupProving,
   SetupSize,
   SelectIdentity,
-  SetupSummary,
   SelectATX,
+  SetupSummary,
 } from "../components/setupPOS";
 import { BackButton, TransparentButton } from "../components/button";
 import { Header } from "../styles/texts";
+import { useConsole } from "../state/ConsoleContext";
+import { executePostCli } from "../services/postcliService";
+import { useSettings } from "../state/SettingsContext";
 
 const NavProgress = styled.div`
   width: 1200px;
@@ -110,9 +113,22 @@ const ContentContainer = styled.div`
   margin: 20px;
 `;
 
+const ErrorMessage = styled.div`
+  color: ${Colors.red};
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+`;
+
 const Generate: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [showSummary, setShowSummary] = useState<boolean>(false);
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const { updateConsole } = useConsole();
+  const { settings } = useSettings();
 
   const steps = [
     {
@@ -144,10 +160,42 @@ const Generate: React.FC = () => {
   const handleStepChange = (index: number) => {
     setCurrentStep(index);
     setShowSummary(false);
+    setError(null);
   };
 
-  const handleStartGeneration = () => {
-    console.log("Starting POS data generation...");
+  const handleStartGeneration = async () => {
+    setIsGenerating(true);
+    setError(null);
+
+    try {
+      updateConsole("generation", "Starting POS data generation...");
+      updateConsole(
+        "settings",
+        `Using settings: ${JSON.stringify(settings, null, 2)}`
+      );
+
+      const result = await executePostCli(settings, updateConsole);
+
+      updateConsole(
+        "result",
+        `Generation result: ${JSON.stringify(result, null, 2)}`
+      );
+
+      if (!result.success) {
+        const errorMsg = result.stderr || "Failed to generate POS data";
+        setError(errorMsg);
+        updateConsole("error", errorMsg);
+      } else if (result.stdout) {
+        updateConsole("success", result.stdout);
+      }
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "An unknown error occurred";
+      setError(errorMessage);
+      updateConsole("error", `Generation error: ${errorMessage}`);
+    }
+
+    setIsGenerating(false);
   };
 
   const renderContent = () => {
@@ -176,6 +224,7 @@ const Generate: React.FC = () => {
           </TextWrapper>
 
           <ContentContainer>{renderContent()}</ContentContainer>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
         </SetupContainer>
         <ButtonColumn>
           {steps.map((step, index) => (
@@ -185,13 +234,17 @@ const Generate: React.FC = () => {
               $isActive={currentStep === index}
               label={step.label}
               width={250}
+              disabled={isGenerating}
             ></TransparentButton>
           ))}
           <TransparentButton
-            onClick={() => setShowSummary(true)}
+            onClick={() => {
+              setShowSummary(true);
+            }}
             $isActive={showSummary}
             width={250}
             label="Summary"
+            disabled={isGenerating}
           ></TransparentButton>
         </ButtonColumn>
       </BottomContainer>

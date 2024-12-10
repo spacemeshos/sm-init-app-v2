@@ -8,7 +8,7 @@ interface Provider {
 }
 
 interface UsePostCliReturn {
-  run: (args: string[]) => Promise<void>;
+  run: (args: string[], updateConsole?: (command: string, output: string) => void) => Promise<void>;
   response: Provider[] | null;
   error: string | null;
   loading: boolean;
@@ -19,11 +19,11 @@ const FindProviders = (): UsePostCliReturn => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const run = async (args: string[]): Promise<void> => {
+  const run = async (args: string[], updateConsole?: (command: string, output: string) => void): Promise<void> => {
     setLoading(true);
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result: any = await callPostCli(args);
+      const result: any = await callPostCli(args, updateConsole);
       const parsedResult = parseResponse(result.stdout);
       setResponse(parsedResult);
       setError(null);
