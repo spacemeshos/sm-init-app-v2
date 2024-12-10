@@ -83,28 +83,6 @@ const Output = styled.pre<OutputProps>`
   }};
 `;
 
-const EmptyState = styled.div`
-  color: ${Colors.grayLight};
-  text-align: center;
-  padding: 20px;
-  font-style: italic;
-`;
-
-const Cursor = styled.span`
-  display: inline-block;
-  width: 8px;
-  height: 16px;
-  background-color: ${Colors.greenLight};
-  margin-left: 4px;
-  animation: blink 1s step-end infinite;
-
-  @keyframes blink {
-    50% {
-      opacity: 0;
-    }
-  }
-`;
-
 const Timestamp = styled.span`
   color: ${Colors.grayLight};
 `;
@@ -144,21 +122,12 @@ const ConsoleView: React.FC = () => {
   };
 
   const renderContent = () => {
-    if (entries.length === 0) {
-      return (
-        <EmptyState>
-          Initializing console
-          <Cursor />
-        </EmptyState>
-      );
-    }
-
     const groupedEntries = groupEntriesByCommand();
 
     return Array.from(groupedEntries.entries()).map(
       ([command, outputs], groupIndex) => (
         <CommandGroup key={groupIndex}>
-          <CommandLine>{command}</CommandLine>
+          {command && <CommandLine>{command}</CommandLine>}
           {outputs.map((output, index) => (
             <Output key={index} $content={output.output}>
               <Timestamp>[{output.timestamp}]</Timestamp> {output.output}
