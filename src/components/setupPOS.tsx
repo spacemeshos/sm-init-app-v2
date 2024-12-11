@@ -53,26 +53,24 @@ const SelectedValue = styled.h1`
 `;
 
 const SelectDirectory: React.FC = () => {
-  const { setSettings } = useSettings();
+  const { settings, setSettings } = useSettings();
   const [error, setError] = useState<string | null>(null);
-  const [selectedDir, setSelectedDir] = useState<string | null>(null);
   const [isValidating, setIsValidating] = useState(false);
 
   useEffect(() => {
     const initDefaultPath = async () => {
       try {
         const home = await homeDir();
-        const defaultPath = await join(home, 'post', 'data');
+        const defaultDir = await join(home, 'post', 'data');
         
-        // Set the default directory without validation
-        setSelectedDir(defaultPath);
-        setSettings((settings) => ({
-          ...settings,
-          selectedDir: defaultPath,
+        // Store the default directory in settings
+        setSettings(prev => ({
+          ...prev,
+          defaultDir: defaultDir
         }));
       } catch (err) {
-        console.error('Error setting default directory:', err);
-        setError('Failed to set default directory');
+        console.error('Error getting default directory:', err);
+        setError('Failed to get default directory path');
       }
     };
 
@@ -89,43 +87,52 @@ const SelectDirectory: React.FC = () => {
         multiple: false,
       });
 
-      if (!selected) return;
+      if (!selected) {
+        // If user cancels selection, clear selectedDir but keep defaultDir
+        setSettings(prev => ({ ...prev, selectedDir: undefined }));
+        return;
+      }
 
       const dir = selected as string;
       
-      // Validate only user-selected directories
+      // Validate custom directory
       const validationResult = await validateDirectory(dir);
 
       if (validationResult.isValid) {
-        setSelectedDir(dir);
-        setSettings((settings) => ({
-          ...settings,
-          selectedDir: dir,
+        setSettings(prev => ({
+          ...prev,
+          selectedDir: dir
         }));
       } else {
         setError(validationResult.error || "Invalid directory selected");
+        setSettings(prev => ({ ...prev, selectedDir: undefined }));
       }
     } catch (err: unknown) {
       const errorMessage = handleDirectoryError(err);
       console.error("Directory selection failed:", errorMessage);
       setError(errorMessage);
+      setSettings(prev => ({ ...prev, selectedDir: undefined }));
     } finally {
       setIsValidating(false);
     }
   };
+
+  // Display either selected directory or default path
+  const displayPath = settings.selectedDir || settings.defaultDir || "Loading...";
 
   return (
     <BottomContainer>
       <TileWrapper width={500}>
         <Tile
           heading="Select where to store POS data"
+          subheader={settings.selectedDir ? "Custom directory selected" : "Default directory"}
           errmsg={error ?? undefined}
         />
-        <Subheader text="Selected:" />
-        <BodyText text={selectedDir ? shortenPath(selectedDir, 30) : "No directory selected"} />
+        <Subheader text="Path:" />
+        <BodyText text={shortenPath(displayPath, 30)} />
         <Button
           onClick={handleSelectDirectory}
-          label={isValidating ? "Validating..." : "Choose directory"}
+          label={isValidating ? "Validating..." : "Choose custom directory"}
           width={320}
           top={30}
           disabled={isValidating}
