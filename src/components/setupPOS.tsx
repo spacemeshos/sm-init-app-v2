@@ -17,6 +17,7 @@ import { truncateHex, isValidHex } from "../utils/hexUtils";
 import POSSummary from "./POSSummary";
 import { open } from "@tauri-apps/api/dialog";
 import { useConsole } from "../state/ConsoleContext";
+import { homeDir, join } from '@tauri-apps/api/path';
 
 const BottomContainer = styled.div`
   height: 80%;
@@ -57,26 +58,53 @@ const SelectDirectory: React.FC = () => {
   const [selectedDir, setSelectedDir] = useState<string | null>(null);
   const [isValidating, setIsValidating] = useState(false);
 
+  useEffect(() => {
+    const initDefaultPath = async () => {
+      try {
+        const home = await homeDir();
+        const defaultPath = await join(home, 'post', 'data');
+        
+        // Set the default directory without validation
+        setSelectedDir(defaultPath);
+        setSettings((settings) => ({
+          ...settings,
+          selectedDir: defaultPath,
+        }));
+      } catch (err) {
+        console.error('Error setting default directory:', err);
+        setError('Failed to set default directory');
+      }
+    };
+
+    initDefaultPath();
+  }, [setSettings]);
+
   const handleSelectDirectory = async () => {
     try {
       setIsValidating(true);
       setError(null);
 
-      const dir = await invoke<string>("select_directory");
+      const selected = await open({
+        directory: true,
+        multiple: false,
+      });
 
-      // Validate the selected directory
+      if (!selected) return;
+
+      const dir = selected as string;
+      
+      // Validate only user-selected directories
       const validationResult = await validateDirectory(dir);
 
-      if (!validationResult.isValid) {
+      if (validationResult.isValid) {
+        setSelectedDir(dir);
+        setSettings((settings) => ({
+          ...settings,
+          selectedDir: dir,
+        }));
+      } else {
         setError(validationResult.error || "Invalid directory selected");
-        return;
       }
-
-      setSelectedDir(dir);
-      setSettings((settings) => ({
-        ...settings,
-        selectedDir: dir,
-      }));
     } catch (err: unknown) {
       const errorMessage = handleDirectoryError(err);
       console.error("Directory selection failed:", errorMessage);
@@ -93,12 +121,8 @@ const SelectDirectory: React.FC = () => {
           heading="Select where to store POS data"
           errmsg={error ?? undefined}
         />
-        {selectedDir && (
-          <>
-            <Subheader text="Selected:" />
-            <BodyText text={`${shortenPath(selectedDir, 30)}`} />
-          </>
-        )}
+        <Subheader text="Selected:" />
+        <BodyText text={selectedDir ? shortenPath(selectedDir, 30) : "No directory selected"} />
         <Button
           onClick={handleSelectDirectory}
           label={isValidating ? "Validating..." : "Choose directory"}
