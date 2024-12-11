@@ -1,18 +1,21 @@
-use std::path::PathBuf;
 use std::fs;
+use std::path::PathBuf;
 use tauri::api::dialog::FileDialogBuilder;
-use sys_info;
+
+// Constant for minimum required space (256 GiB in bytes)
+const MIN_REQUIRED_SPACE: f64 = 256.0 * 1024.0 * 1024.0 * 1024.0;
 
 #[derive(Debug, serde::Serialize)]
 pub struct DirectoryValidation {
     exists: bool,
     has_write_permission: bool,
     has_space: bool,
+    available_space_gb: f64,
     error: Option<String>,
 }
 
 #[tauri::command]
-pub async fn select_directory() -> Result<String, String> {
+pub async fn select_directory() -> Result<(String, f64), String> {
     let (sender, receiver) = std::sync::mpsc::channel();
 
     FileDialogBuilder::new().pick_folder(move |dir: Option<PathBuf>| {
@@ -28,25 +31,91 @@ pub async fn select_directory() -> Result<String, String> {
         .map_err(|_| "Failed to receive directory".to_string())?
         .ok_or("No directory selected".to_string())?;
 
-    Ok(selected_dir)
+    let path = PathBuf::from(&selected_dir);
+    let free_space_bytes = get_available_space(&path)?;
+    let free_space_gb = free_space_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
+
+    Ok((selected_dir, free_space_gb))
 }
 
+#[cfg(target_family = "unix")]
 fn get_available_space(path: &PathBuf) -> Result<u64, String> {
-    let disk_info = sys_info::disk_info()
-        .map_err(|e| format!("Failed to get disk info: {}", e))?;
+    use std::os::unix::fs::MetadataExt;
     
-    // Convert KB to bytes (sys_info returns values in KB)
-    let free_space = disk_info.free * 1024;
-    Ok(free_space)
+    let metadata = fs::metadata(path)
+        .map_err(|e| format!("Failed to get metadata: {}", e))?;
+    
+    // On Unix systems, we can get the device ID from metadata
+    let dev_id = metadata.dev();
+    
+    // Use statvfs to get filesystem information
+    let mut stat: libc::statvfs = unsafe { std::mem::zeroed() };
+    let path_str = path.to_str()
+        .ok_or("Invalid path")?;
+    
+    let result = unsafe {
+        libc::statvfs(
+            std::ffi::CString::new(path_str)
+                .map_err(|e| format!("Invalid path: {}", e))?
+                .as_ptr(),
+            &mut stat
+        )
+    };
+
+    if result == 0 {
+        // Calculate available space using f_bavail (blocks available to non-superuser)
+        // and f_frsize (fundamental file system block size)
+        let available_space = stat.f_bavail as u64 * stat.f_frsize as u64;
+        Ok(available_space)
+    } else {
+        Err("Failed to get filesystem statistics".to_string())
+    }
+}
+
+#[cfg(target_family = "windows")]
+fn get_available_space(path: &PathBuf) -> Result<u64, String> {
+    use std::os::windows::ffi::OsStrExt;
+    use std::iter::once;
+    use std::ffi::OsStr;
+    
+    let path_str = path.to_str()
+        .ok_or("Invalid path")?;
+        
+    let wide: Vec<u16> = OsStr::new(path_str)
+        .encode_wide()
+        .chain(once(0))
+        .collect();
+        
+    let mut free_bytes: libc::c_ulonglong = 0;
+    let mut total_bytes: libc::c_ulonglong = 0;
+    let mut available_bytes: libc::c_ulonglong = 0;
+    
+    let result = unsafe {
+        libc::GetDiskFreeSpaceExW(
+            wide.as_ptr(),
+            &mut free_bytes,
+            &mut total_bytes,
+            &mut available_bytes,
+        )
+    };
+    
+    if result != 0 {
+        Ok(available_bytes as u64)
+    } else {
+        Err("Failed to get disk space information".to_string())
+    }
 }
 
 #[tauri::command]
-pub async fn verify_directory(path: String) -> Result<DirectoryValidation, String> {
+pub async fn verify_directory(path: String, required_space_gb: Option<f64>) -> Result<DirectoryValidation, String> {
     let path = PathBuf::from(path);
+    let required_space = required_space_gb.unwrap_or(256.0) * 1024.0 * 1024.0 * 1024.0; // Default to 256 GiB
+
     let mut validation = DirectoryValidation {
         exists: false,
         has_write_permission: false,
         has_space: false,
+        available_space_gb: 0.0,
         error: None,
     };
 
@@ -57,12 +126,11 @@ pub async fn verify_directory(path: String) -> Result<DirectoryValidation, Strin
         return Ok(validation);
     }
 
-    // Check write permissions by attempting to create a temporary file
+    // Check write permissions
     let temp_file_path = path.join(".write_test_temp");
     match fs::write(&temp_file_path, b"test") {
         Ok(_) => {
             validation.has_write_permission = true;
-            // Clean up the test file
             let _ = fs::remove_file(temp_file_path);
         }
         Err(e) => {
@@ -75,13 +143,13 @@ pub async fn verify_directory(path: String) -> Result<DirectoryValidation, Strin
     // Check available space
     match get_available_space(&path) {
         Ok(space) => {
-            // Require at least 1GB of free space
-            const MIN_REQUIRED_SPACE: u64 = 1024 * 1024 * 1024; // 1GB in bytes
-            validation.has_space = space >= MIN_REQUIRED_SPACE;
+            validation.available_space_gb = space as f64 / (1024.0 * 1024.0 * 1024.0);
+            validation.has_space = space as f64 >= MIN_REQUIRED_SPACE;
+            
             if !validation.has_space {
                 validation.error = Some(format!(
-                    "Insufficient disk space. Required: 1GB, Available: {:.2} GB",
-                    space as f64 / (1024.0 * 1024.0 * 1024.0)
+                    "Insufficient disk space. Required: 256 GiB, Available: {:.2} GiB",
+                    validation.available_space_gb
                 ));
             }
         }
@@ -95,18 +163,18 @@ pub async fn verify_directory(path: String) -> Result<DirectoryValidation, Strin
 }
 
 #[tauri::command]
-pub async fn check_directory_space(path: String) -> Result<bool, String> {
+pub async fn check_directory_space(path: String, required_space_gb: Option<f64>) -> Result<(bool, f64), String> {
     let path = PathBuf::from(path);
-    
+    let required_space = required_space_gb.unwrap_or(256.0) * 1024.0 * 1024.0 * 1024.0; // Default to 256 GiB
+
     if !path.exists() || !path.is_dir() {
         return Err("Directory does not exist".to_string());
     }
 
     match get_available_space(&path) {
         Ok(space) => {
-            // Require at least 1GB of free space
-            const MIN_REQUIRED_SPACE: u64 = 1024 * 1024 * 1024; // 1GB in bytes
-            Ok(space >= MIN_REQUIRED_SPACE)
+            let available_gb = space as f64 / (1024.0 * 1024.0 * 1024.0);
+            Ok((space as f64 >= required_space, available_gb))
         }
         Err(e) => Err(format!("Failed to check disk space: {}", e)),
     }
@@ -115,16 +183,14 @@ pub async fn check_directory_space(path: String) -> Result<bool, String> {
 #[tauri::command]
 pub async fn check_write_permission(path: String) -> Result<bool, String> {
     let path = PathBuf::from(path);
-    
+
     if !path.exists() || !path.is_dir() {
         return Err("Directory does not exist".to_string());
     }
 
-    // Try to create a temporary file to verify write permissions
     let temp_file_path = path.join(".write_test_temp");
     match fs::write(&temp_file_path, b"test") {
         Ok(_) => {
-            // Clean up the test file
             let _ = fs::remove_file(temp_file_path);
             Ok(true)
         }

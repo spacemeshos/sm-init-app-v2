@@ -3,12 +3,14 @@ import { invoke } from "@tauri-apps/api/tauri";
 export interface DirectoryValidationResult {
   isValid: boolean;
   error?: string;
+  availableSpace?: number;
 }
 
 interface BackendValidation {
   exists: boolean;
   has_write_permission: boolean;
   has_space: boolean;
+  available_space_gb: number;
   error: string | null;
 }
 
@@ -31,6 +33,7 @@ export const validateDirectory = async (
       return {
         isValid: false,
         error: validation.error,
+        availableSpace: validation.available_space_gb,
       };
     }
 
@@ -46,19 +49,22 @@ export const validateDirectory = async (
       return {
         isValid: false,
         error: "Insufficient permissions for the selected directory",
+        availableSpace: validation.available_space_gb,
       };
     }
 
     if (!validation.has_space) {
       return {
         isValid: false,
-        error: "Not enough space in the selected directory (minimum 1GB required)",
+        error: `Not enough space in the selected directory. Available: ${validation.available_space_gb.toFixed(2)} GiB (minimum 256 GiB required)`,
+        availableSpace: validation.available_space_gb,
       };
     }
 
     // All checks passed
     return {
       isValid: true,
+      availableSpace: validation.available_space_gb,
     };
   } catch (err) {
     return {
@@ -81,7 +87,7 @@ export const handleDirectoryError = (error: unknown): string => {
       return "Directory selection was cancelled";
     }
     if (error.message.includes("space")) {
-      return "Not enough space in the selected directory (minimum 1GB required)";
+      return "Not enough space in the selected directory (minimum 256 GiB required)";
     }
     if (error.message.includes("disk")) {
       return "Failed to check disk space. Please ensure the drive is accessible";
@@ -94,12 +100,12 @@ export const handleDirectoryError = (error: unknown): string => {
 };
 
 // Utility function to check directory space separately if needed
-export const checkDirectorySpace = async (path: string): Promise<boolean> => {
+export const checkDirectorySpace = async (path: string): Promise<[boolean, number]> => {
   try {
-    return await invoke<boolean>("check_directory_space", { path });
+    return await invoke<[boolean, number]>("check_directory_space", { path });
   } catch (err) {
     console.error("Error checking directory space:", err);
-    return false;
+    return [false, 0];
   }
 };
 
