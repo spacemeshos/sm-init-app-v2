@@ -10,8 +10,8 @@ import {
   SetupSize,
   SelectIdentity,
   SelectATX,
-  SetupSummary,
-} from "../components/setupPOS";
+  POSSummary,
+} from "../components/pos/index";
 import { BackButton, TransparentButton } from "../components/button";
 import { Header } from "../styles/texts";
 import { useConsole } from "../state/ConsoleContext";
@@ -200,7 +200,7 @@ const Generate: React.FC = () => {
 
   const renderContent = () => {
     if (showSummary) {
-      return <SetupSummary onStart={handleStartGeneration} />;
+      return <POSSummary onProceed={handleStartGeneration} />;
     }
     return steps[currentStep].component;
   };

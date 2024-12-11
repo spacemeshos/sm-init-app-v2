@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Frame from "./frames";
-import { Button } from "./button";
-import { useSettings } from "../state/SettingsContext";
-import { shortenPath } from "../utils/directoryUtils";
-import { truncateHex, isValidHex } from "../utils/hexUtils";
-import Colors from "../styles/colors";
-import Modal from "./modal";
-import { List } from "../styles/texts";
+import Frame from "../frames";
+import { Button } from "../button";
+import { useSettings } from "../../state/SettingsContext";
+import { shortenPath } from "../../utils/directoryUtils";
+import { truncateHex, isValidHex } from "../../utils/hexUtils";
+import Colors from "../../styles/colors";
+import Modal from "../modal";
+import { List } from "../../styles/texts";
 
 const Container = styled.div`
   display: flex;
@@ -34,7 +34,7 @@ interface POSSummaryProps {
   error?: string | null;
 }
 
-const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
+export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
   const { settings } = useSettings();
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -97,9 +97,9 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
   // Get the directory display information
   const getDirectoryDisplay = () => {
     if (settings.selectedDir) {
-      return `Custom: ${shortenPath(settings.selectedDir, 30)}`;
+      return `Custom: ${shortenPath(settings.selectedDir, 20)}`;
     }
-    return `Default: ${settings.defaultDir ? shortenPath(settings.defaultDir, 30) : "Loading..."}`;
+    return `Default: ${settings.defaultDir ? shortenPath(settings.defaultDir, 20) : "Loading..."}`;
   };
 
   return (
