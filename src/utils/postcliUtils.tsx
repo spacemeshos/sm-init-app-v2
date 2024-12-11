@@ -19,8 +19,8 @@ export const buildPostCliArgs = (settings: Settings): string[] => {
         args.push(`-commitmentAtxId=${settings.atxId}`);
     }
 
-    // Directory - if not provided, use the default home/post/data
-    if (settings.selectedDir) {
+    // Directory - only add if custom directory is provided
+    if (settings.selectedDir && settings.selectedDir.trim() !== '') {
         args.push(`-datadir=${settings.selectedDir}`);
     }
 
@@ -31,14 +31,23 @@ export const buildPostCliArgs = (settings: Settings): string[] => {
 };
 
 export const validateSettings = (settings: Settings): string | null => {
-    if (!settings.selectedDir) {
-        return 'Directory must be selected';
-    }
     if (!settings.numUnits || settings.numUnits < 4) {
         return 'Number of units must be at least 4';
     }
     if (settings.provider === undefined) {
         return 'Provider must be selected';
     }
+    // If selectedDir is provided, validate that it's not empty
+    if (settings.selectedDir && settings.selectedDir.trim() === '') {
+        return 'Selected directory cannot be empty';
+    }
     return null;
+};
+
+export const validateDirectory = (path: string): boolean => {
+    if (!path) return false;
+    
+    // Basic validation - ensure path is not empty and has valid characters
+    const validPathRegex = /^[a-zA-Z0-9\s\-_/\\:.]+$/;
+    return validPathRegex.test(path);
 };
