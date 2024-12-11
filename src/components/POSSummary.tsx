@@ -42,11 +42,6 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
   const validateSettings = () => {
     const errors: string[] = [];
 
-    // Check directory selection
-    if (!settings.selectedDir) {
-      errors.push("POS directory must be selected");
-    }
-
     // Check provider
     if (settings.provider === undefined) {
       errors.push("Provider must be selected");
@@ -99,6 +94,14 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
     return `${sizeInGiB} GiB`;
   };
 
+  // Get the directory display information
+  const getDirectoryDisplay = () => {
+    if (settings.selectedDir) {
+      return `Custom: ${shortenPath(settings.selectedDir, 30)}`;
+    }
+    return `Default: ${settings.defaultDir ? shortenPath(settings.defaultDir, 30) : "Loading..."}`;
+  };
+
   return (
     <>
       <Modal
@@ -124,7 +127,7 @@ const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
           <Frame
             height={16}
             heading="POS Location"
-            subheader={settings.selectedDir ? shortenPath(settings.selectedDir, 20) : "Not selected"}
+            subheader={getDirectoryDisplay()}
           />
           <Frame
             height={16}

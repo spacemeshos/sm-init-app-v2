@@ -8,6 +8,7 @@ export interface Settings {
   numNonces?: number;
   provider?: number;
   selectedDir?: string;
+  defaultDir?: string;
   identityFile?: string;
   privateKey?: string;
   atxId?: string;
@@ -32,6 +33,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
     numNonces: 288,
     provider: 0,
     selectedDir: undefined,
+    defaultDir: undefined,
     identityFile: undefined,
     privateKey: undefined,
     atxId: undefined,
