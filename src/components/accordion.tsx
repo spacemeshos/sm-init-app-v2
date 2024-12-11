@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+
 import Colors from "../styles/colors";
+
 import { Button, TransparentButton } from "./button";
 
 // Styled component for the menu container

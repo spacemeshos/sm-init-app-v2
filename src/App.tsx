@@ -1,12 +1,13 @@
+import { open } from "@tauri-apps/api/shell";
 import React from "react";
 import styled from "styled-components";
-import Colors from "./styles/colors";
-import AppRoutes from "./Shared/Routes";
-import { ExternalLinks } from "./Shared/Constants";
-import { open } from "@tauri-apps/api/shell";
-import GlobalStyles from "./styles/globalStyles";
-import { ConsoleProvider } from "./state/ConsoleContext";
+
 import ConsoleView from "./components/ConsoleView";
+import { ExternalLinks } from "./Shared/Constants";
+import AppRoutes from "./Shared/Routes";
+import { ConsoleProvider } from "./state/ConsoleContext";
+import Colors from "./styles/colors";
+import GlobalStyles from "./styles/globalStyles";
 
 const AppWrapper = styled.div`
   height: 100%;

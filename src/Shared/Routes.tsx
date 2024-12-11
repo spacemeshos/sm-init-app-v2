@@ -1,8 +1,9 @@
-/* eslint-disable react/react-in-jsx-scope */
+ 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "../pages/Home";
+
 import Confirmation from "../components/confirmation";
 import Generate from "../pages/Generate";
+import Home from "../pages/Home";
 
 const AppRoutes = () => (
   <BrowserRouter>

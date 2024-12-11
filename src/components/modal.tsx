@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+
 import Colors from "../styles/colors";
-import { CloseButton } from "./button";
 import { BodyText, Header } from "../styles/texts";
+
+import { CloseButton } from "./button";
 
 const Backdrop = styled.div<{ isOpen?: boolean }>`
   position: fixed;

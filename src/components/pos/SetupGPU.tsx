@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Tile from "../tile";
-import { ErrorMessage, Subheader } from "../../styles/texts";
-import { useSettings } from "../../state/SettingsContext";
+
 import { useConsole } from "../../state/ConsoleContext";
+import { useSettings } from "../../state/SettingsContext";
+import { ErrorMessage, Subheader } from "../../styles/texts";
 import { FindProviders } from "../../utils/parseResponse";
+import Tile from "../tile";
+
 import { BottomContainer, TileWrapper } from "./styles";
 
 interface Props {

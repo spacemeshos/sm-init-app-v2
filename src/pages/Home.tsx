@@ -1,10 +1,11 @@
 import * as React from "react";
-import styled from "styled-components";
-import { HoverAccordionMenu } from "../components/accordion";
-import BackgroundImage from "../assets/lines.png";
-import { ExternalLinks } from "../Shared/Constants";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+
+import BackgroundImage from "../assets/lines.png";
+import { HoverAccordionMenu } from "../components/accordion";
 import { Button } from "../components/button";
+import { ExternalLinks } from "../Shared/Constants";
 
 const Image = styled.img`
   position: absolute;

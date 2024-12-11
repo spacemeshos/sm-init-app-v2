@@ -1,12 +1,13 @@
 import * as React from "react";
-import styled from "styled-components";
-import Colors from "../styles/colors";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+
 import back from "../assets/back.png";
-import next from "../assets/next.png";
-import pen from "../assets/edit.png";
 import save from "../assets/check.png";
+import pen from "../assets/edit.png";
+import next from "../assets/next.png";
 import close from "../assets/x.png";
+import Colors from "../styles/colors";
 
 
 // Interface defining the properties for the Button component below
