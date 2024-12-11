@@ -53,23 +53,13 @@ export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
     }
 
     // Check identity key format if provided
-    if (settings.privateKey && !isValidHex(settings.privateKey)) {
+    if (settings.publicKey && !isValidHex(settings.publicKey)) {
       errors.push("Invalid identity key format");
     }
 
     // Check ATX ID format if provided
     if (settings.atxId && !isValidHex(settings.atxId)) {
       errors.push("Invalid ATX ID format");
-    }
-
-    // Check if either identity file or private key is provided
-    if (!settings.identityFile && !settings.privateKey) {
-      errors.push("Either identity file or private key must be provided");
-    }
-
-    // Check ATX ID is provided
-    if (!settings.atxId) {
-      errors.push("ATX ID must be provided");
     }
 
     return errors;
@@ -99,7 +89,9 @@ export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
     if (settings.selectedDir) {
       return `Custom: ${shortenPath(settings.selectedDir, 20)}`;
     }
-    return `Default: ${settings.defaultDir ? shortenPath(settings.defaultDir, 20) : "Loading..."}`;
+    return `Default: ${
+      settings.defaultDir ? shortenPath(settings.defaultDir, 20) : "Loading..."
+    }`;
   };
 
   return (
@@ -111,7 +103,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
         text={
           <>
             Please configure the following required parameters:
-            <List 
+            <List
               items={validationErrors}
               bulletColor={Colors.red}
               itemColor={Colors.white}
@@ -132,12 +124,14 @@ export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
           <Frame
             height={16}
             heading="POS Size"
-            subheader={`${settings.numUnits || 4} Space Units (${calculateTotalSize()})`}
+            subheader={`${
+              settings.numUnits || 4
+            } Space Units (${calculateTotalSize()})`}
           />
           <Frame
             height={16}
             heading="POS Provider"
-            subheader={`Provider ID: ${settings.provider ?? 'Not selected'}`}
+            subheader={`Provider ID: ${settings.provider ?? "Not selected"}`}
           />
           <Frame
             height={16}
@@ -152,8 +146,8 @@ export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
             subheader={
               settings.identityFile
                 ? `File: ${shortenPath(settings.identityFile, 20)}`
-                : settings.privateKey
-                ? `Key: ${truncateHex(settings.privateKey, 8)}`
+                : settings.publicKey
+                ? `Key: ${truncateHex(settings.publicKey, 8)}`
                 : "Create New Identity"
             }
           />

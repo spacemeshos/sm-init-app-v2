@@ -10,7 +10,7 @@ export interface Settings {
   selectedDir?: string;
   defaultDir?: string;
   identityFile?: string;
-  privateKey?: string;
+  publicKey?: string;
   atxId?: string;
 }
 
@@ -35,7 +35,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
     selectedDir: undefined,
     defaultDir: undefined,
     identityFile: undefined,
-    privateKey: undefined,
+    publicKey: undefined,
     atxId: undefined,
   });
 
