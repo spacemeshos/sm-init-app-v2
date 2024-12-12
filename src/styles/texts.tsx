@@ -89,7 +89,7 @@ const ErrorMsg = styled.h3<{
   left?: number;
 }>`
   color: ${Colors.red};
-  font-family: "Source Code Pro Extralight";
+  font-family: "Univers45", sans-serif;
   text-align: "center";
   font-size: 18px;
   font-weight: 200;

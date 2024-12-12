@@ -47,13 +47,14 @@ const StyledInput = styled.input<{
   isValid?: boolean;
 }>`
   font-size: ${({ fontSize = 36 }) => fontSize}px;
-  font-family: "Source Code Pro ExtraLight", sans-serif;
+  font-family: "Univers45", sans-serif;
   font-weight: 200;
   color: ${Colors.white};
   height: 40px;
   width: 300px;
   background: ${Colors.greenLightOpaque};
-  border: 2px solid ${props => props.isValid === false ? Colors.red : Colors.whiteOpaque};
+  border: 2px solid
+    ${(props) => (props.isValid === false ? Colors.red : Colors.whiteOpaque)};
   padding: 5px;
   text-align: center;
 
@@ -74,7 +75,7 @@ const StyledButton = styled.button<{
   height?: number;
   width?: number;
 }>`
-  font-family: "Source Code Pro", sans-serif;
+  font-family: "Univers55", sans-serif;
   font-size: 36px;
   box-sizing: border-box;
   line-height: 1.5;
@@ -102,7 +103,7 @@ const StyledButton = styled.button<{
 
 const Text = styled.h1`
   color: ${Colors.grayLight};
-  font-family: "Source Code Pro", sans-serif;
+  font-family: "Univers55", sans-serif;
   text-align: center;
   font-size: 26px;
   position: relative;

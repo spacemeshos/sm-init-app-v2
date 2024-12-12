@@ -29,7 +29,7 @@ export const TileWrapper = styled.div<{
 
 export const SelectedValue = styled.h1`
   color: ${Colors.greenLight};
-  font-family: "Source Code Pro ExtraLight", sans-serif;
+  font-family: "Univers55", sans-serif;
   font-weight: 300;
   font-size: 50px;
   position: relative;

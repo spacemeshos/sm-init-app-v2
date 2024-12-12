@@ -5,6 +5,7 @@ import cpu from "../assets/cpu.png";
 import files from "../assets/duplicate.png";
 import gpu from "../assets/graphics-card.png";
 import Colors from "../styles/colors";
+import { BodyText, Header, Subheader } from "../styles/texts";
 
 import { CloseButton } from "./button";
 
@@ -30,43 +31,6 @@ const Wrapper = styled.div`
   height: 630px;
 `;
 
-const Header = styled.h1`
-  color: ${Colors.white};
-  text-align: center;
-  font-family: "Source Code Pro", sans-serif;
-  font-size: 26px;
-  margin-top: 40px;
-  font-weight: 200;
-  text-transform: uppercase;
-  letter-spacing: 5px;
-  line-height: 20px;
-`;
-
-const Subheader = styled.h2`
-  color: ${Colors.greenLight};
-  text-align: center;
-  font-family: "Source Code Pro", sans-serif;
-  font-size: 16px;
-  margin-top: 20px;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  line-height: 26px;
-  padding: 20px 75px 10px;
-`;
-
-const Text = styled.div`
-  color: ${Colors.white};
-  padding: 20px 75px;
-  margin-top: 10px;
-  text-align: justify;
-  font-family: "Source Code Pro ExtraLight", sans-serif;
-  font-size: 16px;
-  font-weight: 100;
-  line-height: 25px;
-  white-space: pre-wrap;
-`;
-
 const BgImage = styled.img<{
   top: number;
   left: number;
@@ -81,7 +45,6 @@ const BgImage = styled.img<{
   opacity: 0.2;
 `;
 
-
 type Props = {
   onClose: () => void;
   isOpen: boolean;
@@ -95,15 +58,15 @@ const PosInfo = ({ onClose, isOpen }: Props) => {
     <Backdrop onClick={onClose}>
       <Wrapper onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose} top={2} left={97} />
-        <Header>Proof of space data Setup</Header>
-        <Subheader>
-          We run a benchmark to find the best settings for you, to maximise
-          both: rewards and chances to qualify for them every epoch.
-        </Subheader>
+        <Header text="Proof of space data Setup" />
+        <Subheader
+          text="We run a benchmark to find the best settings for you, to maximise
+          both: rewards and chances to qualify for them every epoch."
+        />
         <BgImage src={gpu} top={225} left={35} />
         <BgImage src={files} top={340} left={35} />
         <BgImage src={cpu} top={460} left={35} />
-        <Text>
+        <BodyText>
           {
             <>
               You&apos;ll create Proof of Space (PoS) data just once, then it
@@ -128,7 +91,7 @@ const PosInfo = ({ onClose, isOpen }: Props) => {
               the proof generation.
             </>
           }
-        </Text>
+        </BodyText>
       </Wrapper>
     </Backdrop>
   );

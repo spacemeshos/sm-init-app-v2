@@ -1,52 +1,13 @@
 import React from "react";
-import styled from "styled-components";
 
-import Colors from "../styles/colors";
-
-const Header = styled.h1`
-  color: ${Colors.greenLight};
-  text-align: center;
-  font-family: "Source Code Pro", sans-serif;
-  font-size: 26px;
-  margin-top: 40px;
-  font-weight: 200;
-  text-transform: uppercase;
-  letter-spacing: 5px;
-  line-height: 20px;
-`;
-
-const Subheader = styled.h2`
-  color: ${Colors.greenLight};
-  text-align: center;
-  font-family: "Source Code Pro", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  line-height: 26px;
-  padding: 10px 75px 10px;
-`;
-
-const Text = styled.div`
-  color: ${Colors.white};
-  padding: 40px 75px;
-  text-align: justify;
-  font-family: "Source Code Pro ExtraLight", sans-serif;
-  font-size: 16px;
-  font-weight: 100;
-  line-height: 25px;
-  white-space: pre-wrap;
-  left: 450px;
-  position: relative;
-  width: 550px;
-`;
+import { BodyText, Header, Subheader } from "../styles/texts";
 
 const Confirmation: React.FC = () => {
   return (
     <>
       <Header>Congratulations </Header>
       <Subheader>on launching your first proof of space</Subheader>
-      <Text>
+      <BodyText>
         {
           <>
             WHAT NOW?
@@ -63,7 +24,7 @@ const Confirmation: React.FC = () => {
             [TO DO]
           </> //TODO more explanation to be added
         }
-      </Text>
+      </BodyText>
     </>
   );
 };

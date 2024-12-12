@@ -40,6 +40,7 @@ export const SelectATX: React.FC = () => {
           onChange={handleAtxIdChange}
           placeholder="Enter ATX ID (hex)"
           maxLength={64}
+          fontSize={12}
         />
       </TileWrapper>
     </BottomContainer>
