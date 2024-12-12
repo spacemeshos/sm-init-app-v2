@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import Colors from "../styles/colors";
-import gpu from "../assets/graphics-card.png";
-import files from "../assets/duplicate.png";
+
 import cpu from "../assets/cpu.png";
+import files from "../assets/duplicate.png";
+import gpu from "../assets/graphics-card.png";
+import Colors from "../styles/colors";
+
 import { CloseButton } from "./button";
 
 const Backdrop = styled.div`

@@ -1,15 +1,17 @@
+import { open } from "@tauri-apps/api/dialog";
+import { homeDir, join } from '@tauri-apps/api/path';
 import React, { useEffect, useState } from "react";
-import Tile from "../tile";
-import { Button } from "../button";
-import { BodyText, Subheader } from "../../styles/texts";
+
 import { useSettings } from "../../state/SettingsContext";
+import { BodyText, Subheader } from "../../styles/texts";
 import {
   validateDirectory,
   handleDirectoryError,
   shortenPath,
 } from "../../utils/directoryUtils";
-import { open } from "@tauri-apps/api/dialog";
-import { homeDir, join } from '@tauri-apps/api/path';
+import { Button } from "../button";
+import Tile from "../tile";
+
 import { BottomContainer, TileWrapper } from "./styles";
 
 export const SelectDirectory: React.FC = () => {

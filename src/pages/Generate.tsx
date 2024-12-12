@@ -1,8 +1,9 @@
 import * as React from "react";
-import styled from "styled-components";
-import BackgroundImage from "../assets/wave.png";
 import { useState } from "react";
-import Colors from "../styles/colors";
+import styled from "styled-components";
+
+import BackgroundImage from "../assets/wave.png";
+import { BackButton, TransparentButton } from "../components/button";
 import {
   SelectDirectory,
   SetupGPU,
@@ -12,11 +13,11 @@ import {
   SelectATX,
   POSSummary,
 } from "../components/pos/index";
-import { BackButton, TransparentButton } from "../components/button";
-import { Header } from "../styles/texts";
-import { useConsole } from "../state/ConsoleContext";
 import { executePostCli } from "../services/postcliService";
+import { useConsole } from "../state/ConsoleContext";
 import { useSettings } from "../state/SettingsContext";
+import Colors from "../styles/colors";
+import { Header } from "../styles/texts";
 
 const NavProgress = styled.div`
   width: 1200px;

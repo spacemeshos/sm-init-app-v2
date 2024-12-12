@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Frame from "../frames";
-import { Button } from "../button";
+
 import { useSettings } from "../../state/SettingsContext";
+import Colors from "../../styles/colors";
+import { List } from "../../styles/texts";
 import { shortenPath } from "../../utils/directoryUtils";
 import { truncateHex, isValidHex } from "../../utils/hexUtils";
-import Colors from "../../styles/colors";
+import { Button } from "../button";
+import Frame from "../frames";
 import Modal from "../modal";
-import { List } from "../../styles/texts";
 
 const Container = styled.div`
   display: flex;

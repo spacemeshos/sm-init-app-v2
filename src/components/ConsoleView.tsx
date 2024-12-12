@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import Colors from "../styles/colors";
+
 import { useConsole } from "../state/ConsoleContext";
+import Colors from "../styles/colors";
 
 interface ConsoleContainerProps {
   $isExpanded: boolean;

@@ -1,4 +1,5 @@
 import { Settings } from "../state/SettingsContext";
+
 import { isValidHex } from "./hexUtils";
 
 export const buildPostCliArgs = (settings: Settings): string[] => {

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import Tile from "../tile";
-import { HexInput } from "../input";
+
 import { useSettings } from "../../state/SettingsContext";
 import { truncateHex, isValidHex } from "../../utils/hexUtils";
+import { HexInput } from "../input";
+import Tile from "../tile";
+
 import { BottomContainer, TileWrapper } from "./styles";
 
 export const SelectIdentity: React.FC = () => {

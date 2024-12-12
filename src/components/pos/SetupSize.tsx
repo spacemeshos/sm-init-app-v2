@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import Tile from "../tile";
+
+import { useSettings } from "../../state/SettingsContext";
 import { SaveButton, CancelButton } from "../button";
 import CustomNumberInput from "../input";
-import { useSettings } from "../../state/SettingsContext";
+import Tile from "../tile";
+
 import { BottomContainer, TileWrapper, SelectedValue } from "./styles";
 
 export const SetupSize: React.FC = () => {

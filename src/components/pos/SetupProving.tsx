@@ -1,9 +1,11 @@
+import { invoke } from "@tauri-apps/api";
 import React, { useEffect, useState } from "react";
-import Tile from "../tile";
+
+import { useSettings } from "../../state/SettingsContext";
 import { SaveButton, CancelButton } from "../button";
 import CustomNumberInput from "../input";
-import { useSettings } from "../../state/SettingsContext";
-import { invoke } from "@tauri-apps/api";
+import Tile from "../tile";
+
 import { BottomContainer, TileWrapper, SelectedValue } from "./styles";
 
 interface InputSectionProps {

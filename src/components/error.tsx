@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import Colors from "../styles/colors";
+
 import errorIcon from "../assets/disruption.png";
+import Colors from "../styles/colors";
 import { BodyText, Header, Subheader } from "../styles/texts";
+
 import { CloseButton } from "./button";
 
 const Backdrop = styled.div`
