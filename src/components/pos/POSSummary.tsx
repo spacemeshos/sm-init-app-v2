@@ -59,8 +59,8 @@ export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
     }
 
     // Check ATX ID format if provided
-    if (settings.atxId && !isValidHex(settings.atxId)) {
-      errors.push("Invalid ATX ID format");
+    if (!settings.atxId || !isValidHex(settings.atxId)) {
+      errors.push("Correct ATX ID is required");
     }
 
     return errors;

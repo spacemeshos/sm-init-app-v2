@@ -25,6 +25,15 @@ export const executePostCli = async (
     }
 
     const args = buildPostCliArgs(settings);
+    if (!args) {
+        const error = "Cannot proceed: Valid ATX ID is required";
+        console.error(error);
+        if (updateConsole) {
+            updateConsole('validate', `Error: ${error}`);
+        }
+        throw new Error(error);
+    }
+
     const commandStr = `./postcli ${args.join(' ')}`;
     
     console.log('Executing command:', commandStr);

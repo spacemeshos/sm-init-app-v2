@@ -2,21 +2,22 @@ import { Settings } from "../state/SettingsContext";
 
 import { isValidHex } from "./hexUtils";
 
-export const buildPostCliArgs = (settings: Settings): string[] => {
+export const buildPostCliArgs = (settings: Settings): string[] | null => {
+  // First validate that ATX ID is present and valid
+  if (!settings.atxId || !isValidHex(settings.atxId, 64)) {
+    return null; // Return null to indicate postcli should not run
+  }
+
   const args: string[] = [];
 
   // Required arguments
   args.push(`-provider=${settings.provider || 0}`);
   args.push(`-numUnits=${settings.numUnits || 4}`);
+  args.push(`-commitmentAtxId=${settings.atxId}`); // ATX ID is required
 
   // Optional identity - only pass -id flag if publicKey is provided and valid
   if (settings.publicKey && isValidHex(settings.publicKey, 64)) {
     args.push(`-id=${settings.publicKey}`);
-  }
-
-  // ATX ID (if provided) - TODO: if not provided, fetch from explorer
-  if (settings.atxId) {
-    args.push(`-commitmentAtxId=${settings.atxId}`);
   }
 
   // Directory - only add if custom directory is provided
@@ -31,6 +32,14 @@ export const buildPostCliArgs = (settings: Settings): string[] => {
 };
 
 export const validateSettings = (settings: Settings): string | null => {
+  // ATX ID is required and must be valid
+  if (!settings.atxId) {
+    return "ATX ID is required";
+  }
+  if (!isValidHex(settings.atxId, 64)) {
+    return "ATX ID must be a 64-character hexadecimal string";
+  }
+
   if (!settings.numUnits || settings.numUnits < 4) {
     return "Number of units must be at least 4";
   }
