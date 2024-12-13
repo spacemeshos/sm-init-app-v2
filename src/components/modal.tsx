@@ -45,7 +45,7 @@ const Head = styled.div`
 `;
 
 const Text = styled.div`
-  padding: 10px;
+  padding: 35px;
   margin-top: 10px;
 `;
 

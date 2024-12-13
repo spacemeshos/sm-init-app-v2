@@ -37,11 +37,17 @@ interface POSSummaryProps {
   updateConsole?: (command: string, output: string) => void;
 }
 
-export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed, updateConsole }) => {
+export const POSSummary: React.FC<POSSummaryProps> = ({
+  onProceed,
+  isGenerating: parentIsGenerating,
+  updateConsole,
+}) => {
   const { settings } = useSettings();
   const [showValidationModal, setShowValidationModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
+
+  const isGenerating = parentIsGenerating || false;
 
   const validateSettings = () => {
     const errors: string[] = [];
@@ -77,18 +83,35 @@ export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed, updateConsole
       return;
     }
 
-    setIsGenerating(true);
     try {
-      await executePostCliDetached(settings, updateConsole);
-      // Call onProceed to indicate successful start of background process
-      onProceed();
-    } catch (error) {
-      console.error('Error starting POS generation:', error);
       if (updateConsole) {
-        updateConsole('generate', `Error starting POS generation: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        updateConsole("generate", "Starting POS data generation...");
       }
-    } finally {
-      setIsGenerating(false);
+
+      const response = await executePostCliDetached(settings, updateConsole);
+
+      if (response && response.process_id) {
+        if (updateConsole) {
+          updateConsole(
+            "generate",
+            `POS generation started with process ID: ${response.process_id}`
+          );
+        }
+        setShowSuccessModal(true);
+        onProceed(); // This will set isGenerating in parent
+      } else {
+        throw new Error("Failed to start POS generation process");
+      }
+    } catch (error) {
+      console.error("Error starting POS generation:", error);
+      if (updateConsole) {
+        updateConsole(
+          "generate",
+          `Error starting POS generation: ${
+            error instanceof Error ? error.message : "Unknown error"
+          }`
+        );
+      }
     }
   };
 
@@ -127,6 +150,35 @@ export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed, updateConsole
               width="80%"
               maxWidth="400px"
             />
+          </>
+        }
+      />
+
+      <Modal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        header="POS Generation Started"
+        width={600}
+        height={80}
+        text={
+          <>
+            WHAT NOW?
+            <br />
+            <br />
+            Leave your PC on and plugged into a power source 24/7.
+            <br />
+            Your GPU will operate at its full capacity to generate the Proof of
+            Space (PoS) data.
+            <br />
+            <br />
+            The duration of this process depends on your hardware and setup,
+            ranging from several days to a few weeks. While it may require
+            significant effort initially, this is a one-time task.
+            <br />
+            <br />
+            Once your PoS data is successfully generated, you'll be ready to set
+            up a node and actively participate in the network to start earning
+            rewards.
           </>
         }
       />

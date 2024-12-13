@@ -13,7 +13,6 @@ import {
   SelectATX,
   POSSummary,
 } from "../components/pos/index";
-import { executePostCli } from "../services/postcliService";
 import { useConsole } from "../state/ConsoleContext";
 import { useSettings } from "../state/SettingsContext";
 import Colors from "../styles/colors";
@@ -164,44 +163,25 @@ const Generate: React.FC = () => {
     setError(null);
   };
 
-  const handleStartGeneration = async () => {
+  const handleProceed = () => {
     setIsGenerating(true);
-    setError(null);
-
-    try {
-      updateConsole("generation", "Starting POS data generation...");
-      updateConsole(
-        "settings",
-        `Using settings: ${JSON.stringify(settings, null, 2)}`
-      );
-
-      const result = await executePostCli(settings, updateConsole);
-
-      updateConsole(
-        "result",
-        `Generation result: ${JSON.stringify(result, null, 2)}`
-      );
-
-      if (!result.success) {
-        const errorMsg = result.stderr || "Failed to generate POS data";
-        setError(errorMsg);
-        updateConsole("error", errorMsg);
-      } else if (result.stdout) {
-        updateConsole("success", result.stdout);
-      }
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "An unknown error occurred";
-      setError(errorMessage);
-      updateConsole("error", `Generation error: ${errorMessage}`);
-    }
-
-    setIsGenerating(false);
+    updateConsole("generation", "POS data generation started in background...");
+    updateConsole(
+      "settings",
+      `Using settings: ${JSON.stringify(settings, null, 2)}`
+    );
   };
 
   const renderContent = () => {
     if (showSummary) {
-      return <POSSummary onProceed={handleStartGeneration} />;
+      return (
+        <POSSummary
+          onProceed={handleProceed}
+          isGenerating={isGenerating}
+          error={error}
+          updateConsole={updateConsole}
+        />
+      );
     }
     return steps[currentStep].component;
   };
