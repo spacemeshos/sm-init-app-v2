@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
+import { executePostCliDetached } from "../../services/postcliService";
 import { useSettings } from "../../state/SettingsContext";
 import Colors from "../../styles/colors";
 import { List } from "../../styles/texts";
@@ -33,12 +34,14 @@ interface POSSummaryProps {
   onProceed: () => void;
   isGenerating?: boolean;
   error?: string | null;
+  updateConsole?: (command: string, output: string) => void;
 }
 
-export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
+export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed, updateConsole }) => {
   const { settings } = useSettings();
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const validateSettings = () => {
     const errors: string[] = [];
@@ -66,13 +69,26 @@ export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
     return errors;
   };
 
-  const handleGenerateClick = () => {
+  const handleGenerateClick = async () => {
     const errors = validateSettings();
     if (errors.length > 0) {
       setValidationErrors(errors);
       setShowValidationModal(true);
-    } else {
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      await executePostCliDetached(settings, updateConsole);
+      // Call onProceed to indicate successful start of background process
       onProceed();
+    } catch (error) {
+      console.error('Error starting POS generation:', error);
+      if (updateConsole) {
+        updateConsole('generate', `Error starting POS generation: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -163,10 +179,11 @@ export const POSSummary: React.FC<POSSummaryProps> = ({ onProceed }) => {
           />
         </SummarySection>
         <Button
-          label="Generate POS Data"
+          label={isGenerating ? "Starting..." : "Generate POS Data"}
           onClick={handleGenerateClick}
           width={250}
           height={56}
+          disabled={isGenerating}
         />
       </Container>
     </>

@@ -9,6 +9,12 @@ pub struct CommandOutput {
     stderr: String,
 }
 
+#[derive(Serialize)]
+pub struct DetachedProcessInfo {
+    process_id: u32,
+    message: String,
+}
+
 #[tauri::command]
 pub fn run_postcli_command(args: Vec<String>) -> Result<CommandOutput, String> {
     let mut path: PathBuf = env::current_dir().map_err(|e| e.to_string())?;
@@ -40,4 +46,31 @@ pub fn run_postcli_command(args: Vec<String>) -> Result<CommandOutput, String> {
     }
 
     Ok(CommandOutput { stdout, stderr })
+}
+
+#[tauri::command]
+pub fn run_postcli_detached(args: Vec<String>) -> Result<DetachedProcessInfo, String> {
+    let mut path: PathBuf = env::current_dir().map_err(|e| e.to_string())?;
+    path.push("bin/postcli/postcli");
+
+    // Check if postcli exists
+    if !path.exists() {
+        return Err("postcli executable not found. Please ensure it's installed in the bin/postcli directory.".to_string());
+    }
+
+    let postcli_path = path.to_str().ok_or("Invalid path")?;
+
+    println!("Executing postcli in detached mode with args: {:?}", args);
+
+    let child = Command::new(postcli_path)
+        .args(&args)
+        .spawn()
+        .map_err(|e| format!("Failed to execute postcli: {}", e))?;
+
+    let process_id = child.id();
+
+    Ok(DetachedProcessInfo {
+        process_id,
+        message: format!("POS data generation started in background with process ID: {}", process_id),
+    })
 }
