@@ -31,7 +31,7 @@ pub async fn select_directory() -> Result<String, String> {
     Ok(selected_dir)
 }
 
-fn get_available_space(path: &PathBuf) -> Result<u64, String> {
+fn get_available_space(_path: &PathBuf) -> Result<u64, String> {
     let disk_info = sys_info::disk_info()
         .map_err(|e| format!("Failed to get disk info: {}", e))?;
     
