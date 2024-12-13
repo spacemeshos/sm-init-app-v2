@@ -2,7 +2,7 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import BackgroundImage from "../assets/lines.png";
+import BackgroundImage from "../assets/home.png";
 import { HoverAccordionMenu } from "../components/accordion";
 import { Button } from "../components/button";
 import { ExternalLinks } from "../Shared/Constants";
