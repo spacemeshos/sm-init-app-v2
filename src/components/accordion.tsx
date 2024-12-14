@@ -11,7 +11,7 @@ const MenuContainer = styled.div<{
   backgroundColor?: string;
   $isHovered: boolean;
 }>`
-  width: auto;
+  width: ${({ width }) => `${width ?? 100}%`};
   position: relative;
   padding: 25px;
   box-sizing: border-box;
@@ -21,7 +21,6 @@ const MenuContainer = styled.div<{
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-radius: 50px;
   background-color: ${({ backgroundColor }) =>
     backgroundColor || "transparent"};
 `;
@@ -32,26 +31,20 @@ const MenuTitle = styled.span<{ $isHovered: boolean }>`
   ${({ $isHovered }) => ($isHovered ? "transparent" : Colors.greenDark)};
 `;
 
-const ButtonsWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
 // Styled component for the container holding the buttons
 const ButtonsContainer = styled.div<{ $isHovered: boolean }>`
   transition: max-height 0.5s ease, opacity 0.5s ease;
-  max-height: ${({ $isHovered }) => ($isHovered ? "500px" : "0px")};
+  max-height: ${({ $isHovered }) => ($isHovered ? "200px" : "0px")};
   opacity: ${({ $isHovered }) => ($isHovered ? "1" : "0")};
   overflow: hidden;
+  padding-top: ${({ $isHovered }) => ($isHovered ? "90px" : "0px")};
   padding-bottom: ${({ $isHovered }) => ($isHovered ? "20px" : "0px")};
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: center;
   align-content: center;
   align-items: center;
-  position: relative;
+  position: absolute;
 `;
 
 // Buttons properties
@@ -103,7 +96,6 @@ export const HoverAccordionMenu: React.FC<
         <MenuTitle $isHovered={$isHovered}>
           <Button label={title} />
         </MenuTitle>
-        <ButtonsWrapper>
           <ButtonsContainer $isHovered={$isHovered}>
             {buttons.map((button, index) => (
               <TransparentButton
@@ -112,13 +104,12 @@ export const HoverAccordionMenu: React.FC<
                 label={button.label}
                 top={20}
                 left={button.left}
-                margin={5}
+                margin={0}
                 height={60}
-                width={180}
+                width={190}
               ></TransparentButton>
             ))}
           </ButtonsContainer>
-        </ButtonsWrapper>
       </MenuContainer>
     </>
   );

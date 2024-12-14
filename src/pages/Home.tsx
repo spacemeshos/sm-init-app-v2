@@ -3,22 +3,25 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import BackgroundImage from "../assets/home.png";
+import Logo from "../assets/Full logo - White.png";
 import { HoverAccordionMenu } from "../components/accordion";
 import { Button } from "../components/button";
 import { ExternalLinks } from "../Shared/Constants";
+import { Subheader, Title } from "../styles/texts";
+import Image from "../components/image";
 
-const Image = styled.img`
+const Background = styled.img`
   position: absolute;
   margin-bottom: 10px;
-  width: 100vw;
+  height: 100%;
 `;
 
 const MenuContainer = styled.div`
   position: absolute;
-  width: 400px;
-  height: 200px;
-  right: 20%;
-  top: 50%;
+  width: 500px;
+  height: 100%;
+  right: 40px;
+  padding: 150px 0px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -57,7 +60,11 @@ const Home: React.FC = () => {
   return (
     <>
       <MenuContainer>
+        <Image src={Logo} width={40} top={60}/>
+        <Title text="Proof of Space" />
+        <Subheader text="Initialization App" top={0}/>
         <Button
+          top={30}
           onClick={() => navigate("/generate")}
           width={250}
           label="Generate"
@@ -70,7 +77,7 @@ const Home: React.FC = () => {
           buttons={CheckButtons}
         />
       </MenuContainer>
-      <Image src={BackgroundImage} />
+      <Background src={BackgroundImage} />
     </>
   );
 };

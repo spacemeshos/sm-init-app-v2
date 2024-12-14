@@ -256,8 +256,11 @@ const TransparentRectangle = styled.button<{
   border: none;
 
   &:hover {
+    text-decoration: underline;
+    text-underline-offset: 10px;
+    text-decoration-color: ${Colors.greenLight};
     background-color: ${({ disabled }) =>
-      disabled ? Colors.grayMedium : Colors.greenLightOpaque};
+      disabled ? Colors.grayMedium : "transparent"};
   }
 `;
 
