@@ -24,16 +24,15 @@ const StyledTitle = styled.h1<{
   top?: number;
   left?: number;
 }>`
-  color: ${Colors.grayLight};
   font-family: "Univers93", sans-serif;
-  text-align: ${({ left }) => (left == null ? "center" : "left")};
+  color: ${Colors.greenLight};
+  text-align: "center";
   white-space: nowrap;
-  font-size: 30px;
+  font-size: 35px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  top: ${({ top }) => top}px;
-  left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
-  transform: ${({ left }) => (left == null ? "translateX(-50%)" : "none")};
+  top: ${({ top }) => `${top ?? 20}px`};
+  left: ${({ left }) => `${left ?? ""}px`};
   position: relative;
 `;
 
@@ -41,16 +40,14 @@ const StyledHeader = styled.h1<{
   top?: number;
   left?: number;
 }>`
-  color: ${Colors.grayLight};
   font-family: "Univers65", sans-serif;
-  text-align: ${({ left }) => (left == null ? "center" : "left")};
+  color: ${Colors.grayLight};
+  text-align: "center";
   white-space: nowrap;
-  font-size: 20px;
+  font-size: 30px;
   letter-spacing: 2px;
-  font-weight: 300;
-  top: ${({ top }) => top}px;
-  left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
-  transform: ${({ left }) => (left == null ? "translateX(-50%)" : "none")};
+  top: ${({ top }) => `${top ?? 20}px`};
+  left: ${({ left }) => `${left ?? ""}px`};
   position: relative;
 `;
 
@@ -58,14 +55,15 @@ const StyledSubheader = styled.h2<{
   top?: number;
   left?: number;
 }>`
-  color: ${Colors.grayLight};
-  font-weight: 200;
   font-family: "Univers55", sans-serif;
-  text-align: ${({ left }) => (left == null ? "center" : "left")};
+  color: ${Colors.grayLight};
+  font-weight: 100;
+  text-align: "center";
   white-space: nowrap;
-  font-size: 16px;
+  font-size: 20px;
   letter-spacing: 1px;
-  top: ${({ top }) => top}px;
+  top: ${({ top }) => `${top ?? 20}px`};
+  left: ${({ left }) => `${left ?? ""}px`};
   position: relative;
 `;
 
@@ -73,14 +71,15 @@ const StyledBody = styled.h3<{
   top?: number;
   left?: number;
 }>`
-  color: ${Colors.white};
   font-family: "Univers45", sans-serif;
+  color: ${Colors.white};
   text-align: "center";
   white-space: pre-wrap;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 100;
   letter-spacing: 1px;
-  top: ${({ top }) => top}px;
+  top: ${({ top }) => `${top ?? 20}px`};
+  left: ${({ left }) => `${left ?? ""}px`};
   position: relative;
 `;
 
@@ -88,11 +87,13 @@ const ErrorMsg = styled.h3<{
   top?: number;
   left?: number;
 }>`
-  color: ${Colors.red};
   font-family: "Univers45", sans-serif;
+  color: ${Colors.red};
   text-align: "center";
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 200;
+  top: ${({ top }) => `${top ?? 20}px`};
+  left: ${({ left }) => `${left ?? ""}px`};
   letter-spacing: 2px;
   position: relative;
 `;
@@ -106,8 +107,8 @@ const StyledList = styled.ul<{
   padding: 0;
   margin: 20px 0;
   text-align: left;
-  width: ${({ width }) => width || '80%'};
-  max-width: ${({ maxWidth }) => maxWidth || '400px'};
+  width: ${({ width }) => width || "80%"};
+  max-width: ${({ maxWidth }) => maxWidth || "400px"};
 `;
 
 const StyledListItem = styled.li<{
@@ -162,23 +163,23 @@ const BodyText: React.FC<TextProps> = ({ text, top, left }) => {
   );
 };
 
-const ErrorMessage: React.FC<TextProps> = ({ text, children }) => {
+const ErrorMessage: React.FC<TextProps> = ({ text, children, top, left }) => {
   return (
-    <ErrorMsg>
+    <ErrorMsg top={top} left={left}>
       {text}
       {children}
     </ErrorMsg>
   );
 };
 
-const List: React.FC<ListProps> = ({ 
-  items, 
-  bulletColor, 
-  itemColor, 
+const List: React.FC<ListProps> = ({
+  items,
+  bulletColor,
+  itemColor,
   bulletSymbol,
   itemSpacing,
   width,
-  maxWidth
+  maxWidth,
 }) => {
   return (
     <StyledList width={width} maxWidth={maxWidth} itemSpacing={itemSpacing}>
@@ -197,4 +198,4 @@ const List: React.FC<ListProps> = ({
   );
 };
 
-export {Title, Header, Subheader, BodyText, ErrorMessage, List};
+export { Title, Header, Subheader, BodyText, ErrorMessage, List };
