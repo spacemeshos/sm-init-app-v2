@@ -18,33 +18,24 @@ import { useSettings } from "../state/SettingsContext";
 import Colors from "../styles/colors";
 import { Header } from "../styles/texts";
 
-const NavProgress = styled.div`
-  width: 1200px;
-  height: 160px;
-  position: abslute;
+const Background = styled.img`
+  position: absolute;
+  width: 100%;
+  object-fit: cover;
 `;
 
-const Image = styled.img`
+const MainContainer = styled.div`
+  width: 1000px;
+  height: 800px;
   position: absolute;
-  margin-bottom: 10px;
-  right: 0px;
   top: 0px;
-`;
-
-const BottomContainer = styled.div`
-  width: 960px;
-  height: 480px;
-  position: absolute;
-  top: 200px;
   left: 50%;
-  transform: translate(-50%);
-  background-color: ${Colors.whiteOpaque};
+  transform: translateX(-50%);
+  background-color: ${Colors.darkOpaque};
   backdrop-filter: blur(8px);
   display: flex;
   align-items: flex-start;
-  border-radius: 10px;
   justify-content: center;
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   /* Gradient border */
   &::before {
@@ -58,8 +49,8 @@ const BottomContainer = styled.div`
     padding: 1px;
     background: linear-gradient(
       45deg,
-      ${Colors.whiteOpaque},
-      ${Colors.greenLightOpaque}
+      ${Colors.greenLightOpaque},
+      ${Colors.whiteOpaque}
     );
     -webkit-mask: linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);
@@ -71,54 +62,46 @@ const BottomContainer = styled.div`
 `;
 
 const SetupContainer = styled.div`
-  width: 660px;
-  height: 480px;
+  width: 800px;
+  height: 650px;
   position: absolute;
   left: 0px;
-  top: 0px;
+  top: 10%;
   display: flex;
   align-items: flex-start;
+  align-content: center;
   justify-content: center;
-  margin: 20px;
+  padding: 20px;
 `;
 
 const ButtonColumn = styled.div`
   position: absolute;
-  width: 250px;
-  height: 480px;
-  right: 0px;
+  width: 200px;
+  height: 650px;
+  top: 10%;
+  right: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  padding-right: 10px;
 `;
 
 const TextWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  position: relative;
+  position: absolute;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
 `;
 
-const ContentContainer = styled.div`
-  width: 660px;
-  height: 480px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 20px;
-`;
-
 const ErrorMessage = styled.div`
   color: ${Colors.red};
-  position: absolute;
-  bottom: 20px;
+  position: relative;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   text-align: center;
 `;
 
@@ -188,47 +171,45 @@ const Generate: React.FC = () => {
 
   return (
     <>
-      <NavProgress>
-        <BackButton />
-      </NavProgress>
-      <Image src={BackgroundImage} />
-      <BottomContainer>
+      <Background src={BackgroundImage} />
+      <BackButton />
+      <MainContainer>
+        <TextWrapper>
+          <Header
+            text={
+              showSummary
+                ? "SUMMARY OF YOUR SETTINGS"
+                : steps[currentStep].label
+            }
+          />
+        </TextWrapper>
         <SetupContainer>
-          <TextWrapper>
-            <Header
-              text={
-                showSummary
-                  ? "Summary of your Settings"
-                  : steps[currentStep].label
-              }
-            />
-          </TextWrapper>
-
-          <ContentContainer>{renderContent()}</ContentContainer>
+          <SetupContainer>{renderContent()}</SetupContainer>
           {error && <ErrorMessage>{error}</ErrorMessage>}
         </SetupContainer>
         <ButtonColumn>
+          <TransparentButton
+            onClick={() => {
+              setShowSummary(true);
+            }}
+            $isActive={showSummary}
+            width={200}
+            label="Summary"
+            disabled={isGenerating}
+          />
+
           {steps.map((step, index) => (
             <TransparentButton
               key={index}
               onClick={() => handleStepChange(index)}
               $isActive={currentStep === index}
               label={step.label}
-              width={250}
+              width={200}
               disabled={isGenerating}
             ></TransparentButton>
           ))}
-          <TransparentButton
-            onClick={() => {
-              setShowSummary(true);
-            }}
-            $isActive={showSummary}
-            width={250}
-            label="Summary"
-            disabled={isGenerating}
-          ></TransparentButton>
         </ButtonColumn>
-      </BottomContainer>
+      </MainContainer>
     </>
   );
 };
