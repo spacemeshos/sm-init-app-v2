@@ -12,16 +12,16 @@ import Image from "../components/image";
 
 const Background = styled.img`
   position: absolute;
-  margin-bottom: 10px;
-  height: 100%;
+  width: 1300px;
+  object-fit: cover;
 `;
 
 const MenuContainer = styled.div`
   position: absolute;
   width: 500px;
-  height: 100%;
-  right: 40px;
-  padding: 150px 0px;
+  height: 400px;
+  right: 50px;
+  top: 150px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -60,9 +60,10 @@ const Home: React.FC = () => {
   return (
     <>
       <MenuContainer>
-        <Image src={Logo} width={40} top={60}/>
+        <Image src={Logo} width={40} top={-60} />
+
         <Title text="Proof of Space" />
-        <Subheader text="Initialization App" top={0}/>
+        <Subheader text="Initialization App" top={0} />
         <Button
           top={30}
           onClick={() => navigate("/generate")}
