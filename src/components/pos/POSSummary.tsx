@@ -16,17 +16,15 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  width: 660px;
-  height: 400px;
+  width: 700px;
+  height: 600px;
   position: absolute;
-  left: 0px;
   top: 0px;
-  margin: 60px 15px 20px 15px;
 `;
 
 const SummarySection = styled.div`
-  width: 660px;
-  height: 250px;
+  width: 700px;
+  height: 400px;
   position: relative;
 `;
 
@@ -127,10 +125,10 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
   // Get the directory display information
   const getDirectoryDisplay = () => {
     if (settings.selectedDir) {
-      return `Custom: ${shortenPath(settings.selectedDir, 20)}`;
+      return `Custom: ${shortenPath(settings.selectedDir, 35)}`;
     }
     return `Default: ${
-      settings.defaultDir ? shortenPath(settings.defaultDir, 20) : "Loading..."
+      settings.defaultDir ? shortenPath(settings.defaultDir, 35) : "Loading..."
     }`;
   };
 
@@ -186,42 +184,40 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
       <Container>
         <SummarySection>
           <Frame
-            height={16}
+            height={18}
             heading="POS Location"
             subheader={getDirectoryDisplay()}
           />
           <Frame
-            height={16}
+            height={18}
             heading="POS Size"
             subheader={`${
               settings.numUnits || 4
             } Space Units (${calculateTotalSize()})`}
           />
           <Frame
-            height={16}
+            height={18}
             heading="POS Provider"
             subheader={`Provider ID: ${settings.provider ?? "Not selected"}`}
           />
           <Frame
-            height={16}
+            height={18}
             heading="Proving Setup"
             subheader={`${settings.numCores || 8} CPU Cores | ${
               settings.numNonces || 288
             } Nonces`}
           />
           <Frame
-            height={16}
+            height={18}
             heading="Identity Configuration"
             subheader={
-              settings.identityFile
-                ? `File: ${shortenPath(settings.identityFile, 20)}`
-                : settings.publicKey
+                settings.publicKey
                 ? `Key: ${truncateHex(settings.publicKey, 8)}`
                 : "Create New Identity"
             }
           />
           <Frame
-            height={16}
+            height={18}
             heading="ATX ID"
             subheader={
               settings.atxId
