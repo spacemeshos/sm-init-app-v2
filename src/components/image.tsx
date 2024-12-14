@@ -6,19 +6,19 @@ interface ImageProps {
   alt?: string;
   top?: number;
   left?: number;
-  height?: number;
   width?: number;
   opacity?: number;
 }
 
 const StyledImage = styled.img<ImageProps>`
   position: absolute;
-  top: ${({ top }) => (top ? `${top}px` : "auto")};
-  left: ${({ left }) => (left ? `${left}px` : "auto")};
-  height: ${({ height }) => (height ? `${height}px` : "auto")};
-  width: ${({ width }) => (width ? `${width}px` : "auto")};
+  top: ${({ top }) => `${top ?? 0}px`};
+  left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
+  transform: ${({ left }) => (left == null ? "translateX(-50%)" : "none")};
+  height: "auto";
+  width: ${({ width }) => `${width ?? 100}%`};
   object-fit: contain;
-  opacity: ${({ opacity }) => (opacity ? opacity : 1)};
+  opacity: ${({ opacity }) => `${opacity ?? 1}`};
 `;
 
 const Image: React.FC<ImageProps> = ({
@@ -26,7 +26,6 @@ const Image: React.FC<ImageProps> = ({
   alt,
   top,
   left,
-  height,
   width,
   opacity,
 }) => {
@@ -36,7 +35,6 @@ const Image: React.FC<ImageProps> = ({
       alt={alt}
       top={top}
       left={left}
-      height={height}
       width={width}
       opacity={opacity}
     />
