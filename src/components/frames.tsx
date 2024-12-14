@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 
 import Colors from "../styles/colors";
-import { Header, Subheader } from "../styles/texts";
+import { BodyText, Subheader } from "../styles/texts";
 
 interface FrameProps {
   heading?: string;
@@ -22,7 +22,7 @@ const Wrapper = styled.div<{
   height?: number;
   width?: number;
 }>`
-  background-color: ${Colors.whiteOpaque};
+  background-color: ${Colors.darkOpaque};
   position: relative;
   top: ${({ top }) => top}px;
   left: ${({ left }) => left}px;
@@ -32,6 +32,7 @@ const Wrapper = styled.div<{
   justify-content: center;
   flex-direction: row;
   align-items: center;
+  align-content: center;
   border: 0.5px solid ${Colors.greenLightOpaque};
 `;
 
@@ -61,10 +62,10 @@ const Frame: React.FC<FrameProps> = ({
   return (
     <Wrapper top={top} left={left} height={height} width={width}>
       <FrameHeading>
-        <Header text={heading} />
+        <Subheader text={heading} top={0} />
       </FrameHeading>
       <Details>
-        <Subheader text={subheader} />
+        <BodyText text={subheader} top={0} />
       </Details>
       {children}
     </Wrapper>
