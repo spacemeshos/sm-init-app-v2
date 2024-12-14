@@ -10,8 +10,8 @@ import Colors from "./styles/colors";
 import GlobalStyles from "./styles/globalStyles";
 
 const AppWrapper = styled.div`
-  height: 100%;
-  width: 100%;
+  height: 800px;
+  width: 1300px;
   position: absolute;
   background-color: ${Colors.greenDark};
 `;
@@ -20,28 +20,21 @@ const ConsoleWrapper = styled.div`
   position: fixed;
   left: 0px;
   bottom: 0px;
-  width: 1000px;
+  width: 1300px;
   z-index: 1;
   pointer-events: auto;
 `;
 
 const Footer = styled.div`
   position: fixed;
-  width: 1100px;
+  width: 1300px;
   height: 30px;
-  bottom: 10px;
-  left: 50px;
+  bottom: 0px;
   display: flex;
   flex-direction: row;
-  justify-content: right;
+  justify-content: center;
   align-content: center;
   align-items: center;
-  font-family: "Source Code Pro Extralight", sans-serif;
-  color: ${Colors.grayLight};
-  font-size: 12px;
-  font-weight: 100;
-  letter-spacing: 1px;
-  z-index: 1001;
 `;
 
 // Wrapper component to use hooks
