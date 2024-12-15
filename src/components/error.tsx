@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-import errorIcon from "../assets/disruption.png";
 import Colors from "../styles/colors";
 import { BodyText, Header, Subheader } from "../styles/texts";
 
@@ -30,17 +29,6 @@ const Wrapper = styled.div`
   height: 500px;
 `;
 
-const BgImage = styled.img`
-  aspect-ratio: 1;
-  object-fit: contain;
-  width: 210px;
-  position: absolute;
-  left: 20px;
-  top: 5%;
-  left: 5%;
-  opacity: 0.1;
-`;
-
 type Props = {
   onClose: () => void;
   isOpen: boolean;
@@ -57,7 +45,6 @@ const ErrorModal = ({ onClose, isOpen }: Props) => {
         <Header>Oops!</Header>
         <Subheader>Something Went Wrong</Subheader>
         <BodyText>Error Code: [Error_Code_Placeholder]</BodyText>
-        <BgImage src={errorIcon} />
         <BodyText>
           {
             <>
