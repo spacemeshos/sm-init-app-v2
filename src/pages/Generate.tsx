@@ -19,7 +19,7 @@ import Colors from "../styles/colors";
 import { Header } from "../styles/texts";
 
 const Background = styled.img`
-  position: absolute;
+  position: fixed;
   width: 100%;
   object-fit: cover;
 `;
@@ -27,7 +27,7 @@ const Background = styled.img`
 const MainContainer = styled.div`
   width: 1000px;
   height: 800px;
-  position: absolute;
+  position: fixed;
   top: 0px;
   left: 50%;
   transform: translateX(-50%);
