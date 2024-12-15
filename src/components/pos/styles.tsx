@@ -4,10 +4,9 @@ import Colors from "../../styles/colors";
 
 export const BottomContainer = styled.div`
   height: 80%;
-  width: 100%;
+  width: 80%;
   position: absolute;
   top: 70px;
-  left: 0px;
   display: flex;
   justify-content: space-evenly;
   flex-direction: row;
@@ -17,7 +16,7 @@ export const BottomContainer = styled.div`
 export const TileWrapper = styled.div<{
   width?: number;
 }>`
-  height: 90%;
+  height: 80%;
   width: ${({ width }) => width || 450}px;
   position: relative;
   display: flex;

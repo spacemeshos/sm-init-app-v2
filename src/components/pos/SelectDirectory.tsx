@@ -11,8 +11,20 @@ import {
 } from "../../utils/directoryUtils";
 import { Button } from "../button";
 import Tile from "../tile";
+import { styled } from "styled-components";
 
-import { BottomContainer, TileWrapper } from "./styles";
+
+export const BottomContainer = styled.div`
+  height: 80%;
+  width: 80%;
+  position: absolute;
+  top: 70px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+`;
+
 
 export const SelectDirectory: React.FC = () => {
   const { settings, setSettings } = useSettings();
@@ -84,7 +96,7 @@ export const SelectDirectory: React.FC = () => {
 
   return (
     <BottomContainer>
-      <TileWrapper width={500}>
+
         <Tile
           heading="Select where to store POS data"
           subheader={settings.selectedDir ? "Custom directory selected" : "Default directory"}
@@ -96,10 +108,10 @@ export const SelectDirectory: React.FC = () => {
           onClick={handleSelectDirectory}
           label={isValidating ? "Validating..." : "Choose custom directory"}
           width={320}
-          top={30}
+          top={60}
           disabled={isValidating}
         />
-      </TileWrapper>
+
     </BottomContainer>
   );
 };
