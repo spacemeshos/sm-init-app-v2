@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { callPostCli } from "../services/postcliService";
 
@@ -19,25 +19,9 @@ const FindProviders = (): UsePostCliReturn => {
   const [response, setResponse] = useState<Provider[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  const run = async (args: string[], updateConsole?: (command: string, output: string) => void): Promise<void> => {
-    setLoading(true);
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result: any = await callPostCli(args, updateConsole);
-      const parsedResult = parseResponse(result.stdout);
-      setResponse(parsedResult);
-      setError(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setError(err.message);
-      setResponse(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const parseResponse = (response: string): Provider[] => {
+  const parseResponse = useCallback((response: string): Provider[] => {
     const providers: Provider[] = [];
     const regex = /ID:\s*\(uint32\)\s*(\d+),[\s\S]*?Model:\s*\(string\)\s*\(len=\d+\)\s*"\[(CPU|GPU)\]\s*([^"]+)",[\s\S]*?DeviceType:\s*\(postrs\.DeviceClass\)\s*(\w+)/g;
     let match;
@@ -52,9 +36,40 @@ const FindProviders = (): UsePostCliReturn => {
     }
 
     return providers;
-  };
+  }, []);
+
+  const run = useCallback(async (args: string[], updateConsole?: (command: string, output: string) => void): Promise<void> => {
+    // Cancel any existing request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Create new abort controller for this request
+    abortControllerRef.current = new AbortController();
+
+    setLoading(true);
+    try {
+      // Pass only the supported arguments to callPostCli
+      const result = await callPostCli(args, updateConsole);
+      const parsedResult = parseResponse(result.stdout);
+      setResponse(parsedResult);
+      setError(null);
+    } catch (err: any) {
+      // Don't set error state if the request was intentionally cancelled
+      if (err.name !== 'AbortError') {
+        setError(err.message);
+        setResponse(null);
+      }
+    } finally {
+      if (abortControllerRef.current) {
+        abortControllerRef.current = null;
+      }
+      setLoading(false);
+    }
+  }, [parseResponse]);
 
   return { run, response, error, loading };
 };
 
 export { FindProviders };
+export type { Provider };
