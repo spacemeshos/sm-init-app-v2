@@ -137,6 +137,8 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
       <Modal
         isOpen={showValidationModal}
         onClose={() => setShowValidationModal(false)}
+        width={600}
+        height={50}
         header="Missing Required Parameters"
         text={
           <>
@@ -211,7 +213,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
             height={18}
             heading="Identity Configuration"
             subheader={
-                settings.publicKey
+              settings.publicKey
                 ? `Key: ${truncateHex(settings.publicKey, 8)}`
                 : "Create New Identity"
             }
