@@ -13,15 +13,13 @@ const ConsoleContainer = styled.div<ConsoleContainerProps>`
   background-color: ${Colors.black};
   font-family: 'Courier New', Courier, monospace;
   min-height: 20px;
-  height: ${props => props.$isExpanded ? `${props.$height || 300}px` : '30px'};
-  max-height: ${props => props.$isExpanded ? '500px' : '30px'};
+  height: ${props => props.$isExpanded ? `100px` : '30px'};
   overflow-y: auto;
   color: ${Colors.greenVeryLight};
   font-size: 12px;
   line-height: 1.4;
   position: relative;
   transition: height 0.3s ease;
-  resize: ${props => props.$isExpanded ? 'vertical' : 'none'};
   
   /* Scrollbar styling */
   &::-webkit-scrollbar {
@@ -39,23 +37,6 @@ const ConsoleContainer = styled.div<ConsoleContainerProps>`
 
   &::-webkit-scrollbar-thumb:hover {
     background: ${Colors.greenLight}80;
-  }
-
-  /* Resize handle styling */
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    cursor: ${props => props.$isExpanded ? 'ns-resize' : 'default'};
-    background: ${props => props.$isExpanded ? `${Colors.greenLight}20` : 'transparent'};
-    transition: background 0.2s ease;
-  }
-
-  &:hover::after {
-    background: ${props => props.$isExpanded ? `${Colors.greenLight}40` : 'transparent'};
   }
 `;
 
