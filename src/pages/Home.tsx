@@ -11,13 +11,13 @@ import { Subheader, Title } from "../styles/texts";
 import Image from "../components/image";
 
 const Background = styled.img`
-  position: absolute;
-  width: 1300px;
+  position: fixed;
+  width: 100%;
   object-fit: cover;
 `;
 
 const MenuContainer = styled.div`
-  position: absolute;
+  position: fixed;
   width: 500px;
   height: 400px;
   right: 50px;
@@ -42,17 +42,17 @@ const Home: React.FC = () => {
   const CheckButtons = [
     {
       label: "Requirements",
-      onClick: () => navigateToReqs(),
+      onClick: () => navigateToReqs(), //TODO
       width: 300,
     },
     {
       label: "Generation speed",
-      onClick: () => console.log("Button 1 clicked"),
+      onClick: () => console.log("Button 1 clicked"), //TODO
       width: 300,
     },
     {
       label: "Proving Capacity",
-      onClick: () => console.log("Button 2 clicked"),
+      onClick: () => console.log("Button 2 clicked"), //TODO
       width: 300,
     },
   ];
