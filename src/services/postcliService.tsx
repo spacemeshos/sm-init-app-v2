@@ -73,19 +73,14 @@ export const executePostCli = async (
     }
 
     return {
-      stdout: response.stdout,
-      stderr: response.stderr,
-      success:
-        !response.stderr.includes("error") &&
-        !response.stderr.includes("Error"),
+      ...response,
+      success: !response.stderr?.includes("error") && !response.stderr?.includes("Error"),
     };
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred";
     console.error("Error executing postcli:", error);
-    if (updateConsole) {
-      updateConsole(commandStr, `> Error:\n${errorMessage}`);
-    }
+    updateConsole?.(commandStr, `> Error:\n${errorMessage}`);
     throw error;
   }
 };
@@ -187,11 +182,8 @@ export const callPostCli = async (
     }
 
     return {
-      stdout: response.stdout,
-      stderr: response.stderr,
-      success:
-        !response.stderr.includes("error") &&
-        !response.stderr.includes("Error"),
+      ...response,
+      success: !response.stderr?.includes("error") && !response.stderr?.includes("Error"),
     };
   } catch (error) {
     const errorMessage =
