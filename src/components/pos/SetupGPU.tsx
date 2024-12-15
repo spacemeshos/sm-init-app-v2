@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 import { useConsole } from "../../state/ConsoleContext";
 import { useSettings } from "../../state/SettingsContext";
 import { ErrorMessage, Subheader } from "../../styles/texts";
-import { FindProviders } from "../../utils/parseResponse";
+import { FindProviders, Provider } from "../../utils/parseResponse";
 import Tile from "../tile";
 
 import { BottomContainer, TileWrapper } from "./styles";
@@ -12,50 +12,49 @@ interface Props {
   isOpen: boolean;
 }
 
-interface Processor {
-  ID: number;
-  Model: string;
-  DeviceType: string;
-}
-
 export const SetupGPU: React.FC<Props> = ({ isOpen }) => {
   const { setSettings } = useSettings();
   const { updateConsole } = useConsole();
   const { run, response, loading, error } = FindProviders();
-  const [selectedProvider, setSelectedProvider] = useState<number>(0);
-  const [hasInitialized, setHasInitialized] = useState(false);
+  const selectedProviderRef = useRef<number>(0);
+  const mountedRef = useRef(false);
 
+  // Memoize the provider selection handler
+  const handleProviderSelect = useCallback((providerId: number) => {
+    selectedProviderRef.current = providerId;
+    setSettings((prev) => ({ ...prev, provider: providerId }));
+  }, [setSettings]);
+
+  // Effect for initial provider detection
   useEffect(() => {
-    if (isOpen && !hasInitialized) {
-      const detectProviders = async () => {
-        await run(["-printProviders"], updateConsole);
-        setHasInitialized(true);
-      };
+    mountedRef.current = true;
+
+    const detectProviders = async () => {
+      if (!mountedRef.current) return;
+      await run(["-printProviders"], updateConsole);
+    };
+
+    if (isOpen) {
       detectProviders();
     }
-  }, [isOpen, hasInitialized, updateConsole, run]);
 
+    // Cleanup function
+    return () => {
+      mountedRef.current = false;
+    };
+  }, [isOpen, run, updateConsole]);
+
+  // Effect for setting initial provider when response is received
   useEffect(() => {
-    if (response && response.length > 0) {
-      setSelectedProvider(0);
-      setSettings((prev) => ({ ...prev, provider: 0 }));
+    if (response && response.length > 0 && mountedRef.current) {
+      handleProviderSelect(0);
     }
-  }, [response, setSettings]);
+  }, [response, handleProviderSelect]);
 
-  useEffect(() => {
-    if (!isOpen) {
-      setHasInitialized(false);
-    }
-  }, [isOpen]);
-
-  const handleProviderSelect = (providerId: number) => {
-    setSelectedProvider(providerId);
-    setSettings((prev) => ({ ...prev, provider: providerId }));
-  };
-
-  const createTile = (processor: Processor) => {
+  // Memoize tile creation to prevent unnecessary re-renders
+  const createTile = useCallback((processor: Provider) => {
     const isFastest = processor.ID === 0;
-    const isSelected = processor.ID === selectedProvider;
+    const isSelected = processor.ID === selectedProviderRef.current;
 
     return (
       <TileWrapper width={350} key={processor.ID}>
@@ -68,7 +67,7 @@ export const SetupGPU: React.FC<Props> = ({ isOpen }) => {
         />
       </TileWrapper>
     );
-  };
+  }, [handleProviderSelect]);
 
   if (!isOpen) return null;
 
