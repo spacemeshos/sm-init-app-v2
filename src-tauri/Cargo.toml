@@ -20,6 +20,8 @@ wgpu = "0.12"
 sys-info = "0.9.1"
 libc = "0.2.155"
 num_cpus = "1.16.0"
+nix = { version = "0.26", features = ["signal"] }
+winapi = { version = "0.3", features = ["processthreadsapi", "winnt", "handleapi"] }
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.

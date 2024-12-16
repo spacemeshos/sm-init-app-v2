@@ -2,6 +2,18 @@ use std::env;
 use std::path::PathBuf;
 use std::process::Command;
 use serde::Serialize;
+#[cfg(unix)]
+use nix::sys::signal::{kill, Signal};
+#[cfg(unix)]
+use nix::unistd::Pid;
+#[cfg(windows)]
+use winapi::um::processthreadsapi::OpenProcess;
+#[cfg(windows)]
+use winapi::um::processthreadsapi::TerminateProcess;
+#[cfg(windows)]
+use winapi::um::winnt::PROCESS_TERMINATE;
+#[cfg(windows)]
+use winapi::um::handleapi::CloseHandle;
 
 #[derive(Serialize)]
 pub struct CommandOutput {
@@ -73,4 +85,36 @@ pub fn run_postcli_detached(args: Vec<String>) -> Result<DetachedProcessInfo, St
         process_id,
         message: format!("POS data generation started in background with process ID: {}", process_id),
     })
+}
+
+#[tauri::command]
+pub fn stop_postcli_process(pid: u32) -> Result<String, String> {
+    println!("Attempting to stop postcli process with PID: {}", pid);
+
+    #[cfg(unix)]
+    {
+        match kill(Pid::from_raw(pid as i32), Signal::SIGTERM) {
+            Ok(_) => Ok(format!("Successfully terminated process {}", pid)),
+            Err(e) => Err(format!("Failed to terminate process {}: {}", pid, e))
+        }
+    }
+
+    #[cfg(windows)]
+    {
+        unsafe {
+            let handle = OpenProcess(PROCESS_TERMINATE, 0, pid);
+            if handle.is_null() {
+                return Err(format!("Failed to open process {}", pid));
+            }
+
+            let result = TerminateProcess(handle, 0);
+            CloseHandle(handle);
+
+            if result == 0 {
+                Err(format!("Failed to terminate process {}", pid))
+            } else {
+                Ok(format!("Successfully terminated process {}", pid))
+            }
+        }
+    }
 }

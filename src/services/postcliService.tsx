@@ -144,6 +144,35 @@ export const executePostCliDetached = async (
   }
 };
 
+export const stopPostCliProcess = async (
+  processId: number,
+  updateConsole?: (command: string, output: string) => void
+): Promise<void> => {
+  console.log("Attempting to stop postcli process:", processId);
+  const commandStr = `Stop postcli process ${processId}`;
+
+  if (updateConsole) {
+    updateConsole(commandStr, `> Attempting to stop process ${processId}...`);
+  }
+
+  try {
+    const response = await invoke<string>("stop_postcli_process", { pid: processId });
+    console.log("Stop process response:", response);
+
+    if (updateConsole) {
+      updateConsole(commandStr, `> ${response}`);
+    }
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "An unknown error occurred";
+    console.error("Error stopping postcli process:", error);
+    if (updateConsole) {
+      updateConsole(commandStr, `> Error:\n${errorMessage}`);
+    }
+    throw error;
+  }
+};
+
 export const callPostCli = async (
   args: string[],
   updateConsole?: (command: string, output: string) => void

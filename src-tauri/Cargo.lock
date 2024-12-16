@@ -85,6 +85,7 @@ name = "app"
 version = "1.2.5"
 dependencies = [
  "libc",
+ "nix 0.26.4",
  "num_cpus",
  "serde",
  "serde_json",
@@ -92,6 +93,7 @@ dependencies = [
  "tauri",
  "tauri-build",
  "wgpu",
+ "winapi",
 ]
 
 [[package]]
@@ -2348,6 +2350,7 @@ dependencies = [
  "cfg-if",
  "libc",
  "memoffset 0.7.1",
+ "pin-utils",
 ]
 
 [[package]]

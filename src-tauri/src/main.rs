@@ -15,6 +15,7 @@ fn main() {
             commands::file_dialog::check_write_permission,
             commands::postcli::run_postcli_command,
             commands::postcli::run_postcli_detached,
+            commands::postcli::stop_postcli_process,
             commands::cpu::get_cpu_cores
         ])
         .run(tauri::generate_context!())
