@@ -25,6 +25,9 @@ export const buildPostCliArgs = (settings: Settings): string[] | null => {
     args.push(`-datadir=${settings.selectedDir}`);
   }
 
+  // Add debug log level
+  args.push("-logLevel=debug");
+
   // Always add genproof
   args.push("-genproof");
 
