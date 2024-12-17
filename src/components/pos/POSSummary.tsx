@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 import { executePostCliDetached } from "../../services/postcliService";
 import { useSettings } from "../../state/SettingsContext";
+import { usePOSProcess } from "../../state/POSProcessContext";
 import Colors from "../../styles/colors";
 import { List } from "../../styles/texts";
 import { shortenPath } from "../../utils/directoryUtils";
@@ -40,7 +42,9 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
   isGenerating: parentIsGenerating,
   updateConsole,
 }) => {
+  const navigate = useNavigate();
   const { settings } = useSettings();
+  const { startProcess } = usePOSProcess();
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -95,8 +99,13 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
             `POS generation started with process ID: ${response.process_id}`
           );
         }
+        startProcess(response.process_id);
         setShowSuccessModal(true);
         onProceed(); // This will set isGenerating in parent
+        // Navigate to progress page after showing success modal
+        setTimeout(() => {
+          navigate('/progress');
+        }, 100);
       } else {
         throw new Error("Failed to start POS generation process");
       }

@@ -4,6 +4,7 @@ import styled from "styled-components";
 import ConsoleView from "./components/ConsoleView";
 import AppRoutes from "./Shared/Routes";
 import { ConsoleProvider } from "./state/ConsoleContext";
+import { POSProcessProvider } from "./state/POSProcessContext";
 import Colors from "./styles/colors";
 import GlobalStyles from "./styles/globalStyles";
 
@@ -27,13 +28,15 @@ const ConsoleWrapper = styled.div`
 const App: React.FC = () => {
   return (
     <ConsoleProvider>
-      <AppWrapper>
-        <GlobalStyles />
-        <AppRoutes />
-        <ConsoleWrapper>
-          <ConsoleView />
-        </ConsoleWrapper>
-      </AppWrapper>
+      <POSProcessProvider>
+        <AppWrapper>
+          <GlobalStyles />
+          <AppRoutes />
+          <ConsoleWrapper>
+            <ConsoleView />
+          </ConsoleWrapper>
+        </AppWrapper>
+      </POSProcessProvider>
     </ConsoleProvider>
   );
 };
