@@ -1,22 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/button";
+import { BackButton, Button } from "../components/button";
 import { usePOSProcess } from "../state/POSProcessContext";
-import Colors from "../styles/colors";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 20px;
-  background-color: ${Colors.greenDark};
-`;
+import BackgroundImage from "../assets/home.png";
+import { Background, MainContainer } from "../styles/containers";
 
 const StopButton = styled(Button)`
-  margin-top: 20px;
+  position: absolute;
+  bottom: 20px;
 `;
 
 const Progress: React.FC = () => {
@@ -42,14 +34,18 @@ const Progress: React.FC = () => {
   }
 
   return (
-    <Container>
-      <StopButton
-        label="Stop Generation"
-        onClick={handleStopGeneration}
-        width={250}
-        height={56}
-      />
-    </Container>
+    <>
+      <Background src={BackgroundImage} />
+      <BackButton />
+      <MainContainer>
+        <StopButton
+          label="Stop Generation"
+          onClick={handleStopGeneration}
+          width={250}
+          height={56}
+        />
+      </MainContainer>
+    </>
   );
 };
 

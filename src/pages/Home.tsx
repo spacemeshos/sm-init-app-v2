@@ -9,12 +9,7 @@ import { Button } from "../components/button";
 import { ExternalLinks } from "../Shared/Constants";
 import { Subheader, Title } from "../styles/texts";
 import Image from "../components/image";
-
-const Background = styled.img`
-  position: fixed;
-  width: 100%;
-  object-fit: cover;
-`;
+import { Background } from "../styles/containers";
 
 const MenuContainer = styled.div`
   position: fixed;
@@ -59,6 +54,7 @@ const Home: React.FC = () => {
 
   return (
     <>
+      <Background src={BackgroundImage} />
       <MenuContainer>
         <Image src={Logo} width={40} top={-60} />
 
@@ -78,7 +74,6 @@ const Home: React.FC = () => {
           buttons={CheckButtons}
         />
       </MenuContainer>
-      <Background src={BackgroundImage} />
     </>
   );
 };
