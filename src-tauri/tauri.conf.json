@@ -38,7 +38,10 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": ["bin/postcli/postcli"],
+      "resources": [
+        "bin/postcli/postcli",
+        "bin/postcli/postcli.exe"
+      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {

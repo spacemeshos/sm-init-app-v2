@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Spacemesh Init App v2** is a user-friendly application designed to streamline the process of setting up, generating, and managing Proof of Space data\. By leveraging the Tauri framework for its frontend, this app offers a sleek and efficient user experience. At its core, it integrates the `postcli` binary, developed in Go by the Spacemesh team, to handle all essential commands and flags seamlessly. Whether you are a novice or an experienced user, Spacemesh Init App v2 simplifies the complexities of Proof of Space management, making it accessible and straightforward.
+**Spacemesh Init App v2** is a user-friendly application designed to streamline the process of setting up, generating, and managing Proof of Space data\. At its core, it integrates the `postcli` binary, developed in Go by the Spacemesh team, to handle all essential commands and flags seamlessly.
 
 ## Table of Contents
 
@@ -26,8 +26,12 @@ Ensure you have the following installed:
 This application requires specific binary files to function properly. These files are not included in the repository and need to be downloaded separately:
 
 1. Download the required binaries from the official Spacemesh releases:
-   - post-rs binaries (libpost.dylib, post-service, profiler)
-   - postcli binaries (libpost.dylib, postcli)
+   - post-rs binaries:
+     - macOS: libpost.dylib, post-service, profiler
+     - Windows: post.dll, post-service.exe, profiler.exe
+   - postcli binaries:
+     - macOS: libpost.dylib, postcli
+     - Windows: post.dll, postcli.exe
 
 2. Place the downloaded files in their respective directories:
    ```
@@ -38,6 +42,18 @@ This application requires specific binary files to function properly. These file
 You can find the latest versions of these binaries at:
 - [Post-rs Releases](https://github.com/spacemeshos/post-rs/releases) for post-rs
 - [PostCli Releases](https://github.com/spacemeshos/post/releases) for postcli
+
+### Platform-Specific Notes
+
+#### Windows
+- Ensure you download the Windows-specific binaries (*.exe and *.dll files)
+- The application expects postcli.exe to be in the bin/postcli directory
+- Make sure you have the required Visual C++ Redistributable packages installed
+
+#### macOS
+- Ensure you download the macOS-specific binaries (*.dylib files)
+- The application expects postcli to be in the bin/postcli directory
+- Make sure the binary files have execute permissions (`chmod +x`)
 
 ### Clone the Repository
 

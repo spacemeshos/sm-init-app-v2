@@ -27,14 +27,27 @@ pub struct DetachedProcessInfo {
     message: String,
 }
 
+fn get_postcli_path() -> PathBuf {
+    let mut path: PathBuf = env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
+    path.push("bin");
+    path.push("postcli");
+    #[cfg(windows)]
+    path.push("postcli.exe");
+    #[cfg(unix)]
+    path.push("postcli");
+    path
+}
+
 #[tauri::command]
 pub fn run_postcli_command(args: Vec<String>) -> Result<CommandOutput, String> {
-    let mut path: PathBuf = env::current_dir().map_err(|e| e.to_string())?;
-    path.push("bin/postcli/postcli");
+    let path = get_postcli_path();
 
     // Check if postcli exists
     if !path.exists() {
-        return Err("postcli executable not found. Please ensure it's installed in the bin/postcli directory.".to_string());
+        return Err(format!(
+            "postcli executable not found at {}. Please ensure it's installed in the bin/postcli directory.",
+            path.display()
+        ));
     }
 
     let postcli_path = path.to_str().ok_or("Invalid path")?;
@@ -62,12 +75,14 @@ pub fn run_postcli_command(args: Vec<String>) -> Result<CommandOutput, String> {
 
 #[tauri::command]
 pub fn run_postcli_detached(args: Vec<String>) -> Result<DetachedProcessInfo, String> {
-    let mut path: PathBuf = env::current_dir().map_err(|e| e.to_string())?;
-    path.push("bin/postcli/postcli");
+    let path = get_postcli_path();
 
     // Check if postcli exists
     if !path.exists() {
-        return Err("postcli executable not found. Please ensure it's installed in the bin/postcli directory.".to_string());
+        return Err(format!(
+            "postcli executable not found at {}. Please ensure it's installed in the bin/postcli directory.",
+            path.display()
+        ));
     }
 
     let postcli_path = path.to_str().ok_or("Invalid path")?;
