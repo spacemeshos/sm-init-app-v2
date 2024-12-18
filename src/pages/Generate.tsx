@@ -66,7 +66,7 @@ const SetupContainer = styled.div`
   height: 650px;
   position: absolute;
   left: 0px;
-  top: 10%;
+  top: 40px;
   display: flex;
   align-items: flex-start;
   align-content: center;
@@ -77,8 +77,8 @@ const SetupContainer = styled.div`
 const ButtonColumn = styled.div`
   position: absolute;
   width: 200px;
-  height: 650px;
-  top: 10%;
+  height: 600px;
+  top: 120px;
   right: 30px;
   display: flex;
   flex-direction: column;
@@ -90,10 +90,15 @@ const TextWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-content: center;
   position: absolute;
-  top: 20px;
+  top: 50px;
   left: 50%;
+  height: 80px;
+  width: 80%;
   transform: translateX(-50%);
+  text-transform: uppercase;
+  border-bottom: 1px solid ${Colors.greenLight};
 `;
 
 const ErrorMessage = styled.div`
