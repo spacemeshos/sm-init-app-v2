@@ -4,7 +4,7 @@ import { useSettings } from "../../state/SettingsContext";
 import { SaveButton, CancelButton } from "../button";
 import CustomNumberInput from "../input";
 import Tile from "../tile";
-import { calculateTotalSize } from "../../utils/sizeUtils";
+import { calculateTotalSize, calculateNumFiles } from "../../utils/sizeUtils";
 
 import { BottomContainer, TileWrapper, SelectedValue } from "./styles";
 
@@ -71,8 +71,11 @@ export const SetupSize: React.FC = () => {
 
       <TileWrapper>
         <Tile
-          heading="Max File Size"
-          subheader="Size in Mebibytes (MiB)"
+          heading="Max File Size in Mebibytes"
+          subheader={`${calculateNumFiles(
+            settings.numUnits,
+            settings.maxFileSize || DEFAULT_MAX_FILE_SIZE_MIB
+          )} files will be generated`}
           footer="Default: 4096 MiB (4 GiB)"
         />
         {isMaxFileSizeVisible ? (
