@@ -9,6 +9,7 @@ import Colors from "../../styles/colors";
 import { List } from "../../styles/texts";
 import { shortenPath } from "../../utils/directoryUtils";
 import { truncateHex, isValidHex } from "../../utils/hexUtils";
+import { calculateTotalSize } from "../../utils/sizeUtils";
 import { Button } from "../button";
 import Frame from "../frames";
 import Modal from "../modal";
@@ -122,15 +123,6 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
     }
   };
 
-  const calculateTotalSize = () => {
-    const spaceUnits = settings.numUnits || 4;
-    const sizeInGiB = spaceUnits * 64;
-    if (sizeInGiB >= 1024) {
-      return `${(sizeInGiB / 1024).toFixed(1)} TiB`;
-    }
-    return `${sizeInGiB} GiB`;
-  };
-
   // Get the directory display information
   const getDirectoryDisplay = () => {
     if (settings.selectedDir) {
@@ -204,7 +196,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
             heading="POS Size"
             subheader={`${
               settings.numUnits || 4
-            } Space Units (${calculateTotalSize()})`}
+            } Space Units (${calculateTotalSize(settings.numUnits)})`}
           />
           <Frame
             height={18}

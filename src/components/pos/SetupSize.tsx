@@ -4,6 +4,7 @@ import { useSettings } from "../../state/SettingsContext";
 import { SaveButton, CancelButton } from "../button";
 import CustomNumberInput from "../input";
 import Tile from "../tile";
+import { calculateTotalSize } from "../../utils/sizeUtils";
 
 import { BottomContainer, TileWrapper, SelectedValue } from "./styles";
 
@@ -28,7 +29,10 @@ export const SetupSize: React.FC = () => {
   };
 
   const handleCancelMaxFileSize = () => {
-    setSettings((prev) => ({ ...prev, maxFileSize: DEFAULT_MAX_FILE_SIZE_MIB }));
+    setSettings((prev) => ({
+      ...prev,
+      maxFileSize: DEFAULT_MAX_FILE_SIZE_MIB,
+    }));
     setIsMaxFileSizeVisible(true);
   };
 
@@ -37,8 +41,10 @@ export const SetupSize: React.FC = () => {
       <TileWrapper>
         <Tile
           heading="Select Space Units"
-          subheader="1 Space Unit = 64 GiB"
-          footer="Minimum: 4 Space Units (256 GiB)"
+          subheader={`${
+            settings.numUnits || 4
+          } Space Units (${calculateTotalSize(settings.numUnits)})`}
+          footer="1 Space Unit = 64 GiB. Minimum 4."
         />
         {isSpaceUnitsVisible ? (
           <>
