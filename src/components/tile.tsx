@@ -16,8 +16,8 @@ export interface TileProps {
 
 const TileWrapper = styled.div<{ selected?: boolean }>`
   background-color: ${({ selected }) =>
-    selected ? Colors.greenLightOpaque : Colors.darkOpaque};
-  height: 100%;
+    selected ? Colors.greenLightOpaque : "transparent"};
+  height: 90%;
   width: 100%;
   position: absolute;
   display: flex;
@@ -40,7 +40,7 @@ const TileHeading = styled.h2`
 const SubHeader = styled.h3`
   color: ${Colors.grayLight};
   font-family: "Univers45", sans-serif;
-  top: 20%;
+  top: 30%;
   position: absolute;
   text-align: center;
   text-transform: uppercase;
@@ -61,7 +61,7 @@ const ErrorMessage = styled.h3`
 const Footer = styled.h3`
   color: ${Colors.grayLight};
   font-family: "Univers45", sans-serif;
-  bottom: 5%;
+  bottom: 10%;
   position: absolute;
   text-align: center;
   font-size: 14px;
@@ -81,9 +81,9 @@ const Tile: React.FC<TileProps> = ({
     <TileWrapper onClick={onClick} selected={selected}>
       <TileHeading>{heading}</TileHeading>
       {!errmsg && <SubHeader>{subheader}</SubHeader>}
+      {children}
       {errmsg && <ErrorMessage>{errmsg}</ErrorMessage>}
       <Footer>{footer}</Footer>
-      {children}
     </TileWrapper>
   );
 };
