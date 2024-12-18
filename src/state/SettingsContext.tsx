@@ -36,7 +36,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
     defaultDir: undefined,
     identityFile: undefined,
     publicKey: undefined,
-    atxId: undefined,
+    atxId: "65f77244a23870ee39f15cf088ee1651745c3b73195491e277bc65aa56937425", //temporary for the convenience of dev and tests, to be replaced with API call eventually
   });
 
   return (
