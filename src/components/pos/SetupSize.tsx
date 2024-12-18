@@ -50,7 +50,6 @@ export const SetupSize: React.FC = () => {
           <>
             <CustomNumberInput
               min={MIN_SPACE_UNITS}
-              max={999}
               step={1}
               value={settings.numUnits || MIN_SPACE_UNITS}
               onChange={(val) =>

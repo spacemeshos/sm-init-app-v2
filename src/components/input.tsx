@@ -129,7 +129,7 @@ const HexInput: React.FC<HexInputProps> = ({
 
 const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   min = 1,
-  max = 99,
+  max,
   step = 1,
   height,
   width,
@@ -145,7 +145,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   }, [value]);
 
   const handleIncrement = () => {
-    if (inputValue < max) {
+    if (max === undefined || inputValue < max) {
       const newValue = inputValue + step;
       setInputValue(newValue);
       onChange?.(newValue);
@@ -162,7 +162,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseInt(e.target.value, 10);
-    if (!isNaN(newValue) && newValue >= min && newValue <= max) {
+    if (!isNaN(newValue) && newValue >= min && (max === undefined || newValue <= max)) {
       setInputValue(newValue);
       onChange?.(newValue);
     }
