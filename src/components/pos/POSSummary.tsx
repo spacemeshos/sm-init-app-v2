@@ -9,7 +9,7 @@ import Colors from "../../styles/colors";
 import { List } from "../../styles/texts";
 import { shortenPath } from "../../utils/directoryUtils";
 import { truncateHex, isValidHex } from "../../utils/hexUtils";
-import { calculateTotalSize } from "../../utils/sizeUtils";
+import { calculateNumFiles, calculateTotalSize } from "../../utils/sizeUtils";
 import { Button } from "../button";
 import Frame from "../frames";
 import Modal from "../modal";
@@ -105,7 +105,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
         onProceed(); // This will set isGenerating in parent
         // Navigate to progress page after showing success modal
         setTimeout(() => {
-          navigate('/progress');
+          navigate("/progress");
         }, 100);
       } else {
         throw new Error("Failed to start POS generation process");
@@ -200,16 +200,24 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
           />
           <Frame
             height={18}
+            heading="File Size"
+            subheader={`${calculateNumFiles(
+              settings.numUnits,
+              settings.maxFileSize || 4096
+            )} files will be generated, ${settings.maxFileSize} MiB each`}
+          />
+          <Frame
+            height={18}
             heading="POS Provider"
             subheader={`Provider ID: ${settings.provider ?? "Not selected"}`}
           />
-          <Frame
+          {/* <Frame
             height={18}
             heading="Proving Setup"
             subheader={`${settings.numCores || 8} CPU Cores | ${
               settings.numNonces || 288
             } Nonces`}
-          />
+          /> */}
           <Frame
             height={18}
             heading="Identity Configuration"
