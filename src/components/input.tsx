@@ -1,7 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
-
 import Colors from "../styles/colors";
+import plusIcon from "../assets/plus.png";
+import minusIcon from "../assets/minus.png";
 
 interface CustomNumberInputProps {
   min?: number;
@@ -28,7 +29,7 @@ interface HexInputProps {
   type?: string;
 }
 
-const StyledInputRoot = styled.div<{ height?: number; width?: number }>`
+const StyledInputRoot = styled.div<{ height?: number }>`
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
@@ -45,17 +46,18 @@ const StyledInputRoot = styled.div<{ height?: number; width?: number }>`
 const StyledInput = styled.input<{
   fontSize?: number;
   isValid?: boolean;
+  width?: number;
 }>`
-  font-size: ${({ fontSize = 36 }) => fontSize}px;
+  font-size: ${({ fontSize = 36 }) => `${fontSize}px`};
   font-family: "Univers45", sans-serif;
   font-weight: 200;
   color: ${Colors.white};
-  height: 40px;
-  width: 300px;
-  background: ${Colors.greenLightOpaque};
-  border: 2px solid
+  height: 60px;
+  line-height: 60px;
+  width: ${({ width = 150 }) => `${width}px`};
+  background-color: ${Colors.greenLightOpaque};
+  border: 1px solid
     ${(props) => (props.isValid === false ? Colors.red : Colors.whiteOpaque)};
-  padding: 5px;
   text-align: center;
 
   /* Hide default number input arrows buttons */
@@ -75,23 +77,14 @@ const StyledButton = styled.button<{
   height?: number;
   width?: number;
 }>`
-  font-family: "Univers55", sans-serif;
-  font-size: 36px;
-  box-sizing: border-box;
-  line-height: 1.5;
   border: none;
-  background: ${Colors.whiteOpaque};
-  color: ${Colors.white};
-  height: 40px;
-  width: 56px;
+  background-color: ${Colors.whiteOpaque};
+  height: ${({ height = 60 }) => `${height}px`};
+  width: ${({ width = 60 }) => `${width}px`};
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 120ms;
-
   &:hover {
     cursor: pointer;
   }
@@ -101,12 +94,10 @@ const StyledButton = styled.button<{
   }
 `;
 
-const Text = styled.h1`
-  color: ${Colors.grayLight};
-  font-family: "Univers55", sans-serif;
-  text-align: center;
-  font-size: 26px;
-  position: relative;
+const IconImage = styled.img`
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 `;
 
 const HexInput: React.FC<HexInputProps> = ({
@@ -121,11 +112,12 @@ const HexInput: React.FC<HexInputProps> = ({
   type = 'text'
 }) => {
   return (
-    <StyledInputRoot height={height} width={width}>
+    <StyledInputRoot height={height}>
       <StyledInput
         type={type}
         value={value}
         onChange={onChange}
+        width={width}
         placeholder={placeholder}
         maxLength={maxLength}
         fontSize={fontSize}
@@ -177,16 +169,17 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   };
 
   return (
-    <StyledInputRoot height={height} width={width}>
+    <StyledInputRoot height={height}>
       <StyledButton
         height={height}
         width={width}
         onClick={handleDecrement}
         className="decrement"
       >
-        <Text>-</Text>
+        <IconImage src={minusIcon} alt="Decrease" />
       </StyledButton>
       <StyledInput
+        width={width}
         type="number"
         value={inputValue}
         onChange={handleChange}
@@ -200,7 +193,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
         onClick={handleIncrement}
         className="increment"
       >
-        <Text>+</Text>
+        <IconImage src={plusIcon} alt="Increase" />
       </StyledButton>
     </StyledInputRoot>
   );
