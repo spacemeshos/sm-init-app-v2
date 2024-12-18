@@ -10,7 +10,9 @@ import { BottomContainer, TileWrapper, SelectedValue } from "./styles";
 export const SetupSize: React.FC = () => {
   const { settings, setSettings } = useSettings();
   const [isSpaceUnitsVisible, setIsSpaceUnitsVisible] = useState(true);
+  const [isMaxFileSizeVisible, setIsMaxFileSizeVisible] = useState(true);
   const MIN_SPACE_UNITS = 4;
+  const DEFAULT_MAX_FILE_SIZE_MIB = 4096;
 
   const handleSaveSpaceUnits = () => {
     setIsSpaceUnitsVisible(false);
@@ -19,6 +21,15 @@ export const SetupSize: React.FC = () => {
   const handleCancelSpaceUnits = () => {
     setSettings((prev) => ({ ...prev, numUnits: MIN_SPACE_UNITS }));
     setIsSpaceUnitsVisible(true);
+  };
+
+  const handleSaveMaxFileSize = () => {
+    setIsMaxFileSizeVisible(false);
+  };
+
+  const handleCancelMaxFileSize = () => {
+    setSettings((prev) => ({ ...prev, maxFileSize: DEFAULT_MAX_FILE_SIZE_MIB }));
+    setIsMaxFileSizeVisible(true);
   };
 
   return (
@@ -49,6 +60,36 @@ export const SetupSize: React.FC = () => {
               {settings.numUnits || MIN_SPACE_UNITS}
             </SelectedValue>
             <CancelButton left={50} onClick={handleCancelSpaceUnits} />
+          </>
+        )}
+      </TileWrapper>
+
+      <TileWrapper>
+        <Tile
+          heading="Max File Size"
+          subheader="Size in Mebibytes (MiB)"
+          footer="Default: 4096 MiB (4 GiB)"
+        />
+        {isMaxFileSizeVisible ? (
+          <>
+            <CustomNumberInput
+              min={1}
+              max={8192}
+              step={1}
+              value={settings.maxFileSize || DEFAULT_MAX_FILE_SIZE_MIB}
+              onChange={(val) =>
+                setSettings((prev) => ({ ...prev, maxFileSize: val }))
+              }
+            />
+            <SaveButton left={55} onClick={handleSaveMaxFileSize} />
+            <CancelButton left={45} onClick={handleCancelMaxFileSize} />
+          </>
+        ) : (
+          <>
+            <SelectedValue>
+              {settings.maxFileSize || DEFAULT_MAX_FILE_SIZE_MIB}
+            </SelectedValue>
+            <CancelButton left={50} onClick={handleCancelMaxFileSize} />
           </>
         )}
       </TileWrapper>

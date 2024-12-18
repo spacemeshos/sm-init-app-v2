@@ -2,6 +2,9 @@ import { Settings } from "../state/SettingsContext";
 
 import { isValidHex } from "./hexUtils";
 
+const MIB_TO_BYTES = 1048576; // 1 MiB = 1,048,576 bytes
+const DEFAULT_MAX_FILE_SIZE_BYTES = 4294967296; // 4 GiB in bytes
+
 export const buildPostCliArgs = (settings: Settings): string[] | null => {
   // First validate that ATX ID is present and valid
   if (!settings.atxId || !isValidHex(settings.atxId, 64)) {
@@ -25,11 +28,21 @@ export const buildPostCliArgs = (settings: Settings): string[] | null => {
     args.push(`-datadir=${settings.selectedDir}`);
   }
 
+  // Add maxFileSize if provided, converting from MiB to bytes
+  if (settings.maxFileSize) {
+    const maxFileSizeBytes = settings.maxFileSize * MIB_TO_BYTES;
+    args.push(`-maxFileSize=${maxFileSizeBytes}`);
+  }
+
   // Add debug log level
   args.push("-logLevel=debug");
 
+  // Temporary flag for quicker testing
+  args.push("-labelsPerUnit=4096");
+  args.push("-yes");
+  
   // Always add genproof
-  args.push("-genproof");
+  //args.push("-genproof");
 
   return args;
 };
@@ -56,6 +69,10 @@ export const validateSettings = (settings: Settings): string | null => {
   // If publicKey is provided, validate that it's a valid hex string
   if (settings.publicKey && !isValidHex(settings.publicKey, 64)) {
     return "Invalid public key format";
+  }
+  // Validate maxFileSize if provided
+  if (settings.maxFileSize && (settings.maxFileSize < 1 || settings.maxFileSize > 8192)) {
+    return "Max file size must be between 1 and 8192 MiB";
   }
   return null;
 };
