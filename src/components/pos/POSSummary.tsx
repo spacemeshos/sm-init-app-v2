@@ -45,12 +45,12 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
 }) => {
   const navigate = useNavigate();
   const { settings } = useSettings();
-  const { startProcess } = usePOSProcess();
+  const { startProcess, processState } = usePOSProcess();
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  const isGenerating = parentIsGenerating || false;
+  const isGenerating = parentIsGenerating || processState.isRunning || false;
 
   const validateSettings = () => {
     const errors: string[] = [];
@@ -103,10 +103,12 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
         startProcess(response.process_id);
         setShowSuccessModal(true);
         onProceed(); // This will set isGenerating in parent
+
         // Navigate to progress page after showing success modal
+        // Use a short delay to ensure the modal is visible
         setTimeout(() => {
           navigate("/progress");
-        }, 100);
+        }, 1500); // Increased delay to ensure modal is visible
       } else {
         throw new Error("Failed to start POS generation process");
       }
@@ -157,7 +159,10 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
 
       <Modal
         isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/progress");
+        }}
         header="POS Generation Started"
         width={600}
         height={80}
