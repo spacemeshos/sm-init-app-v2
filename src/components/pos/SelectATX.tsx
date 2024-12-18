@@ -48,6 +48,7 @@ export const SelectATX: React.FC = () => {
           placeholder="Enter ATX ID (required, 64-char hex)"
           maxLength={64}
           fontSize={12}
+          width={300}
           className={error ? "error" : ""}
         />
       </TileWrapper>

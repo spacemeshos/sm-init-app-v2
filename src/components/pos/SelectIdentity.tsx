@@ -53,6 +53,7 @@ export const SelectIdentity: React.FC = () => {
           onChange={handlePublicKeyChange}
           placeholder="Enter your Public Key (hex, optional)"
           maxLength={64}
+          width={300}
           className={error ? "error" : ""}
         />
       </TileWrapper>
