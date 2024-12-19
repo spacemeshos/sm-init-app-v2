@@ -17,7 +17,11 @@ import { useConsole } from "../state/ConsoleContext";
 import { useSettings } from "../state/SettingsContext";
 import Colors from "../styles/colors";
 import { Header } from "../styles/texts";
-import { Background, MainContainer } from "../styles/containers";
+import {
+  Background,
+  MainContainer,
+  PageTitleWrapper,
+} from "../styles/containers";
 
 const SetupContainer = styled.div`
   width: 800px;
@@ -42,21 +46,6 @@ const ButtonColumn = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-`;
-
-const TextWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-content: center;
-  position: absolute;
-  top: 50px;
-  left: 50%;
-  height: 80px;
-  width: 80%;
-  transform: translateX(-50%);
-  text-transform: uppercase;
-  border-bottom: 1px solid ${Colors.greenLight};
 `;
 
 const ErrorMessage = styled.div`
@@ -137,7 +126,7 @@ const Generate: React.FC = () => {
       <Background src={BackgroundImage} />
       <BackButton />
       <MainContainer>
-        <TextWrapper>
+        <PageTitleWrapper>
           <Header
             text={
               showSummary
@@ -145,7 +134,7 @@ const Generate: React.FC = () => {
                 : steps[currentStep].label
             }
           />
-        </TextWrapper>
+        </PageTitleWrapper>
         <SetupContainer>
           <SetupContainer>{renderContent()}</SetupContainer>
           {error && <ErrorMessage>{error}</ErrorMessage>}

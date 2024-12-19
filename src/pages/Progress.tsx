@@ -2,17 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { usePOSProcess } from "../state/POSProcessContext";
 import { Stage } from "../types/posProgress";
-import Colors from "../styles/colors";
 import BackgroundImage from "../assets/home.png";
 import { BackButton, Button } from "../components/button";
 import { useNavigate } from "react-router-dom";
-import { Background, MainContainer } from "../styles/containers";
-import { BodyText, ErrorMessage, Header } from "../styles/texts";
-
-const StopButton = styled(Button)`
-  position: absolute;
-  bottom: 20px;
-`;
+import { Background, MainContainer, PageTitleWrapper} from "../styles/containers";
+import { BodyText, ErrorMessage, Header, Subheader } from "../styles/texts";
 
 const ProgressContainer = styled.div`
   width: 800px;
@@ -85,18 +79,16 @@ const DetailText = styled(BodyText)`
       <Background src={BackgroundImage} />
       <BackButton />
       <MainContainer>
-        <ProgressContainer>
+        <PageTitleWrapper>
           <Header text="POS Generation Progress" />
-
-          {processId && <BodyText>Process ID: {processId}</BodyText>}
-
-          <ProgressSection>
-            <ProgressLabel>Overall Progress</ProgressLabel>
-            <ProgressBar>
-              <ProgressFill width={progress} />
-            </ProgressBar>
-            <DetailText>{details}</DetailText>
-          </ProgressSection>
+          {processState.processId && (
+            <BodyText>Process ID: {processState.processId}</BodyText>
+          )}
+          <BodyText>{details}</BodyText>
+        </PageTitleWrapper>
+        <ProgressContainer>
+          <Header text="Current File Progress" top={10} />
+          <BodyText>{details}</BodyText>
 
           {processState.fileProgress && (
             <ProgressSection>
@@ -117,14 +109,14 @@ const DetailText = styled(BodyText)`
           )}
 
           {isError && <ErrorMessage>{details}</ErrorMessage>}
-        </ProgressContainer>
-        <StopButton
+          <Button
           label="Stop Generation"
           onClick={handleStopGeneration}
           width={250}
           height={56}
           disabled={stage === Stage.Complete || stage === Stage.Error}
         />
+        </ProgressContainer>
       </MainContainer>
     </>
   );
