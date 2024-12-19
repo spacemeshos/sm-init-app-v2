@@ -30,12 +30,13 @@ export const buildPostCliArgs = (settings: Settings): string[] | null => {
 
   // Add maxFileSize if provided, converting from MiB to bytes
   if (settings.maxFileSize) {
-    const maxFileSizeBytes = settings.maxFileSize * MIB_TO_BYTES;
-    args.push(`-maxFileSize=${maxFileSizeBytes}`);
+    //  const maxFileSizeBytes = settings.maxFileSize * MIB_TO_BYTES;
+    //args.push(`-maxFileSize=${maxFileSizeBytes}`);
+    args.push(`-maxFileSize=2048`); //for testing
   }
 
   // Add debug log level
-  args.push("-logLevel=debug");
+  //args.push("-logLevel=debug");
 
   // Temporary flag for quicker testing
   args.push("-labelsPerUnit=4096");
