@@ -87,12 +87,15 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const processLog = (log: string) => {
+    // Strip stdout/stderr prefixes from the log
+    const cleanLog = log.replace(/^(stdout|stderr): /, '');
+    
     const posSettings: POSSettings = {
       numUnits: settings.numUnits || 4,
       maxFileSize: settings.maxFileSize || 4096
     };
 
-    const parsed = parsePOSProgress(log, posSettings);
+    const parsed = parsePOSProgress(cleanLog, posSettings);
     
     setProcessState(prev => {
       // If we're already in a terminal state (Complete or Error), don't process more logs
@@ -100,14 +103,26 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
         return prev;
       }
 
+      // Keep previous fileProgress if the new parsed state doesn't have it
+      const updatedFileProgress = parsed.fileProgress || prev.fileProgress;
+      
+      // Calculate overall progress considering both file and label progress
+      let calculatedProgress = parsed.progress;
+      if (updatedFileProgress && updatedFileProgress.targetLabels > 0) {
+        const fileProgress = updatedFileProgress.currentFile / updatedFileProgress.totalFiles;
+        const labelProgress = updatedFileProgress.currentLabels / updatedFileProgress.targetLabels;
+        const fileWeight = 1 / updatedFileProgress.totalFiles;
+        calculatedProgress = ((fileProgress + (labelProgress * fileWeight)) * 100);
+      }
+
       return {
         ...prev,
         stage: parsed.stage,
-        progress: parsed.progress,
+        progress: calculatedProgress,
         details: parsed.details,
         isError: parsed.isError,
-        fileProgress: parsed.fileProgress,
-        logs: [...prev.logs, log],
+        fileProgress: updatedFileProgress,
+        logs: [...prev.logs, cleanLog],
         // Update running state based on terminal conditions
         isRunning: parsed.stage !== Stage.Complete && parsed.stage !== Stage.Error
       };
