@@ -106,19 +106,10 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
       // Keep previous fileProgress if the new parsed state doesn't have it
       const updatedFileProgress = parsed.fileProgress || prev.fileProgress;
       
-      // Calculate overall progress considering both file and label progress
-      let calculatedProgress = parsed.progress;
-      if (updatedFileProgress && updatedFileProgress.targetLabels > 0) {
-        const fileProgress = updatedFileProgress.currentFile / updatedFileProgress.totalFiles;
-        const labelProgress = updatedFileProgress.currentLabels / updatedFileProgress.targetLabels;
-        const fileWeight = 1 / updatedFileProgress.totalFiles;
-        calculatedProgress = ((fileProgress + (labelProgress * fileWeight)) * 100);
-      }
-
       return {
         ...prev,
         stage: parsed.stage,
-        progress: calculatedProgress,
+        progress: parsed.progress,
         details: parsed.details,
         isError: parsed.isError,
         fileProgress: updatedFileProgress,
