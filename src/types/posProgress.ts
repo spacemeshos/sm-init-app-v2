@@ -8,8 +8,6 @@ export enum Stage {
 export interface FileProgress {
   currentFile: number;
   totalFiles: number;
-  currentLabels: number;
-  targetLabels: number;
 }
 
 export interface POSSettings {
