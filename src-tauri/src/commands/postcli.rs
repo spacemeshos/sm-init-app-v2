@@ -1,7 +1,10 @@
 use std::env;
 use std::path::PathBuf;
-use std::process::Command;
+use std::process::{Command, Stdio};
+use std::thread;
 use serde::Serialize;
+use tauri::Manager;
+use std::io::{BufRead, BufReader};
 #[cfg(unix)]
 use nix::sys::signal::{kill, Signal};
 #[cfg(unix)]
@@ -74,7 +77,7 @@ pub fn run_postcli_command(args: Vec<String>) -> Result<CommandOutput, String> {
 }
 
 #[tauri::command]
-pub fn run_postcli_detached(args: Vec<String>) -> Result<DetachedProcessInfo, String> {
+pub async fn run_postcli_detached(args: Vec<String>, app: tauri::AppHandle) -> Result<DetachedProcessInfo, String> {
     let path = get_postcli_path();
 
     // Check if postcli exists
@@ -91,10 +94,40 @@ pub fn run_postcli_detached(args: Vec<String>) -> Result<DetachedProcessInfo, St
 
     let child = Command::new(postcli_path)
         .args(&args)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
         .spawn()
         .map_err(|e| format!("Failed to execute postcli: {}", e))?;
 
     let process_id = child.id();
+
+    // Handle stdout in a separate thread
+    if let Some(stdout) = child.stdout {
+        let app_clone = app.clone();
+        thread::spawn(move || {
+            let reader = BufReader::new(stdout);
+            for line in reader.lines() {
+                if let Ok(line) = line {
+                    println!("postcli stdout: {}", line);
+                    app_clone.emit_all("postcli-log", format!("stdout: {}", line)).unwrap();
+                }
+            }
+        });
+    }
+
+    // Handle stderr in a separate thread
+    if let Some(stderr) = child.stderr {
+        let app_clone = app.clone();
+        thread::spawn(move || {
+            let reader = BufReader::new(stderr);
+            for line in reader.lines() {
+                if let Ok(line) = line {
+                    eprintln!("postcli stderr: {}", line);
+                    app_clone.emit_all("postcli-log", format!("stderr: {}", line)).unwrap();
+                }
+            }
+        });
+    }
 
     Ok(DetachedProcessInfo {
         process_id,
