@@ -21,10 +21,21 @@ const ProgressContainer = styled.div`
   left: 0px;
   top: 40px;
   display: flex;
-  align-items: flex-start;
-  align-content: center;
-  justify-content: center;
-  padding: 20px;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 50px;
+`;
+
+const ProgressSection = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const ProgressLabel = styled(BodyText)`
+  margin-bottom: 5px;
 `;
 
 const ProgressBar = styled.div`
@@ -40,6 +51,12 @@ const ProgressFill = styled.div<{ width: number }>`
   height: 100%;
   background-color: ${Colors.greenLight};
   transition: width 0.3s ease;
+`;
+
+const DetailText = styled(BodyText)`
+  color: ${Colors.greenLight};
+  font-size: 14px;
+  margin-top: 5px;
 `;
 
  const Progress: React.FC = () => {
@@ -73,15 +90,33 @@ const ProgressFill = styled.div<{ width: number }>`
 
           {processId && <BodyText>Process ID: {processId}</BodyText>}
 
-          <ProgressBar>
-            <ProgressFill width={progress} />
-          </ProgressBar>
+          <ProgressSection>
+            <ProgressLabel>Overall Progress</ProgressLabel>
+            <ProgressBar>
+              <ProgressFill width={progress} />
+            </ProgressBar>
+            <DetailText>{details}</DetailText>
+          </ProgressSection>
 
-          {isError ? (
-            <ErrorMessage>{details}</ErrorMessage>
-          ) : (
-            <BodyText>{details}</BodyText>
+          {processState.fileProgress && (
+            <ProgressSection>
+              <ProgressLabel>Current File Progress</ProgressLabel>
+              <ProgressBar>
+                <ProgressFill 
+                  width={
+                    (processState.fileProgress.currentLabels / 
+                    processState.fileProgress.targetLabels) * 100 || 0
+                  } 
+                />
+              </ProgressBar>
+              <DetailText>
+                File {processState.fileProgress.currentFile + 1} of {processState.fileProgress.totalFiles}
+                {processState.fileProgress.targetLabels > 0 && ` • ${processState.fileProgress.currentLabels} of ${processState.fileProgress.targetLabels} labels`}
+              </DetailText>
+            </ProgressSection>
           )}
+
+          {isError && <ErrorMessage>{details}</ErrorMessage>}
         </ProgressContainer>
         <StopButton
           label="Stop Generation"
