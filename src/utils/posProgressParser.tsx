@@ -2,37 +2,41 @@ import { Stage, ParsedPOSProgress, POSSettings } from "../types/posProgress";
 import { calculateNumFiles } from "./sizeUtils";
 
 export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSProgress => {
+  console.log('Parsing log:', log);
   // Default response
   const defaultResponse: ParsedPOSProgress = {
     stage: Stage.Processing,
     progress: 0,
-    details: "Starting POS data generation...",
+    details: "Generating Proof of Space data...",
     isError: false
   };
 
   if (!log) return defaultResponse;
 
+  // Remove the "postcli stdout: " prefix if present
+  const cleanLog = log.replace(/^postcli stdout:\s*/, '');
+
   // Calculate total files based on settings
   const totalFiles = calculateNumFiles(settings.numUnits, settings.maxFileSize);
 
   // Check for errors first
-  if (log.toLowerCase().includes("error")) {
+  if (cleanLog.toLowerCase().includes("error")) {
     return {
       stage: Stage.Error,
       progress: 0,
-      details: log,
+      details: cleanLog,
       isError: true
     };
   }
 
   // Parse file completion
-  const fileCompleteMatch = log.match(
-    /(.*?\s+)(INFO\s+initialization:\s+completed\s+\{"fileIndex":\s)(\d+)(,.*?})/
-  );
+  const fileCompleteMatch = cleanLog.match(/INFO\s+initialization:\s+completed\s+{"fileIndex":\s*(\d+)/);
   if (fileCompleteMatch) {
-    const currentFile = parseInt(fileCompleteMatch[3]);
+    const currentFile = parseInt(fileCompleteMatch[1]);
     const progress = ((currentFile + 1) / totalFiles) * 100;
-
+    
+    console.log('Matched file completion:', { currentFile, totalFiles, progress });
+    
     return {
       stage: Stage.Processing,
       progress,
@@ -46,7 +50,7 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
   }
 
   // Check for final completion
-  if (log.includes("cli: initialization completed")) {
+  if (cleanLog.includes("cli: initialization completed")) {
     return {
       stage: Stage.Complete,
       progress: 100,
