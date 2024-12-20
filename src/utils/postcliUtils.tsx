@@ -30,9 +30,8 @@ export const buildPostCliArgs = (settings: Settings): string[] | null => {
 
   // Add maxFileSize if provided, converting from MiB to bytes
   if (settings.maxFileSize) {
-    //  const maxFileSizeBytes = settings.maxFileSize * MIB_TO_BYTES;
-    //args.push(`-maxFileSize=${maxFileSizeBytes}`);
-    args.push(`-maxFileSize=2048`); //for testing
+    const maxFileSizeBytes = settings.maxFileSize * MIB_TO_BYTES;
+    args.push(`-maxFileSize=${maxFileSizeBytes}`);
   }
 
   // Add debug log level
@@ -41,7 +40,7 @@ export const buildPostCliArgs = (settings: Settings): string[] | null => {
   // Temporary flag for quicker testing
   args.push("-labelsPerUnit=4096");
   args.push("-yes");
-  
+
   // Always add genproof
   //args.push("-genproof");
 
@@ -72,7 +71,10 @@ export const validateSettings = (settings: Settings): string | null => {
     return "Invalid public key format";
   }
   // Validate maxFileSize if provided
-  if (settings.maxFileSize && (settings.maxFileSize < 1 || settings.maxFileSize > 8192)) {
+  if (
+    settings.maxFileSize &&
+    (settings.maxFileSize < 1 || settings.maxFileSize > 8192)
+  ) {
     return "Max file size must be between 1 and 8192 MiB";
   }
   return null;
