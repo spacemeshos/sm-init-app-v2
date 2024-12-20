@@ -11,6 +11,9 @@ import {
   PageTitleWrapper,
 } from "../styles/containers";
 import { BodyText, ErrorMessage, Header, Subheader } from "../styles/texts";
+import Frame from "../components/frames";
+import { calculateNumFiles, calculateTotalSize } from "../utils/sizeUtils";
+import { useSettings } from "../state/SettingsContext";
 
 const ProgressContainer = styled.div`
   width: 800px;
@@ -30,6 +33,7 @@ const Progress: React.FC = () => {
   const navigate = useNavigate();
   const { processState, stopProcess } = usePOSProcess();
   const { stage, details, isError, processId, isRunning } = processState;
+  const { settings } = useSettings();
 
   React.useEffect(() => {
     if (!isRunning && stage !== Stage.Complete && stage !== Stage.Error) {
@@ -54,18 +58,34 @@ const Progress: React.FC = () => {
       <MainContainer>
         <PageTitleWrapper>
           <Header text="POS Generation Progress" />
-          {processId && <Subheader text="Process ID: ">{processId}</Subheader>}
         </PageTitleWrapper>
         <ProgressContainer>
           <Header text="Current Progress" top={10} />
-          <BodyText>{details}</BodyText>
-
-          {processState.fileProgress && (
-            <Subheader top={160} text="Last Generated File Index:">
-              {processState.fileProgress.currentFile}
-            </Subheader>
-          )}
+          <BodyText text={`Status: ${details}`} />
           {isError && <ErrorMessage>{details}</ErrorMessage>}
+          <Frame
+            height={18}
+            heading="POS Size"
+            subheader={`${settings.numUnits} Space Units (${calculateTotalSize(
+              settings.numUnits
+            )})`}
+          />
+          <Frame
+            height={18}
+            heading="File Size"
+            subheader={`${calculateNumFiles(
+              settings.numUnits,
+              settings.maxFileSize
+            )} files will be generated, ${settings.maxFileSize} MiB each`}
+          />
+          <Frame
+            height={18}
+            heading="Already generated"
+            subheader={`${
+              processState.progress
+            } Files`}
+          />
+
           <Button
             label="Stop Generation"
             onClick={handleStopGeneration}
@@ -74,6 +94,7 @@ const Progress: React.FC = () => {
             disabled={stage === Stage.Complete || stage === Stage.Error}
           />
         </ProgressContainer>
+        <BodyText text={`Process ID: ${processState.processId}`} />
       </MainContainer>
     </>
   );
