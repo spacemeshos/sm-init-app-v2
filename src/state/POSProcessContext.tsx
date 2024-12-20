@@ -87,15 +87,19 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const processLog = (log: string) => {
-    // Strip stdout/stderr prefixes from the log
-    const cleanLog = log.replace(/^(stdout|stderr): /, '');
+    console.log('Processing log:', log);
+    
+    // Strip postcli stdout/stderr prefixes from the log
+    const cleanLog = log.replace(/^postcli (stdout|stderr):\s*/, '');
     
     const posSettings: POSSettings = {
       numUnits: settings.numUnits || 4,
       maxFileSize: settings.maxFileSize || 4096
     };
 
+    console.log('Settings for parsing:', posSettings);
     const parsed = parsePOSProgress(cleanLog, posSettings);
+    console.log('Parsed progress:', parsed);
     
     setProcessState(prev => {
       // If we're already in a terminal state (Complete or Error), don't process more logs
@@ -106,7 +110,7 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
       // Keep previous fileProgress if the new parsed state doesn't have it
       const updatedFileProgress = parsed.fileProgress || prev.fileProgress;
       
-      return {
+      const newState = {
         ...prev,
         stage: parsed.stage,
         progress: parsed.progress,
@@ -117,12 +121,27 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
         // Update running state based on terminal conditions
         isRunning: parsed.stage !== Stage.Complete && parsed.stage !== Stage.Error
       };
+      console.log('New process state:', newState);
+      return newState;
     });
   };
 
   const reset = () => {
     setProcessState(initialState);
   };
+
+  // Set up event listener for progress updates
+  React.useEffect(() => {
+    const handleProgress = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      if (customEvent.detail) {
+        processLog(customEvent.detail);
+      }
+    };
+
+    window.addEventListener('postcli-progress', handleProgress);
+    return () => window.removeEventListener('postcli-progress', handleProgress);
+  }, [settings]); // Add settings as dependency since processLog uses it
 
   return (
     <POSProcessContext.Provider
