@@ -7,7 +7,7 @@ import { useSettings } from "../../state/SettingsContext";
 import { usePOSProcess } from "../../state/POSProcessContext";
 import Colors from "../../styles/colors";
 import { List } from "../../styles/texts";
-import { shortenPath } from "../../utils/directoryUtils";
+import { getDirectoryDisplay } from "../../utils/directoryUtils";
 import { truncateHex, isValidHex } from "../../utils/hexUtils";
 import { calculateNumFiles, calculateTotalSize } from "../../utils/sizeUtils";
 import { Button } from "../button";
@@ -45,12 +45,12 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
 }) => {
   const navigate = useNavigate();
   const { settings } = useSettings();
-  const { startProcess } = usePOSProcess();
+  const { startProcess, processState } = usePOSProcess();
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  const isGenerating = parentIsGenerating || false;
+  const isGenerating = parentIsGenerating || processState.isRunning || false;
 
   const validateSettings = () => {
     const errors: string[] = [];
@@ -103,10 +103,12 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
         startProcess(response.process_id);
         setShowSuccessModal(true);
         onProceed(); // This will set isGenerating in parent
+
         // Navigate to progress page after showing success modal
+        // Use a short delay to ensure the modal is visible
         setTimeout(() => {
           navigate("/progress");
-        }, 100);
+        }, 1500); // Increased delay to ensure modal is visible
       } else {
         throw new Error("Failed to start POS generation process");
       }
@@ -121,16 +123,6 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
         );
       }
     }
-  };
-
-  // Get the directory display information
-  const getDirectoryDisplay = () => {
-    if (settings.selectedDir) {
-      return `Custom: ${shortenPath(settings.selectedDir, 35)}`;
-    }
-    return `Default: ${
-      settings.defaultDir ? shortenPath(settings.defaultDir, 35) : "Loading..."
-    }`;
   };
 
   return (
@@ -157,7 +149,10 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
 
       <Modal
         isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/progress");
+        }}
         header="POS Generation Started"
         width={600}
         height={80}
@@ -189,7 +184,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
           <Frame
             height={18}
             heading="POS Location"
-            subheader={getDirectoryDisplay()}
+            subheader={getDirectoryDisplay(settings.selectedDir, settings.defaultDir)}
           />
           <Frame
             height={18}

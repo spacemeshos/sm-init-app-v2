@@ -119,6 +119,24 @@ export const checkWritePermission = async (path: string): Promise<boolean> => {
  * @param maxLength - The maximum length of the shortened path.
  * @returns The shortened path.
  */
+/**
+ * Gets a formatted display string for the directory path
+ * @param selectedDir - The selected custom directory path
+ * @param defaultDir - The default directory path
+ * @param maxLength - Maximum length for the shortened path
+ * @returns Formatted directory display string
+ */
+export const getDirectoryDisplay = (
+  selectedDir: string | null | undefined,
+  defaultDir: string | null | undefined,
+  maxLength: number = 35
+): string => {
+  if (selectedDir) {
+    return `Custom: ${shortenPath(selectedDir, maxLength)}`;
+  }
+  return `Default: ${defaultDir ? shortenPath(defaultDir, maxLength) : "Loading..."}`;
+};
+
 export const shortenPath = (path: string, maxLength: number): string => {
   if (path.length <= maxLength) {
     return path;

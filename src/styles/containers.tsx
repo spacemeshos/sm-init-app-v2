@@ -43,3 +43,18 @@ export const MainContainer = styled.div`
     pointer-events: none;
   }
 `;
+
+export const PageTitleWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  height: 80px;
+  width: 80%;
+  transform: translateX(-50%);
+  text-transform: uppercase;
+  border-bottom: 1px solid ${Colors.greenLight};
+`;

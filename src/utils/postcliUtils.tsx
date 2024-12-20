@@ -35,12 +35,12 @@ export const buildPostCliArgs = (settings: Settings): string[] | null => {
   }
 
   // Add debug log level
-  args.push("-logLevel=debug");
+  //args.push("-logLevel=debug");
 
   // Temporary flag for quicker testing
   args.push("-labelsPerUnit=4096");
   args.push("-yes");
-  
+
   // Always add genproof
   //args.push("-genproof");
 
@@ -71,7 +71,10 @@ export const validateSettings = (settings: Settings): string | null => {
     return "Invalid public key format";
   }
   // Validate maxFileSize if provided
-  if (settings.maxFileSize && (settings.maxFileSize < 1 || settings.maxFileSize > 8192)) {
+  if (
+    settings.maxFileSize &&
+    (settings.maxFileSize < 1 || settings.maxFileSize > 8192)
+  ) {
     return "Max file size must be between 1 and 8192 MiB";
   }
   return null;

@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/tauri";
+import { listen } from '@tauri-apps/api/event';
 
 import { Settings } from "../state/SettingsContext";
 import { buildPostCliArgs, validateSettings } from "../utils/postcliUtils";
@@ -120,7 +121,24 @@ export const executePostCliDetached = async (
     );
   }
 
+  let unlistenCallback: (() => void) | undefined;
+
   try {
+    // Set up event listener for postcli logs
+    unlistenCallback = await listen('postcli-log', (event) => {
+      if (typeof event.payload === 'string') {
+        // Update console if callback provided
+        if (updateConsole) {
+          updateConsole('postcli-detached', event.payload);
+        }
+        
+        // Emit a custom event for process state updates
+        window.dispatchEvent(new CustomEvent('postcli-progress', {
+          detail: event.payload
+        }));
+      }
+    });
+
     console.log("Invoking Tauri detached command with args:", args);
     const response = await invoke<DetachedProcessResponse>(
       "run_postcli_detached",
@@ -139,6 +157,9 @@ export const executePostCliDetached = async (
     console.error("Error executing postcli in detached mode:", error);
     if (updateConsole) {
       updateConsole(commandStr, `> Error:\n${errorMessage}`);
+    }
+    if (unlistenCallback) {
+      unlistenCallback(); // Clean up listener on error
     }
     throw error;
   }
