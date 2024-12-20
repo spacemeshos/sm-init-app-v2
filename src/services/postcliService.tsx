@@ -126,8 +126,16 @@ export const executePostCliDetached = async (
   try {
     // Set up event listener for postcli logs
     unlistenCallback = await listen('postcli-log', (event) => {
-      if (updateConsole && typeof event.payload === 'string') {
-        updateConsole('postcli-detached', event.payload);
+      if (typeof event.payload === 'string') {
+        // Update console if callback provided
+        if (updateConsole) {
+          updateConsole('postcli-detached', event.payload);
+        }
+        
+        // Emit a custom event for process state updates
+        window.dispatchEvent(new CustomEvent('postcli-progress', {
+          detail: event.payload
+        }));
       }
     });
 
