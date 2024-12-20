@@ -7,7 +7,7 @@ import { useSettings } from "../../state/SettingsContext";
 import { usePOSProcess } from "../../state/POSProcessContext";
 import Colors from "../../styles/colors";
 import { List } from "../../styles/texts";
-import { shortenPath } from "../../utils/directoryUtils";
+import { getDirectoryDisplay } from "../../utils/directoryUtils";
 import { truncateHex, isValidHex } from "../../utils/hexUtils";
 import { calculateNumFiles, calculateTotalSize } from "../../utils/sizeUtils";
 import { Button } from "../button";
@@ -125,16 +125,6 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
     }
   };
 
-  // Get the directory display information
-  const getDirectoryDisplay = () => {
-    if (settings.selectedDir) {
-      return `Custom: ${shortenPath(settings.selectedDir, 35)}`;
-    }
-    return `Default: ${
-      settings.defaultDir ? shortenPath(settings.defaultDir, 35) : "Loading..."
-    }`;
-  };
-
   return (
     <>
       <Modal
@@ -194,7 +184,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
           <Frame
             height={18}
             heading="POS Location"
-            subheader={getDirectoryDisplay()}
+            subheader={getDirectoryDisplay(settings.selectedDir, settings.defaultDir)}
           />
           <Frame
             height={18}

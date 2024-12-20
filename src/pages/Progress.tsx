@@ -13,6 +13,7 @@ import {
 import { BodyText, ErrorMessage, Header } from "../styles/texts";
 import Frame from "../components/frames";
 import { calculateNumFiles, calculateTotalSize } from "../utils/sizeUtils";
+import { getDirectoryDisplay } from "../utils/directoryUtils";
 import { useSettings } from "../state/SettingsContext";
 
 const ProgressContainer = styled.div`
@@ -84,9 +85,13 @@ const Progress: React.FC = () => {
           <Header text="POS Generation Progress" />
         </PageTitleWrapper>
         <ProgressContainer>
-          <Header text="Current Progress" top={10} />
-          <BodyText text={`Status: ${details}`} />
+          <BodyText text={`Status: ${details}`} top={0} />
           {isError && <ErrorMessage>{details}</ErrorMessage>}
+          <Frame
+            height={18}
+            heading="POS Location"
+            subheader={getDirectoryDisplay(settings.selectedDir, settings.defaultDir)}
+          />
           <Frame
             height={18}
             heading="POS Size"
