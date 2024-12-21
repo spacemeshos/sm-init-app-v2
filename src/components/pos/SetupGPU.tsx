@@ -59,6 +59,7 @@ export const SetupGPU: React.FC<Props> = ({ isOpen }) => {
     return (
       <TileWrapper width={350} key={processor.ID}>
         <Tile
+          width={200}
           heading={processor.Model}
           subheader={`${processor.DeviceType}${isFastest ? " (Fastest)" : ""}`}
           footer={isSelected ? "Selected" : "Click to select"}

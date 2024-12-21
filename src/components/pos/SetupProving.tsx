@@ -34,7 +34,7 @@ const InputSection: React.FC<InputSectionProps> = ({
   onChange,
 }) => (
   <TileWrapper>
-    <Tile heading={heading} footer={footer} />
+    <Tile heading={heading} footer={footer} width={250} height={300}/>
     {isVisible ? (
       <>
         <CustomNumberInput

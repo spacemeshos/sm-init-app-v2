@@ -44,7 +44,9 @@ export const SetupSize: React.FC = () => {
           subheader={`${
             settings.numUnits || 4
           } Space Units (${calculateTotalSize(settings.numUnits)})`}
-          footer="1 Space Unit = 64 GiB. Minimum 4."
+          footer="1 Space Unit = 64 GiB (Minimum 4)"
+          width={250}
+          height={400}
         />
         {isSpaceUnitsVisible ? (
           <>
@@ -77,6 +79,8 @@ export const SetupSize: React.FC = () => {
             settings.maxFileSize || DEFAULT_MAX_FILE_SIZE_MIB
           )} files will be generated`}
           footer="Default: 4096 MiB (4 GiB)"
+          width={250}
+          height={400}
         />
         {isMaxFileSizeVisible ? (
           <>

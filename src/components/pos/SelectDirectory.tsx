@@ -15,10 +15,10 @@ import { styled } from "styled-components";
 
 
 export const BottomContainer = styled.div`
-  height: 80%;
+  height: 60%;
   width: 80%;
   position: absolute;
-  top: 70px;
+  top: 100px;
   display: flex;
   justify-content: center;
   flex-direction: column;
