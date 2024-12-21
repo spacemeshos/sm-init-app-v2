@@ -13,13 +13,31 @@ const ConsoleContainer = styled.div<ConsoleContainerProps>`
   background-color: ${Colors.black};
   font-family: 'Courier New', Courier, monospace;
   min-height: 20px;
-  height: ${props => props.$isExpanded ? `100px` : '30px'};
-  overflow-y: auto;
+  height: ${props => props.$isExpanded ? `300px` : '30px'};
   color: ${Colors.greenVeryLight};
   font-size: 12px;
   line-height: 1.4;
   position: relative;
   transition: height 0.3s ease;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ButtonContainer = styled.div`
+  position: sticky;
+  top: 0;
+  background-color: ${Colors.black};
+  padding: 4px;
+  display: flex;
+  gap: 4px;
+  z-index: 1;
+  justify-content: flex-end;
+  flex-shrink: 0;
+`;
+
+const ScrollContainer = styled.div`
+  overflow-y: auto;
+  flex-grow: 1;
   
   /* Scrollbar styling */
   &::-webkit-scrollbar {
@@ -40,24 +58,14 @@ const ConsoleContainer = styled.div<ConsoleContainerProps>`
   }
 `;
 
-const ButtonContainer = styled.div`
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  display: flex;
-  gap: 4px;
-  z-index: 1;
-`;
-
 const ConsoleButton = styled.button`
   background-color: ${Colors.black};
-  border: 1px solid ${Colors.greenLight};
+  border: none;
   color: ${Colors.greenLight};
   padding: 2px 8px;
-  border-radius: 4px;
   font-size: 10px;
   cursor: pointer;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Univers55", sans-serif;
 
   &:hover {
     background-color: ${Colors.greenLight}20;
@@ -172,7 +180,6 @@ const ConsoleView: React.FC = () => {
 
   return (
     <ConsoleContainer 
-      ref={consoleRef} 
       $isExpanded={isExpanded}
       $height={height}
     >
@@ -184,7 +191,9 @@ const ConsoleView: React.FC = () => {
           {isExpanded ? 'Minimize' : 'Expand'}
         </ConsoleButton>
       </ButtonContainer>
-      {renderContent()}
+      <ScrollContainer ref={consoleRef}>
+        {renderContent()}
+      </ScrollContainer>
     </ConsoleContainer>
   );
 };
