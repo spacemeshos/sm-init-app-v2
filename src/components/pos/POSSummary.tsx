@@ -36,12 +36,14 @@ interface POSSummaryProps {
   isGenerating?: boolean;
   error?: string | null;
   updateConsole?: (command: string, output: string) => void;
+  onStepChange?: (step: number) => void;
 }
 
 export const POSSummary: React.FC<POSSummaryProps> = ({
   onProceed,
   isGenerating: parentIsGenerating,
   updateConsole,
+  onStepChange,
 }) => {
   const navigate = useNavigate();
   const { settings } = useSettings();
@@ -185,6 +187,13 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
             height={18}
             heading="POS Location"
             subheader={getDirectoryDisplay(settings.selectedDir, settings.defaultDir)}
+            onClick={() => onStepChange?.(0)}
+          />
+          <Frame
+            height={18}
+            heading="POS Provider"
+            subheader={`Provider ID: ${settings.provider ?? "Not selected"}`}
+            onClick={() => onStepChange?.(1)}
           />
           <Frame
             height={18}
@@ -192,6 +201,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
             subheader={`${
               settings.numUnits || 4
             } Space Units (${calculateTotalSize(settings.numUnits)})`}
+            onClick={() => onStepChange?.(2)}
           />
           <Frame
             height={18}
@@ -203,17 +213,13 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
           />
           <Frame
             height={18}
-            heading="POS Provider"
-            subheader={`Provider ID: ${settings.provider ?? "Not selected"}`}
-          />
-          <Frame
-            height={18}
             heading="Identity Configuration"
             subheader={
               settings.publicKey
                 ? `Key: ${truncateHex(settings.publicKey, 8)}`
                 : "Create New Identity"
             }
+            onClick={() => onStepChange?.(3)}
           />
           <Frame
             height={18}
@@ -223,6 +229,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
                 ? `ATX: ${truncateHex(settings.atxId, 8)}`
                 : "Default"
             }
+            onClick={() => onStepChange?.(4)}
           />
         </SummarySection>
         <Button
