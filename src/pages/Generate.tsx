@@ -7,7 +7,6 @@ import { BackButton, TransparentButton } from "../components/button";
 import {
   SelectDirectory,
   SetupGPU,
-  SetupProving,
   SetupSize,
   SelectIdentity,
   SelectATX,
@@ -30,6 +29,7 @@ const SetupContainer = styled.div`
   left: 0px;
   top: 40px;
   display: flex;
+  flex-direction: row;
   align-items: flex-start;
   align-content: center;
   justify-content: center;
@@ -59,7 +59,7 @@ const ErrorMessage = styled.div`
 
 const Generate: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [showSummary, setShowSummary] = useState<boolean>(false);
+  const [showSummary, setShowSummary] = useState<boolean>(true);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { updateConsole } = useConsole();
@@ -73,10 +73,6 @@ const Generate: React.FC = () => {
     {
       label: "Select Processor",
       component: <SetupGPU isOpen={true} />,
-    },
-    {
-      label: "Set up Proving",
-      component: <SetupProving />,
     },
     {
       label: "Set up POS Size",
@@ -115,6 +111,7 @@ const Generate: React.FC = () => {
           isGenerating={isGenerating}
           error={error}
           updateConsole={updateConsole}
+          onStepChange={handleStepChange}
         />
       );
     }
@@ -130,7 +127,7 @@ const Generate: React.FC = () => {
           <Header
             text={
               showSummary
-                ? "SUMMARY OF YOUR SETTINGS"
+                ? "YOUR POS GENERATION SETTINGS"
                 : steps[currentStep].label
             }
           />
