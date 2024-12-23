@@ -21,6 +21,7 @@ const Wrapper = styled.div<{
   left?: number;
   height?: number;
   width?: number;
+  onClick?: () => void;
 }>`
   background-color: ${Colors.darkOpaque};
   position: relative;
@@ -34,6 +35,7 @@ const Wrapper = styled.div<{
   align-items: center;
   align-content: center;
   border: 0.5px solid ${Colors.greenLightOpaque};
+  cursor: ${({ onClick }) => onClick ? 'pointer' : 'default'};
 `;
 
 const FrameHeading = styled.div`
@@ -58,9 +60,16 @@ const Frame: React.FC<FrameProps> = ({
   left,
   top,
   width,
+  onClick,
 }) => {
   return (
-    <Wrapper top={top} left={left} height={height} width={width}>
+    <Wrapper 
+      top={top} 
+      left={left} 
+      height={height} 
+      width={width}
+      onClick={onClick}
+    >
       <FrameHeading>
         <Subheader text={heading} top={0} />
       </FrameHeading>
