@@ -16,8 +16,11 @@ export const calculateTotalSize = (numUnits: number = 4): string => {
   return `${size.toFixed(1)} ${units[unitIndex]}`;
 };
 
-export const calculateNumFiles = (numUnits: number = 4, maxFileSizeMiB: number = 4096): number => {
+export const calculateNumFiles = (
+  numUnits: number = 4,
+  maxFileSizeMiB: number = 4096
+): number => {
   // Convert total size to MiB (numUnits * 64 GiB * 1024 MiB/GiB)
-  const totalSizeInMiB = numUnits * 64 * 1024;
+  const totalSizeInMiB = numUnits * 0.00006103515625 * 1024; //TESTING PURPOSES TO BE REVERTED TO 64
   return Math.ceil(totalSizeInMiB / maxFileSizeMiB);
 };
