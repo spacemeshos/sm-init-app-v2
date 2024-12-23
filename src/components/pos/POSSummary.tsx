@@ -206,13 +206,6 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
             heading="POS Provider"
             subheader={`Provider ID: ${settings.provider ?? "Not selected"}`}
           />
-          {/* <Frame
-            height={18}
-            heading="Proving Setup"
-            subheader={`${settings.numCores || 8} CPU Cores | ${
-              settings.numNonces || 288
-            } Nonces`}
-          /> */}
           <Frame
             height={18}
             heading="Identity Configuration"
