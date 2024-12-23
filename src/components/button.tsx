@@ -112,7 +112,7 @@ const BackButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
   };
 
   return (
-    <NavWrapper onClick={handleBack} role="button" tabIndex={0} left={67}>
+    <NavWrapper onClick={handleBack} role="button" tabIndex={0} left={50}>
       <NavIcon src={back} alt="Back" />
     </NavWrapper>
   );

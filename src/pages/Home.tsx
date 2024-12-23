@@ -30,8 +30,8 @@ const Home: React.FC = () => {
   const [hoveredMenu, setHoveredMenu] = React.useState<string | null>(null);
   const navigate = useNavigate(); // Hook for navigation
 
-  // Function to navigate to the prerequisites page
-  const navigateToReqs = () => window.open(ExternalLinks.Requirements);
+  // Function to navigate to the docs page
+  const navigateToReqs = () => navigate("/docs");
 
   // Button configurations for the "Check" menu
   const CheckButtons = [
