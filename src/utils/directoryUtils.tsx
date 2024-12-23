@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/tauri";
+import { homeDir, join } from '@tauri-apps/api/path';
 
 export interface DirectoryValidationResult {
   isValid: boolean;
@@ -65,6 +66,16 @@ export const validateDirectory = async (
       isValid: false,
       error: handleDirectoryError(err),
     };
+  }
+};
+
+export const getDefaultDirectory = async (): Promise<string> => {
+  try {
+    const home = await homeDir();
+    return await join(home, 'post', 'data');
+  } catch (err) {
+    console.error('Error getting default directory:', err);
+    throw new Error('Failed to get default directory path');
   }
 };
 

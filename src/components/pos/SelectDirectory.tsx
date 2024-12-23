@@ -1,6 +1,5 @@
 import { open } from "@tauri-apps/api/dialog";
-import { homeDir, join } from '@tauri-apps/api/path';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useSettings } from "../../state/SettingsContext";
 import { BodyText, Subheader } from "../../styles/texts";
@@ -30,26 +29,6 @@ export const SelectDirectory: React.FC = () => {
   const { settings, setSettings } = useSettings();
   const [error, setError] = useState<string | null>(null);
   const [isValidating, setIsValidating] = useState(false);
-
-  useEffect(() => {
-    const initDefaultPath = async () => {
-      try {
-        const home = await homeDir();
-        const defaultDir = await join(home, 'post', 'data');
-        
-        // Store the default directory in settings
-        setSettings(prev => ({
-          ...prev,
-          defaultDir: defaultDir
-        }));
-      } catch (err) {
-        console.error('Error getting default directory:', err);
-        setError('Failed to get default directory path');
-      }
-    };
-
-    initDefaultPath();
-  }, [setSettings]);
 
   const handleSelectDirectory = async () => {
     try {
