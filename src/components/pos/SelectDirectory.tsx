@@ -103,7 +103,7 @@ export const SelectDirectory: React.FC = () => {
           errmsg={error ?? undefined}
         />
         <Subheader text="Path:" />
-        <BodyText text={shortenPath(displayPath, 30)} />
+        <BodyText text={shortenPath(displayPath, 40)} />
         <Button
           onClick={handleSelectDirectory}
           label={isValidating ? "Validating..." : "Choose custom directory"}
