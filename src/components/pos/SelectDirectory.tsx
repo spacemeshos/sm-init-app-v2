@@ -65,11 +65,7 @@ export const SelectDirectory: React.FC = () => {
       <SetupTileWrapper>
         <Tile
           heading="Select where to store POS data"
-          subheader={
-            settings.selectedDir
-              ? `Custom: ${shortenPath(displayPath, 40)}`
-              : `Default: ${shortenPath(displayPath, 40)}`
-          }
+          subheader={shortenPath(displayPath, 40)}
           errmsg={error ?? undefined}
         />
         <Button
