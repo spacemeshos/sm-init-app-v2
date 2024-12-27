@@ -38,13 +38,13 @@ export const SelectIdentity: React.FC = () => {
       <SetupTileWrapper>
         <Tile
           heading="Enter your Smesher Identity"
-          subheader="Public Key in hex"
-          footer={
+          subheader={
             publicKey && !error
               ? `Custom ID will be used: ${truncateHex(publicKey, 8)}`
               : "If no Identity provided, a new one will be created automatically"
           }
           errmsg={error ?? undefined}
+          width={600}
         />
         <HexInput
           type="text"

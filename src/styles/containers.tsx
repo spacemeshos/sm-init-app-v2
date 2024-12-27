@@ -10,10 +10,9 @@ export const Background = styled.img`
 export const MainContainer = styled.div`
   width: 800px;
   height: 800px;
-  position: fixed;
+  position: absolute;
   top: 0px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 250px;
   background-color: ${Colors.darkOpaque};
   backdrop-filter: blur(8px);
   display: flex;

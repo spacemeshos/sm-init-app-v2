@@ -6,7 +6,7 @@ import { executePostCliDetached } from "../../services/postcliService";
 import { useSettings } from "../../state/SettingsContext";
 import { usePOSProcess } from "../../state/POSProcessContext";
 import Colors from "../../styles/colors";
-import { List } from "../../styles/texts";
+import { List, Subheader } from "../../styles/texts";
 import { getDirectoryDisplay } from "../../utils/directoryUtils";
 import { truncateHex, isValidHex } from "../../utils/hexUtils";
 import { calculateNumFiles, calculateTotalSize } from "../../utils/sizeUtils";
@@ -182,10 +182,12 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
 
       <Container>
         <SummarySection>
-          <Frame
-            heading="Click on each row to adjust the settings as needed"
-            onClick={() => onStepChange?.(0)}
-          />
+          <Frame>
+            <Subheader
+              top={0}
+              text="Click on each row to adjust the settings as needed"
+            />{" "}
+          </Frame>
           <Frame
             heading="POS Location"
             subheader={getDirectoryDisplay(
@@ -235,6 +237,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
           onClick={handleGenerateClick}
           width={250}
           height={56}
+          top={40}
           disabled={isGenerating}
         />
       </Container>

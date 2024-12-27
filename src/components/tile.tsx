@@ -54,7 +54,6 @@ const SubHeader = styled.h3`
   top: 35%;
   position: absolute;
   text-align: center;
-  text-transform: uppercase;
   font-size: 14px;
   font-weight: 100;
 `;
