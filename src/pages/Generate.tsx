@@ -2,8 +2,8 @@ import * as React from "react";
 import { useState } from "react";
 import styled from "styled-components";
 
-import BackgroundImage from "../assets/wave.png";
-import { BackButton, TransparentButton } from "../components/button";
+import BackgroundImage from "../assets/wave2.png";
+import { BackButton, DotButton } from "../components/button";
 import {
   SelectDirectory,
   SetupGPU,
@@ -21,13 +21,19 @@ import {
   MainContainer,
   PageTitleWrapper,
 } from "../styles/containers";
+import file from "../assets/file.png";
+import folder from "../assets/folder.png";
+import gpu from "../assets/gpu.png";
+import id from "../assets/id.png";
+import summary from "../assets/justify.png";
+import hex from "../assets/formats.png";
 
 const SetupContainer = styled.div`
   width: 800px;
   height: 650px;
   position: absolute;
   left: 0px;
-  top: 40px;
+  top: 160px;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -38,13 +44,13 @@ const SetupContainer = styled.div`
 
 const ButtonColumn = styled.div`
   position: absolute;
-  width: 200px;
-  height: 600px;
-  top: 120px;
-  right: 30px;
+  width: 80px;
+  height: 420px;
+  top: 180px;
+  left: 170px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-evenly;
 `;
 
@@ -69,28 +75,38 @@ const Generate: React.FC = () => {
     {
       label: "Pick Directory",
       component: <SelectDirectory />,
+      iconSrc: folder,
     },
     {
       label: "Select Processor",
       component: <SetupGPU isOpen={true} />,
+      iconSrc: gpu,
     },
     {
       label: "Set up POS Size",
       component: <SetupSize />,
+      iconSrc: file,
     },
     {
       label: "Select Identity",
       component: <SelectIdentity />,
+      iconSrc: id,
     },
     {
       label: "Select ATX ID",
       component: <SelectATX />,
+      iconSrc: hex,
     },
   ];
 
   const handleStepChange = (index: number) => {
-    setCurrentStep(index);
-    setShowSummary(false);
+    // If index is out of steps range, show summary
+    if (index >= 5) {
+      setShowSummary(true);
+    } else {
+      setShowSummary(false);
+      setCurrentStep(index);
+    }
     setError(null);
   };
 
@@ -132,33 +148,27 @@ const Generate: React.FC = () => {
             }
           />
         </PageTitleWrapper>
-        <SetupContainer>
-          <SetupContainer>{renderContent()}</SetupContainer>
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-        </SetupContainer>
-        <ButtonColumn>
-          <TransparentButton
-            onClick={() => {
-              setShowSummary(true);
-            }}
-            $isActive={showSummary}
-            width={200}
-            label="Summary"
-            disabled={isGenerating}
-          />
-
-          {steps.map((step, index) => (
-            <TransparentButton
-              key={index}
-              onClick={() => handleStepChange(index)}
-              $isActive={currentStep === index}
-              label={step.label}
-              width={200}
-              disabled={isGenerating}
-            ></TransparentButton>
-          ))}
-        </ButtonColumn>
+        <SetupContainer>{renderContent()}</SetupContainer>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
       </MainContainer>
+      <ButtonColumn>
+        <DotButton
+          onClick={() => handleStepChange(steps.length)}
+          $isActive={showSummary}
+          iconSrc={summary}
+        />
+
+        {steps.map((step, index) => (
+          <DotButton
+            key={index}
+            onClick={() => handleStepChange(index)}
+            $isActive={currentStep === index}
+            disabled={isGenerating}
+            iconSrc={step.iconSrc}
+            alt={step.label}
+          />
+        ))}
+      </ButtonColumn>
     </>
   );
 };
