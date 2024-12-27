@@ -27,5 +27,6 @@ yarn-error.log*
 # Binary files
 src-tauri/bin/post-rs/*
 src-tauri/bin/postcli/*
+src-tauri/bin/profiler/*
 !src-tauri/bin/post-rs/.gitkeep
 !src-tauri/bin/postcli/.gitkeep
