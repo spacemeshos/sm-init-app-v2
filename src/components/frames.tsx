@@ -14,6 +14,8 @@ interface FrameProps {
   left?: number;
   height?: number;
   width?: number;
+  $isActive?: boolean;
+  disabled?: boolean;
 }
 
 const Wrapper = styled.div<{
@@ -22,12 +24,14 @@ const Wrapper = styled.div<{
   height?: number;
   width?: number;
   onClick?: () => void;
+  $isActive?: boolean;
+  disabled?: boolean;
 }>`
   background-color: ${Colors.darkOpaque};
   position: relative;
   top: ${({ top }) => top}px;
   left: ${({ left }) => left}px;
-  height: ${({ height }) => height || 100}%;
+  height: ${({ height }) => height || 70}px;
   width: ${({ width }) => width || 100}%;
   display: flex;
   justify-content: center;
@@ -35,12 +39,12 @@ const Wrapper = styled.div<{
   align-items: center;
   align-content: center;
   border: 0.5px solid ${Colors.greenLightOpaque};
-  cursor: ${({ onClick }) => onClick ? 'pointer' : 'default'};
+  cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
 `;
 
 const FrameHeading = styled.div`
   position: absolute;
-  left: 20px;
+  left: 40px;
   text-align: left;
   width: auto;
 `;
@@ -48,7 +52,7 @@ const FrameHeading = styled.div`
 const Details = styled.div`
   position: absolute;
   text-align: right;
-  right: 20px;
+  right: 40px;
   width: auto;
 `;
 
@@ -60,15 +64,19 @@ const Frame: React.FC<FrameProps> = ({
   left,
   top,
   width,
+  $isActive,
   onClick,
+  disabled,
 }) => {
   return (
-    <Wrapper 
-      top={top} 
-      left={left} 
-      height={height} 
+    <Wrapper
+      top={top}
+      left={left}
+      height={height}
       width={width}
       onClick={onClick}
+      $isActive={$isActive}
+      disabled={disabled}
     >
       <FrameHeading>
         <Subheader text={heading} top={0} />
