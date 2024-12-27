@@ -9,7 +9,6 @@ import next from "../assets/next.png";
 import close from "../assets/x.png";
 import Colors from "../styles/colors";
 
-
 // Interface defining the properties for the Button component below
 interface ButtonProps {
   iconSrc?: string;
@@ -26,6 +25,8 @@ interface ButtonProps {
   $isActive?: boolean;
   disabled?: boolean;
   transparent?: boolean;
+  alt?: string;
+  opacity?: number;
 }
 
 // Standard Button component
@@ -74,6 +75,7 @@ const TransparentButton: React.FC<ButtonProps> = ({
   width,
   $isActive,
   disabled,
+  iconSrc,
 }) => {
   const handleClick = () => {
     if (!disabled && typeof onClick === "function") {
@@ -93,7 +95,12 @@ const TransparentButton: React.FC<ButtonProps> = ({
       $isActive={$isActive}
       disabled={disabled}
     >
-      <ButtonText disabled={disabled} transparent>{label}</ButtonText>
+      {iconSrc && <ButtonIcon src={iconSrc} size={24} />}
+      {label && (
+        <ButtonText disabled={disabled} transparent>
+          {label}
+        </ButtonText>
+      )}
     </TransparentRectangle>
   );
 };
@@ -187,6 +194,40 @@ const CloseButton: React.FC<ButtonProps> = (props) => {
   return <IconButton {...props} iconSrc={close} size={24} />;
 };
 
+// Blurry dot button
+const DotButton: React.FC<ButtonProps> = ({
+  iconSrc,
+  alt,
+  top,
+  left,
+  width,
+  onClick,
+  $isActive,
+  disabled,
+}) => {
+  const handleClick = () => {
+    if (!disabled && typeof onClick === "function") {
+      onClick();
+    }
+  };
+  return (
+    <DotWrapper onClick={handleClick} role="button">
+      <Dot $isActive={$isActive} />
+      <Square>
+        {iconSrc && (
+          <DotIcon
+            src={iconSrc}
+            alt={alt}
+            top={top}
+            left={left}
+            width={width}
+          />
+        )}
+      </Square>
+    </DotWrapper>
+  );
+};
+
 // Styled component for the standard button wrapper
 const StandardButton = styled.button<{
   top?: number;
@@ -202,9 +243,7 @@ const StandardButton = styled.button<{
   height: ${({ height }) => height || 42}px;
   width: ${({ width }) => width || 200}px;
   background: ${({ disabled }) =>
-    disabled
-      ? Colors.grayMedium
-      : Colors.gradientGB};
+    disabled ? Colors.grayMedium : Colors.gradientGB};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   transition: all 0.2s ease;
   padding: 10px;
@@ -315,6 +354,52 @@ const IconStandardButton = styled.button<{
   transform: translate(-50%, 0%);
 `;
 
+// Blurry dot button
+const DotWrapper = styled.div<ButtonProps>`
+  width: 80px;
+  height: 70px;
+  position: relative;
+  background-color: transparent;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+`;
+
+const Dot = styled.div<ButtonProps>`
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: ${(props) => (props.$isActive ? 70 : 0)}px;
+  background: ${Colors.greenLight};
+  border-radius: 45px;
+  z-index: 1;
+  transition: left 0.3s ease-in-out;
+`;
+
+const Square = styled.div`
+  width: 70px;
+  height: 70px;
+  left: 10px;
+  position: absolute;
+  background: ${Colors.darkOpaque};
+  backdrop-filter: blur(5px);
+  z-index: 2;
+  border: 0.5px solid ${Colors.greenLightOpaque};
+`;
+
+const DotIcon = styled.img<ButtonProps>`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: ${({ width }) => `${width ?? 24}px`};
+  object-fit: contain;
+  z-index: 3;
+`;
+
 export {
   Button,
   TransparentButton,
@@ -325,4 +410,5 @@ export {
   SaveButton,
   CancelButton,
   CloseButton,
+  DotButton,
 };
