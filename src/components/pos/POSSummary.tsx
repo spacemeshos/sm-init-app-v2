@@ -19,15 +19,14 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  width: 700px;
-  height: 600px;
+  width: 800px;
+  height: 420px;
   position: absolute;
-  top: 40px;
 `;
 
 const SummarySection = styled.div`
-  width: 700px;
-  height: 400px;
+  width: 800px;
+  height: 420px;
   position: relative;
 `;
 
@@ -184,35 +183,35 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
       <Container>
         <SummarySection>
           <Frame
-            height={18}
-            heading="POS Location"
-            subheader={getDirectoryDisplay(settings.selectedDir, settings.defaultDir)}
+            heading="Click on each row to adjust the settings as needed"
             onClick={() => onStepChange?.(0)}
           />
           <Frame
-            height={18}
+            heading="POS Location"
+            subheader={getDirectoryDisplay(
+              settings.selectedDir,
+              settings.defaultDir
+            )}
+            onClick={() => onStepChange?.(0)}
+          />
+          <Frame
             heading="POS Provider"
             subheader={`Provider ID: ${settings.provider ?? "Not selected"}`}
             onClick={() => onStepChange?.(1)}
           />
           <Frame
-            height={18}
             heading="POS Size"
             subheader={`${
               settings.numUnits || 4
-            } Space Units (${calculateTotalSize(settings.numUnits)})`}
+            } Space Units (${calculateTotalSize(
+              settings.numUnits
+            )}), ${calculateNumFiles(
+              settings.numUnits,
+              settings.maxFileSize || 4096
+            )} files, ${settings.maxFileSize} MiB each`}
             onClick={() => onStepChange?.(2)}
           />
           <Frame
-            height={18}
-            heading="File Size"
-            subheader={`${calculateNumFiles(
-              settings.numUnits,
-              settings.maxFileSize || 4096
-            )} files will be generated, ${settings.maxFileSize} MiB each`}
-          />
-          <Frame
-            height={18}
             heading="Identity Configuration"
             subheader={
               settings.publicKey
@@ -222,7 +221,6 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
             onClick={() => onStepChange?.(3)}
           />
           <Frame
-            height={18}
             heading="ATX ID"
             subheader={
               settings.atxId

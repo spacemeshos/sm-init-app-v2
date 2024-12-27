@@ -5,7 +5,7 @@ import { truncateHex, isValidHex } from "../../utils/hexUtils";
 import { HexInput } from "../input";
 import Tile from "../tile";
 
-import { BottomContainer, TileWrapper } from "./styles";
+import { SetupContainer, SetupTileWrapper } from "../../styles/containers";
 
 export const SelectIdentity: React.FC = () => {
   const { setSettings } = useSettings();
@@ -34,8 +34,8 @@ export const SelectIdentity: React.FC = () => {
   };
 
   return (
-    <BottomContainer>
-      <TileWrapper width={660}>
+    <SetupContainer>
+      <SetupTileWrapper>
         <Tile
           heading="Enter your Smesher Identity"
           subheader="Public Key in hex"
@@ -56,7 +56,7 @@ export const SelectIdentity: React.FC = () => {
           width={300}
           className={error ? "error" : ""}
         />
-      </TileWrapper>
-    </BottomContainer>
+      </SetupTileWrapper>
+    </SetupContainer>
   );
 };

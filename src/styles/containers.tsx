@@ -8,7 +8,7 @@ export const Background = styled.img`
 `;
 
 export const MainContainer = styled.div`
-  width: 1000px;
+  width: 800px;
   height: 800px;
   position: fixed;
   top: 0px;
@@ -57,4 +57,36 @@ export const PageTitleWrapper = styled.div`
   transform: translateX(-50%);
   text-transform: uppercase;
   border-bottom: 1px solid ${Colors.greenLight};
+`;
+
+export const SetupContainer = styled.div`
+  height: 450px;
+  width: 80%;
+  position: absolute;
+  top: 0px;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const SetupTileWrapper = styled.div<{
+  width?: number;
+}>`
+  height: 90%;
+  width: ${({ width }) => width || 450}px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+export const SelectedValue = styled.h1`
+  color: ${Colors.greenLight};
+  font-family: "Univers55", sans-serif;
+  font-weight: 300;
+  font-size: 50px;
+  position: relative;
 `;

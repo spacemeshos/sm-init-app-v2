@@ -6,7 +6,11 @@ import CustomNumberInput from "../input";
 import Tile from "../tile";
 import { calculateTotalSize, calculateNumFiles } from "../../utils/sizeUtils";
 
-import { BottomContainer, TileWrapper, SelectedValue } from "./styles";
+import {
+  SetupContainer,
+  SetupTileWrapper,
+  SelectedValue,
+} from "../../styles/containers";
 
 export const SetupSize: React.FC = () => {
   const { settings, setSettings } = useSettings();
@@ -37,8 +41,8 @@ export const SetupSize: React.FC = () => {
   };
 
   return (
-    <BottomContainer>
-      <TileWrapper>
+    <SetupContainer>
+      <SetupTileWrapper>
         <Tile
           heading="Select Space Units"
           subheader={`${
@@ -69,9 +73,9 @@ export const SetupSize: React.FC = () => {
             <CancelButton left={50} onClick={handleCancelSpaceUnits} />
           </>
         )}
-      </TileWrapper>
+      </SetupTileWrapper>
 
-      <TileWrapper>
+      <SetupTileWrapper>
         <Tile
           heading="Max File Size in Mebibytes"
           subheader={`${calculateNumFiles(
@@ -104,7 +108,7 @@ export const SetupSize: React.FC = () => {
             <CancelButton left={50} onClick={handleCancelMaxFileSize} />
           </>
         )}
-      </TileWrapper>
-    </BottomContainer>
+      </SetupTileWrapper>
+    </SetupContainer>
   );
 };

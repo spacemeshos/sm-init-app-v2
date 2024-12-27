@@ -6,7 +6,11 @@ import { SaveButton, CancelButton } from "../button";
 import CustomNumberInput from "../input";
 import Tile from "../tile";
 
-import { BottomContainer, TileWrapper, SelectedValue } from "./styles";
+import {
+  SetupContainer,
+  SetupTileWrapper,
+  SelectedValue,
+} from "../../styles/containers";
 
 interface InputSectionProps {
   heading: string;
@@ -33,8 +37,8 @@ const InputSection: React.FC<InputSectionProps> = ({
   handleCancel,
   onChange,
 }) => (
-  <TileWrapper>
-    <Tile heading={heading} footer={footer} width={250} height={300}/>
+  <SetupTileWrapper>
+    <Tile heading={heading} footer={footer} width={250} height={300} />
     {isVisible ? (
       <>
         <CustomNumberInput
@@ -53,7 +57,7 @@ const InputSection: React.FC<InputSectionProps> = ({
         <CancelButton left={50} onClick={handleCancel} />
       </>
     )}
-  </TileWrapper>
+  </SetupTileWrapper>
 );
 
 export const SetupProving: React.FC = () => {
@@ -98,7 +102,7 @@ export const SetupProving: React.FC = () => {
   }, [setSettings]);
 
   return (
-    <BottomContainer>
+    <SetupContainer>
       <InputSection
         heading="Select number of CPU cores"
         footer={`Default: ${Math.floor(
@@ -125,6 +129,6 @@ export const SetupProving: React.FC = () => {
         handleCancel={handleCancelNonces}
         onChange={(val) => setSettings((prev) => ({ ...prev, numNonces: val }))}
       />
-    </BottomContainer>
+    </SetupContainer>
   );
 };
