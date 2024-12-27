@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { invoke } from "@tauri-apps/api/tauri";
 
 import BackgroundImage from "../assets/home.png";
 import Logo from "../assets/Full logo - White.png";
@@ -10,6 +11,7 @@ import { ExternalLinks } from "../Shared/Constants";
 import { Subheader, Title } from "../styles/texts";
 import Image from "../components/image";
 import { Background } from "../styles/containers";
+import { ProfilerResultModal } from "../components/ProfilerResultModal";
 
 const MenuContainer = styled.div`
   position: fixed;
@@ -28,10 +30,31 @@ const MenuContainer = styled.div`
 const Home: React.FC = () => {
   // State to track which menu is hovered
   const [hoveredMenu, setHoveredMenu] = React.useState<string | null>(null);
+  const [isRunningProfiler, setIsRunningProfiler] = React.useState(false);
+  const [profilerResult, setProfilerResult] = React.useState<any>(null);
+  const [showProfilerModal, setShowProfilerModal] = React.useState(false);
   const navigate = useNavigate(); // Hook for navigation
 
   // Function to navigate to the docs page
   const navigateToReqs = () => navigate("/docs");
+
+  const runProfiler = async () => {
+    try {
+      setIsRunningProfiler(true);
+      const result = await invoke('run_profiler', {
+        threads: 4,
+        data_size: 1,
+        duration: 10
+      });
+      setProfilerResult(result);
+      setShowProfilerModal(true);
+    } catch (error) {
+      console.error('Profiler error:', error);
+      alert(`Failed to run profiler: ${error}`);
+    } finally {
+      setIsRunningProfiler(false);
+    }
+  };
 
   // Button configurations for the "Check" menu
   const CheckButtons = [
@@ -46,8 +69,9 @@ const Home: React.FC = () => {
       width: 300,
     },
     {
-      label: "Proving Capacity",
-      onClick: () => console.log("Button 2 clicked"), //TODO
+      label: isRunningProfiler ? "Running..." : "Proving Capacity",
+      onClick: runProfiler,
+      disabled: isRunningProfiler,
       width: 300,
     },
   ];
@@ -74,6 +98,11 @@ const Home: React.FC = () => {
           buttons={CheckButtons}
         />
       </MenuContainer>
+      <ProfilerResultModal
+        isOpen={showProfilerModal}
+        onClose={() => setShowProfilerModal(false)}
+        result={profilerResult}
+      />
     </>
   );
 };
