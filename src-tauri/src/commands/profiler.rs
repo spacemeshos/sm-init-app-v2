@@ -1,23 +1,53 @@
 use serde::{Deserialize, Serialize};
+use std::time::Instant;
 use tauri::command;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProfilerResult {
+    pub nonces: u32,
+    pub threads: u32,
     pub time_s: f64,
     pub speed_gib_s: f64,
+    pub data_size: u32, // in GiB
+    pub duration: u32,  // in seconds
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ProfilerConfig {
+    pub data_size: u32, // in GiB
+    pub duration: u32,  // in seconds
+}
+
+#[command]
+pub async fn get_default_config() -> ProfilerConfig {
+    ProfilerConfig {
+        data_size: 1, // Default 1 GiB
+        duration: 10, // Default 10 seconds
+    }
 }
 
 #[command]
 pub async fn run_profiler(
     app: tauri::AppHandle,
-    threads: Option<u32>,
-    data_size: Option<u32>,
-    duration: Option<u32>,
+    nonces: u32,
+    threads: u32,
+    config: Option<ProfilerConfig>,
 ) -> Result<ProfilerResult, String> {
-    // Default values if not provided
-    let threads = threads.unwrap_or(4);
-    let data_size = data_size.unwrap_or(1);
-    let duration = duration.unwrap_or(10);
+    // Validate required parameters
+    if nonces == 0 {
+        return Err("Nonces parameter is required".to_string());
+    }
+
+    // Validate nonces is multiple of 16
+    if nonces % 16 != 0 {
+        return Err("Nonces must be a multiple of 16".to_string());
+    }
+
+    // Use default config if none provided
+    let config = config.unwrap_or_else(|| ProfilerConfig {
+        data_size: 1,
+        duration: 10,
+    });
 
     // Create temporary directory for profiler data
     let temp_dir = std::env::temp_dir().join("sm-init-profiler");
@@ -25,33 +55,40 @@ pub async fn run_profiler(
         std::fs::create_dir_all(&temp_dir).map_err(|e| e.to_string())?;
     }
 
-    // Get the path to the bundled profiler binary from the resource directory
-    let resource_path = app.path_resolver().resource_dir()
+    // Get the path to the bundled profiler binary
+    let resource_path = app
+        .path_resolver()
+        .resource_dir()
         .ok_or_else(|| "Failed to get resource directory".to_string())?;
-    let profiler_path = resource_path.join("bin").join("profiler").join(
-        if cfg!(target_os = "windows") {
-            "profiler.exe"
-        } else {
-            "profiler"
-        }
-    );
+    let profiler_path =
+        resource_path
+            .join("bin")
+            .join("profiler")
+            .join(if cfg!(target_os = "windows") {
+                "profiler.exe"
+            } else {
+                "profiler"
+            });
 
-    // Log the path and check if file exists
-    println!("Looking for profiler at: {:?}", profiler_path);
     if !profiler_path.exists() {
         return Err(format!("Profiler binary not found at {:?}", profiler_path));
     }
 
-    // Run profiler command
-    let output = std::process::Command::new(profiler_path)
+    // Run profiler
+    let data_file = temp_dir.join("profiler-data");
+    let start = Instant::now();
+
+    let output = std::process::Command::new(&profiler_path)
         .arg("--threads")
         .arg(threads.to_string())
-        .arg("--data-size")
-        .arg(data_size.to_string())
-        .arg("--duration")
-        .arg(duration.to_string())
+        .arg("--nonces")
+        .arg(nonces.to_string())
         .arg("--data-file")
-        .arg(temp_dir.join("profiler-data").to_str().unwrap())
+        .arg(&data_file)
+        .arg("--data-size")
+        .arg(config.data_size.to_string())
+        .arg("--duration")
+        .arg(config.duration.to_string())
         .output()
         .map_err(|e| format!("Failed to run profiler: {}", e))?;
 
@@ -60,8 +97,37 @@ pub async fn run_profiler(
     }
 
     // Parse profiler output
-    let result: ProfilerResult = serde_json::from_slice(&output.stdout)
+    let parsed_output: serde_json::Value = serde_json::from_slice(&output.stdout)
         .map_err(|e| format!("Failed to parse profiler output: {}", e))?;
 
-    Ok(result)
+    // Extract values from parsed output
+    let time_s = parsed_output["time_s"]
+        .as_f64()
+        .ok_or_else(|| "Missing time_s in output".to_string())?;
+    let speed_gib_s = parsed_output["speed_gib_s"]
+        .as_f64()
+        .ok_or_else(|| "Missing speed_gib_s in output".to_string())?;
+
+    // Cleanup
+    let _ = std::fs::remove_file(data_file);
+
+    Ok(ProfilerResult {
+        nonces,
+        threads,
+        time_s,
+        speed_gib_s,
+        data_size: config.data_size,
+        duration: config.duration,
+    })
+}
+
+// Helper function to calculate probability of finding PoST in one pass
+#[command]
+pub fn calculate_post_probability(nonces: u32) -> f64 {
+    // Using simplified probability calculation
+    // Full formula: 1-(1-(1-BINOM.DIST(36,10^9,26/10^9,TRUE)))^nonces
+    // This is a simplified approximation
+    let base_prob: f64 = 0.0124; // Probability for 16 nonces
+    let groups = nonces as f64 / 16.0;
+    1.0f64 - (1.0f64 - base_prob).powf(groups)
 }
