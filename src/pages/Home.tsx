@@ -7,11 +7,12 @@ import BackgroundImage from "../assets/home.png";
 import Logo from "../assets/Full logo - White.png";
 import { HoverAccordionMenu } from "../components/accordion";
 import { Button } from "../components/button";
-import { ExternalLinks } from "../Shared/Constants";
 import { Subheader, Title } from "../styles/texts";
 import Image from "../components/image";
 import { Background } from "../styles/containers";
 import { ProfilerResultModal } from "../components/ProfilerResultModal";
+import { POSProfiler } from "../components/pos/POSProfiler";
+import Modal from "../components/modal";
 
 const MenuContainer = styled.div`
   position: fixed;
@@ -33,7 +34,9 @@ const Home: React.FC = () => {
   const [isRunningProfiler, setIsRunningProfiler] = React.useState(false);
   const [profilerResult, setProfilerResult] = React.useState<any>(null);
   const [showProfilerModal, setShowProfilerModal] = React.useState(false);
-  const navigate = useNavigate(); // Hook for navigation
+  const [showProfilerComponent, setShowProfilerComponent] =
+    React.useState(false);
+  const navigate = useNavigate();
 
   // Function to navigate to the docs page
   const navigateToReqs = () => navigate("/docs");
@@ -41,15 +44,18 @@ const Home: React.FC = () => {
   const runProfiler = async () => {
     try {
       setIsRunningProfiler(true);
-      const result = await invoke('run_profiler', {
+      const result = await invoke("run_profiler", {
+        nonces: 64, // Default value from profiler docs
         threads: 4,
-        data_size: 1,
-        duration: 10
+        config: {
+          data_size: 1,
+          duration: 10,
+        },
       });
       setProfilerResult(result);
       setShowProfilerModal(true);
     } catch (error) {
-      console.error('Profiler error:', error);
+      console.error("Profiler error:", error);
       alert(`Failed to run profiler: ${error}`);
     } finally {
       setIsRunningProfiler(false);
@@ -60,18 +66,23 @@ const Home: React.FC = () => {
   const CheckButtons = [
     {
       label: "Requirements",
-      onClick: () => navigateToReqs(), //TODO
+      onClick: () => navigateToReqs(),
       width: 300,
     },
     {
       label: "Generation speed",
-      onClick: () => console.log("Button 1 clicked"), //TODO
+      onClick: () => console.log("Button 1 clicked"),
       width: 300,
     },
     {
-      label: isRunningProfiler ? "Running..." : "Proving Capacity",
+      label: isRunningProfiler ? "Running..." : "Quick Proving Test",
       onClick: runProfiler,
       disabled: isRunningProfiler,
+      width: 300,
+    },
+    {
+      label: "Advanced Profiler",
+      onClick: () => setShowProfilerComponent(true),
       width: 300,
     },
   ];
@@ -103,6 +114,14 @@ const Home: React.FC = () => {
         onClose={() => setShowProfilerModal(false)}
         result={profilerResult}
       />
+      <Modal
+        isOpen={showProfilerComponent}
+        onClose={() => setShowProfilerComponent(false)}
+        width={1200}
+        height={95}
+      >
+        <POSProfiler />
+      </Modal>
     </>
   );
 };
