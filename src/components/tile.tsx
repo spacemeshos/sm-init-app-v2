@@ -16,6 +16,7 @@ export interface TileProps {
   blurred?: boolean;
   width?: number;
   height?: number;
+  top?: number;
 }
 
 const TileWrapper = styled.div<{
@@ -24,34 +25,36 @@ const TileWrapper = styled.div<{
   width?: number;
   backgroundColor?: string;
   blurred?: boolean;
+  top?: number;
 }>`
   height: ${({ height = 450 }) => `${height}px`};
   width: ${({ width = 500 }) => `${width}px`};
-  background-color: ${({ selected, backgroundColor = 'transparent' }) =>
+  background-color: ${({ selected, backgroundColor = "transparent" }) =>
     selected ? Colors.greenLightOpaque : backgroundColor};
-  backdrop-filter: ${({ blurred }) => blurred ? 'blur(8px)' : 'none'};
+  backdrop-filter: ${({ blurred }) => (blurred ? "blur(8px)" : "none")};
   position: relative;
   display: flex;
   justify-content: center;
   cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
+  top: ${({ top }) => top || 0}px;
 `;
 
 const TileHeading = styled.h2`
   color: ${Colors.grayLight};
   font-family: "Univers55", sans-serif;
-  margin: 10px 15px 0px;
+  margin: 0px 15px;
   text-align: center;
   text-transform: uppercase;
   font-weight: 100;
   font-size: 16px;
-  top: 5%;
+  top: 15px;
   position: absolute;
 `;
 
 const SubHeader = styled.h3`
   color: ${Colors.grayLight};
   font-family: "Univers45", sans-serif;
-  top: 35%;
+  top: 30%;
   position: absolute;
   text-align: center;
   font-size: 14px;
@@ -90,15 +93,17 @@ const Tile: React.FC<TileProps> = ({
   blurred,
   width,
   height,
+  top,
 }) => {
   return (
-    <TileWrapper 
-      onClick={onClick} 
+    <TileWrapper
+      onClick={onClick}
       selected={selected}
       backgroundColor={backgroundColor}
       blurred={blurred}
       width={width}
       height={height}
+      top={top}
     >
       <TileHeading>{heading}</TileHeading>
       {!errmsg && <SubHeader>{subheader}</SubHeader>}
