@@ -9,7 +9,7 @@ import {
 } from "../../utils/directoryUtils";
 import { Button } from "../button";
 import Tile from "../tile";
-import { SetupContainer, SetupTileWrapper } from "../../styles/containers";
+import { SetupTileWrapper } from "../../styles/containers";
 
 export const SelectDirectory: React.FC = () => {
   const { settings, setSettings } = useSettings();
@@ -61,12 +61,12 @@ export const SelectDirectory: React.FC = () => {
     settings.selectedDir || settings.defaultDir || "Loading...";
 
   return (
-    <SetupContainer>
       <SetupTileWrapper>
         <Tile
           heading="Select where to store POS data"
-          subheader={shortenPath(displayPath, 40)}
-          errmsg={error ?? undefined}
+          footer={shortenPath(displayPath, 40)}
+        errmsg={error ?? undefined}
+        height={120}
         />
         <Button
           onClick={handleSelectDirectory}
@@ -75,6 +75,5 @@ export const SelectDirectory: React.FC = () => {
           disabled={isValidating}
         />
       </SetupTileWrapper>
-    </SetupContainer>
   );
 };
