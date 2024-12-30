@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Colors from "../styles/colors";
+import { getDirectoryDisplay } from "../utils/directoryUtils";
 
 const Table = styled.div`
   display: flex;
@@ -88,7 +89,7 @@ export interface ProfilerResult {
   speed_gib_s: number;
   data_size: number;
   duration: number;
-  data_file?: string;
+  data_file: string;  // Made required instead of optional
 }
 
 export interface Benchmark extends Partial<ProfilerResult> {
@@ -96,6 +97,7 @@ export interface Benchmark extends Partial<ProfilerResult> {
   threads: number;
   status: BenchmarkStatus;
   error?: string;
+  data_file?: string;  // Added explicitly to ensure it's tracked in benchmarks
 }
 
 // Helper Functions
@@ -157,7 +159,7 @@ const ProfilerTable: React.FC<ProfilerTableProps> = ({
             <Column>{benchmark.speed_gib_s?.toFixed(2) ?? "..."}</Column>
             <Column>{benchmark.data_size ?? config.data_size}</Column>
             <Column>{benchmark.duration ?? config.duration}</Column>
-            <Column>{benchmark.data_file || "Default"}</Column>
+            <Column>{getDirectoryDisplay(benchmark.data_file, "Default", 20)}</Column>
             <Column>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <StatusIndicator color={getStatusColor(benchmark.status)} />

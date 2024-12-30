@@ -10,6 +10,7 @@
  */
 
 import { invoke } from '@tauri-apps/api';
+import { join } from '@tauri-apps/api/path';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useSettings } from '../state/SettingsContext';
@@ -125,19 +126,29 @@ const Profiler: React.FC = () => {
         )
       );
 
+      if (!settings.selectedDir && !settings.defaultDir) {
+        throw new Error("No directory available");
+      }
+      const currentDir = settings.selectedDir || settings.defaultDir as string;
+      const dataFilePath = await join(currentDir, 'profiler-data');
       const result = await invoke<ProfilerResult>('run_profiler', {
         nonces: benchmark.nonces,
         threads: benchmark.threads,
         config: {
           ...config,
-          data_file: settings.selectedDir || undefined,
+          data_file: dataFilePath,
         },
       });
 
       setBenchmarks((prev) =>
         prev.map((b) =>
           b.nonces === benchmark.nonces && b.threads === benchmark.threads
-            ? { ...b, ...result, status: BenchmarkStatus.Complete }
+            ? {
+                ...b,
+                ...result,
+                status: BenchmarkStatus.Complete,
+                data_file: currentDir,
+              }
             : b
         )
       );
@@ -157,10 +168,16 @@ const Profiler: React.FC = () => {
    * Adds the new benchmark to the list and scrolls to show results
    */
   const runCustomBenchmark = async () => {
+    if (!settings.selectedDir && !settings.defaultDir) {
+      throw new Error("No directory available");
+    }
+    const currentDir = settings.selectedDir || settings.defaultDir as string;
+    const dataFilePath = await join(currentDir, 'profiler-data');
     const newBenchmark: Benchmark = {
       nonces: customNonces,
       threads: customThreads,
       status: BenchmarkStatus.Idle,
+      data_file: currentDir, // Keep directory path for display purposes
     };
 
     setBenchmarks((prev) => [...prev, newBenchmark]);
