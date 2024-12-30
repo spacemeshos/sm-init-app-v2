@@ -85,6 +85,7 @@ const Profiler: React.FC = () => {
   const [benchmarks, setBenchmarks] = useState<Benchmark[]>([]);
   const [customNonces, setCustomNonces] = useState(288);
   const [customThreads, setCustomThreads] = useState(1);
+  const [showAccuracyParams, setShowAccuracyParams] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Initialize component with system information
@@ -253,10 +254,24 @@ const Profiler: React.FC = () => {
           width={500}
           blurred
           backgroundColor={Colors.whiteOpaque}
-          heading="How accurate the test should be"
-          footer="Increase amount of data or duration time for more accurate results"
+          heading={showAccuracyParams ? "How accurate the test should be" : ""}
+          footer={showAccuracyParams ? "Increase amount of data or duration time for more accurate results" : ""}
+          onClick={() => setShowAccuracyParams(!showAccuracyParams)}
         >
-          <Tile heading="GiB to process:" height={150} top={50}>
+          {!showAccuracyParams ? (
+            <div style={{ 
+              height: '100%', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              textAlign: 'center',
+              padding: '0 20px'
+            }}>
+              <BodyText text="Click here if you want to adjust the test accuracy" />
+            </div>
+          ) : (
+            <>
+              <Tile heading="GiB to process:" height={150} top={50}>
             <CustomNumberInput
               min={1}
               max={64}
@@ -277,7 +292,9 @@ const Profiler: React.FC = () => {
                 setConfig((prev) => ({ ...prev, duration: val }))
               }
             />
-          </Tile>
+              </Tile>
+            </>
+          )}
         </Tile>
 
         {/* Table with test results history*/}
