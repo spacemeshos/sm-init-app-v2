@@ -10,12 +10,14 @@ pub struct ProfilerResult {
     pub speed_gib_s: f64,
     pub data_size: u32, // in GiB
     pub duration: u32,  // in seconds
+    pub data_file: Option<String>, // Path to data file used
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProfilerConfig {
     pub data_size: u32, // in GiB
     pub duration: u32,  // in seconds
+    pub data_file: Option<String>, // Optional custom path for data file
 }
 
 #[command]
@@ -23,6 +25,7 @@ pub async fn get_default_config() -> ProfilerConfig {
     ProfilerConfig {
         data_size: 1, // Default 1 GiB
         duration: 10, // Default 10 seconds
+        data_file: None, // No custom path by default
     }
 }
 
@@ -47,13 +50,19 @@ pub async fn run_profiler(
     let config = config.unwrap_or_else(|| ProfilerConfig {
         data_size: 1,
         duration: 10,
+        data_file: None,
     });
 
-    // Create temporary directory for profiler data
-    let temp_dir = std::env::temp_dir().join("sm-init-profiler");
-    if !temp_dir.exists() {
-        std::fs::create_dir_all(&temp_dir).map_err(|e| e.to_string())?;
-    }
+    // Use custom data file path if provided, otherwise create temporary directory
+    let data_file = if let Some(path) = &config.data_file {
+        std::path::PathBuf::from(path)
+    } else {
+        let temp_dir = std::env::temp_dir().join("sm-init-profiler");
+        if !temp_dir.exists() {
+            std::fs::create_dir_all(&temp_dir).map_err(|e| e.to_string())?;
+        }
+        temp_dir.join("profiler-data")
+    };
 
     // Get the path to the bundled profiler binary
     let resource_path = app
@@ -75,7 +84,6 @@ pub async fn run_profiler(
     }
 
     // Run profiler
-    let data_file = temp_dir.join("profiler-data");
     let start = Instant::now();
 
     let output = std::process::Command::new(&profiler_path)
@@ -108,8 +116,10 @@ pub async fn run_profiler(
         .as_f64()
         .ok_or_else(|| "Missing speed_gib_s in output".to_string())?;
 
-    // Cleanup
-    let _ = std::fs::remove_file(data_file);
+    // Only cleanup if using temporary file
+    if config.data_file.is_none() {
+        let _ = std::fs::remove_file(data_file);
+    }
 
     Ok(ProfilerResult {
         nonces,
@@ -118,6 +128,7 @@ pub async fn run_profiler(
         speed_gib_s,
         data_size: config.data_size,
         duration: config.duration,
+        data_file: config.data_file,
     })
 }
 
