@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { invoke } from "@tauri-apps/api/tauri";
 
 import BackgroundImage from "../assets/home.png";
 import Logo from "../assets/Full logo - White.png";
@@ -10,9 +9,6 @@ import { Button } from "../components/button";
 import { Subheader, Title } from "../styles/texts";
 import Image from "../components/image";
 import { Background } from "../styles/containers";
-import { ProfilerResultModal } from "../components/ProfilerResultModal";
-import { POSProfiler } from "../components/pos/POSProfiler";
-import Modal from "../components/modal";
 
 const MenuContainer = styled.div`
   position: fixed;
@@ -31,36 +27,13 @@ const MenuContainer = styled.div`
 const Home: React.FC = () => {
   // State to track which menu is hovered
   const [hoveredMenu, setHoveredMenu] = React.useState<string | null>(null);
-  const [isRunningProfiler, setIsRunningProfiler] = React.useState(false);
-  const [profilerResult, setProfilerResult] = React.useState<any>(null);
-  const [showProfilerModal, setShowProfilerModal] = React.useState(false);
-  const [showProfilerComponent, setShowProfilerComponent] =
-    React.useState(false);
   const navigate = useNavigate();
 
   // Function to navigate to the docs page
   const navigateToReqs = () => navigate("/docs");
+  // Function to navigate to the profiler
+  const navigateToProfiler = () => navigate("/profiler");
 
-  const runProfiler = async () => {
-    try {
-      setIsRunningProfiler(true);
-      const result = await invoke("run_profiler", {
-        nonces: 64, // Default value from profiler docs
-        threads: 4,
-        config: {
-          data_size: 1,
-          duration: 10,
-        },
-      });
-      setProfilerResult(result);
-      setShowProfilerModal(true);
-    } catch (error) {
-      console.error("Profiler error:", error);
-      alert(`Failed to run profiler: ${error}`);
-    } finally {
-      setIsRunningProfiler(false);
-    }
-  };
 
   // Button configurations for the "Check" menu
   const CheckButtons = [
@@ -70,19 +43,13 @@ const Home: React.FC = () => {
       width: 300,
     },
     {
+      label: "Max POS size and Proving capacity",
+      onClick: () => navigateToProfiler(),
+      width: 300,
+    },
+    {
       label: "Generation speed",
       onClick: () => console.log("Button 1 clicked"),
-      width: 300,
-    },
-    {
-      label: isRunningProfiler ? "Running..." : "Quick Proving Test",
-      onClick: runProfiler,
-      disabled: isRunningProfiler,
-      width: 300,
-    },
-    {
-      label: "Advanced Profiler",
-      onClick: () => setShowProfilerComponent(true),
       width: 300,
     },
   ];
@@ -109,19 +76,6 @@ const Home: React.FC = () => {
           buttons={CheckButtons}
         />
       </MenuContainer>
-      <ProfilerResultModal
-        isOpen={showProfilerModal}
-        onClose={() => setShowProfilerModal(false)}
-        result={profilerResult}
-      />
-      <Modal
-        isOpen={showProfilerComponent}
-        onClose={() => setShowProfilerComponent(false)}
-        width={1200}
-        height={95}
-      >
-        <POSProfiler />
-      </Modal>
     </>
   );
 };
