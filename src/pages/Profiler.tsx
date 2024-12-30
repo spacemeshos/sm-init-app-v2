@@ -194,8 +194,8 @@ const Profiler: React.FC = () => {
       <ProfilerContainer>
         {/* How it works */}
         <Tile
-          height={showInfo ? 150 : 50}
-          width={1020}
+          height={showInfo ? 200 : 50}
+          width={500}
           blurred
           backgroundColor={Colors.whiteOpaque}
           onClick={() => setshowInfo(!showInfo)}
@@ -205,18 +205,63 @@ const Profiler: React.FC = () => {
           ) : (
             <Tile>
               <BodyText
-                text={`The profiler helps estimate how fast Proof of Space-Time (PoST) can be generated. 
+                text="The profiler helps estimate how fast Proof of Space-Time (PoST) can be generated. 
                 It measures performance based on CPU threads, nonce count, and data size. 
-                Higher nonce counts increase proof probability but require more CPU power.`}
+                Higher nonce counts increase proof probability but require more CPU power."
               />
             </Tile>
+          )}
+        </Tile>
+
+        {/* Benchmarch accuracy params*/}
+
+        <Tile
+          height={showAccuracyParams ? 200 : 50}
+          width={500}
+          blurred
+          backgroundColor={Colors.whiteOpaque}
+          heading={showAccuracyParams ? 'How accurate the test should be' : ''}
+          footer={
+            showAccuracyParams
+              ? 'Increase amount of data or duration time for more accurate results'
+              : ''
+          }
+          onClick={() => setShowAccuracyParams(!showAccuracyParams)}
+        >
+          {!showAccuracyParams ? (
+            <Tile heading="adjust test accuracy" />
+          ) : (
+            <>
+              <Tile heading="GiB to process:" height={150} top={50}>
+                <CustomNumberInput
+                  min={1}
+                  max={64}
+                  step={1}
+                  value={config.data_size}
+                  onChange={(val) =>
+                    setConfig((prev) => ({ ...prev, data_size: val }))
+                  }
+                />
+              </Tile>
+              <Tile heading="Duration (s):" height={150} top={50}>
+                <CustomNumberInput
+                  min={5}
+                  max={60}
+                  step={5}
+                  value={config.duration}
+                  onChange={(val) =>
+                    setConfig((prev) => ({ ...prev, duration: val }))
+                  }
+                />
+              </Tile>
+            </>
           )}
         </Tile>
 
         {/* Select Directory */}
         <Tile
           height={200}
-          width={400}
+          width={500}
           blurred
           backgroundColor={Colors.whiteOpaque}
         >
@@ -259,51 +304,6 @@ const Profiler: React.FC = () => {
           backgroundColor={Colors.whiteOpaque}
           heading="results: speed and max data size"
         /> */}
-
-        {/* Benchmarch accuracy params*/}
-
-        <Tile
-          height={200}
-          width={showAccuracyParams ? 500 : 100}
-          blurred
-          backgroundColor={Colors.whiteOpaque}
-          heading={showAccuracyParams ? 'How accurate the test should be' : ''}
-          footer={
-            showAccuracyParams
-              ? 'Increase amount of data or duration time for more accurate results'
-              : ''
-          }
-          onClick={() => setShowAccuracyParams(!showAccuracyParams)}
-        >
-          {!showAccuracyParams ? (
-            <Tile subheader="adjust test accuracy" />
-          ) : (
-            <>
-              <Tile heading="GiB to process:" height={150} top={50}>
-                <CustomNumberInput
-                  min={1}
-                  max={64}
-                  step={1}
-                  value={config.data_size}
-                  onChange={(val) =>
-                    setConfig((prev) => ({ ...prev, data_size: val }))
-                  }
-                />
-              </Tile>
-              <Tile heading="Duration (s):" height={150} top={50}>
-                <CustomNumberInput
-                  min={5}
-                  max={60}
-                  step={5}
-                  value={config.duration}
-                  onChange={(val) =>
-                    setConfig((prev) => ({ ...prev, duration: val }))
-                  }
-                />
-              </Tile>
-            </>
-          )}
-        </Tile>
 
         {/* Table with test results history*/}
 
