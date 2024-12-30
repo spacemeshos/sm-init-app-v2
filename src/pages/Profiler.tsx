@@ -9,20 +9,24 @@
  * - Select optimal configurations for their system
  */
 
-import { invoke } from "@tauri-apps/api";
-import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import { useSettings } from "../state/SettingsContext";
-import { Button } from "../components/button";
-import CustomNumberInput from "../components/input";
-import { SelectDirectory } from "../components/pos/SelectDirectory";
-import { Background, PageTitleWrapper } from "../styles/containers";
-import { BodyText, Header } from "../styles/texts";
-import Tile from "../components/tile";
-import Colors from "../styles/colors";
-import BackgroundImage from "../assets/wave2.png";
-import { useNavigate } from "react-router-dom";
-import ProfilerTable, { Benchmark, BenchmarkStatus, ProfilerResult } from "../components/ProfilerTable";
+import { invoke } from '@tauri-apps/api';
+import React, { useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import { useSettings } from '../state/SettingsContext';
+import { Button } from '../components/button';
+import CustomNumberInput from '../components/input';
+import { SelectDirectory } from '../components/pos/SelectDirectory';
+import { Background, PageTitleWrapper } from '../styles/containers';
+import { BodyText, Header } from '../styles/texts';
+import Tile from '../components/tile';
+import Colors from '../styles/colors';
+import BackgroundImage from '../assets/wave2.png';
+import { useNavigate } from 'react-router-dom';
+import ProfilerTable, {
+  Benchmark,
+  BenchmarkStatus,
+  ProfilerResult,
+} from '../components/ProfilerTable';
 
 const ProfilerContainer = styled.div`
   width: 1100px;
@@ -30,12 +34,12 @@ const ProfilerContainer = styled.div`
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 170px;
+  top: 160px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  align-items: center;
-  align-content: center;
+  align-items: flex-start;
+  align-content: flex-start;
   justify-content: center;
   gap: 10px;
 `;
@@ -86,20 +90,20 @@ const Profiler: React.FC = () => {
   const [customNonces, setCustomNonces] = useState(288);
   const [customThreads, setCustomThreads] = useState(1);
   const [showAccuracyParams, setShowAccuracyParams] = useState(false);
+  const [showInfo, setshowInfo] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Initialize component with system information
   useEffect(() => {
     const initialize = async () => {
       try {
-        const cores = await invoke<number>("get_cpu_cores");
+        const cores = await invoke<number>('get_cpu_cores');
         setMaxCores(cores);
-        const defaultConfig = await invoke<ProfilerConfig>(
-          "get_default_config"
-        );
+        const defaultConfig =
+          await invoke<ProfilerConfig>('get_default_config');
         setConfig(defaultConfig);
       } catch (error) {
-        console.error("Error initializing POSProfiler:", error);
+        console.error('Error initializing POSProfiler:', error);
       }
     };
 
@@ -121,7 +125,7 @@ const Profiler: React.FC = () => {
         )
       );
 
-      const result = await invoke<ProfilerResult>("run_profiler", {
+      const result = await invoke<ProfilerResult>('run_profiler', {
         nonces: benchmark.nonces,
         threads: benchmark.threads,
         config: {
@@ -163,7 +167,7 @@ const Profiler: React.FC = () => {
     await runBenchmark(newBenchmark);
     scrollRef.current?.scrollTo({
       top: scrollRef.current.scrollHeight,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   };
 
@@ -184,25 +188,32 @@ const Profiler: React.FC = () => {
   return (
     <>
       <Background src={BackgroundImage} />
-      <PageTitleWrapper
-        style={{
-          top: 0,
-          height: 150,
-          flexDirection: "column",
-          textAlign: "center",
-          textTransform: "none",
-        }}
-      >
-        <Header text="PoS Profiler" top={0} />
-        <BodyText
-          text="The profiler helps estimate how fast Proof of Space-Time (PoST) can be
-          generated. It measures performance based on CPU threads, nonce count,
-          and data size. Higher nonce counts increase proof probability but
-          require more CPU power. Aim for at least 95% probability for reliable
-          proof generation."
-        />
+      <PageTitleWrapper>
+        <Header text="PoS Profiler" />
       </PageTitleWrapper>
       <ProfilerContainer>
+        {/* How it works */}
+        <Tile
+          height={showInfo ? 150 : 50}
+          width={1020}
+          blurred
+          backgroundColor={Colors.whiteOpaque}
+          onClick={() => setshowInfo(!showInfo)}
+        >
+          {!showInfo ? (
+            <Tile heading="how it works?" />
+          ) : (
+            <Tile>
+              <BodyText
+                text={`The profiler helps estimate how fast Proof of Space-Time (PoST) can be generated. 
+                It measures performance based on CPU threads, nonce count, and data size. 
+                Higher nonce counts increase proof probability but require more CPU power.`}
+              />
+            </Tile>
+          )}
+        </Tile>
+
+        {/* Select Directory */}
         <Tile
           height={200}
           width={400}
@@ -211,9 +222,11 @@ const Profiler: React.FC = () => {
         >
           <SelectDirectory />
         </Tile>
+
+        {/* Custom Proving Settings */}
         <Tile
           height={200}
-          width={600}
+          width={500}
           blurred
           backgroundColor={Colors.whiteOpaque}
           footer="Test drive and CPU to find optimal config and know your POS Data max size"
@@ -239,59 +252,54 @@ const Profiler: React.FC = () => {
         </Tile>
 
         {/* Results*/}
-        <Tile
-          height={200}
+        {/* <Tile
+          height={100}
           width={500}
           blurred
           backgroundColor={Colors.whiteOpaque}
           heading="results: speed and max data size"
-        />
+        /> */}
 
         {/* Benchmarch accuracy params*/}
 
         <Tile
           height={200}
-          width={500}
+          width={showAccuracyParams ? 500 : 100}
           blurred
           backgroundColor={Colors.whiteOpaque}
-          heading={showAccuracyParams ? "How accurate the test should be" : ""}
-          footer={showAccuracyParams ? "Increase amount of data or duration time for more accurate results" : ""}
+          heading={showAccuracyParams ? 'How accurate the test should be' : ''}
+          footer={
+            showAccuracyParams
+              ? 'Increase amount of data or duration time for more accurate results'
+              : ''
+          }
           onClick={() => setShowAccuracyParams(!showAccuracyParams)}
         >
           {!showAccuracyParams ? (
-            <div style={{ 
-              height: '100%', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              textAlign: 'center',
-              padding: '0 20px'
-            }}>
-              <BodyText text="Click here if you want to adjust the test accuracy" />
-            </div>
+            <Tile subheader="adjust test accuracy" />
           ) : (
             <>
               <Tile heading="GiB to process:" height={150} top={50}>
-            <CustomNumberInput
-              min={1}
-              max={64}
-              step={1}
-              value={config.data_size}
-              onChange={(val) =>
-                setConfig((prev) => ({ ...prev, data_size: val }))
-              }
-            />
-          </Tile>
-          <Tile heading="Duration (s):" height={150} top={50}>
-            <CustomNumberInput
-              min={5}
-              max={60}
-              step={5}
-              value={config.duration}
-              onChange={(val) =>
-                setConfig((prev) => ({ ...prev, duration: val }))
-              }
-            />
+                <CustomNumberInput
+                  min={1}
+                  max={64}
+                  step={1}
+                  value={config.data_size}
+                  onChange={(val) =>
+                    setConfig((prev) => ({ ...prev, data_size: val }))
+                  }
+                />
+              </Tile>
+              <Tile heading="Duration (s):" height={150} top={50}>
+                <CustomNumberInput
+                  min={5}
+                  max={60}
+                  step={5}
+                  value={config.duration}
+                  onChange={(val) =>
+                    setConfig((prev) => ({ ...prev, duration: val }))
+                  }
+                />
               </Tile>
             </>
           )}
@@ -301,7 +309,7 @@ const Profiler: React.FC = () => {
 
         <Tile
           height={200}
-          width={1010}
+          width={1020}
           blurred
           backgroundColor={Colors.whiteOpaque}
           heading="table of results"
@@ -328,13 +336,13 @@ const Profiler: React.FC = () => {
           />
           <Button
             label="View full config"
-            onClick={() => navigate("/config")} //TO DO
+            onClick={() => navigate('/config')} //TO DO
             width={250}
             height={52}
           />
           <Button
             label="What next?"
-            onClick={() => navigate("/nextSteps")} //TO DO
+            onClick={() => navigate('/nextSteps')} //TO DO
             width={250}
             height={52}
           />
