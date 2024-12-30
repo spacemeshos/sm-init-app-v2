@@ -4,6 +4,7 @@ import Generate from "../pages/Generate";
 import Home from "../pages/Home";
 import Progress from "../pages/Progress";
 import Docs from "../pages/Docs";
+import Profiler from "../pages/Profiler";
 
 const AppRoutes = () => (
   <BrowserRouter>
@@ -12,6 +13,7 @@ const AppRoutes = () => (
       <Route path="/generate" element={<Generate />} />
       <Route path="/progress" element={<Progress />} />
       <Route path="/docs" element={<Docs />} />
+      <Route path="/profiler" element={<Profiler />} />
     </Routes>
   </BrowserRouter>
 );
