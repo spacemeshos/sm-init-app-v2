@@ -22,13 +22,7 @@ import Tile from "../components/tile";
 import Colors from "../styles/colors";
 import BackgroundImage from "../assets/wave2.png";
 import { useNavigate } from "react-router-dom";
-
-// Styled Components for layout and presentation
-/**
- * Styled component definitions for the UI layout
- * Container - Main wrapper for the profiler interface
- * Provides consistent padding and flex column layout
- */
+import ProfilerTable, { Benchmark, BenchmarkStatus, ProfilerResult } from "../components/ProfilerTable";
 
 const ProfilerContainer = styled.div`
   width: 1100px;
@@ -46,9 +40,9 @@ const ProfilerContainer = styled.div`
   gap: 10px;
 `;
 
-const DetailsContainer = styled.div`
-  width: 400px;
-  height: 310px;
+const SettingsContainer = styled.div`
+  width: 500px;
+  height: 250px;
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -69,75 +63,6 @@ const ButtonsContainer = styled.div`
   gap: 10px;
 `;
 
-const Table = styled.div`
-  display: flex;
-  width: 900px;
-  top: 200px;
-  left: 50%;
-  transform: translateX(-50%);
-  position: relative;
-  flex-direction: column;
-  border: 1px solid ${Colors.whiteOpaque};
-  overflow: hidden;
-`;
-
-const TableHeader = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  width: 100%;
-  background: transparent;
-  padding: 10px;
-  font-size: 16px;
-  font-family: "Univers55", sans-serif;
-  color: ${Colors.greenVeryLight};
-`;
-
-const TableBody = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  flex-direction: column;
-  width: 100%;
-  max-height: 350px;
-  background: transparent;
-  padding: 10px;
-  font-size: 16px;
-  font-family: "Univers55", sans-serif;
-  color: ${Colors.greenVeryLight};
-  overflow-y: auto;
-`;
-
-const TableRow = styled.div<{ isClickable?: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  width: 100%;
-  height: 35px;
-  border-bottom: 0.5px solid ${Colors.white};
-  cursor: ${({ isClickable }) => (isClickable ? "pointer" : "default")};
-
-  &:hover {
-    background: ${({ isClickable }) =>
-      isClickable ? Colors.greenLightOpaque : "none"};
-  }
-`;
-
-const Column = styled.div`
-  width: 12.5%;
-`;
-
-const StatusIndicator = styled.div<{ color: string }>`
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: ${({ color }) => color};
-  margin-right: 5px;
-`;
-
 /**
  * Interface Definitions
  */
@@ -148,48 +73,6 @@ interface ProfilerConfig {
   duration: number; // Duration of the benchmark in seconds
   data_file?: string; // Optional custom path for data file
 }
-
-// Results from a profiling run
-interface ProfilerResult {
-  nonces: number; // Number of nonces processed
-  threads: number; // Number of CPU threads used
-  time_s: number; // Time taken in seconds
-  speed_gib_s: number; // Processing speed in GiB/second
-  data_size: number; // Size of data processed
-  duration: number; // Actual duration of the benchmark
-  data_file?: string; // Path to data file used
-}
-
-enum BenchmarkStatus {
-  Idle = "Idle",
-  Running = "Running",
-  Complete = "Complete",
-  Error = "Error",
-}
-
-interface Benchmark extends Partial<ProfilerResult> {
-  nonces: number;
-  threads: number;
-  status: BenchmarkStatus;
-  error?: string; // Error message if status is Error
-}
-
-/**
- * Helper function to determine the color coding for different benchmark statuses
- * Green for complete, Orange for running, Red for error, Grey for idle
- */
-const getStatusColor = (status: BenchmarkStatus) => {
-  switch (status) {
-    case BenchmarkStatus.Complete:
-      return Colors.greenLight;
-    case BenchmarkStatus.Running:
-      return Colors.blueLight;
-    case BenchmarkStatus.Error:
-      return Colors.red;
-    default:
-      return Colors.grayMedium;
-  }
-};
 
 /**
  * Main POSProfiler Component
@@ -357,18 +240,53 @@ const Profiler: React.FC = () => {
             />
           </Tile>
         </Tile>
-
-        {/* Configuration controls for benchmark parameters */}
+        {/* Results*/}
 
         <Tile
-          height={300}
+          height={150}
+          width={500}
+          blurred
+          backgroundColor={Colors.whiteOpaque}
+          heading="results: speed"
+        />
+        <Tile
+          height={150}
+          width={500}
+          blurred
+          backgroundColor={Colors.whiteOpaque}
+          heading="results: max data size"
+        />
+
+        {/* Table with test results history*/}
+
+        <Tile
+          height={200}
+          width={1010}
+          blurred
+          backgroundColor={Colors.whiteOpaque}
+          heading="table of results"
+        >
+          <ProfilerTable
+            benchmarks={benchmarks}
+            onBenchmarkSelect={selectBenchmark}
+            scrollRef={scrollRef}
+            config={config}
+            customNonces={customNonces}
+            customThreads={customThreads}
+          />
+        </Tile>
+
+        {/* Benchmarch accuracy params*/}
+
+        <Tile
+          height={250}
           width={500}
           blurred
           backgroundColor={Colors.whiteOpaque}
           heading="How accurate the test should be"
           footer="Increase amount of data or duration time for more accurate results"
         >
-          <Tile heading="GiB to process:" height={200}>
+          <Tile heading="GiB to process:" height={150} top={60}>
             <CustomNumberInput
               min={1}
               max={64}
@@ -379,7 +297,7 @@ const Profiler: React.FC = () => {
               }
             />
           </Tile>
-          <Tile heading="Duration (s):" height={200}>
+          <Tile heading="Duration (s):" height={150} top={60}>
             <CustomNumberInput
               min={5}
               max={60}
@@ -392,67 +310,6 @@ const Profiler: React.FC = () => {
           </Tile>
         </Tile>
 
-        <DetailsContainer>
-          <Tile
-            height={150}
-            width={500}
-            blurred
-            backgroundColor={Colors.whiteOpaque}
-            heading="results: speed"
-          />
-          <Tile
-            height={150}
-            width={500}
-            blurred
-            backgroundColor={Colors.whiteOpaque}
-            heading="results: max data size"
-          />
-        </DetailsContainer>
-        <Tile
-          height={80}
-          width={800}
-          blurred
-          backgroundColor={Colors.whiteOpaque}
-          heading="table of results"
-        >
-          <Table>
-            <TableHeader>
-              <Column>Nonces</Column>
-              <Column>Threads</Column>
-              <Column>Time (s)</Column>
-              <Column>Speed (GiB/s)</Column>
-              <Column>Size</Column>
-              <Column>Duration</Column>
-              <Column>Directory</Column>
-              <Column>Status</Column>
-            </TableHeader>
-            <TableBody ref={scrollRef}>
-              {benchmarks.map((benchmark, index) => (
-                <TableRow
-                  key={`${benchmark.nonces}-${benchmark.threads}-${index}`}
-                  isClickable={benchmark.status === BenchmarkStatus.Complete}
-                  onClick={() => selectBenchmark(benchmark)}
-                >
-                  <Column>{benchmark.nonces ?? customNonces}</Column>
-                  <Column>{benchmark.threads ?? customThreads}</Column>
-                  <Column>{benchmark.time_s?.toFixed(2) ?? "..."}</Column>
-                  <Column>{benchmark.speed_gib_s?.toFixed(2) ?? "..."}</Column>
-                  <Column>{benchmark.data_size ?? config.data_size}</Column>
-                  <Column>{benchmark.duration ?? config.duration}</Column>
-                  <Column>{benchmark.data_file || "Temp"}</Column>
-                  <Column>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <StatusIndicator
-                        color={getStatusColor(benchmark.status)}
-                      />
-                      {benchmark.error || benchmark.status}
-                    </div>
-                  </Column>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Tile>
         <ButtonsContainer>
           <Button
             onClick={runCustomBenchmark}
