@@ -59,7 +59,7 @@ export const PageTitleWrapper = styled.div`
 `;
 
 export const SetupContainer = styled.div`
-  height: 450px;
+  height: 90%;
   width: 80%;
   position: absolute;
   top: 0px;
@@ -72,7 +72,7 @@ export const SetupContainer = styled.div`
 export const SetupTileWrapper = styled.div<{
   width?: number;
 }>`
-  height: 90%;
+  height: 100%;
   width: ${({ width }) => width || 450}px;
   position: relative;
   display: flex;
