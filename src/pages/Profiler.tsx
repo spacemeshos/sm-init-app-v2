@@ -40,16 +40,6 @@ const ProfilerContainer = styled.div`
   gap: 10px;
 `;
 
-const SettingsContainer = styled.div`
-  width: 500px;
-  height: 250px;
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  align-items: auto;
-  gap: 10px;
-`;
 const ButtonsContainer = styled.div`
   width: 810px;
   height: 70px;
@@ -60,7 +50,7 @@ const ButtonsContainer = styled.div`
   align-items: center;
   align-content: center;
   justify-content: center;
-  gap: 10px;
+  gap: 20px;
 `;
 
 /**
@@ -194,9 +184,15 @@ const Profiler: React.FC = () => {
     <>
       <Background src={BackgroundImage} />
       <PageTitleWrapper
-        style={{ height: 150, flexDirection: "column", textTransform: "none" }}
+        style={{
+          top: 0,
+          height: 150,
+          flexDirection: "column",
+          textAlign: "center",
+          textTransform: "none",
+        }}
       >
-        <Header text="PoS Profiler" />
+        <Header text="PoS Profiler" top={0} />
         <BodyText
           text="The profiler helps estimate how fast Proof of Space-Time (PoST) can be
           generated. It measures performance based on CPU threads, nonce count,
@@ -207,7 +203,7 @@ const Profiler: React.FC = () => {
       </PageTitleWrapper>
       <ProfilerContainer>
         <Tile
-          height={250}
+          height={200}
           width={400}
           blurred
           backgroundColor={Colors.whiteOpaque}
@@ -215,13 +211,13 @@ const Profiler: React.FC = () => {
           <SelectDirectory />
         </Tile>
         <Tile
-          height={250}
+          height={200}
           width={600}
           blurred
           backgroundColor={Colors.whiteOpaque}
           footer="Test drive and CPU to find optimal config and know your POS Data max size"
         >
-          <Tile heading="Nonces:" height={250}>
+          <Tile heading="Nonces:" height={200}>
             <CustomNumberInput
               min={16}
               max={9999}
@@ -230,7 +226,7 @@ const Profiler: React.FC = () => {
               onChange={(val) => setCustomNonces(val)}
             />
           </Tile>
-          <Tile heading="CPU Threads:" height={250}>
+          <Tile heading="CPU Threads:" height={200}>
             <CustomNumberInput
               min={1}
               max={maxCores}
@@ -240,22 +236,49 @@ const Profiler: React.FC = () => {
             />
           </Tile>
         </Tile>
+
         {/* Results*/}
+        <Tile
+          height={200}
+          width={500}
+          blurred
+          backgroundColor={Colors.whiteOpaque}
+          heading="results: speed and max data size"
+        />
+
+        {/* Benchmarch accuracy params*/}
 
         <Tile
-          height={150}
+          height={200}
           width={500}
           blurred
           backgroundColor={Colors.whiteOpaque}
-          heading="results: speed"
-        />
-        <Tile
-          height={150}
-          width={500}
-          blurred
-          backgroundColor={Colors.whiteOpaque}
-          heading="results: max data size"
-        />
+          heading="How accurate the test should be"
+          footer="Increase amount of data or duration time for more accurate results"
+        >
+          <Tile heading="GiB to process:" height={150} top={50}>
+            <CustomNumberInput
+              min={1}
+              max={64}
+              step={1}
+              value={config.data_size}
+              onChange={(val) =>
+                setConfig((prev) => ({ ...prev, data_size: val }))
+              }
+            />
+          </Tile>
+          <Tile heading="Duration (s):" height={150} top={50}>
+            <CustomNumberInput
+              min={5}
+              max={60}
+              step={5}
+              value={config.duration}
+              onChange={(val) =>
+                setConfig((prev) => ({ ...prev, duration: val }))
+              }
+            />
+          </Tile>
+        </Tile>
 
         {/* Table with test results history*/}
 
@@ -274,40 +297,6 @@ const Profiler: React.FC = () => {
             customNonces={customNonces}
             customThreads={customThreads}
           />
-        </Tile>
-
-        {/* Benchmarch accuracy params*/}
-
-        <Tile
-          height={250}
-          width={500}
-          blurred
-          backgroundColor={Colors.whiteOpaque}
-          heading="How accurate the test should be"
-          footer="Increase amount of data or duration time for more accurate results"
-        >
-          <Tile heading="GiB to process:" height={150} top={60}>
-            <CustomNumberInput
-              min={1}
-              max={64}
-              step={1}
-              value={config.data_size}
-              onChange={(val) =>
-                setConfig((prev) => ({ ...prev, data_size: val }))
-              }
-            />
-          </Tile>
-          <Tile heading="Duration (s):" height={150} top={60}>
-            <CustomNumberInput
-              min={5}
-              max={60}
-              step={5}
-              value={config.duration}
-              onChange={(val) =>
-                setConfig((prev) => ({ ...prev, duration: val }))
-              }
-            />
-          </Tile>
         </Tile>
 
         <ButtonsContainer>
