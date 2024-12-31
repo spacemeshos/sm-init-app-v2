@@ -11,23 +11,29 @@
 
 import { invoke } from '@tauri-apps/api';
 import { join } from '@tauri-apps/api/path';
+import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useSettings } from '../state/SettingsContext';
-import { Button } from '../components/button';
-import CustomNumberInput from '../components/input';
-import { SelectDirectory } from '../components/pos/SelectDirectory';
-import { Background, PageTitleWrapper } from '../styles/containers';
-import { BodyText, Header } from '../styles/texts';
+import Modal from '../components/modal';
+import Image from '../components/image';
 import Tile from '../components/tile';
-import Colors from '../styles/colors';
-import BackgroundImage from '../assets/wave2.png';
-import { useNavigate } from 'react-router-dom';
 import ProfilerTable, {
   Benchmark,
   BenchmarkStatus,
   ProfilerResult,
 } from '../components/ProfilerTable';
+import { BackButton, Button } from '../components/button';
+import CustomNumberInput from '../components/input';
+import { SelectDirectory } from '../components/pos/SelectDirectory';
+import { Background, PageTitleWrapper } from '../styles/containers';
+import { BodyText, Header } from '../styles/texts';
+import Colors from '../styles/colors';
+import InfoIcon from '../assets/help.png';
+import Gear from '../assets/setting.png';
+import Control from '../assets/control.png';
+import NextStep from '../assets/nextstep.png';
+import BackgroundImage from '../assets/wave3.jpg';
 
 const ProfilerContainer = styled.div`
   width: 1100px;
@@ -35,27 +41,14 @@ const ProfilerContainer = styled.div`
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 160px;
+  top: 155px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   align-items: flex-start;
   align-content: flex-start;
   justify-content: center;
-  gap: 10px;
-`;
-
-const ButtonsContainer = styled.div`
-  width: 810px;
-  height: 70px;
-  position: relative;
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  gap: 20px;
+  gap: 5px;
 `;
 
 /**
@@ -90,8 +83,8 @@ const Profiler: React.FC = () => {
   const [benchmarks, setBenchmarks] = useState<Benchmark[]>([]);
   const [customNonces, setCustomNonces] = useState(288);
   const [customThreads, setCustomThreads] = useState(1);
-  const [showAccuracyParams, setShowAccuracyParams] = useState(false);
-  const [showInfo, setshowInfo] = useState(false);
+  const [showAccuracyModal, setShowAccuracyModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Initialize component with system information
@@ -127,9 +120,10 @@ const Profiler: React.FC = () => {
       );
 
       if (!settings.selectedDir && !settings.defaultDir) {
-        throw new Error("No directory available");
+        throw new Error('No directory available');
       }
-      const currentDir = settings.selectedDir || settings.defaultDir as string;
+      const currentDir =
+        settings.selectedDir || (settings.defaultDir as string);
       const dataFilePath = await join(currentDir, 'profiler-data');
       const result = await invoke<ProfilerResult>('run_profiler', {
         nonces: benchmark.nonces,
@@ -169,10 +163,9 @@ const Profiler: React.FC = () => {
    */
   const runCustomBenchmark = async () => {
     if (!settings.selectedDir && !settings.defaultDir) {
-      throw new Error("No directory available");
+      throw new Error('No directory available');
     }
-    const currentDir = settings.selectedDir || settings.defaultDir as string;
-    const dataFilePath = await join(currentDir, 'profiler-data');
+    const currentDir = settings.selectedDir || (settings.defaultDir as string);
     const newBenchmark: Benchmark = {
       nonces: customNonces,
       threads: customThreads,
@@ -204,81 +197,131 @@ const Profiler: React.FC = () => {
 
   return (
     <>
+      {/* How it works modal */}
+
+      <Modal
+        isOpen={showInfoModal}
+        onClose={() => setShowInfoModal(false)}
+        header="How it works"
+        text="The profiler helps estimate how fast Proof of Space-Time (PoST) can be generated. 
+          It measures performance based on CPU threads, nonce count, and data size. 
+          Higher nonce counts increase proof probability but require more CPU power."
+        //TO DO more comprehensive explanation
+        width={600}
+        height={400}
+      />
+
+      {/* Benchmark accuracy modal */}
+
+      <Modal
+        isOpen={showAccuracyModal}
+        onClose={() => setShowAccuracyModal(false)}
+        header="How accurate the test should be" //TO DO rephrase and fix layout
+        text="Increase amount of data or duration time for more accurate results"
+        width={700}
+        height={500}
+      >
+        <>
+          <Tile heading="GiB to process:" height={150}>
+            <CustomNumberInput
+              min={1}
+              max={64}
+              step={1}
+              value={config.data_size}
+              onChange={(val) =>
+                setConfig((prev) => ({ ...prev, data_size: val }))
+              }
+            />
+          </Tile>
+          <Tile heading="Duration (s):" height={150}>
+            <CustomNumberInput
+              min={5}
+              max={60}
+              step={5}
+              value={config.duration}
+              onChange={(val) =>
+                setConfig((prev) => ({ ...prev, duration: val }))
+              }
+            />
+          </Tile>
+        </>
+      </Modal>
+
+      {/* Main POSProfiler content */}
+
       <Background src={BackgroundImage} />
+      <BackButton onClick={() => navigate('/')} />
       <PageTitleWrapper>
         <Header text="PoS Profiler" />
       </PageTitleWrapper>
       <ProfilerContainer>
         {/* How it works */}
         <Tile
-          height={showInfo ? 200 : 50}
-          width={500}
+          footer="How it works?"
+          height={100}
+          width={120}
           blurred
           backgroundColor={Colors.whiteOpaque}
-          onClick={() => setshowInfo(!showInfo)}
+          onClick={() => setShowInfoModal(true)}
         >
-          {!showInfo ? (
-            <Tile heading="how it works?" />
-          ) : (
-            <Tile>
-              <BodyText
-                text="The profiler helps estimate how fast Proof of Space-Time (PoST) can be generated. 
-                It measures performance based on CPU threads, nonce count, and data size. 
-                Higher nonce counts increase proof probability but require more CPU power."
-              />
-            </Tile>
-          )}
+          <Image src={InfoIcon} width={35} top={20} />
         </Tile>
 
-        {/* Benchmarch accuracy params*/}
-
+        {/* Benchmark accuracy params */}
         <Tile
-          height={showAccuracyParams ? 200 : 50}
-          width={500}
+          footer="Test Accuracy"
+          height={100}
+          width={120}
           blurred
           backgroundColor={Colors.whiteOpaque}
-          heading={showAccuracyParams ? 'How accurate the test should be' : ''}
-          footer={
-            showAccuracyParams
-              ? 'Increase amount of data or duration time for more accurate results'
-              : ''
-          }
-          onClick={() => setShowAccuracyParams(!showAccuracyParams)}
+          onClick={() => setShowAccuracyModal(true)}
         >
-          {!showAccuracyParams ? (
-            <Tile heading="adjust test accuracy" />
-          ) : (
-            <>
-              <Tile heading="GiB to process:" height={150} top={50}>
-                <CustomNumberInput
-                  min={1}
-                  max={64}
-                  step={1}
-                  value={config.data_size}
-                  onChange={(val) =>
-                    setConfig((prev) => ({ ...prev, data_size: val }))
-                  }
-                />
-              </Tile>
-              <Tile heading="Duration (s):" height={150} top={50}>
-                <CustomNumberInput
-                  min={5}
-                  max={60}
-                  step={5}
-                  value={config.duration}
-                  onChange={(val) =>
-                    setConfig((prev) => ({ ...prev, duration: val }))
-                  }
-                />
-              </Tile>
-            </>
-          )}
+          <Image src={Gear} width={35} top={20} />
+        </Tile>
+
+        {/* Config preview */}
+        <Tile
+          footer="View full config"
+          height={100}
+          width={120}
+          blurred
+          backgroundColor={Colors.whiteOpaque}
+          onClick={() => navigate('/config')} //TO DO
+        >
+          <Image src={Control} width={35} top={20} />
+        </Tile>
+
+        {/* What next button */}
+        <Tile
+          footer="What Next?"
+          height={100}
+          width={120}
+          blurred
+          backgroundColor={Colors.whiteOpaque}
+          onClick={() => navigate('/nextSteps')} //TO DO
+        >
+          <Image src={NextStep} width={35} top={20} />
+        </Tile>
+
+        {/* Info */}
+        <Tile
+          height={100}
+          width={550}
+          blurred
+          backgroundColor={Colors.whiteOpaque}
+          onClick={() => setShowInfoModal(true)}
+        >
+          <BodyText
+            top={30}
+            text="The profiler helps estimate how much POS Data you can prove on time. 
+            Succesful proving within cycle gap is crucial for rewards eligibility."
+          />
         </Tile>
 
         {/* Select Directory */}
         <Tile
           height={200}
-          width={500}
+          width={495}
           blurred
           backgroundColor={Colors.whiteOpaque}
         >
@@ -288,12 +331,13 @@ const Profiler: React.FC = () => {
         {/* Custom Proving Settings */}
         <Tile
           height={200}
-          width={500}
+          width={550}
           blurred
           backgroundColor={Colors.whiteOpaque}
-          footer="Test drive and CPU to find optimal config and know your POS Data max size"
+          footer="Experiment with these params to find optimal config. 
+          Try to balance the probability of one pass and max proving speed."
         >
-          <Tile heading="Nonces:" height={200}>
+          <Tile heading="Nonces:" height={130} top={25}>
             <CustomNumberInput
               min={16}
               max={9999}
@@ -302,7 +346,7 @@ const Profiler: React.FC = () => {
               onChange={(val) => setCustomNonces(val)}
             />
           </Tile>
-          <Tile heading="CPU Threads:" height={200}>
+          <Tile heading="CPU Threads:" height={130} top={25}>
             <CustomNumberInput
               min={1}
               max={maxCores}
@@ -313,23 +357,35 @@ const Profiler: React.FC = () => {
           </Tile>
         </Tile>
 
-        {/* Results*/}
-        {/* <Tile
+        {/* Result Max POS Data to Prove + Speed */}
+        <Tile
+          heading="Max POS Data"
           height={100}
-          width={500}
+          width={495}
           blurred
           backgroundColor={Colors.whiteOpaque}
-          heading="results: speed and max data size"
-        /> */}
+        ></Tile>
+        <Tile height={100} width={550}>
+          <Button
+            onClick={runCustomBenchmark}
+            disabled={benchmarks.some(
+              (b) => b.status === BenchmarkStatus.Running
+            )}
+            label="Test My Settings"
+            width={250}
+            height={52}
+            margin={10}
+          />
+        </Tile>
 
         {/* Table with test results history*/}
 
         <Tile
-          height={200}
-          width={1020}
+          height={300}
+          width={1100}
           blurred
           backgroundColor={Colors.whiteOpaque}
-          heading="table of results"
+          heading="Results History"
         >
           <ProfilerTable
             benchmarks={benchmarks}
@@ -340,30 +396,6 @@ const Profiler: React.FC = () => {
             customThreads={customThreads}
           />
         </Tile>
-
-        <ButtonsContainer>
-          <Button
-            onClick={runCustomBenchmark}
-            disabled={benchmarks.some(
-              (b) => b.status === BenchmarkStatus.Running
-            )}
-            label="Test My Settings"
-            width={250}
-            height={52}
-          />
-          <Button
-            label="View full config"
-            onClick={() => navigate('/config')} //TO DO
-            width={250}
-            height={52}
-          />
-          <Button
-            label="What next?"
-            onClick={() => navigate('/nextSteps')} //TO DO
-            width={250}
-            height={52}
-          />
-        </ButtonsContainer>
       </ProfilerContainer>
     </>
   );
