@@ -10,7 +10,7 @@
  */
 
 import { invoke } from '@tauri-apps/api';
-import { join } from '@tauri-apps/api/path';
+import { join, homeDir } from '@tauri-apps/api/path';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -28,7 +28,7 @@ import { BackButton, Button } from '../components/button';
 import CustomNumberInput from '../components/input';
 import { SelectDirectory } from '../components/pos/SelectDirectory';
 import { Background, PageTitleWrapper } from '../styles/containers';
-import { BodyText, Header } from '../styles/texts';
+import { BodyText, Header, Title } from '../styles/texts';
 import Colors from '../styles/colors';
 import InfoIcon from '../assets/help.png';
 import Gear from '../assets/setting.png';
@@ -321,7 +321,7 @@ const Profiler: React.FC = () => {
 
         {/* Select Directory */}
         <Tile
-          height={200}
+          height={230}
           width={495}
           blurred
           backgroundColor={Colors.whiteOpaque}
@@ -331,7 +331,7 @@ const Profiler: React.FC = () => {
 
         {/* Custom Proving Settings */}
         <Tile
-          height={200}
+          height={230}
           width={550}
           blurred
           backgroundColor={Colors.whiteOpaque}
@@ -360,39 +360,36 @@ const Profiler: React.FC = () => {
 
         {/* Result Max POS Data to Prove + Speed */}
         <Tile
-          heading="Results"
-          height={100}
-          width={495}
+          heading="Proving Speed"
+          footer="GiB/s"
+          height={120}
+          width={350}
           blurred
           backgroundColor={Colors.whiteOpaque}
         >
           {benchmarks.length > 0 &&
             (() => {
               const speed = benchmarks[benchmarks.length - 1].speed_gib_s;
-              return (
-                <>
-                  <Tile
-                    height={70}
-                    width={200}
-                    top={20}
-                    footer={`Proving Speed`}
-                    heading={`${speed?.toFixed(2) ?? '...'} GiB/s`}
-                  />
-                  <Tile
-                    height={70}
-                    width={200}
-                    top={20}
-                    footer={`Max POS Size`}
-                    heading={`${speed !== undefined ? formatSize(calculateMaxDataSize(speed)) : '...'}`}
-                  />
-                </>
-              );
+              return <Header top={45} text={`${speed?.toFixed(2) ?? '...'}`} />;
             })()}
         </Tile>
 
+        <Tile
+          heading="Max POS Size"
+          height={120}
+          width={350}
+          blurred
+          backgroundColor={Colors.whiteOpaque}
+        >
+          {benchmarks.length > 0 &&
+            (() => {
+              const speed = benchmarks[benchmarks.length - 1].speed_gib_s;
+             return <Header top={45} text={`${speed !== undefined ? formatSize(calculateMaxDataSize(speed)) : '...'}`} />;
+            })()}
+        </Tile>
         {/* Run Benchmark Button */}
 
-        <Tile height={100} width={550}>
+        <Tile height={120} width={340}>
           <Button
             onClick={runCustomBenchmark}
             disabled={benchmarks.some(
