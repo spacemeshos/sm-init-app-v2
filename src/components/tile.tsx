@@ -46,7 +46,7 @@ const TileHeading = styled.h2`
   text-align: center;
   text-transform: uppercase;
   font-weight: 100;
-  font-size: 16px;
+  font-size: 14px;
   top: 15px;
   position: absolute;
 `;
@@ -57,7 +57,7 @@ const SubHeader = styled.h3`
   top: 30%;
   position: absolute;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 100;
 `;
 
@@ -67,7 +67,7 @@ const ErrorMessage = styled.h3`
   top: 20%;
   position: absolute;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 200;
 `;
 
@@ -77,8 +77,9 @@ const Footer = styled.h3`
   bottom: 10%;
   position: absolute;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 100;
+  padding: 0px 20px;
 `;
 
 const Tile: React.FC<TileProps> = ({
