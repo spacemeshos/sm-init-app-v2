@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Colors from '../styles/colors';
 import { getDirectoryDisplay } from '../utils/directoryUtils';
@@ -24,7 +24,7 @@ const TableHeader = styled.div`
   width: 100%;
   background: transparent;
   padding: 10px;
-  font-size: 16px;
+  font-size: 14px;
   font-family: 'Univers55', sans-serif;
   border-bottom: 0.5px solid ${Colors.white};
   color: ${Colors.white};
@@ -38,10 +38,10 @@ const TableBody = styled.div`
   align-content: center;
   flex-direction: column;
   width: 100%;
-  max-height: 120px;
+  max-height: 200px;
   background: transparent;
   padding: 10px;
-  font-size: 16px;
+  font-size: 14px;
   font-family: 'Univers55', sans-serif;
   color: ${Colors.greenVeryLight};
   overflow-y: auto;
@@ -53,7 +53,7 @@ const TableRow = styled.div<{ isClickable?: boolean }>`
   align-items: center;
   align-content: center;
   width: 100%;
-  height: 35px;
+  min-height: 35px;
   border-bottom: 0.5px solid ${Colors.greenVeryLight};
   cursor: ${({ isClickable }) => (isClickable ? 'pointer' : 'default')};
 
@@ -63,8 +63,26 @@ const TableRow = styled.div<{ isClickable?: boolean }>`
   }
 `;
 
-const Column = styled.div`
-  width: 11%;
+const Column = styled.div<{ expanded?: boolean }>`
+  width: ${({ expanded }) => (expanded ? '11%' : '17%')};
+`;
+
+const ToggleButton = styled.button`
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  background: ${Colors.greenLightOpaque};
+  color: ${Colors.white};
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Univers55', sans-serif;
+  font-size: 10px;
+
+  &:hover {
+    background: ${Colors.darkOpaque};
+  }
 `;
 
 const StatusIndicator = styled.div<{ color: string }>`
@@ -135,18 +153,26 @@ const ProfilerTable: React.FC<ProfilerTableProps> = ({
   customNonces,
   customThreads,
 }) => {
+  const [showDetails, setShowDetails] = useState(false);
   return (
     <Table>
+      <ToggleButton onClick={() => setShowDetails(!showDetails)}>
+        {showDetails ? '<<' : 'More Details'}
+      </ToggleButton>
       <TableHeader>
-        <Column>Nonces</Column>
-        <Column>Threads</Column>
-        <Column>Time (s)</Column>
-        <Column>Speed (GiB/s)</Column>
-        <Column>Size</Column>
-        <Column>Duration</Column>
-        <Column>Max Size</Column>
-        <Column>Directory</Column>
-        <Column>Status</Column>
+        <Column expanded={showDetails}>Nonces</Column>
+        <Column expanded={showDetails}>Threads</Column>
+        <Column expanded={showDetails}>Speed (GiB/s)</Column>
+        <Column expanded={showDetails}>Max Size</Column>
+        <Column expanded={showDetails}>Status</Column>
+        {showDetails && (
+          <>
+            <Column expanded={showDetails}>Time (s)</Column>
+            <Column expanded={showDetails}>Size</Column>
+            <Column expanded={showDetails}>Duration</Column>
+            <Column expanded={showDetails}>Directory</Column>
+          </>
+        )}
       </TableHeader>
       <TableBody ref={scrollRef}>
         {benchmarks.map((benchmark, index) => (
@@ -155,26 +181,42 @@ const ProfilerTable: React.FC<ProfilerTableProps> = ({
             isClickable={benchmark.status === BenchmarkStatus.Complete}
             onClick={() => onBenchmarkSelect(benchmark)}
           >
-            <Column>{benchmark.nonces ?? customNonces}</Column>
-            <Column>{benchmark.threads ?? customThreads}</Column>
-            <Column>{benchmark.time_s?.toFixed(2) ?? '...'}</Column>
-            <Column>{benchmark.speed_gib_s?.toFixed(2) ?? '...'}</Column>
-            <Column>{benchmark.data_size ?? config.data_size}</Column>
-            <Column>{benchmark.duration ?? config.duration}</Column>
-            <Column>
-              {benchmark.speed_gib_s 
+            <Column expanded={showDetails}>
+              {benchmark.nonces ?? customNonces}
+            </Column>
+            <Column expanded={showDetails}>
+              {benchmark.threads ?? customThreads}
+            </Column>
+            <Column expanded={showDetails}>
+              {benchmark.speed_gib_s?.toFixed(2) ?? '...'}
+            </Column>
+            <Column expanded={showDetails}>
+              {benchmark.speed_gib_s
                 ? formatSize(calculateMaxDataSize(benchmark.speed_gib_s))
-                : "..."}
+                : '...'}
             </Column>
-            <Column>
-              {getDirectoryDisplay(benchmark.data_file, 'Default', 20)}
-            </Column>
-            <Column>
+            <Column expanded={showDetails}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <StatusIndicator color={getStatusColor(benchmark.status)} />
                 {benchmark.error || benchmark.status}
               </div>
             </Column>
+            {showDetails && (
+              <>
+                <Column expanded={showDetails}>
+                  {benchmark.time_s?.toFixed(2) ?? '...'}
+                </Column>
+                <Column expanded={showDetails}>
+                  {benchmark.data_size ?? config.data_size}
+                </Column>
+                <Column expanded={showDetails}>
+                  {benchmark.duration ?? config.duration}
+                </Column>
+                <Column expanded={showDetails}>
+                  {getDirectoryDisplay(benchmark.data_file, 'Default', 20)}
+                </Column>
+              </>
+            )}
           </TableRow>
         ))}
       </TableBody>
