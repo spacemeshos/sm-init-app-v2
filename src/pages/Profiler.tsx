@@ -1,40 +1,35 @@
-/**
- * POSProfiler Component
- *
- * A comprehensive profiling tool for Proof of Space-Time (PoST) performance analysis.
- * This component allows users to:
- * - Run benchmarks with different configurations of nonces and CPU threads
- * - View and compare performance metrics
- * - Test custom settings
- * - Select optimal configurations for their system
- */
-
-import { invoke } from '@tauri-apps/api';
-import { join, homeDir } from '@tauri-apps/api/path';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { calculateMaxDataSize, formatSize } from '../utils/sizeUtils';
-import { useSettings } from '../state/SettingsContext';
 import Modal from '../components/modal';
-import Image from '../components/image';
-import Tile from '../components/tile';
-import ProfilerTable, {
-  Benchmark,
-  BenchmarkStatus,
-  ProfilerResult,
-} from '../components/ProfilerTable';
+import Tile, { ActionTile } from '../components/tile';
+import ProfilerTable from '../components/ProfilerTable';
 import { BackButton, Button } from '../components/button';
 import CustomNumberInput from '../components/input';
 import { SelectDirectory } from '../components/pos/SelectDirectory';
 import { Background, PageTitleWrapper } from '../styles/containers';
-import { BodyText, Header, Title } from '../styles/texts';
+import { BodyText, Header } from '../styles/texts';
 import Colors from '../styles/colors';
+import { useProfiler } from '../hooks/useProfiler';
+
+// Assets
 import InfoIcon from '../assets/help.png';
 import Gear from '../assets/setting.png';
 import Control from '../assets/control.png';
 import NextStep from '../assets/nextstep.png';
 import BackgroundImage from '../assets/wave3.jpg';
+
+export const PROFILER_CONSTANTS = {
+  MIN_NONCES: 16,
+  MAX_NONCES: 9999,
+  MIN_DURATION: 5,
+  MAX_DURATION: 60,
+  MIN_DATA_SIZE: 1,
+  MAX_DATA_SIZE: 64,
+  DEFAULT_NONCES: 288,
+  DEFAULT_THREADS: 1,
+} as const;
 
 const ProfilerContainer = styled.div`
   width: 1100px;
@@ -52,154 +47,27 @@ const ProfilerContainer = styled.div`
   gap: 5px;
 `;
 
-/**
- * Interface Definitions
- */
-
-// Configuration settings for the profiler
-interface ProfilerConfig {
-  data_size: number; // Size of data to process in GiB
-  duration: number; // Duration of the benchmark in seconds
-  data_file?: string; // Optional custom path for data file
-}
-
-/**
- * Main POSProfiler Component
- *
- * Manages the state and logic for:
- * - Running benchmarks with different configurations
- * - Displaying results in a tabular format
- * - Handling custom benchmark configurations
- * - Updating global settings based on selected results
- */
-
 const Profiler: React.FC = () => {
   const navigate = useNavigate();
-  const { settings, setSettings } = useSettings();
-  const [maxCores, setMaxCores] = useState(0);
-  const [config, setConfig] = useState<ProfilerConfig>({
-    data_size: 1,
-    duration: 10,
-  });
-  const [benchmarks, setBenchmarks] = useState<Benchmark[]>([]);
-  const [customNonces, setCustomNonces] = useState(288);
-  const [customThreads, setCustomThreads] = useState(1);
   const [showAccuracyModal, setShowAccuracyModal] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Initialize component with system information
-  useEffect(() => {
-    const initialize = async () => {
-      try {
-        const cores = await invoke<number>('get_cpu_cores');
-        setMaxCores(cores);
-        const defaultConfig =
-          await invoke<ProfilerConfig>('get_default_config');
-        setConfig(defaultConfig);
-      } catch (error) {
-        console.error('Error initializing POSProfiler:', error);
-      }
-    };
-
-    initialize();
-  }, []);
-
-  /**
-   * Executes a single benchmark with specified configuration
-   * Updates the benchmark status and results in real-time
-   * Calculates probability of successful proof generation
-   */
-  const runBenchmark = async (benchmark: Benchmark) => {
-    try {
-      setBenchmarks((prev) =>
-        prev.map((b) =>
-          b.nonces === benchmark.nonces && b.threads === benchmark.threads
-            ? { ...b, status: BenchmarkStatus.Running }
-            : b
-        )
-      );
-
-      if (!settings.selectedDir && !settings.defaultDir) {
-        throw new Error('No directory available');
-      }
-      const currentDir =
-        settings.selectedDir || (settings.defaultDir as string);
-      const dataFilePath = await join(currentDir, 'profiler-data');
-      const result = await invoke<ProfilerResult>('run_profiler', {
-        nonces: benchmark.nonces,
-        threads: benchmark.threads,
-        config: {
-          ...config,
-          data_file: dataFilePath,
-        },
-      });
-
-      setBenchmarks((prev) =>
-        prev.map((b) =>
-          b.nonces === benchmark.nonces && b.threads === benchmark.threads
-            ? {
-                ...b,
-                ...result,
-                status: BenchmarkStatus.Complete,
-                data_file: currentDir,
-              }
-            : b
-        )
-      );
-    } catch (error) {
-      setBenchmarks((prev) =>
-        prev.map((b) =>
-          b.nonces === benchmark.nonces && b.threads === benchmark.threads
-            ? { ...b, status: BenchmarkStatus.Error, error: String(error) }
-            : b
-        )
-      );
-    }
-  };
-
-  /**
-   * Executes a benchmark with user-specified nonce and thread counts
-   * Adds the new benchmark to the list and scrolls to show results
-   */
-  const runCustomBenchmark = async () => {
-    if (!settings.selectedDir && !settings.defaultDir) {
-      throw new Error('No directory available');
-    }
-    const currentDir = settings.selectedDir || (settings.defaultDir as string);
-    const newBenchmark: Benchmark = {
-      nonces: customNonces,
-      threads: customThreads,
-      status: BenchmarkStatus.Idle,
-      data_file: currentDir, // Keep directory path for display purposes
-    };
-
-    setBenchmarks((prev) => [...prev, newBenchmark]);
-    await runBenchmark(newBenchmark);
-    scrollRef.current?.scrollTo({
-      top: scrollRef.current.scrollHeight,
-      behavior: 'smooth',
-    });
-  };
-
-  /**
-   * Updates global settings with the selected benchmark configuration
-   * Only allows selection of completed benchmarks
-   */
-  const selectBenchmark = (benchmark: Benchmark) => {
-    if (benchmark.status === BenchmarkStatus.Complete) {
-      setSettings((prev) => ({
-        ...prev,
-        numNonces: benchmark.nonces,
-        numCores: benchmark.threads,
-      }));
-    }
-  };
+  const {
+    maxCores,
+    config,
+    benchmarks,
+    benchmarkSettings,
+    updateConfig,
+    updateBenchmarkSettings,
+    runCustomBenchmark,
+    selectBenchmark,
+    isRunning,
+  } = useProfiler();
 
   return (
     <>
       {/* How it works modal */}
-
       <Modal
         isOpen={showInfoModal}
         onClose={() => setShowInfoModal(false)}
@@ -225,24 +93,20 @@ const Profiler: React.FC = () => {
         <>
           <Tile heading="GiB to process:" height={150}>
             <CustomNumberInput
-              min={1}
-              max={64}
+              min={PROFILER_CONSTANTS.MIN_DATA_SIZE}
+              max={PROFILER_CONSTANTS.MAX_DATA_SIZE}
               step={1}
               value={config.data_size}
-              onChange={(val) =>
-                setConfig((prev) => ({ ...prev, data_size: val }))
-              }
+              onChange={(val) => updateConfig({ data_size: val })}
             />
           </Tile>
           <Tile heading="Duration (s):" height={150}>
             <CustomNumberInput
-              min={5}
-              max={60}
+              min={PROFILER_CONSTANTS.MIN_DURATION}
+              max={PROFILER_CONSTANTS.MAX_DURATION}
               step={5}
               value={config.duration}
-              onChange={(val) =>
-                setConfig((prev) => ({ ...prev, duration: val }))
-              }
+              onChange={(val) => updateConfig({ duration: val })}
             />
           </Tile>
         </>
@@ -256,53 +120,26 @@ const Profiler: React.FC = () => {
         <Header text="PoS Profiler" />
       </PageTitleWrapper>
       <ProfilerContainer>
-        {/* How it works */}
-        <Tile
+        <ActionTile
           footer="How it works?"
-          height={100}
-          width={120}
-          blurred
-          backgroundColor={Colors.whiteOpaque}
+          icon={InfoIcon}
           onClick={() => setShowInfoModal(true)}
-        >
-          <Image src={InfoIcon} width={35} top={20} />
-        </Tile>
-
-        {/* Benchmark accuracy params */}
-        <Tile
+        />
+        <ActionTile
           footer="Test Accuracy"
-          height={100}
-          width={120}
-          blurred
-          backgroundColor={Colors.whiteOpaque}
+          icon={Gear}
           onClick={() => setShowAccuracyModal(true)}
-        >
-          <Image src={Gear} width={35} top={20} />
-        </Tile>
-
-        {/* Config preview */}
-        <Tile
+        />
+        <ActionTile
           footer="Full config"
-          height={100}
-          width={120}
-          blurred
-          backgroundColor={Colors.whiteOpaque}
-          onClick={() => navigate('/config')} //TO DO
-        >
-          <Image src={Control} width={35} top={20} />
-        </Tile>
-
-        {/* What next button */}
-        <Tile
+          icon={Control}
+          onClick={() => navigate('/config')}
+        />
+        <ActionTile
           footer="What Next?"
-          height={100}
-          width={120}
-          blurred
-          backgroundColor={Colors.whiteOpaque}
-          onClick={() => navigate('/nextSteps')} //TO DO
-        >
-          <Image src={NextStep} width={35} top={20} />
-        </Tile>
+          icon={NextStep}
+          onClick={() => navigate('/nextSteps')}
+        />
 
         {/* Info */}
         <Tile
@@ -340,11 +177,11 @@ const Profiler: React.FC = () => {
         >
           <Tile heading="Nonces:" height={130} top={25}>
             <CustomNumberInput
-              min={16}
-              max={9999}
+              min={PROFILER_CONSTANTS.MIN_NONCES}
+              max={PROFILER_CONSTANTS.MAX_NONCES}
               step={16}
-              value={customNonces}
-              onChange={(val) => setCustomNonces(val)}
+              value={benchmarkSettings.nonces}
+              onChange={(val) => updateBenchmarkSettings({ nonces: val })}
             />
           </Tile>
           <Tile heading="CPU Cores:" height={130} top={25}>
@@ -352,8 +189,8 @@ const Profiler: React.FC = () => {
               min={1}
               max={maxCores}
               step={1}
-              value={customThreads}
-              onChange={(val) => setCustomThreads(val)}
+              value={benchmarkSettings.threads}
+              onChange={(val) => updateBenchmarkSettings({ threads: val })}
             />
           </Tile>
         </Tile>
@@ -384,17 +221,24 @@ const Profiler: React.FC = () => {
           {benchmarks.length > 0 &&
             (() => {
               const speed = benchmarks[benchmarks.length - 1].speed_gib_s;
-             return <Header top={45} text={`${speed !== undefined ? formatSize(calculateMaxDataSize(speed)) : '...'}`} />;
+              return (
+                <Header
+                  top={45}
+                  text={`${
+                    speed !== undefined
+                      ? formatSize(calculateMaxDataSize(speed))
+                      : '...'
+                  }`}
+                />
+              );
             })()}
         </Tile>
-        {/* Run Benchmark Button */}
 
+        {/* Run Benchmark Button */}
         <Tile height={120} width={340}>
           <Button
             onClick={runCustomBenchmark}
-            disabled={benchmarks.some(
-              (b) => b.status === BenchmarkStatus.Running
-            )}
+            disabled={isRunning}
             label="Test My Settings"
             width={250}
             height={52}
@@ -416,8 +260,8 @@ const Profiler: React.FC = () => {
             onBenchmarkSelect={selectBenchmark}
             scrollRef={scrollRef}
             config={config}
-            customNonces={customNonces}
-            customThreads={customThreads}
+            customNonces={benchmarkSettings.nonces}
+            customThreads={benchmarkSettings.threads}
           />
         </Tile>
       </ProfilerContainer>

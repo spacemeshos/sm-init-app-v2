@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-
+import Image from "./image";
 import Colors from "../styles/colors";
 
 export interface TileProps {
@@ -114,5 +114,28 @@ const Tile: React.FC<TileProps> = ({
     </TileWrapper>
   );
 };
+
+interface ActionTileProps {
+  footer: string;
+  icon: string;
+  onClick: () => void;
+}
+
+export const ActionTile: React.FC<ActionTileProps> = ({
+  footer,
+  icon,
+  onClick,
+}) => (
+  <Tile
+    footer={footer}
+    height={100}
+    width={120}
+    blurred
+    backgroundColor={Colors.whiteOpaque}
+    onClick={onClick}
+  >
+    <Image src={icon} width={35} top={20} />
+  </Tile>
+);
 
 export default Tile;
