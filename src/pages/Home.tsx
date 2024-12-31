@@ -58,7 +58,7 @@ const Home: React.FC = () => {
     <>
       <Background src={BackgroundImage} />
       <MenuContainer>
-        <Image src={Logo} width={40} top={-60} />
+        <Image src={Logo} width={200} top={-60} />
 
         <Title text="Proof of Space" />
         <Subheader text="Initialization App" top={0} />
