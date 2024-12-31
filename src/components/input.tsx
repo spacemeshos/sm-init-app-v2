@@ -1,18 +1,13 @@
-import * as React from "react";
-import styled from "styled-components";
-import Colors from "../styles/colors";
-import plusIcon from "../assets/plus.png";
-import minusIcon from "../assets/minus.png";
+import * as React from 'react';
+import styled from 'styled-components';
+import Colors from '../styles/colors';
+import plusIcon from '../assets/plus.png';
+import minusIcon from '../assets/minus.png';
 
 interface CustomNumberInputProps {
   min?: number;
   max?: number;
   step?: number;
-  inputColor?: string;
-  buttonColor?: string;
-  fontSize?: number;
-  height?: number;
-  width?: number;
   value?: number;
   onChange?: (value: number) => void;
 }
@@ -45,17 +40,20 @@ const StyledInputRoot = styled.div<{ height?: number }>`
 
 const StyledInput = styled.input<{
   isValid?: boolean;
+  width?: number;
+  fontSize?: number;
+  height?: number;
 }>`
-  font-size: 28px;
-  font-family: "Univers45", sans-serif;
+  font-size: ${({ fontSize }) => fontSize || 28}px;
+  font-family: 'Univers45', sans-serif;
   font-weight: 200;
   color: ${Colors.white};
-  height: 45px;
+  height: ${({ height }) => height || 45}px;
   line-height: 50px;
-  width: 100px;
+  width: ${({ width }) => width || 100}px;
   background-color: ${Colors.greenLightOpaque};
   border: 1px solid
-    ${(props) => (props.isValid === false ? Colors.red : "transparent")};
+    ${(props) => (props.isValid === false ? Colors.red : 'transparent')};
   text-align: center;
 
   /* Hide default number input arrows buttons */
@@ -103,7 +101,8 @@ const HexInput: React.FC<HexInputProps> = ({
   placeholder,
   maxLength,
   className,
-  type = 'text'
+  type = 'text',
+  fontSize,
 }) => {
   return (
     <StyledInputRoot height={height}>
@@ -115,6 +114,7 @@ const HexInput: React.FC<HexInputProps> = ({
         placeholder={placeholder}
         maxLength={maxLength}
         className={className}
+        fontSize={fontSize}
       />
     </StyledInputRoot>
   );
@@ -124,7 +124,6 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   min = 1,
   max,
   step = 1,
-  height,
   value = min,
   onChange,
 }) => {
@@ -164,11 +163,8 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   };
 
   return (
-    <StyledInputRoot height={height}>
-      <StyledButton
-        onClick={handleDecrement}
-        className="decrement"
-      >
+    <StyledInputRoot>
+      <StyledButton onClick={handleDecrement} className="decrement">
         <IconImage src={minusIcon} alt="Decrease" />
       </StyledButton>
       <StyledInput
@@ -178,10 +174,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
         min={min}
         max={max}
       />
-      <StyledButton
-        onClick={handleIncrement}
-        className="increment"
-      >
+      <StyledButton onClick={handleIncrement} className="increment">
         <IconImage src={plusIcon} alt="Increase" />
       </StyledButton>
     </StyledInputRoot>
