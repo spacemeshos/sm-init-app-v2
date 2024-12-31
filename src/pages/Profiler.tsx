@@ -158,8 +158,8 @@ const Profiler: React.FC = () => {
 
         {/* Select Directory */}
         <Tile
-          height={230}
-          width={495}
+          height={250}
+          width={400}
           blurred
           backgroundColor={Colors.whiteOpaque}
         >
@@ -168,14 +168,14 @@ const Profiler: React.FC = () => {
 
         {/* Custom Proving Settings */}
         <Tile
-          height={230}
-          width={550}
+          height={250}
+          width={400}
           blurred
           backgroundColor={Colors.whiteOpaque}
           footer="Experiment with these params to find optimal config. 
           Try to balance the probability of one pass and max proving speed."
         >
-          <Tile heading="Nonces:" height={130} top={25}>
+          <Tile heading="Nonces:" height={130} top={50}>
             <CustomNumberInput
               min={PROFILER_CONSTANTS.MIN_NONCES}
               max={PROFILER_CONSTANTS.MAX_NONCES}
@@ -184,7 +184,7 @@ const Profiler: React.FC = () => {
               onChange={(val) => updateBenchmarkSettings({ nonces: val })}
             />
           </Tile>
-          <Tile heading="CPU Cores:" height={130} top={25}>
+          <Tile heading="CPU Cores:" height={130} top={50}>
             <CustomNumberInput
               min={1}
               max={maxCores}
@@ -195,12 +195,23 @@ const Profiler: React.FC = () => {
           </Tile>
         </Tile>
 
+        {/* Run Benchmark Button */}
+        <Tile height={250} width={240} backgroundColor={Colors.whiteOpaque}>
+          <Button
+            onClick={runCustomBenchmark}
+            disabled={isRunning}
+            label="Test My Settings"
+            width={200}
+            top={170}
+          />
+        </Tile>
+
         {/* Result Max POS Data to Prove + Speed */}
         <Tile
           heading="Proving Speed"
           footer="GiB/s"
           height={120}
-          width={350}
+          width={400}
           blurred
           backgroundColor={Colors.whiteOpaque}
         >
@@ -214,7 +225,7 @@ const Profiler: React.FC = () => {
         <Tile
           heading="Max POS Size"
           height={120}
-          width={350}
+          width={400}
           blurred
           backgroundColor={Colors.whiteOpaque}
         >
@@ -234,16 +245,17 @@ const Profiler: React.FC = () => {
             })()}
         </Tile>
 
-        {/* Run Benchmark Button */}
-        <Tile height={120} width={340}>
-          <Button
-            onClick={runCustomBenchmark}
-            disabled={isRunning}
-            label="Test My Settings"
-            width={250}
-            height={52}
-            margin={25}
-          />
+        {/* Status */}
+        <Tile
+          heading="Status"
+          height={120}
+          width={240}
+          blurred
+          backgroundColor={Colors.whiteOpaque}
+        >
+          {benchmarks.length > 0 && (
+            <Header top={45} text={benchmarks[benchmarks.length - 1].status} />
+          )}
         </Tile>
 
         {/* Table with test results history*/}
