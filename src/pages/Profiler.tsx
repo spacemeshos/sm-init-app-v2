@@ -14,6 +14,7 @@ import { join } from '@tauri-apps/api/path';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { calculateMaxDataSize, formatSize } from '../utils/sizeUtils';
 import { useSettings } from '../state/SettingsContext';
 import Modal from '../components/modal';
 import Image from '../components/image';
@@ -281,7 +282,7 @@ const Profiler: React.FC = () => {
 
         {/* Config preview */}
         <Tile
-          footer="View full config"
+          footer="Full config"
           height={100}
           width={120}
           blurred
@@ -346,7 +347,7 @@ const Profiler: React.FC = () => {
               onChange={(val) => setCustomNonces(val)}
             />
           </Tile>
-          <Tile heading="CPU Threads:" height={130} top={25}>
+          <Tile heading="CPU Cores:" height={130} top={25}>
             <CustomNumberInput
               min={1}
               max={maxCores}
@@ -359,12 +360,38 @@ const Profiler: React.FC = () => {
 
         {/* Result Max POS Data to Prove + Speed */}
         <Tile
-          heading="Max POS Data"
+          heading="Results"
           height={100}
           width={495}
           blurred
           backgroundColor={Colors.whiteOpaque}
-        ></Tile>
+        >
+          {benchmarks.length > 0 &&
+            (() => {
+              const speed = benchmarks[benchmarks.length - 1].speed_gib_s;
+              return (
+                <>
+                  <Tile
+                    height={70}
+                    width={200}
+                    top={20}
+                    footer={`Proving Speed`}
+                    heading={`${speed?.toFixed(2) ?? '...'} GiB/s`}
+                  />
+                  <Tile
+                    height={70}
+                    width={200}
+                    top={20}
+                    footer={`Max POS Size`}
+                    heading={`${speed !== undefined ? formatSize(calculateMaxDataSize(speed)) : '...'}`}
+                  />
+                </>
+              );
+            })()}
+        </Tile>
+
+        {/* Run Benchmark Button */}
+
         <Tile height={100} width={550}>
           <Button
             onClick={runCustomBenchmark}
@@ -374,7 +401,7 @@ const Profiler: React.FC = () => {
             label="Test My Settings"
             width={250}
             height={52}
-            margin={10}
+            margin={25}
           />
         </Tile>
 
@@ -382,7 +409,7 @@ const Profiler: React.FC = () => {
 
         <Tile
           height={300}
-          width={1100}
+          width={1050}
           blurred
           backgroundColor={Colors.whiteOpaque}
           heading="Results History"
