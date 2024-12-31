@@ -16,7 +16,7 @@ const StyledImage = styled.img<ImageProps>`
   left: ${({ left }) => (left == null ? "50%" : `${left}px`)};
   transform: ${({ left }) => (left == null ? "translateX(-50%)" : "none")};
   height: "auto";
-  width: ${({ width }) => `${width ?? 100}%`};
+  width: ${({ width }) => `${width ?? 100}px`};
   object-fit: contain;
   opacity: ${({ opacity }) => `${opacity ?? 1}`};
 `;
