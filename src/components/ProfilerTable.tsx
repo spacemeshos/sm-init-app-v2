@@ -1,7 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import Colors from "../styles/colors";
-import { getDirectoryDisplay } from "../utils/directoryUtils";
+import React from 'react';
+import styled from 'styled-components';
+import Colors from '../styles/colors';
+import { getDirectoryDisplay } from '../utils/directoryUtils';
+import { calculateMaxDataSize, formatSize } from '../utils/sizeUtils';
 
 const Table = styled.div`
   display: flex;
@@ -24,7 +25,7 @@ const TableHeader = styled.div`
   background: transparent;
   padding: 10px;
   font-size: 16px;
-  font-family: "Univers55", sans-serif;
+  font-family: 'Univers55', sans-serif;
   border-bottom: 0.5px solid ${Colors.white};
   color: ${Colors.white};
 `;
@@ -41,7 +42,7 @@ const TableBody = styled.div`
   background: transparent;
   padding: 10px;
   font-size: 16px;
-  font-family: "Univers55", sans-serif;
+  font-family: 'Univers55', sans-serif;
   color: ${Colors.greenVeryLight};
   overflow-y: auto;
 `;
@@ -54,16 +55,16 @@ const TableRow = styled.div<{ isClickable?: boolean }>`
   width: 100%;
   height: 35px;
   border-bottom: 0.5px solid ${Colors.greenVeryLight};
-  cursor: ${({ isClickable }) => (isClickable ? "pointer" : "default")};
+  cursor: ${({ isClickable }) => (isClickable ? 'pointer' : 'default')};
 
   &:hover {
     background: ${({ isClickable }) =>
-      isClickable ? Colors.greenLightOpaque : "none"};
+      isClickable ? Colors.greenLightOpaque : 'none'};
   }
 `;
 
 const Column = styled.div`
-  width: 12.5%;
+  width: 11%;
 `;
 
 const StatusIndicator = styled.div<{ color: string }>`
@@ -76,10 +77,10 @@ const StatusIndicator = styled.div<{ color: string }>`
 
 // Types and Interfaces
 export enum BenchmarkStatus {
-  Idle = "Idle",
-  Running = "Running",
-  Complete = "Complete",
-  Error = "Error",
+  Idle = 'Idle',
+  Running = 'Running',
+  Complete = 'Complete',
+  Error = 'Error',
 }
 
 export interface ProfilerResult {
@@ -89,7 +90,7 @@ export interface ProfilerResult {
   speed_gib_s: number;
   data_size: number;
   duration: number;
-  data_file: string;  // Made required instead of optional
+  data_file: string; // Made required instead of optional
 }
 
 export interface Benchmark extends Partial<ProfilerResult> {
@@ -97,7 +98,7 @@ export interface Benchmark extends Partial<ProfilerResult> {
   threads: number;
   status: BenchmarkStatus;
   error?: string;
-  data_file?: string;  // Added explicitly to ensure it's tracked in benchmarks
+  data_file?: string; // Added explicitly to ensure it's tracked in benchmarks
 }
 
 // Helper Functions
@@ -143,6 +144,7 @@ const ProfilerTable: React.FC<ProfilerTableProps> = ({
         <Column>Speed (GiB/s)</Column>
         <Column>Size</Column>
         <Column>Duration</Column>
+        <Column>Max Size</Column>
         <Column>Directory</Column>
         <Column>Status</Column>
       </TableHeader>
@@ -155,13 +157,20 @@ const ProfilerTable: React.FC<ProfilerTableProps> = ({
           >
             <Column>{benchmark.nonces ?? customNonces}</Column>
             <Column>{benchmark.threads ?? customThreads}</Column>
-            <Column>{benchmark.time_s?.toFixed(2) ?? "..."}</Column>
-            <Column>{benchmark.speed_gib_s?.toFixed(2) ?? "..."}</Column>
+            <Column>{benchmark.time_s?.toFixed(2) ?? '...'}</Column>
+            <Column>{benchmark.speed_gib_s?.toFixed(2) ?? '...'}</Column>
             <Column>{benchmark.data_size ?? config.data_size}</Column>
             <Column>{benchmark.duration ?? config.duration}</Column>
-            <Column>{getDirectoryDisplay(benchmark.data_file, "Default", 20)}</Column>
             <Column>
-              <div style={{ display: "flex", alignItems: "center" }}>
+              {benchmark.speed_gib_s 
+                ? formatSize(calculateMaxDataSize(benchmark.speed_gib_s))
+                : "..."}
+            </Column>
+            <Column>
+              {getDirectoryDisplay(benchmark.data_file, 'Default', 20)}
+            </Column>
+            <Column>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 <StatusIndicator color={getStatusColor(benchmark.status)} />
                 {benchmark.error || benchmark.status}
               </div>
