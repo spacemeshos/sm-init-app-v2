@@ -20,8 +20,8 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  width: 800px;
-  height: 420px;
+  width: 100%;
+  height: 440px;
   position: absolute;
   top: 0px;
 `;
@@ -31,6 +31,16 @@ const SummarySection = styled.div`
   height: 420px;
   position: relative;
   top: 0px;
+`;
+
+const AdvancedSection = styled.div<{ isVisible: boolean }>`
+  width: 800px;
+  height: ${props => props.isVisible ? '280px' : '0px'};
+  position: relative;
+  top: 0px;
+  overflow: hidden;
+  transition: height 0.3s ease-in-out;
+  opacity: ${props => props.isVisible ? '1' : '0'};
 `;
 
 interface POSSummaryProps {
@@ -53,6 +63,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [isAdvancedVisible, setIsAdvancedVisible] = useState(false);
 
   const isGenerating = parentIsGenerating || processState.isRunning || false;
 
@@ -226,11 +237,11 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
           <Frame>
             <Subheader
               top={0}
-              text="Click on each row to adjust the settings as needed"
+              text="Click on each row to adjust the settings"
             />
           </Frame>
           <Frame
-            heading="POS Location"
+            heading="Where to Store POS Data"
             subheader={getDirectoryDisplay(
               settings.selectedDir,
               settings.defaultDir
@@ -238,49 +249,60 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
             onClick={() => onStepChange?.(0)}
           />
           <Frame
-            heading="POS Provider"
+            heading="How to Generate"
             subheader={`Provider ID: ${settings.provider ?? 'Not selected'}`}
             onClick={() => onStepChange?.(1)}
           />
           <Frame
-            heading="POS Size"
+            heading="How Much to Generate"
             subheader={`${
               settings.numUnits || 4
-            } Space Units (${calculateTotalSize(
-              settings.numUnits
-            )}), ${calculateNumFiles(
-              settings.numUnits,
-              settings.maxFileSize || 4096
-            )} files, ${settings.maxFileSize} MiB each`}
+            } Space Units | ${calculateTotalSize(settings.numUnits)}`}
             onClick={() => onStepChange?.(2)}
           />
           <Frame
-            heading="Identity Configuration"
-            subheader={
-              settings.publicKey
-                ? `Key: ${truncateHex(settings.publicKey, 8)}`
-                : 'Create New Identity'
-            }
-            onClick={() => onStepChange?.(3)}
+            heading="Advanced Settings"
+            onClick={() => setIsAdvancedVisible(!isAdvancedVisible)}
           />
-          <Frame
-            heading="ATX ID"
-            subheader={
-              settings.atxId
-                ? `ATX: ${truncateHex(settings.atxId, 8)}`
-                : 'Default'
-            }
-            onClick={() => onStepChange?.(4)}
+          <AdvancedSection isVisible={isAdvancedVisible}>
+            <Frame
+              heading="Identity Configuration"
+              subheader={
+                settings.publicKey
+                  ? `Key: ${truncateHex(settings.publicKey, 8)}`
+                  : 'Create New Identity'
+              }
+              onClick={() => onStepChange?.(3)}
+            />
+            <Frame
+              heading="ATX ID"
+              subheader={
+                settings.atxId
+                  ? `ATX: ${truncateHex(settings.atxId, 8)}`
+                  : 'Default'
+              }
+              onClick={() => onStepChange?.(4)}
+            />
+            <Frame
+              heading="Max File Size"
+              subheader={`${calculateNumFiles(
+                settings.numUnits,
+                settings.maxFileSize || 4096
+              )} files, ${settings.maxFileSize} MiB each`}
+              onClick={() => onStepChange?.(2)}
+            />
+            <Frame heading="Split in Subsets" subheader="To Be Implemented" />
+          </AdvancedSection>
+          <Button
+            label={isGenerating ? 'Starting...' : 'Generate POS Data'}
+            onClick={handleGenerateClick}
+            width={250}
+            height={56}
+            top={40}
+            left={275}
+            disabled={isGenerating}
           />
         </SummarySection>
-        <Button
-          label={isGenerating ? 'Starting...' : 'Generate POS Data'}
-          onClick={handleGenerateClick}
-          width={250}
-          height={56}
-          top={40}
-          disabled={isGenerating}
-        />
       </Container>
     </>
   );
