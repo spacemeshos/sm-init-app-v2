@@ -64,7 +64,7 @@ const ErrorMessage = styled.div`
 `;
 
 const Generate: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [currentStep, setCurrentStep] = useState<number>(5); // Initialize to steps.length
   const [showSummary, setShowSummary] = useState<boolean>(true);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
