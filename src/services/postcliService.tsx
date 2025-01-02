@@ -4,16 +4,37 @@ import { listen } from '@tauri-apps/api/event';
 import { Settings } from "../state/SettingsContext";
 import { buildPostCliArgs, validateSettings } from "../utils/postcliUtils";
 
+// Mock ATX ID response - will be replaced with actual API call
+const MOCK_ATX_RESPONSE = {
+  atxId: "65f77244a23870ee39f15cf088ee1651745c3b73195491e277bc65aa56937425"
+};
+
 export interface PostCliResponse {
   stdout: string;
   stderr: string;
   success: boolean;
 }
 
+export interface AtxIdResponse {
+  atxId: string;
+}
+
 export interface DetachedProcessResponse {
   process_id: number;
   message: string;
 }
+
+export const fetchLatestAtxId = async (): Promise<AtxIdResponse> => {
+  // TODO: Replace with actual API call when endpoint is available
+  // const response = await fetch('https://mainnet-api.spacemesh.network/spacemesh.v2alpha1.ActivationService/Highest');
+  // return response.json();
+  
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Return mock data
+  return MOCK_ATX_RESPONSE;
+};
 
 export const executePostCli = async (
   settings: Settings,
