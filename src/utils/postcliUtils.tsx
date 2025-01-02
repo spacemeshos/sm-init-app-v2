@@ -6,9 +6,19 @@ const MIB_TO_BYTES = 1048576; // 1 MiB = 1,048,576 bytes
 const DEFAULT_MAX_FILE_SIZE_BYTES = 4294967296; // 4 GiB in bytes
 
 export const buildPostCliArgs = (settings: Settings): string[] | null => {
-  // First validate that ATX ID is present and valid
-  if (!settings.atxId || !isValidHex(settings.atxId, 64)) {
-    return null; // Return null to indicate postcli should not run
+  // If ATX ID is being fetched from API, wait for it
+  if (!settings.atxId && settings.atxIdSource === 'api') {
+    return null; // Return null to indicate postcli should wait
+  }
+
+  // For manual input, require valid ATX ID
+  if (settings.atxIdSource === 'manual' && (!settings.atxId || !isValidHex(settings.atxId, 64))) {
+    return null;
+  }
+
+  // If we have an ATX ID error, don't proceed
+  if (settings.atxIdError) {
+    return null;
   }
 
   const args: string[] = [];
@@ -48,11 +58,23 @@ export const buildPostCliArgs = (settings: Settings): string[] | null => {
 };
 
 export const validateSettings = (settings: Settings): string | null => {
-  // ATX ID is required and must be valid
-  if (!settings.atxId) {
+  // Check for ATX ID error first
+  if (settings.atxIdError) {
+    return settings.atxIdError;
+  }
+
+  // If ATX ID is undefined and source is API, it means it's being fetched
+  if (!settings.atxId && settings.atxIdSource === 'api') {
+    return "Waiting for ATX ID to be fetched...";
+  }
+
+  // If ATX ID is undefined and source is manual, it's an error
+  if (!settings.atxId && settings.atxIdSource === 'manual') {
     return "ATX ID is required";
   }
-  if (!isValidHex(settings.atxId, 64)) {
+
+  // Validate ATX ID format if it exists
+  if (settings.atxId && !isValidHex(settings.atxId, 64)) {
     return "ATX ID must be a 64-character hexadecimal string";
   }
 
