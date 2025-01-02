@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 import { executePostCliDetached } from "../../services/postcliService";
-import { useSettings } from "../../state/SettingsContext";
+import { useSettings, Settings } from "../../state/SettingsContext";
+import { fetchLatestAtxId } from "../../services/postcliService";
 import { usePOSProcess } from "../../state/POSProcessContext";
 import Colors from "../../styles/colors";
 import { List, Subheader } from "../../styles/texts";
@@ -45,7 +46,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
   onStepChange,
 }) => {
   const navigate = useNavigate();
-  const { settings } = useSettings();
+  const { settings, setSettings } = useSettings();
   const { startProcess, processState } = usePOSProcess();
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -53,7 +54,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
 
   const isGenerating = parentIsGenerating || processState.isRunning || false;
 
-  const validateSettings = () => {
+  const validateSettings = (): string[] => {
     const errors: string[] = [];
 
     // Check provider
@@ -71,15 +72,11 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
       errors.push("Invalid identity key format");
     }
 
-    // Check ATX ID format if provided
-    if (!settings.atxId || !isValidHex(settings.atxId)) {
-      errors.push("Correct ATX ID is required");
-    }
-
     return errors;
   };
 
   const handleGenerateClick = async () => {
+    // First check non-ATX validation
     const errors = validateSettings();
     if (errors.length > 0) {
       setValidationErrors(errors);
@@ -88,11 +85,45 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
     }
 
     try {
+      let currentSettings = settings;
+
+      // If ATX ID is missing or invalid, try to fetch it
+      if (!currentSettings.atxId || !isValidHex(currentSettings.atxId)) {
+        if (updateConsole) {
+          updateConsole("generate", "Fetching ATX ID before starting generation...");
+        }
+        try {
+          const atxResponse = await fetchLatestAtxId();
+          // Create new settings object with fetched ATX ID
+          currentSettings = {
+            ...currentSettings,
+            atxId: atxResponse.atxId,
+            atxIdSource: 'api',
+            atxIdError: undefined
+          };
+          // Update the global settings state
+          setSettings(currentSettings);
+        } catch (err) {
+          errors.push("Failed to fetch ATX ID. Please try again or enter manually.");
+          setValidationErrors(errors);
+          setShowValidationModal(true);
+          return;
+        }
+      }
+
+      // If we have any other validation errors, show them
+      if (errors.length > 0) {
+        setValidationErrors(errors);
+        setShowValidationModal(true);
+        return;
+      }
+
       if (updateConsole) {
         updateConsole("generate", "Starting POS data generation...");
       }
 
-      const response = await executePostCliDetached(settings, updateConsole);
+      // Now we can proceed with POS generation using the current settings
+      const response = await executePostCliDetached(currentSettings, updateConsole);
 
       if (response && response.process_id) {
         if (updateConsole) {
