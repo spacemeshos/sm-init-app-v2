@@ -30,10 +30,10 @@ import hex from "../assets/formats.png";
 
 const SetupContainer = styled.div`
   width: 800px;
-  height: 650px;
+  height: 420px;
   position: absolute;
   left: 0px;
-  top: 160px;
+  top: 180px;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -103,6 +103,7 @@ const Generate: React.FC = () => {
     // If index is out of steps range, show summary
     if (index >= 5) {
       setShowSummary(true);
+      setCurrentStep(5); // Set currentStep to steps.length when showing summary
     } else {
       setShowSummary(false);
       setCurrentStep(index);
