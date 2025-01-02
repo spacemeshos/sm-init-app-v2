@@ -11,7 +11,7 @@ import { ErrorMessage, Header } from "../styles/texts";
 import { calculateNumFiles, calculateTotalSize } from "../utils/sizeUtils";
 import { getDirectoryDisplay } from "../utils/directoryUtils";
 import { useSettings } from "../state/SettingsContext";
-import Tile from "../components/tile";
+import {Tile} from "../components/tile";
 import Colors from "../styles/colors";
 
 const ProgressContainer = styled.div`
