@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
-import { executePostCliDetached } from "../../services/postcliService";
-import { useSettings, Settings } from "../../state/SettingsContext";
-import { fetchLatestAtxId } from "../../services/postcliService";
-import { usePOSProcess } from "../../state/POSProcessContext";
-import Colors from "../../styles/colors";
-import { List, Subheader } from "../../styles/texts";
-import { getDirectoryDisplay } from "../../utils/directoryUtils";
-import { truncateHex, isValidHex } from "../../utils/hexUtils";
-import { calculateNumFiles, calculateTotalSize } from "../../utils/sizeUtils";
-import { Button } from "../button";
-import Frame from "../frames";
-import Modal from "../modal";
+import { executePostCliDetached } from '../../services/postcliService';
+import { useSettings } from '../../state/SettingsContext';
+import { fetchLatestAtxId } from '../../services/postcliService';
+import { usePOSProcess } from '../../state/POSProcessContext';
+import Colors from '../../styles/colors';
+import { List, Subheader } from '../../styles/texts';
+import { getDirectoryDisplay } from '../../utils/directoryUtils';
+import { truncateHex, isValidHex } from '../../utils/hexUtils';
+import { calculateNumFiles, calculateTotalSize } from '../../utils/sizeUtils';
+import { Button } from '../button';
+import Frame from '../frames';
+import Modal from '../modal';
 
 const Container = styled.div`
   display: flex;
@@ -23,12 +23,14 @@ const Container = styled.div`
   width: 800px;
   height: 420px;
   position: absolute;
+  top: 0px;
 `;
 
 const SummarySection = styled.div`
   width: 800px;
   height: 420px;
   position: relative;
+  top: 0px;
 `;
 
 interface POSSummaryProps {
@@ -59,17 +61,17 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
 
     // Check provider
     if (settings.provider === undefined) {
-      errors.push("Provider must be selected");
+      errors.push('Provider must be selected');
     }
 
     // Check number of units
     if (!settings.numUnits || settings.numUnits < 4) {
-      errors.push("Number of units must be at least 4");
+      errors.push('Number of units must be at least 4');
     }
 
     // Check identity key format if provided
     if (settings.publicKey && !isValidHex(settings.publicKey)) {
-      errors.push("Invalid identity key format");
+      errors.push('Invalid identity key format');
     }
 
     return errors;
@@ -90,7 +92,10 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
       // If ATX ID is missing or invalid, try to fetch it
       if (!currentSettings.atxId || !isValidHex(currentSettings.atxId)) {
         if (updateConsole) {
-          updateConsole("generate", "Fetching ATX ID before starting generation...");
+          updateConsole(
+            'generate',
+            'Fetching ATX ID before starting generation...'
+          );
         }
         try {
           const atxResponse = await fetchLatestAtxId();
@@ -99,12 +104,14 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
             ...currentSettings,
             atxId: atxResponse.atxId,
             atxIdSource: 'api',
-            atxIdError: undefined
+            atxIdError: undefined,
           };
           // Update the global settings state
           setSettings(currentSettings);
         } catch (err) {
-          errors.push("Failed to fetch ATX ID. Please try again or enter manually.");
+          errors.push(
+            'Failed to fetch ATX ID. Please try again or enter manually.'
+          );
           setValidationErrors(errors);
           setShowValidationModal(true);
           return;
@@ -119,16 +126,19 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
       }
 
       if (updateConsole) {
-        updateConsole("generate", "Starting POS data generation...");
+        updateConsole('generate', 'Starting POS data generation...');
       }
 
       // Now we can proceed with POS generation using the current settings
-      const response = await executePostCliDetached(currentSettings, updateConsole);
+      const response = await executePostCliDetached(
+        currentSettings,
+        updateConsole
+      );
 
       if (response && response.process_id) {
         if (updateConsole) {
           updateConsole(
-            "generate",
+            'generate',
             `POS generation started with process ID: ${response.process_id}`
           );
         }
@@ -139,18 +149,18 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
         // Navigate to progress page after showing success modal
         // Use a short delay to ensure the modal is visible
         setTimeout(() => {
-          navigate("/progress");
+          navigate('/progress');
         }, 1500); // Increased delay to ensure modal is visible
       } else {
-        throw new Error("Failed to start POS generation process");
+        throw new Error('Failed to start POS generation process');
       }
     } catch (error) {
-      console.error("Error starting POS generation:", error);
+      console.error('Error starting POS generation:', error);
       if (updateConsole) {
         updateConsole(
-          "generate",
+          'generate',
           `Error starting POS generation: ${
-            error instanceof Error ? error.message : "Unknown error"
+            error instanceof Error ? error.message : 'Unknown error'
           }`
         );
       }
@@ -183,7 +193,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
         isOpen={showSuccessModal}
         onClose={() => {
           setShowSuccessModal(false);
-          navigate("/progress");
+          navigate('/progress');
         }}
         header="POS Generation Started"
         width={600}
@@ -217,7 +227,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
             <Subheader
               top={0}
               text="Click on each row to adjust the settings as needed"
-            />{" "}
+            />
           </Frame>
           <Frame
             heading="POS Location"
@@ -229,7 +239,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
           />
           <Frame
             heading="POS Provider"
-            subheader={`Provider ID: ${settings.provider ?? "Not selected"}`}
+            subheader={`Provider ID: ${settings.provider ?? 'Not selected'}`}
             onClick={() => onStepChange?.(1)}
           />
           <Frame
@@ -249,7 +259,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
             subheader={
               settings.publicKey
                 ? `Key: ${truncateHex(settings.publicKey, 8)}`
-                : "Create New Identity"
+                : 'Create New Identity'
             }
             onClick={() => onStepChange?.(3)}
           />
@@ -258,13 +268,13 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
             subheader={
               settings.atxId
                 ? `ATX: ${truncateHex(settings.atxId, 8)}`
-                : "Default"
+                : 'Default'
             }
             onClick={() => onStepChange?.(4)}
           />
         </SummarySection>
         <Button
-          label={isGenerating ? "Starting..." : "Generate POS Data"}
+          label={isGenerating ? 'Starting...' : 'Generate POS Data'}
           onClick={handleGenerateClick}
           width={250}
           height={56}
