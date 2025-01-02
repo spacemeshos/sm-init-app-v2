@@ -27,6 +27,9 @@ import gpu from "../assets/gpu.png";
 import id from "../assets/id.png";
 import summary from "../assets/justify.png";
 import hex from "../assets/formats.png";
+import gear from "../assets/setting.png";
+import copy from "../assets/copy.png";
+import box from "../assets/box.png";
 
 const Wrapper = styled.div`
   width: 880px;
@@ -59,7 +62,7 @@ const SetupContainer = styled.div`
 const ButtonColumn = styled.div`
   position: absolute;
   width: 80px;
-  height: 420px;
+  height: 630px;
   top: 180px;
   left: 0px;
   display: flex;
@@ -78,7 +81,7 @@ const ErrorMessage = styled.div`
 `;
 
 const Generate: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState<number>(5); // Initialize to steps.length
+  const [currentStep, setCurrentStep] = useState<number>(8); // Initialize to steps.length
   const [showSummary, setShowSummary] = useState<boolean>(true);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -87,37 +90,50 @@ const Generate: React.FC = () => {
 
   const steps = [
     {
-      label: "Pick Directory",
+      label: 'Pick Directory',
       component: <SelectDirectory />,
       iconSrc: folder,
     },
     {
-      label: "Select Processor",
+      label: 'Select Processor',
       component: <SetupGPU isOpen={true} />,
       iconSrc: gpu,
     },
     {
-      label: "Set up POS Size",
+      label: 'Set up POS Size',
       component: <SetupSize />,
-      iconSrc: file,
+      iconSrc: box,
     },
     {
-      label: "Select Identity",
+      label: 'Advanced Settings',
+      iconSrc: gear,
+    },
+    {
+      label: 'Select Identity',
       component: <SelectIdentity />,
       iconSrc: id,
     },
     {
-      label: "Select ATX ID",
+      label: 'Setup Max File Size',
+      component: <SetupSize />,
+      iconSrc: file,
+    },
+    {
+      label: 'Select ATX ID',
       component: <SelectATX />,
       iconSrc: hex,
+    },
+    {
+      label: 'Split Generation in Subsets',
+      iconSrc: copy,
     },
   ];
 
   const handleStepChange = (index: number) => {
     // If index is out of steps range, show summary
-    if (index >= 5) {
+    if (index >= 8) {
       setShowSummary(true);
-      setCurrentStep(5); // Set currentStep to steps.length when showing summary
+      setCurrentStep(8); // Set currentStep to steps.length when showing summary
     } else {
       setShowSummary(false);
       setCurrentStep(index);
