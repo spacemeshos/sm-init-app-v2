@@ -28,6 +28,20 @@ import id from "../assets/id.png";
 import summary from "../assets/justify.png";
 import hex from "../assets/formats.png";
 
+const Wrapper = styled.div`
+  width: 880px;
+  height: 800px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  align-content: flex-start;
+  justify-content: center;
+`;
+
 const SetupContainer = styled.div`
   width: 800px;
   height: 420px;
@@ -47,7 +61,7 @@ const ButtonColumn = styled.div`
   width: 80px;
   height: 420px;
   top: 180px;
-  left: 170px;
+  left: 0px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -139,37 +153,39 @@ const Generate: React.FC = () => {
     <>
       <Background src={BackgroundImage} />
       <BackButton />
-      <MainContainer>
-        <PageTitleWrapper>
-          <Header
-            text={
-              showSummary
-                ? "YOUR POS GENERATION SETTINGS"
-                : steps[currentStep].label
-            }
-          />
-        </PageTitleWrapper>
-        <SetupContainer>{renderContent()}</SetupContainer>
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-      </MainContainer>
-      <ButtonColumn>
-        <DotButton
-          onClick={() => handleStepChange(steps.length)}
-          $isActive={showSummary}
-          iconSrc={summary}
-        />
-
-        {steps.map((step, index) => (
+      <Wrapper>
+        <MainContainer>
+          <PageTitleWrapper>
+            <Header
+              text={
+                showSummary
+                  ? 'YOUR POS GENERATION SETTINGS'
+                  : steps[currentStep].label
+              }
+            />
+          </PageTitleWrapper>
+          <SetupContainer>{renderContent()}</SetupContainer>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+        </MainContainer>
+        <ButtonColumn>
           <DotButton
-            key={index}
-            onClick={() => handleStepChange(index)}
-            $isActive={currentStep === index}
-            disabled={isGenerating}
-            iconSrc={step.iconSrc}
-            alt={step.label}
+            onClick={() => handleStepChange(steps.length)}
+            $isActive={showSummary}
+            iconSrc={summary}
           />
-        ))}
-      </ButtonColumn>
+
+          {steps.map((step, index) => (
+            <DotButton
+              key={index}
+              onClick={() => handleStepChange(index)}
+              $isActive={currentStep === index}
+              disabled={isGenerating}
+              iconSrc={step.iconSrc}
+              alt={step.label}
+            />
+          ))}
+        </ButtonColumn>
+      </Wrapper>
     </>
   );
 };

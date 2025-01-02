@@ -12,7 +12,7 @@ export const MainContainer = styled.div`
   height: 800px;
   position: absolute;
   top: 0px;
-  left: 250px;
+  left: 80px;
   background-color: ${Colors.darkOpaque};
   backdrop-filter: blur(8px);
   display: flex;
