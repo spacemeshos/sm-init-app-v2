@@ -43,7 +43,7 @@ const Home: React.FC = () => {
       width: 300,
     },
     {
-      label: "Max POS size and Proving capacity",
+      label: "Max POS Proving capability",
       onClick: () => navigateToProfiler(),
       width: 300,
     },
