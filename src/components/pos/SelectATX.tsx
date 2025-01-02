@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { useSettings } from "../../state/SettingsContext";
 import { truncateHex, isValidHex } from "../../utils/hexUtils";
@@ -8,49 +8,60 @@ import {Tile} from "../tile";
 import { SetupContainer, SetupTileWrapper } from "../../styles/containers";
 
 export const SelectATX: React.FC = () => {
-  const { setSettings } = useSettings();
-  const [atxId, setAtxId] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
+  const { settings, setSettings } = useSettings();
 
   const handleAtxIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.toLowerCase();
-    setAtxId(value);
 
     if (value === "") {
-      setError(null);
-      setSettings((prev) => ({ ...prev, atxId: undefined }));
+      setSettings((prev) => ({ 
+        ...prev, 
+        atxId: undefined,
+        atxIdSource: 'api',
+        atxIdError: undefined 
+      }));
     } else if (!isValidHex(value, 64)) {
-      setError("ATX ID must be a 64-character hexadecimal string");
-      setSettings((prev) => ({ ...prev, atxId: undefined }));
+      setSettings((prev) => ({ 
+        ...prev, 
+        atxId: undefined,
+        atxIdSource: 'manual',
+        atxIdError: "ATX ID must be a 64-character hexadecimal string"
+      }));
     } else {
-      setError(null);
-      setSettings((prev) => ({ ...prev, atxId: value }));
+      setSettings((prev) => ({ 
+        ...prev, 
+        atxId: value,
+        atxIdSource: 'manual',
+        atxIdError: undefined
+      }));
     }
   };
 
-  const displayValue = atxId && !error 
-    ? `ATX ID: ${truncateHex(atxId, 8)}`
-    : "ATX ID is required to generate POS data";
+  const displayValue = settings.atxId
+    ? `ATX ID: ${truncateHex(settings.atxId, 8)} (${settings.atxIdSource === 'manual' ? 'Manual Input' : 'Auto-fetched'})`
+    : "ATX ID will be auto-fetched";
 
   return (
     <SetupContainer>
       <SetupTileWrapper>
         <Tile
-          heading="ATX ID"
-          subheader="Required for POS data generation"
+          heading="ATX ID (Advanced)"
+          subheader="Automatically managed. But you can override it here."
           footer={displayValue}
-          errmsg={error ?? undefined}
+          errmsg={settings.atxIdError}
         />
-        <HexInput
-          type="text"
-          value={atxId}
-          onChange={handleAtxIdChange}
-          placeholder="Enter ATX ID (required, 64-char hex)"
-          maxLength={64}
-          fontSize={12}
-          width={300}
-          className={error ? "error" : ""}
-        />
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <HexInput
+            type="text"
+            value={settings.atxId || ''}
+            onChange={handleAtxIdChange}
+            placeholder="Leave empty to use auto-fetched ATX ID"
+            maxLength={64}
+            fontSize={12}
+            width={300}
+            className={settings.atxIdError ? "error" : ""}
+          />
+        </div>
       </SetupTileWrapper>
     </SetupContainer>
   );
