@@ -28,7 +28,7 @@ const StyledTitle = styled.h1<{
   color: ${Colors.greenLight};
   text-align: "center";
   white-space: nowrap;
-  font-size: 35px;
+  font-size: 32px;
   letter-spacing: 3px;
   text-transform: uppercase;
   top: ${({ top }) => `${top ?? 20}px`};
@@ -44,7 +44,7 @@ const StyledHeader = styled.h1<{
   color: ${Colors.grayLight};
   text-align: "center";
   white-space: nowrap;
-  font-size: 30px;
+  font-size: 28px;
   letter-spacing: 2px;
   top: ${({ top }) => `${top ?? 20}px`};
   left: ${({ left }) => `${left ?? ""}px`};
@@ -60,7 +60,7 @@ const StyledSubheader = styled.h2<{
   font-weight: 100;
   text-align: "center";
   white-space: nowrap;
-  font-size: 20px;
+  font-size: 18px;
   letter-spacing: 1px;
   top: ${({ top }) => `${top ?? 20}px`};
   left: ${({ left }) => `${left ?? ""}px`};
@@ -75,12 +75,13 @@ const StyledBody = styled.h3<{
   color: ${Colors.white};
   text-align: "center";
   white-space: pre-wrap;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 100;
   letter-spacing: 1px;
   top: ${({ top }) => `${top ?? 20}px`};
   left: ${({ left }) => `${left ?? ""}px`};
   position: relative;
+  padding: 0 20px;
 `;
 
 const ErrorMsg = styled.h3<{
@@ -90,7 +91,7 @@ const ErrorMsg = styled.h3<{
   font-family: "Univers45", sans-serif;
   color: ${Colors.red};
   text-align: "center";
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 200;
   top: ${({ top }) => `${top ?? 20}px`};
   left: ${({ left }) => `${left ?? ""}px`};

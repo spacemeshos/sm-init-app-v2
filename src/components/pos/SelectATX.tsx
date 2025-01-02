@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useSettings } from "../../state/SettingsContext";
 import { truncateHex, isValidHex } from "../../utils/hexUtils";
 import { HexInput } from "../input";
-import Tile from "../tile";
+import {Tile} from "../tile";
 
 import { SetupContainer, SetupTileWrapper } from "../../styles/containers";
 

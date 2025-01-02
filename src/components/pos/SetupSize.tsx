@@ -2,7 +2,7 @@ import React from "react";
 
 import { useSettings } from "../../state/SettingsContext";
 import CustomNumberInput from "../input";
-import Tile from "../tile";
+import {Tile} from "../tile";
 import { calculateTotalSize, calculateNumFiles } from "../../utils/sizeUtils";
 
 import {

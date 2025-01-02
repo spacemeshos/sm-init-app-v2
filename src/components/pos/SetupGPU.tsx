@@ -4,7 +4,7 @@ import { useConsole } from "../../state/ConsoleContext";
 import { useSettings } from "../../state/SettingsContext";
 import { ErrorMessage, Subheader } from "../../styles/texts";
 import { FindProviders, Provider } from "../../utils/parseResponse";
-import Tile from "../tile";
+import {Tile} from "../tile";
 
 import { SetupContainer, SetupTileWrapper } from "../../styles/containers";
 

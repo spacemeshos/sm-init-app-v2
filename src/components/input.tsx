@@ -1,18 +1,13 @@
-import * as React from "react";
-import styled from "styled-components";
-import Colors from "../styles/colors";
-import plusIcon from "../assets/plus.png";
-import minusIcon from "../assets/minus.png";
+import * as React from 'react';
+import styled from 'styled-components';
+import Colors from '../styles/colors';
+import plusIcon from '../assets/plus.png';
+import minusIcon from '../assets/minus.png';
 
 interface CustomNumberInputProps {
   min?: number;
   max?: number;
   step?: number;
-  inputColor?: string;
-  buttonColor?: string;
-  fontSize?: number;
-  height?: number;
-  width?: number;
   value?: number;
   onChange?: (value: number) => void;
 }
@@ -36,7 +31,7 @@ const StyledInputRoot = styled.div<{ height?: number }>`
   align-items: center;
   z-index: auto;
   position: absolute;
-  height: 100px;
+  height: 50px;
   width: 80%;
   top: 50%;
   left: 50%;
@@ -44,20 +39,21 @@ const StyledInputRoot = styled.div<{ height?: number }>`
 `;
 
 const StyledInput = styled.input<{
-  fontSize?: number;
   isValid?: boolean;
   width?: number;
+  fontSize?: number;
+  height?: number;
 }>`
-  font-size: ${({ fontSize = 36 }) => `${fontSize}px`};
-  font-family: "Univers45", sans-serif;
+  font-size: ${({ fontSize }) => fontSize || 28}px;
+  font-family: 'Univers45', sans-serif;
   font-weight: 200;
   color: ${Colors.white};
-  height: 60px;
-  line-height: 60px;
-  width: ${({ width = 150 }) => `${width}px`};
+  height: ${({ height }) => height || 45}px;
+  line-height: 50px;
+  width: ${({ width }) => width || 100}px;
   background-color: ${Colors.greenLightOpaque};
   border: 1px solid
-    ${(props) => (props.isValid === false ? Colors.red : Colors.whiteOpaque)};
+    ${(props) => (props.isValid === false ? Colors.red : 'transparent')};
   text-align: center;
 
   /* Hide default number input arrows buttons */
@@ -73,14 +69,11 @@ const StyledInput = styled.input<{
   }
 `;
 
-const StyledButton = styled.button<{
-  height?: number;
-  width?: number;
-}>`
+const StyledButton = styled.button`
   border: none;
-  background-color: ${Colors.whiteOpaque};
-  height: ${({ height = 60 }) => `${height}px`};
-  width: ${({ width = 60 }) => `${width}px`};
+  background-color: ${Colors.greenLightOpaque};
+  height: 45px;
+  width: 45px;
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
@@ -103,13 +96,13 @@ const IconImage = styled.img`
 const HexInput: React.FC<HexInputProps> = ({
   value = '',
   onChange,
-  fontSize,
   height,
   width,
   placeholder,
   maxLength,
   className,
-  type = 'text'
+  type = 'text',
+  fontSize,
 }) => {
   return (
     <StyledInputRoot height={height}>
@@ -120,8 +113,8 @@ const HexInput: React.FC<HexInputProps> = ({
         width={width}
         placeholder={placeholder}
         maxLength={maxLength}
-        fontSize={fontSize}
         className={className}
+        fontSize={fontSize}
       />
     </StyledInputRoot>
   );
@@ -131,10 +124,7 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   min = 1,
   max,
   step = 1,
-  height,
-  width,
   value = min,
-  fontSize,
   onChange,
 }) => {
   const [inputValue, setInputValue] = React.useState<number>(value);
@@ -162,37 +152,29 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseInt(e.target.value, 10);
-    if (!isNaN(newValue) && newValue >= min && (max === undefined || newValue <= max)) {
+    if (
+      !isNaN(newValue) &&
+      newValue >= min &&
+      (max === undefined || newValue <= max)
+    ) {
       setInputValue(newValue);
       onChange?.(newValue);
     }
   };
 
   return (
-    <StyledInputRoot height={height}>
-      <StyledButton
-        height={height}
-        width={width}
-        onClick={handleDecrement}
-        className="decrement"
-      >
+    <StyledInputRoot>
+      <StyledButton onClick={handleDecrement} className="decrement">
         <IconImage src={minusIcon} alt="Decrease" />
       </StyledButton>
       <StyledInput
-        width={width}
         type="number"
         value={inputValue}
         onChange={handleChange}
         min={min}
         max={max}
-        fontSize={fontSize}
       />
-      <StyledButton
-        height={height}
-        width={width}
-        onClick={handleIncrement}
-        className="increment"
-      >
+      <StyledButton onClick={handleIncrement} className="increment">
         <IconImage src={plusIcon} alt="Increase" />
       </StyledButton>
     </StyledInputRoot>
