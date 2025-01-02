@@ -6,6 +6,7 @@ import React, {
   ReactNode,
 } from "react";
 import { getDefaultDirectory } from "../utils/directoryUtils";
+import { fetchLatestAtxId } from "../services/postcliService";
 
 export interface Settings {
   pubKey?: string;
@@ -19,6 +20,8 @@ export interface Settings {
   identityFile?: string;
   publicKey?: string;
   atxId?: string;
+  atxIdSource: 'api' | 'manual';
+  atxIdError?: string;
 }
 
 interface SettingsContextProps {
@@ -43,12 +46,34 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
     defaultDir: undefined,
     identityFile: undefined,
     publicKey: undefined,
-    atxId: "65f77244a23870ee39f15cf088ee1651745c3b73195491e277bc65aa56937425", //TESTING PURPOSES to be replaced with API call eventually
+    atxId: undefined,
+    atxIdSource: 'api'
   });
 
+  const fetchAtxId = async () => {
+    try {
+      const response = await fetchLatestAtxId();
+      setSettings(prev => ({
+        ...prev,
+        atxId: response.atxId,
+        atxIdSource: 'api',
+        atxIdError: undefined
+      }));
+    } catch (err) {
+      console.error("Error fetching ATX ID:", err);
+      setSettings(prev => ({
+        ...prev,
+        atxIdError: "Failed to fetch ATX ID"
+      }));
+      // Retry after 5 seconds
+      setTimeout(fetchAtxId, 5000);
+    }
+  };
+
   useEffect(() => {
-    const initDefaultPath = async () => {
+    const initSettings = async () => {
       try {
+        // Get default directory
         const defaultDir = await getDefaultDirectory();
         setSettings((prev) => ({
           ...prev,
@@ -57,10 +82,20 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
       } catch (err) {
         console.error("Error getting default directory:", err);
       }
+
+      // Fetch ATX ID
+      fetchAtxId();
     };
 
-    initDefaultPath();
+    initSettings();
   }, []);
+
+  // Re-fetch ATX ID if manual input is cleared
+  useEffect(() => {
+    if (settings.atxId === undefined && settings.atxIdSource === 'manual') {
+      fetchAtxId();
+    }
+  }, [settings.atxId, settings.atxIdSource]);
 
   return (
     <SettingsContext.Provider value={{ settings, setSettings }}>
