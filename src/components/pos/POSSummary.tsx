@@ -257,7 +257,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
               />
               <Frame
                 heading="How to Generate"
-                subheader={`Provider ID: ${settings.provider ?? 'Not selected'}`}
+                subheader={settings.providerModel ? settings.providerModel : 'Not selected'}
                 onClick={() => onStepChange?.(1)}
               />
               <Frame
