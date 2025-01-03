@@ -239,14 +239,14 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
 
       <Container>
         <SummarySection>
+          <Frame>
+            <Subheader
+              top={0}
+              text="Click on each row to adjust the settings"
+            />
+          </Frame>
           {!showOnlyAdvanced && (
             <>
-              <Frame>
-                <Subheader
-                  top={0}
-                  text="Click on each row to adjust the settings"
-                />
-              </Frame>
               <Frame
                 heading="Where to Store POS Data"
                 subheader={getDirectoryDisplay(
