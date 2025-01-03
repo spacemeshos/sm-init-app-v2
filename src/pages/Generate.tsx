@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { FindProviders } from '../utils/parseResponse';
 import styled from 'styled-components';
 
 import BackgroundImage from '../assets/wave2.png';
@@ -114,7 +115,27 @@ const Generate: React.FC = () => {
   const [showAdvancedSettings, setShowAdvancedSettings] =
     useState<boolean>(false);
   const { updateConsole } = useConsole();
-  const { settings } = useSettings();
+  const { settings, setSettings } = useSettings();
+  const { run, response } = FindProviders();
+  
+  // Detect providers on component mount
+  useEffect(() => {
+    const detectProviders = async () => {
+      await run(["-printProviders"], updateConsole);
+    };
+    detectProviders();
+  }, [run, updateConsole]);
+
+  // Set initial provider when providers are detected
+  useEffect(() => {
+    if (response && response.length > 0) {
+      setSettings(prev => ({
+        ...prev,
+        provider: 0,
+        providerModel: response[0].Model
+      }));
+    }
+  }, [response, setSettings]);
 
   const steps = [
     {
@@ -124,7 +145,7 @@ const Generate: React.FC = () => {
     },
     {
       label: 'Select Processor',
-      component: <SetupGPU isOpen={true} />,
+      component: <SetupGPU isOpen={true} initialProviders={response} />,
       iconSrc: gpu,
     },
     {
