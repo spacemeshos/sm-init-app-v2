@@ -21,7 +21,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-evenly;
   width: 100%;
-  height: 440px;
+  height: 420px;
   position: absolute;
   top: 0px;
 `;
@@ -49,6 +49,9 @@ interface POSSummaryProps {
   error?: string | null;
   updateConsole?: (command: string, output: string) => void;
   onStepChange?: (step: number) => void;
+  onAdvancedVisibilityChange?: (isVisible: boolean) => void;
+  initialAdvancedVisible?: boolean;
+  showOnlyAdvanced?: boolean;
 }
 
 export const POSSummary: React.FC<POSSummaryProps> = ({
@@ -56,6 +59,8 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
   isGenerating: parentIsGenerating,
   updateConsole,
   onStepChange,
+  initialAdvancedVisible = false,
+  showOnlyAdvanced = false,
 }) => {
   const navigate = useNavigate();
   const { settings, setSettings } = useSettings();
@@ -63,7 +68,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
-  const [isAdvancedVisible, setIsAdvancedVisible] = useState(false);
+  const [isAdvancedVisible] = useState(initialAdvancedVisible);
 
   const isGenerating = parentIsGenerating || processState.isRunning || false;
 
@@ -234,37 +239,37 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
 
       <Container>
         <SummarySection>
-          <Frame>
-            <Subheader
-              top={0}
-              text="Click on each row to adjust the settings"
-            />
-          </Frame>
-          <Frame
-            heading="Where to Store POS Data"
-            subheader={getDirectoryDisplay(
-              settings.selectedDir,
-              settings.defaultDir
-            )}
-            onClick={() => onStepChange?.(0)}
-          />
-          <Frame
-            heading="How to Generate"
-            subheader={`Provider ID: ${settings.provider ?? 'Not selected'}`}
-            onClick={() => onStepChange?.(1)}
-          />
-          <Frame
-            heading="How Much to Generate"
-            subheader={`${
-              settings.numUnits || 4
-            } Space Units | ${calculateTotalSize(settings.numUnits)}`}
-            onClick={() => onStepChange?.(2)}
-          />
-          <Frame
-            heading="Advanced Settings"
-            onClick={() => setIsAdvancedVisible(!isAdvancedVisible)}
-          />
-          <AdvancedSection isVisible={isAdvancedVisible}>
+          {!showOnlyAdvanced && (
+            <>
+              <Frame>
+                <Subheader
+                  top={0}
+                  text="Click on each row to adjust the settings"
+                />
+              </Frame>
+              <Frame
+                heading="Where to Store POS Data"
+                subheader={getDirectoryDisplay(
+                  settings.selectedDir,
+                  settings.defaultDir
+                )}
+                onClick={() => onStepChange?.(0)}
+              />
+              <Frame
+                heading="How to Generate"
+                subheader={`Provider ID: ${settings.provider ?? 'Not selected'}`}
+                onClick={() => onStepChange?.(1)}
+              />
+              <Frame
+                heading="How Much to Generate"
+                subheader={`${
+                  settings.numUnits || 4
+                } Space Units | ${calculateTotalSize(settings.numUnits)}`}
+                onClick={() => onStepChange?.(2)}
+              />
+            </>
+          )}
+          <AdvancedSection isVisible={isAdvancedVisible || showOnlyAdvanced}>
             <Frame
               heading="Identity Configuration"
               subheader={
@@ -275,33 +280,39 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
               onClick={() => onStepChange?.(3)}
             />
             <Frame
+              heading="Max File Size"
+              subheader={`${calculateNumFiles(
+                settings.numUnits,
+                settings.maxFileSize || 4096
+              )} files, ${settings.maxFileSize} MiB each`}
+              onClick={() => onStepChange?.(4)}
+            />
+            <Frame
               heading="ATX ID"
               subheader={
                 settings.atxId
                   ? `ATX: ${truncateHex(settings.atxId, 8)}`
                   : 'Default'
               }
-              onClick={() => onStepChange?.(4)}
+              onClick={() => onStepChange?.(5)}
             />
             <Frame
-              heading="Max File Size"
-              subheader={`${calculateNumFiles(
-                settings.numUnits,
-                settings.maxFileSize || 4096
-              )} files, ${settings.maxFileSize} MiB each`}
-              onClick={() => onStepChange?.(2)}
+              heading="Split in Subsets"
+              subheader="To Be Implemented"
+              onClick={() => onStepChange?.(7)}
             />
-            <Frame heading="Split in Subsets" subheader="To Be Implemented" />
           </AdvancedSection>
-          <Button
-            label={isGenerating ? 'Starting...' : 'Generate POS Data'}
-            onClick={handleGenerateClick}
-            width={250}
-            height={56}
-            top={40}
-            left={275}
-            disabled={isGenerating}
-          />
+          {!showOnlyAdvanced && (
+            <Button
+              label={isGenerating ? 'Starting...' : 'Generate POS Data'}
+              onClick={handleGenerateClick}
+              width={250}
+              height={56}
+              top={40}
+              left={275}
+              disabled={isGenerating}
+            />
+          )}
         </SummarySection>
       </Container>
     </>
