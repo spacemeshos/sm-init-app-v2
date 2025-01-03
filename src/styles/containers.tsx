@@ -9,7 +9,7 @@ export const Background = styled.img`
 
 export const MainContainer = styled.div`
   width: 800px;
-  height: 800px;
+  height: 750px;
   position: absolute;
   top: 0px;
   left: 80px;
