@@ -79,8 +79,8 @@ const AdvancedSettingsButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   position: absolute;
-  right: 100px;
-  top: 120px;
+  right: 80px;
+  top: 150px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -254,24 +254,24 @@ const Generate: React.FC = () => {
                 .slice(0, 3)
                 .map((step, index) => (
                   <DotButton
-                key={index}
-                onClick={() => handleStepChange(index)}
-                $isActive={currentStep === index}
-                disabled={isGenerating}
-                iconSrc={step.iconSrc}
-                alt={step.label}
+                    key={index}
+                    onClick={() => handleStepChange(index)}
+                    $isActive={currentStep === index}
+                    disabled={isGenerating}
+                    iconSrc={step.iconSrc}
+                    alt={step.label}
                   />
                 ))
             : steps
                 .slice(3, 7)
                 .map((step, index) => (
                   <DotButton
-                key={index + 3}
-                onClick={() => handleStepChange(index + 3)}
-                $isActive={currentStep === index + 3}
-                disabled={isGenerating}
-                iconSrc={step.iconSrc}
-                alt={step.label}
+                    key={index + 3}
+                    onClick={() => handleStepChange(index + 3)}
+                    $isActive={currentStep === index + 3}
+                    disabled={isGenerating}
+                    iconSrc={step.iconSrc}
+                    alt={step.label}
                   />
                 ))}
         </ButtonColumn>
