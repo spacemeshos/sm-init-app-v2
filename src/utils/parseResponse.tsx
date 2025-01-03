@@ -11,6 +11,7 @@ interface Provider {
 interface UsePostCliReturn {
   run: (args: string[], updateConsole?: (command: string, output: string) => void) => Promise<void>;
   response: Provider[] | null;
+  setResponse: React.Dispatch<React.SetStateAction<Provider[] | null>>;
   error: string | null;
   loading: boolean;
 }
@@ -127,7 +128,7 @@ const FindProviders = (): UsePostCliReturn => {
     }
   }, [parseResponse]);
 
-  return { run, response, error, loading };
+  return { run, response, setResponse, error, loading };
 };
 
 export { FindProviders };
