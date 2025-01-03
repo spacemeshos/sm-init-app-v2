@@ -15,6 +15,7 @@ export interface Settings {
   numCores?: number;
   numNonces?: number;
   provider?: number;
+  providerModel?: string;
   selectedDir?: string;
   defaultDir?: string;
   identityFile?: string;
@@ -42,6 +43,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
     numCores: 8,
     numNonces: 288,
     provider: 0,
+    providerModel: undefined,
     selectedDir: undefined,
     defaultDir: undefined,
     identityFile: undefined,
