@@ -1,9 +1,9 @@
-import * as React from "react";
-import { useState } from "react";
-import styled from "styled-components";
+import * as React from 'react';
+import { useState } from 'react';
+import styled from 'styled-components';
 
-import BackgroundImage from "../assets/wave2.png";
-import { BackButton, DotButton } from "../components/button";
+import BackgroundImage from '../assets/wave2.png';
+import { BackButton, DotButton } from '../components/button';
 import {
   SelectDirectory,
   SetupGPU,
@@ -11,29 +11,29 @@ import {
   SelectIdentity,
   SelectATX,
   POSSummary,
-} from "../components/pos/index";
-import { useConsole } from "../state/ConsoleContext";
-import { useSettings } from "../state/SettingsContext";
-import Colors from "../styles/colors";
-import { Header } from "../styles/texts";
+} from '../components/pos/index';
+import { useConsole } from '../state/ConsoleContext';
+import { useSettings } from '../state/SettingsContext';
+import Colors from '../styles/colors';
+import { Header } from '../styles/texts';
 import {
   Background,
   MainContainer,
   PageTitleWrapper,
-} from "../styles/containers";
-import file from "../assets/file.png";
-import folder from "../assets/folder.png";
-import gpu from "../assets/gpu.png";
-import id from "../assets/id.png";
-import summary from "../assets/justify.png";
-import hex from "../assets/formats.png";
-import gear from "../assets/setting.png";
-import copy from "../assets/copy.png";
-import box from "../assets/box.png";
+} from '../styles/containers';
+import file from '../assets/file.png';
+import folder from '../assets/folder.png';
+import gpu from '../assets/gpu.png';
+import id from '../assets/id.png';
+import summary from '../assets/justify.png';
+import hex from '../assets/formats.png';
+import gear from '../assets/setting.png';
+import copy from '../assets/copy.png';
+import box from '../assets/box.png';
 
 const Wrapper = styled.div`
   width: 880px;
-  height: 800px;
+  height: 750px;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -62,13 +62,39 @@ const SetupContainer = styled.div`
 const ButtonColumn = styled.div`
   position: absolute;
   width: 80px;
-  height: 630px;
+  height: 280px;
   top: 180px;
   left: 0px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-evenly;
+`;
+
+const AdvancedSettingsButton = styled.button`
+  background: transparent;
+  border: 1px solid ${Colors.white};
+  color: ${Colors.white};
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  position: absolute;
+  right: 100px;
+  top: 120px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  transition: background 0.2s;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  img {
+    width: 16px;
+    height: 16px;
+  }
 `;
 
 const ErrorMessage = styled.div`
@@ -81,10 +107,12 @@ const ErrorMessage = styled.div`
 `;
 
 const Generate: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState<number>(8); // Initialize to steps.length
+  const [currentStep, setCurrentStep] = useState<number>(7); // Initialize to steps.length
   const [showSummary, setShowSummary] = useState<boolean>(true);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [showAdvancedSettings, setShowAdvancedSettings] =
+    useState<boolean>(false);
   const { updateConsole } = useConsole();
   const { settings } = useSettings();
 
@@ -103,10 +131,6 @@ const Generate: React.FC = () => {
       label: 'Set up POS Size',
       component: <SetupSize />,
       iconSrc: box,
-    },
-    {
-      label: 'Advanced Settings',
-      iconSrc: gear,
     },
     {
       label: 'Select Identity',
@@ -131,9 +155,9 @@ const Generate: React.FC = () => {
 
   const handleStepChange = (index: number) => {
     // If index is out of steps range, show summary
-    if (index >= 8) {
+    if (index >= 7) {
       setShowSummary(true);
-      setCurrentStep(8); // Set currentStep to steps.length when showing summary
+      setCurrentStep(7); // Set currentStep to steps.length when showing summary
     } else {
       setShowSummary(false);
       setCurrentStep(index);
@@ -143,14 +167,27 @@ const Generate: React.FC = () => {
 
   const handleProceed = () => {
     setIsGenerating(true);
-    updateConsole("generation", "POS data generation started in background...");
+    updateConsole('generation', 'POS data generation started in background...');
     updateConsole(
-      "settings",
+      'settings',
       `Using settings: ${JSON.stringify(settings, null, 2)}`
     );
   };
 
   const renderContent = () => {
+    if (showAdvancedSettings) {
+      return (
+        <POSSummary
+          onProceed={handleProceed}
+          isGenerating={isGenerating}
+          error={error}
+          updateConsole={updateConsole}
+          onStepChange={handleStepChange}
+          initialAdvancedVisible={true}
+          showOnlyAdvanced={true}
+        />
+      );
+    }
     if (showSummary) {
       return (
         <POSSummary
@@ -165,6 +202,18 @@ const Generate: React.FC = () => {
     return steps[currentStep].component;
   };
 
+  const toggleAdvancedSettings = () => {
+    if (showAdvancedSettings) {
+      setShowAdvancedSettings(false);
+      setShowSummary(true);
+      setCurrentStep(8);
+    } else {
+      setShowAdvancedSettings(true);
+      setShowSummary(false);
+      setCurrentStep(3); // Start with the first advanced setting
+    }
+  };
+
   return (
     <>
       <Background src={BackgroundImage} />
@@ -174,32 +223,54 @@ const Generate: React.FC = () => {
           <PageTitleWrapper>
             <Header
               text={
-                showSummary
+                showAdvancedSettings
+                  ? 'ADVANCED SETTINGS'
+                  : showSummary
                   ? 'YOUR POS GENERATION SETTINGS'
                   : steps[currentStep].label
               }
             />
           </PageTitleWrapper>
+          <AdvancedSettingsButton onClick={toggleAdvancedSettings}>
+            <img src={gear} alt="Advanced Settings" />
+            {showAdvancedSettings ? 'Back to Main' : 'Advanced Settings'}
+          </AdvancedSettingsButton>
           <SetupContainer>{renderContent()}</SetupContainer>
           {error && <ErrorMessage>{error}</ErrorMessage>}
         </MainContainer>
         <ButtonColumn>
-          <DotButton
-            onClick={() => handleStepChange(steps.length)}
-            $isActive={showSummary}
-            iconSrc={summary}
-          />
-
-          {steps.map((step, index) => (
-            <DotButton
-              key={index}
-              onClick={() => handleStepChange(index)}
-              $isActive={currentStep === index}
-              disabled={isGenerating}
-              iconSrc={step.iconSrc}
-              alt={step.label}
-            />
-          ))}
+          {!showAdvancedSettings ? (
+            <>
+              <DotButton
+                onClick={() => handleStepChange(steps.length)}
+                $isActive={showSummary}
+                iconSrc={summary}
+              />
+              {steps.slice(0, 3).map((step, index) => (
+                <DotButton
+                  key={index}
+                  onClick={() => handleStepChange(index)}
+                  $isActive={currentStep === index}
+                  disabled={isGenerating}
+                  iconSrc={step.iconSrc}
+                  alt={step.label}
+                />
+              ))}
+            </>
+          ) : (
+            <>
+              {steps.slice(3, 7).map((step, index) => (
+                <DotButton
+                  key={index + 3}
+                  onClick={() => handleStepChange(index + 3)}
+                  $isActive={currentStep === index + 3}
+                  disabled={isGenerating}
+                  iconSrc={step.iconSrc}
+                  alt={step.label}
+                />
+              ))}
+            </>
+          )}
         </ButtonColumn>
       </Wrapper>
     </>
