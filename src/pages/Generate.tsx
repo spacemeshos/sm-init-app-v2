@@ -62,13 +62,13 @@ const SetupContainer = styled.div`
 const ButtonColumn = styled.div`
   position: absolute;
   width: 80px;
-  height: 280px;
+  height: 350px;
   top: 180px;
   left: 0px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: space-evenly;
+  justify-content: flex-start;
 `;
 
 const AdvancedSettingsButton = styled.button`
@@ -86,11 +86,11 @@ const AdvancedSettingsButton = styled.button`
   gap: 8px;
   font-size: 14px;
   transition: background 0.2s;
-  
+
   &:hover {
     background: rgba(255, 255, 255, 0.1);
   }
-  
+
   img {
     width: 16px;
     height: 16px;
@@ -107,7 +107,7 @@ const ErrorMessage = styled.div`
 `;
 
 const Generate: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState<number>(7); // Initialize to steps.length
+  const [currentStep, setCurrentStep] = useState<number>(7);
   const [showSummary, setShowSummary] = useState<boolean>(true);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -175,6 +175,10 @@ const Generate: React.FC = () => {
   };
 
   const renderContent = () => {
+    if (!showSummary) {
+      return steps[currentStep].component;
+    }
+
     if (showAdvancedSettings) {
       return (
         <POSSummary
@@ -182,35 +186,36 @@ const Generate: React.FC = () => {
           isGenerating={isGenerating}
           error={error}
           updateConsole={updateConsole}
-          onStepChange={handleStepChange}
+          onStepChange={(step) => {
+            setShowSummary(false);
+            handleStepChange(step);
+          }}
           initialAdvancedVisible={true}
           showOnlyAdvanced={true}
         />
       );
     }
-    if (showSummary) {
-      return (
-        <POSSummary
-          onProceed={handleProceed}
-          isGenerating={isGenerating}
-          error={error}
-          updateConsole={updateConsole}
-          onStepChange={handleStepChange}
-        />
-      );
-    }
-    return steps[currentStep].component;
+
+    return (
+      <POSSummary
+        onProceed={handleProceed}
+        isGenerating={isGenerating}
+        error={error}
+        updateConsole={updateConsole}
+        onStepChange={handleStepChange}
+      />
+    );
   };
 
   const toggleAdvancedSettings = () => {
     if (showAdvancedSettings) {
       setShowAdvancedSettings(false);
       setShowSummary(true);
-      setCurrentStep(8);
+      setCurrentStep(7);
     } else {
       setShowAdvancedSettings(true);
-      setShowSummary(false);
-      setCurrentStep(3); // Start with the first advanced setting
+      setShowSummary(true);
+      setCurrentStep(7); // Keep in summary view when entering advanced mode
     }
   };
 
@@ -226,8 +231,8 @@ const Generate: React.FC = () => {
                 showAdvancedSettings
                   ? 'ADVANCED SETTINGS'
                   : showSummary
-                  ? 'YOUR POS GENERATION SETTINGS'
-                  : steps[currentStep].label
+                    ? 'YOUR POS GENERATION SETTINGS'
+                    : steps[currentStep].label
               }
             />
           </PageTitleWrapper>
@@ -239,38 +244,36 @@ const Generate: React.FC = () => {
           {error && <ErrorMessage>{error}</ErrorMessage>}
         </MainContainer>
         <ButtonColumn>
-          {!showAdvancedSettings ? (
-            <>
-              <DotButton
-                onClick={() => handleStepChange(steps.length)}
-                $isActive={showSummary}
-                iconSrc={summary}
-              />
-              {steps.slice(0, 3).map((step, index) => (
-                <DotButton
-                  key={index}
-                  onClick={() => handleStepChange(index)}
-                  $isActive={currentStep === index}
-                  disabled={isGenerating}
-                  iconSrc={step.iconSrc}
-                  alt={step.label}
-                />
-              ))}
-            </>
-          ) : (
-            <>
-              {steps.slice(3, 7).map((step, index) => (
-                <DotButton
-                  key={index + 3}
-                  onClick={() => handleStepChange(index + 3)}
-                  $isActive={currentStep === index + 3}
-                  disabled={isGenerating}
-                  iconSrc={step.iconSrc}
-                  alt={step.label}
-                />
-              ))}
-            </>
-          )}
+          <DotButton
+            onClick={() => handleStepChange(steps.length)}
+            $isActive={showSummary && currentStep === 7}
+            iconSrc={summary}
+          />
+          {!showAdvancedSettings
+            ? steps
+                .slice(0, 3)
+                .map((step, index) => (
+                  <DotButton
+                key={index}
+                onClick={() => handleStepChange(index)}
+                $isActive={currentStep === index}
+                disabled={isGenerating}
+                iconSrc={step.iconSrc}
+                alt={step.label}
+                  />
+                ))
+            : steps
+                .slice(3, 7)
+                .map((step, index) => (
+                  <DotButton
+                key={index + 3}
+                onClick={() => handleStepChange(index + 3)}
+                $isActive={currentStep === index + 3}
+                disabled={isGenerating}
+                iconSrc={step.iconSrc}
+                alt={step.label}
+                  />
+                ))}
         </ButtonColumn>
       </Wrapper>
     </>
