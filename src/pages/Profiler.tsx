@@ -18,7 +18,7 @@ import InfoIcon from '../assets/help.png';
 import Gear from '../assets/setting.png';
 import Control from '../assets/control.png';
 import NextStep from '../assets/nextstep.png';
-import BackgroundImage from '../assets/wave3.jpg';
+import BackgroundImage from '../assets/banner4.png';
 
 export const PROFILER_CONSTANTS = {
   MIN_NONCES: 16,
