@@ -5,6 +5,7 @@ This document provides technical details and implementation notes for developers
 ## Architecture
 
 The application is built using:
+
 - Tauri (Rust backend)
 - React (TypeScript frontend)
 - Styled Components for styling
@@ -13,7 +14,7 @@ The application is built using:
 
 ## Project Structure
 
-```
+```bash
 sm-init-app-v2/
 ├── src/                    # Frontend source code
 │   ├── components/        # React components
@@ -31,7 +32,9 @@ sm-init-app-v2/
 ## Known Implementation Details
 
 ### External Links
+
 Several external links are pending updates (marked as TODO):
+
 - Terms of Service link
 - Disclaimer link
 - Privacy Policy link
@@ -39,18 +42,22 @@ Several external links are pending updates (marked as TODO):
 These links currently point to testnet URLs and need to be updated with production URLs.
 
 ### Important External Resources
+
 The application relies on several external resources:
-- User Guide: https://github.com/spacemeshos/wiki/wiki/Smesher-Guide
-- Requirements Documentation: https://docs.spacemesh.io/docs/start/smeshing/requirements
-- Main Documentation: https://docs.spacemesh.io/docs/start
-- Issue Reporting: https://github.com/spacemeshos/sm-init-app-v2/issues/new
-- Community Discord: https://discord.com/invite/yVhQ7rC
+
+- User Guide: <https://github.com/spacemeshos/wiki/wiki/Smesher-Guide>
+- Requirements Documentation: <https://docs.spacemesh.io/docs/start/smeshing/requirements>
+- Main Documentation: <https://docs.spacemesh.io/docs/start>
+- Issue Reporting: <https://github.com/spacemeshos/sm-init-app-v2/issues/new>
+- Community Discord: <https://discord.com/invite/yVhQ7rC>
 
 ### Installation Guides
+
 Platform-specific installation guides for dependencies:
-- Windows Visual C++ Redistributable: https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist
-- Windows OpenCL Installation: https://sasview.org/docs/old_docs/4.1.2/user/opencl_installation.html
-- Ubuntu OpenCL Installation: https://saturncloud.io/blog/how-to-install-cudaopencl-on-ubuntu-installed-on-a-usb-drive/
+
+- Windows Visual C++ Redistributable: <https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist>
+- Windows OpenCL Installation: <https://sasview.org/docs/old_docs/4.1.2/user/opencl_installation.html>
+- Ubuntu OpenCL Installation: <https://saturncloud.io/blog/how-to-install-cudaopencl-on-ubuntu-installed-on-a-usb-drive/>
 
 ### Hardcoded Values
 
@@ -75,7 +82,7 @@ Platform-specific installation guides for dependencies:
 2. **ATX API Integration**:
    - Currently using mock data
    - Need to implement actual API call when endpoint is available
-   - Endpoint will be: https://mainnet-api.spacemesh.network/spacemesh.v2alpha1.ActivationService/Highest
+   - Endpoint will be: <https://mainnet-api.spacemesh.network/spacemesh.v2alpha1.ActivationService/Highest>
 
 ### Test-Specific Code
 
