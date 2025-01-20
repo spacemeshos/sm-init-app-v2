@@ -15,8 +15,6 @@
 
 ### Prerequisites
 
-Ensure you have the following installed:
-
 - [Node.js](https://nodejs.org/) (version 16.x or later)
 - [Rust](https://www.rust-lang.org/tools/install) (version 1.56.0 or later)
 - [Yarn](https://classic.yarnpkg.com/en/docs/install) (version 1.22.10 or later)
@@ -46,43 +44,37 @@ You can find the latest versions of these binaries at:
 ### Platform-Specific Notes
 
 #### Windows
-- Ensure you download the Windows-specific binaries (*.exe and *.dll files)
-- The application expects postcli.exe to be in the bin/postcli directory
-- Make sure you have the required Visual C++ Redistributable packages installed
+- Download Windows-specific binaries (*.exe)
+- Required Visual C++ Redistributable packages must be installed
+- Application expects postcli.exe in the bin/postcli directory
 
 #### macOS
-- Ensure you download the macOS-specific binaries (*.dylib files)
-- The application expects postcli to be in the bin/postcli directory
-- Make sure the binary files have execute permissions (`chmod +x`)
+- Download macOS-specific binaries (double check the architecture)
+- Application expects postcli in the bin/postcli directory
+- Ensure binary files have execute permissions (`chmod +x`)
 
-### Clone the Repository
+### Installation Steps
 
+1. Clone the repository:
 ```sh
 git clone https://github.com/spacemeshos/sm-init-app-v2.git
 cd sm-init-app-v2
 ```
 
-### Install Dependencies
-
+2. Install dependencies:
 ```sh
 yarn install
 ```
 
 ## Usage
 
-### Running the Application
-
-To start the application in development mode, run:
+### Development Mode
 
 ```sh
 yarn dev
 ```
 
-This command will start the Tauri development environment and the React development server.
-
-### Building the Application
-
-To build the application for production, run:
+### Production Build
 
 ```sh
 yarn build
@@ -90,34 +82,39 @@ yarn build
 
 ### Running Tests
 
-To run the tests, use:
-
 ```sh
 yarn test
 ```
 
+## Important Notes
+
+1. **Hardware Requirements**:
+   - GPU with sufficient memory for PoS data generation
+   - Stable power supply
+   - Adequate storage space based on configuration
+
+2. **Generation Process**:
+   - Generation time varies based on hardware (days to weeks)
+   - System should remain powered and stable throughout
+   - GPU will operate at full capacity during generation
+
+3. **Post-Generation**:
+   - Generated PoS data is required for node setup
+   - Data must be accessible to your node
+   - Backup recommendations provided in documentation
+
 ## Contributing
 
-We welcome contributions to the Spacemesh Init App v2! To contribute:
+See [CONTRIBUTING.md](CODE_OF_CONDUCT.md) for contribution guidelines.
 
-1. Fork the repository
-2. Create a new branch (git checkout -b feature-branch)
-3. Make your changes
-4. Run tests locally to ensure everything passes
-5. Commit your changes (git commit -m 'Add some feature')
-6. Push to the branch (git push origin feature-branch)
-7. Open a pull request
+## Documentation
 
-### Pull Request Process
-
-1. Ensure all tests pass in the PR build
-2. Update documentation if needed
-3. Follow the existing code style and conventions
-4. Add tests for new functionality
-5. Make sure your PR description clearly describes the changes
-
-Please adhere to the Code of Conduct when contributing.
+- [Development Guide](DEVELOPMENT.md) - Technical details for developers
+- [Security Policy](SECURITY.md) - Security considerations and reporting
+- [Code of Conduct](CODE_OF_CONDUCT.md) - Community guidelines
 
 ## Contact
 
-For more information, visit [Spacemesh](https://spacemesh.io/) or contact us at [info@spacemesh.io]().
+For more information:
+- Website: [Spacemesh](https://spacemesh.io/)
+- Email: [info@spacemesh.io](mailto:info@spacemesh.io)
