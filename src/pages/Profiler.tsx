@@ -16,7 +16,7 @@ import { useProfiler } from '../hooks/useProfiler';
 // Assets
 import InfoIcon from '../assets/help.png';
 import Gear from '../assets/setting.png';
-import Control from '../assets/control.png';
+import File from '../assets/file.png';
 import NextStep from '../assets/nextstep.png';
 import BackgroundImage from '../assets/banner4.png';
 
@@ -155,6 +155,22 @@ const Profiler: React.FC = () => {
       </PageTitleWrapper>
       <ProfilerContainer>
         <OptionsContainer>
+          {/* Info */}
+          <Tile
+            height={65}
+            width={550}
+            blurred
+            backgroundColor={Colors.whiteOpaque}
+            onClick={() => setShowInfoModal(true)}
+          >
+            <BodyText
+              top={18}
+              text="The profiler helps estimate how much POS Data you can allocate. 
+            Succesful proving within cycle gap is crucial for rewards eligibility."
+            />
+          </Tile>
+          
+          {/* Action Tiles */}
           <ActionTile
             footer="How it works?"
             icon={InfoIcon}
@@ -167,7 +183,7 @@ const Profiler: React.FC = () => {
           />
           <ActionTile
             footer="Full config"
-            icon={Control}
+            icon={File}
             onClick={() => navigate('/config')}
           />
           <ActionTile
@@ -175,21 +191,6 @@ const Profiler: React.FC = () => {
             icon={NextStep}
             onClick={() => navigate('/nextSteps')}
           />
-
-          {/* Info */}
-          <Tile
-            height={80}
-            width={550}
-            blurred
-            backgroundColor={Colors.whiteOpaque}
-            onClick={() => setShowInfoModal(true)}
-          >
-            <BodyText
-              top={25}
-              text="The profiler helps estimate how much POS Data you can allocate. 
-            Succesful proving within cycle gap is crucial for rewards eligibility."
-            />
-          </Tile>
         </OptionsContainer>
 
         <StepsContainer>
@@ -205,7 +206,7 @@ const Profiler: React.FC = () => {
               <CoverTile
                 counter="1"
                 heading="Select Directory"
-                footer="Indicate where to store your POS data. The Profiler will test the chosen drive performance."
+                footer="Indicate where to store your POS data. The Profiler will test the chosen drive I/O speed and performance."
               />
             ) : (
               <div onClick={(e) => e?.stopPropagation()}>
@@ -232,7 +233,7 @@ const Profiler: React.FC = () => {
                 counter="2"
                 heading="Experiment with Proving Settings"
                 footer="Test different values of these params to find optimal config. 
-              Try to balance the probability of one pass and max proving speed."
+              Balance the probability and proving speed."
               />
             ) : (
               <>
