@@ -2,6 +2,7 @@ import React, { createContext, ReactNode, useContext, useState } from "react";
 import { Stage, FileProgress, POSSettings } from "../types/posProgress";
 import { parsePOSProgress } from "../utils/posProgressParser";
 import { stopPostCliProcess } from "../services/postcliService";
+import { SizeConstants } from "../Shared/Constants";
 import { useConsole } from "./ConsoleContext";
 import { useSettings } from "./SettingsContext";
 
@@ -93,8 +94,8 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
     const cleanLog = log.replace(/^postcli (stdout|stderr):\s*/, '');
     
     const posSettings: POSSettings = {
-      numUnits: settings.numUnits || 4,
-      maxFileSize: settings.maxFileSize || 4096
+      numUnits: settings.numUnits || SizeConstants.DEFAULT_NUM_UNITS,
+      maxFileSize: settings.maxFileSize || SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB
     };
 
     console.log('Settings for parsing:', posSettings);

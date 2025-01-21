@@ -4,6 +4,7 @@ import styled from "styled-components";
 import cpu from "../assets/cpu.png";
 import files from "../assets/duplicate.png";
 import gpu from "../assets/graphics-card.png";
+import { SizeConstants } from "../Shared/Constants";
 import Colors from "../styles/colors";
 import { BodyText, Header, Subheader } from "../styles/texts";
 
@@ -54,6 +55,8 @@ type Props = {
 const PosInfo = ({ onClose, isOpen }: Props) => {
   if (!isOpen) return null;
 
+  const minSizeGiB = SizeConstants.DEFAULT_NUM_UNITS * SizeConstants.UNIT_SIZE_GIB;
+
   return (
     <Backdrop onClick={onClose}>
       <Wrapper onClick={(e) => e.stopPropagation()}>
@@ -75,11 +78,11 @@ const PosInfo = ({ onClose, isOpen }: Props) => {
               will do the job.
               <br />
               <br />
-              The minimum you can allocate is 256 GiB, which equals 4 Space
-              Units (1 SU = 64 GiB). Remember, we measure in Space Units, not
+              The minimum you can allocate is {minSizeGiB} GiB, which equals {SizeConstants.DEFAULT_NUM_UNITS} Space
+              Units (1 SU = {SizeConstants.UNIT_SIZE_GIB} GiB). Remember, we measure in Space Units, not
               single Gibibytes. If you want to allocate more, you must add it in
-              whole Space Units, meaning another 64GiB each time The PoS data
-              will be divided into several files, 4GiB each. You can change how
+              whole Space Units, meaning another {SizeConstants.UNIT_SIZE_GIB} GiB each time. The PoS data
+              will be divided into several files, {SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB / 1024} GiB each. You can change how
               big these files are if it makes things easier for you.
               <br />
               <br />

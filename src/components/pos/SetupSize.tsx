@@ -1,5 +1,6 @@
 import React from "react";
 
+import { SizeConstants } from "../../Shared/Constants";
 import { useSettings } from "../../state/SettingsContext";
 import CustomNumberInput from "../input";
 import {Tile} from "../tile";
@@ -12,8 +13,6 @@ import {
 
 export const SetupSize: React.FC = () => {
   const { settings, setSettings } = useSettings();
-  const MIN_SPACE_UNITS = 4;
-  const DEFAULT_MAX_FILE_SIZE_MIB = 4096;
 
   return (
     <SetupContainer>
@@ -21,17 +20,17 @@ export const SetupSize: React.FC = () => {
         <Tile
           heading="Select Space Units"
           subheader={`${
-            settings.numUnits || 4
+            settings.numUnits || SizeConstants.DEFAULT_NUM_UNITS
           } Space Units (${calculateTotalSize(settings.numUnits)})`}
-          footer="1 Space Unit = 64 GiB (Minimum 4)"
+          footer={`1 Space Unit = ${SizeConstants.UNIT_SIZE_GIB} GiB (Minimum ${SizeConstants.DEFAULT_NUM_UNITS})`}
           width={250}
           height={400}
         />
           <>
             <CustomNumberInput
-              min={MIN_SPACE_UNITS}
+              min={SizeConstants.DEFAULT_NUM_UNITS}
               step={1}
-              value={settings.numUnits || MIN_SPACE_UNITS}
+              value={settings.numUnits || SizeConstants.DEFAULT_NUM_UNITS}
               onChange={(val) =>
                 setSettings((prev) => ({ ...prev, numUnits: val }))
               }
@@ -44,9 +43,9 @@ export const SetupSize: React.FC = () => {
           heading="Max File Size in Mebibytes"
           subheader={`${calculateNumFiles(
             settings.numUnits,
-            settings.maxFileSize || DEFAULT_MAX_FILE_SIZE_MIB
+            settings.maxFileSize || SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB
           )} files will be generated`}
-          footer="Default: 4096 MiB (4 GiB)"
+          footer={`Default: ${SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB} MiB (${SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB / 1024} GiB)`}
           width={250}
           height={400}
         />
@@ -55,7 +54,7 @@ export const SetupSize: React.FC = () => {
               min={1}
               max={8192}
               step={1}
-              value={settings.maxFileSize || DEFAULT_MAX_FILE_SIZE_MIB}
+              value={settings.maxFileSize || SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB}
               onChange={(val) =>
                 setSettings((prev) => ({ ...prev, maxFileSize: val }))
               }

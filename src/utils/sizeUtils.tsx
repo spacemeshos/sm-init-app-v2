@@ -1,52 +1,45 @@
-export const calculateTotalSize = (numUnits: number = 4): string => {
-  const sizeInGiB = numUnits * 64;
+import { SizeConstants } from "../Shared/Constants";
 
-  // Define unit thresholds
-  const units = ["GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
+export const calculateTotalSize = (numUnits: number = SizeConstants.DEFAULT_NUM_UNITS): string => {
+  const sizeInGiB = numUnits * SizeConstants.UNIT_SIZE_GIB;
   let size = sizeInGiB;
   let unitIndex = 0;
 
   // Loop to find the appropriate unit
-  while (size >= 1024 && unitIndex < units.length - 1) {
+  while (size >= 1024 && unitIndex < SizeConstants.SIZE_UNITS.length - 1) {
     size /= 1024;
     unitIndex++;
   }
 
   // Return the size with the corresponding unit
-  return `${size.toFixed(1)} ${units[unitIndex]}`;
+  return `${size.toFixed(1)} ${SizeConstants.SIZE_UNITS[unitIndex]}`;
 };
 
-// Constants for max data size calculation
-const CYCLE_GAP_HOURS = 12;
-const K_SAFE_PERIOD = 0.7;
-
 export const calculateMaxDataSize = (speed: number): number => {
-  const cycleGapSeconds = CYCLE_GAP_HOURS * 3600; // Convert hours to seconds
-  const gibSize = cycleGapSeconds * K_SAFE_PERIOD * speed;
+  const cycleGapSeconds = SizeConstants.CYCLE_GAP_HOURS * 3600; // Convert hours to seconds
+  const gibSize = cycleGapSeconds * SizeConstants.K_SAFE_PERIOD * speed;
   return Math.floor(gibSize);
 };
 
 export const formatSize = (sizeInGiB: number): string => {
-  // Define unit thresholds
-  const units = ["GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
   let size = sizeInGiB;
   let unitIndex = 0;
 
   // Loop to find the appropriate unit
-  while (size >= 1024 && unitIndex < units.length - 1) {
+  while (size >= 1024 && unitIndex < SizeConstants.SIZE_UNITS.length - 1) {
     size /= 1024;
     unitIndex++;
   }
 
   // Return the size with the corresponding unit
-  return `${size.toFixed(1)} ${units[unitIndex]}`;
+  return `${size.toFixed(1)} ${SizeConstants.SIZE_UNITS[unitIndex]}`;
 };
 
 export const calculateNumFiles = (
-  numUnits: number = 4,
-  maxFileSizeMiB: number = 4096
+  numUnits: number = SizeConstants.DEFAULT_NUM_UNITS,
+  maxFileSizeMiB: number = SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB
 ): number => {
-  // Convert total size to MiB (numUnits * 64 GiB * 1024 MiB/GiB)
-  const totalSizeInMiB = numUnits * 0.00006103515625 * 1024; //TESTING PURPOSES TO BE REVERTED TO 64
+  // Convert total size to MiB (numUnits * UNIT_SIZE_GiB * 1024 MiB/GiB)
+  const totalSizeInMiB = numUnits * SizeConstants.UNIT_SIZE_GIB * 1024;
   return Math.ceil(totalSizeInMiB / maxFileSizeMiB);
 };

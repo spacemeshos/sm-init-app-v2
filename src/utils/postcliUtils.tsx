@@ -1,5 +1,5 @@
 import { Settings } from "../state/SettingsContext";
-
+import { SizeConstants } from "../Shared/Constants";
 import { isValidHex } from "./hexUtils";
 
 const MIB_TO_BYTES = 1048576; // 1 MiB = 1,048,576 bytes
@@ -25,7 +25,7 @@ export const buildPostCliArgs = (settings: Settings): string[] | null => {
 
   // Required arguments
   args.push(`-provider=${settings.provider || 0}`);
-  args.push(`-numUnits=${settings.numUnits || 4}`);
+  args.push(`-numUnits=${settings.numUnits || SizeConstants.DEFAULT_NUM_UNITS}`);
   args.push(`-commitmentAtxId=${settings.atxId}`); // ATX ID is required
 
   // Optional identity - only pass -id flag if publicKey is provided and valid
@@ -78,8 +78,8 @@ export const validateSettings = (settings: Settings): string | null => {
     return "ATX ID must be a 64-character hexadecimal string";
   }
 
-  if (!settings.numUnits || settings.numUnits < 4) {
-    return "Number of units must be at least 4";
+  if (!settings.numUnits || settings.numUnits < SizeConstants.DEFAULT_NUM_UNITS) {
+    return `Number of units must be at least ${SizeConstants.DEFAULT_NUM_UNITS}`;
   }
   if (settings.provider === undefined) {
     return "Provider must be selected";
@@ -95,9 +95,9 @@ export const validateSettings = (settings: Settings): string | null => {
   // Validate maxFileSize if provided
   if (
     settings.maxFileSize &&
-    (settings.maxFileSize < 1 || settings.maxFileSize > 8192)
+    (settings.maxFileSize < 1 || settings.maxFileSize > SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB * 2)
   ) {
-    return "Max file size must be between 1 and 8192 MiB";
+    return `Max file size must be between 1 and ${SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB * 2} MiB`;
   }
   return null;
 };

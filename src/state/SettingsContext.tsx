@@ -5,6 +5,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
+import { SizeConstants } from "../Shared/Constants";
 import { getDefaultDirectory } from "../utils/directoryUtils";
 import { fetchLatestAtxId } from "../services/postcliService";
 
@@ -38,8 +39,8 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [settings, setSettings] = useState<Settings>({
-    numUnits: 4,
-    maxFileSize: 4096,
+    numUnits: SizeConstants.DEFAULT_NUM_UNITS,
+    maxFileSize: SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB,
     numCores: 8,
     numNonces: 288,
     provider: 0,
