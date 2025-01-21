@@ -61,12 +61,23 @@ Platform-specific installation guides for dependencies:
 
 ### Hardcoded Values
 
-1. **ATX ID**:
+1. **Initialization**
+   - In the src/utils/postcliUtils.tsx file there are values that should be updated according to the latest indications from devs: 
+     - Temporary flag for quicker testing:   
+       - args.push("-labelsPerUnit=4096");
+       - args.push("-yes");
+     - To be implemented: let user choose whether or not to run genproof after init (recommended)
+       - args.push("-genproof");
+   - In the src/utils/sizeUtils.tsx:
+     - Convert total size to MiB (numUnits * 64 GiB * 1024 MiB/GiB)
+     - Currently: const totalSizeInMiB = numUnits * 0.00006103515625 * 1024; //TESTING PURPOSES TO BE REVERTED TO 64
+
+2. **ATX ID**:
    - Mock ATX ID used for testing: "65f77244a23870ee39f15cf088ee1651745c3b73195491e277bc65aa56937425"
    - API endpoint for fetching latest ATX ID not implemented yet
    - TODO: Implement actual API call to fetch ATX ID
 
-2. **Validation Rules**:
+3. **Validation Rules**:
    - Minimum number of units hardcoded to 4
    - Default max file size: 4096 MiB
    - Provider selection required
