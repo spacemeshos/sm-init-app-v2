@@ -5,6 +5,7 @@ import Home from "../pages/Home";
 import Progress from "../pages/Progress";
 import Docs from "../pages/Docs";
 import Profiler from "../pages/Profiler";
+import GPUProfiler from "../pages/GPUProfiler";
 
 const AppRoutes = () => (
   <BrowserRouter>
@@ -14,6 +15,7 @@ const AppRoutes = () => (
       <Route path="/progress" element={<Progress />} />
       <Route path="/docs" element={<Docs />} />
       <Route path="/profiler" element={<Profiler />} />
+      <Route path="/gpu-profiler" element={<GPUProfiler />} />
     </Routes>
   </BrowserRouter>
 );

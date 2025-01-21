@@ -49,7 +49,7 @@ const Home: React.FC = () => {
     },
     {
       label: "Generation speed",
-      onClick: () => console.log("Button 1 clicked"),
+      onClick: () => navigate("/gpu-profiler"),
       width: 300,
     },
   ];
