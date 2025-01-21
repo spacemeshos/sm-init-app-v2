@@ -22,7 +22,7 @@ import {
   MainContainer,
   PageTitleWrapper,
 } from '../styles/containers';
-import file from '../assets/file.png';
+import file from '../assets/filesize.png';
 import folder from '../assets/folder.png';
 import gpu from '../assets/gpu.png';
 import id from '../assets/id.png';
