@@ -104,15 +104,28 @@ const CoverTileHeading = styled.h1`
   text-transform: uppercase;
   font-weight: 100;
   font-size: 18px;
-  top: 60%;
+  bottom: 40%;
+  width: 60%;
   position: absolute;
+`;
+
+const CoverTileSubheader = styled.h3`
+  color: ${Colors.grayLight};
+  font-family: 'Univers45', sans-serif;
+  bottom: 10%;
+  position: absolute;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 1.5;
+  width: 85%;
 `;
 
 const TileCounter = styled.h3`
   font-family: 'Univers65', sans-serif;
   color: ${Colors.greenDark};
   position: absolute;
-  font-size: 150px;
+  font-size: 170px;
   top: -30px;
   left: 10px;
   opacity: 0.8;
@@ -160,13 +173,13 @@ interface ActionTileProps {
 const ActionTile: React.FC<ActionTileProps> = ({ footer, icon, onClick }) => (
   <Tile
     footer={footer}
-    height={80}
+    height={65}
     width={120}
     blurred
     backgroundColor={Colors.whiteOpaque}
     onClick={onClick}
   >
-    <Image src={icon} width={25} top={15} />
+    <Image src={icon} width={25} top={10} />
   </Tile>
 );
 
@@ -190,7 +203,7 @@ const CoverTile: React.FC<CoverTileProps> = ({
       <CoverTileHeading>{heading}</CoverTileHeading>
       <TileCounter>{counter}</TileCounter>
       {children}
-      <Footer>{footer}</Footer>
+      <CoverTileSubheader>{footer}</CoverTileSubheader>
     </CoverTileWrapper>
   );
 };
