@@ -20,6 +20,10 @@ fn main() {
             commands::profiler::run_profiler,
             commands::profiler::get_default_config,
             commands::profiler::calculate_post_probability,
+            commands::gpu_profiler::get_gpu_info,
+            commands::gpu_profiler::run_gpu_profiler,
+            commands::post_providers::get_providers,
+            commands::post_providers::benchmark_provider,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
