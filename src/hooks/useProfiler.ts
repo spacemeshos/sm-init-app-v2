@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
 import { invoke } from '@tauri-apps/api';
 import { join } from '@tauri-apps/api/path';
+import { useEffect, useState } from 'react';
+
 import { useSettings } from '../state/SettingsContext';
 import {
   Benchmark,
