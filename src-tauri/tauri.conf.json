@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "sm-init-app-v2",
-    "version": "1.0.1"
+    "version": "0.0.1"
   },
   "tauri": {
     "allowlist": {
@@ -40,9 +40,7 @@
       },
       "resources": [
         "bin/postcli/postcli",
-        "bin/postcli/postcli.exe",
-        "bin/profiler/profiler",
-        "bin/profiler/profiler.exe"
+        "bin/profiler/profiler"
       ],
       "shortDescription": "",
       "targets": "all",
