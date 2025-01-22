@@ -2,13 +2,13 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import BackgroundImage from "../assets/home.png";
 import Logo from "../assets/Full logo - White.png";
+import BackgroundImage from "../assets/home.png";
 import { HoverAccordionMenu } from "../components/accordion";
 import { Button } from "../components/button";
-import { Subheader, Title } from "../styles/texts";
 import Image from "../components/image";
 import { Background } from "../styles/containers";
+import { Subheader, Title } from "../styles/texts";
 
 const MenuContainer = styled.div`
   position: fixed;

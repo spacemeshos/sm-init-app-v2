@@ -1,9 +1,9 @@
-import { Settings } from "../state/SettingsContext";
 import { SizeConstants } from "../Shared/Constants";
+import { Settings } from "../state/SettingsContext";
+
 import { isValidHex } from "./hexUtils";
 
 const MIB_TO_BYTES = 1048576; // 1 MiB = 1,048,576 bytes
-const DEFAULT_MAX_FILE_SIZE_BYTES = 4294967296; // 4 GiB in bytes
 
 export const buildPostCliArgs = (settings: Settings): string[] | null => {
   // If ATX ID is being fetched from API, wait for it
