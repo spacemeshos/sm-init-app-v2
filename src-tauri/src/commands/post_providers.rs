@@ -22,13 +22,13 @@ impl fmt::Display for PostProviderError {
 
 #[derive(serde::Serialize)]
 pub struct Provider {
-    id: u32,
-    model: String,
-    device_type: DeviceType,
-    performance: Option<u64>,
+    pub id: u32,
+    pub model: String,
+    pub device_type: DeviceType,
+    pub performance: Option<u64>,
 }
 
-#[derive(serde::Serialize)]
+#[derive(serde::Serialize, PartialEq)]
 pub enum DeviceType {
     CPU = 0,
     GPU = 1,

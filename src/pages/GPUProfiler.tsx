@@ -51,14 +51,35 @@ const GPUProfiler: React.FC = () => {
   const [metrics, setMetrics] = useState<GPUMetrics | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const detectGPU = async () => {
+    try {
+      const gpus = await invoke<string[]>('get_gpu_info');
+      if (gpus.length === 0) {
+        setError('No compatible GPU detected');
+        setStatus(GPUProfilerStatus.Error);
+        return false;
+      }
+      return true;
+    } catch (err) {
+      setError(`Failed to detect GPU: ${err}`);
+      setStatus(GPUProfilerStatus.Error);
+      return false;
+    }
+  };
+
   const runProfiler = async () => {
     try {
       setStatus(GPUProfilerStatus.Running);
       setError(null);
 
+      // First detect GPU
+      const gpuDetected = await detectGPU();
+      if (!gpuDetected) return;
+
       const config = {
         target_data_size: 100, // 100 GiB
         duration: 30, // 30 seconds
+        output_path: null
       };
 
       const result = await invoke<GPUMetrics>('run_gpu_profiler', { config });
@@ -116,37 +137,37 @@ const GPUProfiler: React.FC = () => {
               blurred
               backgroundColor={Colors.whiteOpaque}
             >
-              <Header top={60} text={metrics.gpuModel || 'Unknown GPU'} />
+              <Header top={60} text={metrics.gpu_model || 'Unknown GPU'} />
             </Tile>
 
             <MetricTile
               title="Hash Rate"
-              value={(metrics.hashRate / 1_000_000).toFixed(2)}
+              value={(metrics.hash_rate / 1_000_000).toFixed(2)}
               unit="MH/s"
             />
 
             <MetricTile
               title="Memory Throughput"
-              value={metrics.memoryThroughput.toFixed(2)}
+              value={metrics.memory_throughput.toFixed(2)}
               unit="GB/s"
             />
 
             <MetricTile
               title="GPU Utilization"
-              value={metrics.gpuUtilization.toFixed(1)}
+              value={metrics.gpu_utilization.toFixed(1)}
               unit="%"
             />
 
             <MetricTile
               title="Data Generation Speed"
-              value={metrics.dataSpeed.toFixed(2)}
+              value={metrics.data_speed.toFixed(2)}
               unit="GiB/s"
             />
 
-            {metrics.estimatedTimeRemaining && (
+            {metrics.estimated_time && (
               <MetricTile
                 title="Estimated Time"
-                value={(metrics.estimatedTimeRemaining / 3600).toFixed(1)}
+                value={(metrics.estimated_time / 3600).toFixed(1)}
                 unit="hours"
               />
             )}

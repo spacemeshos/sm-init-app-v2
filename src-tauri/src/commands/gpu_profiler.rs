@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::time::Instant;
 use tauri::command;
+use super::post_providers::{get_providers, benchmark_provider, DeviceType};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GPUMetrics {
@@ -21,72 +22,42 @@ pub struct GPUProfilerConfig {
 
 #[command]
 pub async fn get_gpu_info() -> Result<Vec<String>, String> {
-    // TODO: Implement GPU detection using platform-specific APIs
-    // For now return mock data
-    Ok(vec!["NVIDIA GeForce RTX 3080".to_string()])
+    let providers = get_providers()?;
+    let gpu_models = providers
+        .into_iter()
+        .filter(|p| matches!(p.device_type, DeviceType::GPU))
+        .map(|p| p.model)
+        .collect();
+    Ok(gpu_models)
 }
 
 #[command]
 pub async fn run_gpu_profiler(
-    app: tauri::AppHandle,
+    _app: tauri::AppHandle,
     config: GPUProfilerConfig,
 ) -> Result<GPUMetrics, String> {
-    // Get the path to postcli binary
-    let resource_path = app
-        .path_resolver()
-        .resource_dir()
-        .ok_or_else(|| "Failed to get resource directory".to_string())?;
-    
-    let postcli_path = resource_path
-        .join("bin")
-        .join("postcli")
-        .join(if cfg!(target_os = "windows") {
-            "postcli.exe"
-        } else {
-            "postcli"
-        });
+    // Get available GPUs
+    let providers = get_providers()?;
+    let gpu = providers
+        .into_iter()
+        .find(|p| matches!(p.device_type, DeviceType::GPU))
+        .ok_or_else(|| "No GPU found".to_string())?;
 
-    if !postcli_path.exists() {
-        return Err(format!("postcli binary not found at {:?}", postcli_path));
-    }
-
-    // Create a temporary directory for the test data
-    let temp_dir = std::env::temp_dir().join("sm-init-gpu-test");
-    if !temp_dir.exists() {
-        std::fs::create_dir_all(&temp_dir)
-            .map_err(|e| format!("Failed to create temp directory: {}", e))?;
-    }
-
-    // Run postcli to generate a small amount of data (1 GiB) and measure the speed
+    // Run GPU benchmark
     let start = Instant::now();
+    let raw_performance = benchmark_provider(gpu.id)?;
     
-    let output = std::process::Command::new(&postcli_path)
-        .arg("init")
-        .arg("--size")
-        .arg("1") // 1 GiB test
-        .arg("--out-dir")
-        .arg(&temp_dir)
-        .output()
-        .map_err(|e| format!("Failed to run postcli: {}", e))?;
-
-    if !output.status.success() {
-        return Err(String::from_utf8_lossy(&output.stderr).into_owned());
-    }
-
-    let duration = start.elapsed();
-    let speed_gib_s = 1.0 / duration.as_secs_f64(); // GiB/s
-
-    // Clean up test data
-    std::fs::remove_dir_all(&temp_dir)
-        .map_err(|e| format!("Failed to clean up temp directory: {}", e))?;
-
-    // Calculate metrics
+    // Calculate actual metrics based on benchmark results
+    let hash_rate = raw_performance as f64;
+    let memory_bandwidth = hash_rate * 32.0 / (1024.0 * 1024.0 * 1024.0); // Convert hash/s to GB/s
+    let data_speed = memory_bandwidth / 1024.0; // Convert GB/s to GiB/s
+    
     Ok(GPUMetrics {
-        hash_rate: speed_gib_s * 1024.0 * 1024.0 * 1024.0 / 32.0, // Convert GiB/s to hashes/s (32 bytes per hash)
-        memory_throughput: speed_gib_s * 1024.0, // Convert GiB/s to GB/s
-        gpu_utilization: 100.0, // Assuming full utilization during test
-        data_speed: speed_gib_s,
-        estimated_time: Some((config.target_data_size as f64 / speed_gib_s) as f64),
-        gpu_model: Some("GPU".to_string()), // TODO: Implement actual GPU detection
+        hash_rate,
+        memory_throughput: memory_bandwidth,
+        gpu_utilization: 95.0, // We assume high but not 100% utilization for realistic measure
+        data_speed,
+        estimated_time: Some((config.target_data_size as f64 / data_speed) as f64),
+        gpu_model: Some(gpu.model),
     })
 }

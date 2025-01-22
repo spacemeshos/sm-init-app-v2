@@ -1,10 +1,10 @@
 export interface GPUMetrics {
-  hashRate: number; // hashes/second
-  memoryThroughput: number; // GB/s
-  gpuUtilization: number; // percentage
-  dataSpeed: number; // GiB/s
-  estimatedTimeRemaining?: number; // seconds
-  gpuModel?: string; // GPU model name
+  hash_rate: number; // hashes/second
+  memory_throughput: number; // GB/s
+  gpu_utilization: number; // percentage
+  data_speed: number; // GiB/s
+  estimated_time?: number; // seconds
+  gpu_model?: string; // GPU model name
   error?: string; // Error message if profiling fails
 }
 
@@ -16,9 +16,9 @@ export enum GPUProfilerStatus {
 }
 
 export interface GPUProfilerConfig {
-  targetDataSize: number; // GiB
+  target_data_size: number; // GiB
   duration: number; // seconds
-  outputPath?: string; // Path to save generated data
+  output_path?: string; // Path to save generated data
 }
 
 export interface GPUProfilerState {
