@@ -47,11 +47,6 @@ const Home: React.FC = () => {
       onClick: () => navigateToProfiler(),
       width: 300,
     },
-    {
-      label: "Generation speed",
-      onClick: () => console.log("Button 1 clicked"),
-      width: 300,
-    },
   ];
 
   return (
