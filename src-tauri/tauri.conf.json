@@ -40,7 +40,9 @@
       },
       "resources": [
         "bin/postcli/postcli",
-        "bin/profiler/profiler"
+        "bin/postcli/postcli.exe",
+        "bin/profiler/profiler",
+        "bin/profiler/profiler.exe"
       ],
       "shortDescription": "",
       "targets": "all",
