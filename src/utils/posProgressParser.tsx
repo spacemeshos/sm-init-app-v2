@@ -1,4 +1,5 @@
 import { Stage, ParsedPOSProgress, POSSettings } from "../types/posProgress";
+
 import { calculateNumFiles } from "./sizeUtils";
 
 export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSProgress => {

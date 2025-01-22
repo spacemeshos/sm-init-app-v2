@@ -5,9 +5,10 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
+
+import { fetchLatestAtxId } from "../services/postcliService";
 import { SizeConstants } from "../Shared/Constants";
 import { getDefaultDirectory } from "../utils/directoryUtils";
-import { fetchLatestAtxId } from "../services/postcliService";
 
 export interface Settings {
   pubKey?: string;

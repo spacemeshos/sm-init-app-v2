@@ -1,8 +1,10 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
-import { Stage, FileProgress, POSSettings } from "../types/posProgress";
-import { parsePOSProgress } from "../utils/posProgressParser";
+
 import { stopPostCliProcess } from "../services/postcliService";
 import { SizeConstants } from "../Shared/Constants";
+import { Stage, FileProgress, POSSettings } from "../types/posProgress";
+import { parsePOSProgress } from "../utils/posProgressParser";
+
 import { useConsole } from "./ConsoleContext";
 import { useSettings } from "./SettingsContext";
 
