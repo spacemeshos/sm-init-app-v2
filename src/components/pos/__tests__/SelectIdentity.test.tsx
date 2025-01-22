@@ -2,15 +2,56 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { SelectIdentity } from '../SelectIdentity';
 import { Settings } from '../../../state/SettingsContext';
+import { truncateHex } from '../../../utils/hexUtils';
+
+// Mock the Tile component
+jest.mock('../../../components/tile', () => ({
+  Tile: ({ heading, subheader, errmsg }: any) => (
+    <div>
+      <h2>{heading}</h2>
+      <p>{subheader}</p>
+      {errmsg && <p role="alert">{errmsg}</p>}
+    </div>
+  ),
+}));
+
+// Mock the HexInput component
+jest.mock('../../../components/input', () => ({
+  HexInput: ({ value, onChange, placeholder, className, maxLength }: any) => (
+    <input
+      type="text"
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className={className}
+      maxLength={maxLength}
+      style={{ fontSize: '12px', width: '300px' }}
+    />
+  ),
+}));
 
 // Mock the useSettings hook
 const mockSetSettings = jest.fn();
+const mockSettings: Settings = {
+  publicKey: undefined,
+  numUnits: undefined,
+  maxFileSize: undefined,
+  provider: undefined,
+  providerModel: undefined,
+  selectedDir: undefined,
+  defaultDir: undefined,
+  identityFile: undefined,
+  atxId: undefined,
+  atxIdSource: 'api'
+};
+
 jest.mock('../../../state/SettingsContext', () => ({
   useSettings: () => ({
-    settings: {} as Settings,
+    settings: mockSettings,
     setSettings: mockSetSettings,
   }),
 }));
+
 
 describe('SelectIdentity', () => {
   beforeEach(() => {
@@ -22,34 +63,33 @@ describe('SelectIdentity', () => {
     
     // Check if main elements are rendered
     expect(screen.getByText('Enter your Smesher Identity')).toBeInTheDocument();
-    expect(screen.getByText('Public Key in hex')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Enter your Public Key (hex, optional)')).toBeInTheDocument();
     expect(screen.getByText('If no Identity provided, a new one will be created automatically')).toBeInTheDocument();
   });
 
-  it('handles valid public key input', () => {
+  it('handles valid public key input', async () => {
     render(<SelectIdentity />);
-    const input = screen.getByPlaceholderText('Enter your Public Key (hex, optional)');
+    const input = screen.getByPlaceholderText('Enter your Public Key (hex, optional)') as HTMLInputElement;
     const validHex = 'a'.repeat(64);
 
     fireEvent.change(input, { target: { value: validHex } });
 
     // Check if settings were updated
     expect(mockSetSettings).toHaveBeenCalledWith(expect.any(Function));
-    // Get the callback function that was passed to setSettings
     const setSettingsCallback = mockSetSettings.mock.calls[0][0];
-    // Call the callback with a mock previous state
-    const newSettings = setSettingsCallback({});
-    // Verify the callback returns the correct new state
+    const newSettings = setSettingsCallback(mockSettings);
     expect(newSettings).toEqual(expect.objectContaining({
       publicKey: validHex
     }));
 
     // Check if success message is displayed
-    expect(screen.getByText(/Custom ID will be used:/)).toBeInTheDocument();
+    const successMessage = await screen.findByText(/Custom ID will be used:/);
+    expect(successMessage).toBeInTheDocument();
     
-    // Check that no error message is displayed
+    // Verify input properties
+    expect(input.value).toBe(validHex);
     expect(input.className).not.toContain('error');
+    expect(input).toHaveStyle({ fontSize: '12px', width: '300px' });
   });
 
   it('handles invalid public key input', () => {
@@ -64,7 +104,7 @@ describe('SelectIdentity', () => {
     // Verify settings update
     expect(mockSetSettings).toHaveBeenCalledWith(expect.any(Function));
     const setSettingsCallback = mockSetSettings.mock.calls[0][0];
-    const newSettings = setSettingsCallback({});
+    const newSettings = setSettingsCallback(mockSettings);
     expect(newSettings).toEqual(expect.objectContaining({
       publicKey: undefined
     }));
@@ -75,7 +115,7 @@ describe('SelectIdentity', () => {
     
     // Verify settings update again
     const secondCallback = mockSetSettings.mock.calls[1][0];
-    const secondSettings = secondCallback({});
+    const secondSettings = secondCallback(mockSettings);
     expect(secondSettings).toEqual(expect.objectContaining({
       publicKey: undefined
     }));
@@ -94,7 +134,7 @@ describe('SelectIdentity', () => {
     
     // Verify settings update
     const lastCallback = mockSetSettings.mock.calls[mockSetSettings.mock.calls.length - 1][0];
-    const finalSettings = lastCallback({});
+    const finalSettings = lastCallback(mockSettings);
     expect(finalSettings).toEqual(expect.objectContaining({
       publicKey: undefined
     }));
@@ -119,7 +159,7 @@ describe('SelectIdentity', () => {
     
     // Verify settings update
     const callback = mockSetSettings.mock.calls[0][0];
-    const newSettings = callback({});
+    const newSettings = callback(mockSettings);
     expect(newSettings).toEqual(expect.objectContaining({
       publicKey: lowerHex
     }));

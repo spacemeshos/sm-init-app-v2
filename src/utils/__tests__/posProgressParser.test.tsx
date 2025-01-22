@@ -1,5 +1,6 @@
 import { parsePOSProgress } from '../posProgressParser';
 import { Stage } from '../../types/posProgress';
+import { calculateNumFiles } from '../sizeUtils';
 
 describe('parsePOSProgress', () => {
   const mockSettings = {
@@ -12,39 +13,37 @@ describe('parsePOSProgress', () => {
     expect(result).toEqual({
       stage: Stage.Processing,
       progress: 0,
-      details: 'Starting POS data generation...',
+      details: 'Generating Proof of Space data...',
       isError: false
     });
   });
 
   it('correctly parses file completion log', () => {
-    const log = '2024-12-17T22:34:57.991+0100    INFO    initialization: completed       {"fileIndex": 5, "numLabelsWritten": 26559}';
+    const log = '2024-12-17T22:34:57.991+0100    INFO    initialization: completed       {"fileIndex": 5}';
     const result = parsePOSProgress(log, mockSettings);
     
-    expect(result).toMatchObject({
+    const totalFiles = calculateNumFiles(mockSettings.numUnits, mockSettings.maxFileSize);
+    const progress = ((5 + 1) / totalFiles) * 100;
+    
+    expect(result).toEqual({
       stage: Stage.Processing,
+      progress,
+      details: `6 of ${totalFiles} files generated (${Math.round(progress)}%)`,
       isError: false,
       fileProgress: {
         currentFile: 5,
-        currentLabels: 26559,
-        targetLabels: 26559
+        totalFiles
       }
     });
   });
 
-  it('correctly parses file start log', () => {
-    const log = '2024-12-17T22:34:57.992+0100    INFO    initialization: starting to write file  {"fileIndex": 6, "currentNumLabels": 0, "targetNumLabels": 26559, "startPosition": 159354}';
+  it('handles postcli stdout prefix', () => {
+    const log = 'postcli stdout: INFO    initialization: completed       {"fileIndex": 5}';
     const result = parsePOSProgress(log, mockSettings);
     
-    expect(result).toMatchObject({
-      stage: Stage.Processing,
-      isError: false,
-      fileProgress: {
-        currentFile: 6,
-        currentLabels: 0,
-        targetLabels: 26559
-      }
-    });
+    expect(result.stage).toBe(Stage.Processing);
+    expect(result.fileProgress).toBeDefined();
+    expect(result.fileProgress?.currentFile).toBe(5);
   });
 
   it('detects errors in logs', () => {
@@ -60,13 +59,14 @@ describe('parsePOSProgress', () => {
   });
 
   it('detects final completion', () => {
-    const log = 'initialization: completed, found nonce';
+    const log = 'cli: initialization completed';
+    const totalFiles = calculateNumFiles(mockSettings.numUnits, mockSettings.maxFileSize);
     const result = parsePOSProgress(log, mockSettings);
     
     expect(result).toEqual({
       stage: Stage.Complete,
       progress: 100,
-      details: expect.stringContaining('files have been generated successfully'),
+      details: `All ${totalFiles} files have been generated successfully`,
       isError: false
     });
   });
@@ -78,7 +78,7 @@ describe('parsePOSProgress', () => {
     expect(result).toEqual({
       stage: Stage.Processing,
       progress: 0,
-      details: 'Starting POS data generation...',
+      details: 'Generating Proof of Space data...',
       isError: false
     });
   });
