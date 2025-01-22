@@ -1,8 +1,16 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { FindProviders } from '../utils/parseResponse';
 import styled from 'styled-components';
 
+import box from '../assets/box.png';
+import copy from '../assets/copy.png';
+import file from '../assets/filesize.png';
+import folder from '../assets/folder.png';
+import hex from '../assets/formats.png';
+import gpu from '../assets/gpu.png';
+import id from '../assets/id.png';
+import summary from '../assets/justify.png';
+import gear from '../assets/setting.png';
 import BackgroundImage from '../assets/wave2.png';
 import { BackButton, DotButton } from '../components/button';
 import {
@@ -16,21 +24,13 @@ import {
 import { useConsole } from '../state/ConsoleContext';
 import { useSettings } from '../state/SettingsContext';
 import Colors from '../styles/colors';
-import { Header } from '../styles/texts';
 import {
   Background,
   MainContainer,
   PageTitleWrapper,
 } from '../styles/containers';
-import file from '../assets/filesize.png';
-import folder from '../assets/folder.png';
-import gpu from '../assets/gpu.png';
-import id from '../assets/id.png';
-import summary from '../assets/justify.png';
-import hex from '../assets/formats.png';
-import gear from '../assets/setting.png';
-import copy from '../assets/copy.png';
-import box from '../assets/box.png';
+import { Header } from '../styles/texts';
+import { FindProviders } from '../utils/parseResponse';
 
 const Wrapper = styled.div`
   width: 880px;
