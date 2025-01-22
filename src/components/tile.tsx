@@ -1,7 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import Image from './image';
+
 import Colors from '../styles/colors';
+
+import Image from './image';
 
 export interface TileProps {
   heading?: string;

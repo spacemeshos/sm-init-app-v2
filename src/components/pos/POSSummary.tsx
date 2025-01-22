@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { executePostCliDetached } from '../../services/postcliService';
-import { useSettings } from '../../state/SettingsContext';
 import { fetchLatestAtxId } from '../../services/postcliService';
 import { usePOSProcess } from '../../state/POSProcessContext';
+import { useSettings } from '../../state/SettingsContext';
 import Colors from '../../styles/colors';
 import { List, Subheader } from '../../styles/texts';
 import { getDirectoryDisplay } from '../../utils/directoryUtils';
