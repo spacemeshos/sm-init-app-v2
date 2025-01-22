@@ -34,11 +34,16 @@ jobs:
 
     - name: Download post-rs binaries
       run: |
-        curl -L https://github.com/spacemeshos/post-rs/releases/latest/download/post-rs-linux.tar.gz | tar xz -C src-tauri/bin/post-rs
+        LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post-rs/releases/latest | grep -Po '"tag_name": "\K.*?(?=")')
+        curl -L -o profiler.zip "https://github.com/spacemeshos/post-rs/releases/download/${LATEST_VERSION}/profiler-linux-${LATEST_VERSION}.zip"
+        unzip profiler.zip -d src-tauri/bin/post-rs
+        rm profiler.zip
 
     - name: Download postcli binaries
       run: |
-        curl -L https://github.com/spacemeshos/post/releases/latest/download/postcli-linux.tar.gz | tar xz -C src-tauri/bin/postcli
+        curl -L -o postcli.zip "https://github.com/spacemeshos/post/releases/latest/download/postcli-Linux.zip"
+        unzip postcli.zip -d src-tauri/bin/postcli
+        rm postcli.zip
 
     - name: Run tests
       run: yarn test
