@@ -2,6 +2,7 @@ import { open } from '@tauri-apps/api/dialog';
 import React, { useState } from 'react';
 
 import { useSettings } from '../../state/SettingsContext';
+import { SetupTileWrapper } from '../../styles/containers';
 import {
   validateDirectory,
   handleDirectoryError,
@@ -9,7 +10,6 @@ import {
 } from '../../utils/directoryUtils';
 import { Button } from '../button';
 import {Tile} from '../tile';
-import { SetupTileWrapper } from '../../styles/containers';
 
 export const SelectDirectory: React.FC = () => {
   const { settings, setSettings } = useSettings();

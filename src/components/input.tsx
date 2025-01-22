@@ -1,8 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import Colors from '../styles/colors';
-import plusIcon from '../assets/plus.png';
+
 import minusIcon from '../assets/minus.png';
+import plusIcon from '../assets/plus.png';
+import Colors from '../styles/colors';
 
 interface CustomNumberInputProps {
   min?: number;
