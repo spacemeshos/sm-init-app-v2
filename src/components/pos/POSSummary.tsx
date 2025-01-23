@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Component for displaying and managing POS configuration summary
+ * Provides overview of all POS settings, validation, and generation initiation.
+ * Handles both basic and advanced configuration options.
+ */
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -54,6 +60,33 @@ interface POSSummaryProps {
   showOnlyAdvanced?: boolean;
 }
 
+/**
+ * POS Summary Component
+ * 
+ * Features:
+ * - Configuration overview
+ * - Settings validation
+ * - Generation initiation
+ * - Progress tracking
+ * - Navigation handling
+ * 
+ * The component manages:
+ * 1. Settings Display:
+ *    - Directory configuration
+ *    - Provider selection
+ *    - Space allocation
+ *    - Advanced settings
+ * 
+ * 2. Validation:
+ *    - Required parameters
+ *    - Format validation
+ *    - ATX ID verification
+ * 
+ * 3. Generation:
+ *    - Process initiation
+ *    - Progress tracking
+ *    - Error handling
+ */
 export const POSSummary: React.FC<POSSummaryProps> = ({
   onProceed,
   isGenerating: parentIsGenerating,
@@ -72,6 +105,15 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
 
   const isGenerating = parentIsGenerating || processState.isRunning || false;
 
+  /**
+   * Validates all required settings before generation
+   * Checks:
+   * - Provider selection
+   * - Unit allocation
+   * - Identity format
+   * 
+   * @returns {string[]} Array of validation error messages
+   */
   const validateSettings = (): string[] => {
     const errors: string[] = [];
 
@@ -93,6 +135,14 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
     return errors;
   };
 
+  /**
+   * Handles POS generation initiation
+   * Process:
+   * 1. Validates settings
+   * 2. Fetches ATX ID if needed
+   * 3. Starts generation process
+   * 4. Handles success/failure
+   */
   const handleGenerateClick = async () => {
     // First check non-ATX validation
     const errors = validateSettings();
@@ -162,11 +212,15 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
         setShowSuccessModal(true);
         onProceed(); // This will set isGenerating in parent
 
-        // Navigate to progress page after showing success modal
-        // Use a short delay to ensure the modal is visible
+        /**
+         * Navigate to progress page after showing success modal
+         * Use a short delay to ensure the modal is visible
+         * This should be replaced with swithich to progress page underneath while modal is open, 
+         * close modal only with user action
+         */
         setTimeout(() => {
           navigate('/progress');
-        }, 1500); // Increased delay to ensure modal is visible
+        }, 1500);
       } else {
         throw new Error('Failed to start POS generation process');
       }
@@ -185,6 +239,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
 
   return (
     <>
+      {/* Validation Error Modal */}
       <Modal
         isOpen={showValidationModal}
         onClose={() => setShowValidationModal(false)}
@@ -205,6 +260,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
         }
       />
 
+      {/* Success Modal with Instructions */}
       <Modal
         isOpen={showSuccessModal}
         onClose={() => {
@@ -245,6 +301,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
               text="Click on each row to adjust the settings"
             />
           </Frame>
+          {/* Basic Settings Section */}
           {!showOnlyAdvanced && (
             <>
               <Frame
@@ -269,6 +326,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
               />
             </>
           )}
+          {/* Advanced Settings Section */}
           <AdvancedSection isVisible={isAdvancedVisible || showOnlyAdvanced}>
             <Frame
               heading="Identity Configuration"
@@ -302,6 +360,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
               onClick={() => onStepChange?.(7)}
             />
           </AdvancedSection>
+          {/* Generation Button */}
           {!showOnlyAdvanced && (
             <Button
               label={isGenerating ? 'Starting...' : 'Generate POS Data'}

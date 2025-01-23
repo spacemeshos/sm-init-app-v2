@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Component for configuring POS data size parameters
+ * Handles space unit allocation and file size settings with real-time
+ * calculations and validation. Provides visual feedback for size implications.
+ */
+
 import React from "react";
 
 import { SizeConstants } from "../../Shared/Constants";
@@ -10,12 +16,33 @@ import { calculateTotalSize, calculateNumFiles } from "../../utils/sizeUtils";
 import CustomNumberInput from "../input";
 import {Tile} from "../tile";
 
-
+/**
+ * Size Configuration Component
+ * 
+ * Features:
+ * - Space unit allocation configuration
+ * - Maximum file size settings
+ * - Real-time size calculations
+ * - Input validation and constraints
+ * - Visual feedback
+ * 
+ * The component manages two key aspects:
+ * 1. Space Units:
+ *    - Number of units to allocate
+ *    - Minimum unit requirement
+ *    - Total size calculation
+ * 
+ * 2. File Size:
+ *    - Maximum size per file
+ *    - Number of files calculation
+ *    - Size constraints and validation
+ */
 export const SetupSize: React.FC = () => {
   const { settings, setSettings } = useSettings();
 
   return (
     <SetupContainer>
+      {/* Space Units Configuration */}
       <SetupTileWrapper>
         <Tile
           heading="Select Space Units"
@@ -27,6 +54,11 @@ export const SetupSize: React.FC = () => {
           height={400}
         />
           <>
+            {/* Space Units Input
+                - Minimum: DEFAULT_NUM_UNITS (cannot allocate less)
+                - Step: 1 unit at a time
+                - Updates total size calculation on change
+            */}
             <CustomNumberInput
               min={SizeConstants.DEFAULT_NUM_UNITS}
               step={1}
@@ -38,6 +70,7 @@ export const SetupSize: React.FC = () => {
           </>
       </SetupTileWrapper>
 
+      {/* File Size Configuration */}
       <SetupTileWrapper>
         <Tile
           heading="Max File Size in Mebibytes"
@@ -50,6 +83,12 @@ export const SetupSize: React.FC = () => {
           height={400}
         />
           <>
+            {/* File Size Input
+                - Minimum: 1 MiB (cannot have empty files)
+                - Maximum: 8192 MiB (8 GiB) for practical file handling, but fs limitations to be considered for better boundries
+                - Step: 1 MiB at a time
+                - Updates file count calculation on change
+            */}
             <CustomNumberInput
               min={1}
               max={8192}
