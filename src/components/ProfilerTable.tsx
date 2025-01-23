@@ -1,3 +1,9 @@
+/**
+ * @fileoverview ProfilerTable component for displaying benchmark results in a tabular format.
+ * This component provides a detailed view of profiling results with expandable details,
+ * status indicators, and interactive selection capabilities.
+ */
+
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
@@ -6,6 +12,12 @@ import { BenchmarkStatus } from '../types/profiler';
 import { getDirectoryDisplay } from '../utils/directoryUtils';
 import { calculateMaxDataSize, formatSize } from '../utils/sizeUtils';
 
+// Styled Components for table layout and visualization
+
+/**
+ * Root container for the profiler table
+ * Centers the table and handles overflow
+ */
 const Table = styled.div`
   display: flex;
   width: 100%;
@@ -17,6 +29,10 @@ const Table = styled.div`
   overflow: hidden;
 `;
 
+/**
+ * Header row containing column titles
+ * Uses consistent styling with white border for separation
+ */
 const TableHeader = styled.div`
   display: flex;
   text-align: center;
@@ -32,6 +48,10 @@ const TableHeader = styled.div`
   color: ${Colors.white};
 `;
 
+/**
+ * Scrollable container for benchmark results
+ * Limited to 200px height with overflow scrolling
+ */
 const TableBody = styled.div`
   display: flex;
   text-align: center;
@@ -49,6 +69,10 @@ const TableBody = styled.div`
   overflow-y: auto;
 `;
 
+/**
+ * Individual row in the table
+ * Becomes interactive when the benchmark is complete
+ */
 const TableRow = styled.div<{ isClickable?: boolean }>`
   display: flex;
   justify-content: center;
@@ -65,10 +89,19 @@ const TableRow = styled.div<{ isClickable?: boolean }>`
   }
 `;
 
+/**
+ * Table column with dynamic width based on detail view state
+ * Expands or contracts based on whether detailed view is active
+ */
 const Column = styled.div<{ expanded?: boolean }>`
   width: ${({ expanded }) => (expanded ? '11%' : '17%')};
 `;
 
+/**
+ * Button to toggle between basic and detailed views
+ * Positioned absolutely in the top-right corner
+ * to be placed better in the future, it's a quick and ugly implementation
+ */ 
 const ToggleButton = styled.button`
   position: absolute;
   right: 0px;
@@ -87,6 +120,11 @@ const ToggleButton = styled.button`
   }
 `;
 
+/**
+ * Circular indicator showing benchmark status
+ * Color-coded based on the current state of the benchmark
+ * placing in the table to fix, it's a bit off now
+ */
 const StatusIndicator = styled.div<{ color: string }>`
   width: 10px;
   height: 10px;
@@ -95,6 +133,10 @@ const StatusIndicator = styled.div<{ color: string }>`
   margin-right: 20px;
 `;
 
+/**
+ * Extended interface for profiler results
+ * Includes all measurable metrics from a benchmark run
+ */
 export interface ProfilerResult {
   nonces: number;
   threads: number;
@@ -105,6 +147,10 @@ export interface ProfilerResult {
   data_file: string; // Made required instead of optional
 }
 
+/**
+ * Interface for benchmark entries in the table
+ * Extends ProfilerResult but makes some fields optional for in-progress benchmarks
+ */
 export interface Benchmark extends Partial<ProfilerResult> {
   nonces: number;
   threads: number;
@@ -113,7 +159,11 @@ export interface Benchmark extends Partial<ProfilerResult> {
   data_file?: string; // Added explicitly to ensure it's tracked in benchmarks
 }
 
-// Helper Functions
+/**
+ * Maps benchmark status to corresponding color codes
+ * @param {BenchmarkStatus} status - Current status of the benchmark
+ * @returns {string} Color code from the Colors constant
+ */
 const getStatusColor = (status: BenchmarkStatus) => {
   switch (status) {
     case BenchmarkStatus.Complete:
@@ -127,18 +177,36 @@ const getStatusColor = (status: BenchmarkStatus) => {
   }
 };
 
+/**
+ * Props interface for the ProfilerTable component
+ * @interface ProfilerTableProps
+ */
 interface ProfilerTableProps {
+  /** List of benchmarks to display */
   benchmarks: Benchmark[];
+  /** Callback function when a completed benchmark is selected */
   onBenchmarkSelect: (benchmark: Benchmark) => void;
+  /** Optional ref for scrolling behavior */
   scrollRef?: React.RefObject<HTMLDivElement>;
+  /** Current profiler configuration */
   config: {
     data_size: number;
     duration: number;
   };
+  /** Current custom nonces setting */
   customNonces: number;
+  /** Current custom threads setting */
   customThreads: number;
 }
 
+/**
+ * Component for displaying benchmark results in a tabular format
+ * Features:
+ * - Expandable view with additional details
+ * - Color-coded status indicators
+ * - Interactive rows for completed benchmarks - to be select to fill the pos setup params (not yet implemented)
+ * - Automatic formatting of sizes and speeds
+ */
 const ProfilerTable: React.FC<ProfilerTableProps> = ({
   benchmarks,
   onBenchmarkSelect,
