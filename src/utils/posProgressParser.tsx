@@ -1,10 +1,38 @@
+/**
+ * @fileoverview Parser for Proof of Space (POS) initialization progress logs
+ * Processes raw log output from the postcli tool and converts it into structured progress data
+ * 
+ * As per what Bartek and NJ suggested, we need to modify the code to check the directory periodically: 
+ * Parsing logs has a downside that it will break when the log is changed / removed
+ * How about examining the created files instead? 
+ * I.e. every N seconds walk the directory and calculate how many bytes are already initialized (total sum of all postdata_n.bin files
+ * if implemented in some smart way (ie checking always last file in the directory) and detecting the expected size then it can be prety minimalistic
+ */
+
 import { Stage, ParsedPOSProgress, POSSettings } from "../types/posProgress";
 
 import { calculateNumFiles } from "./sizeUtils";
 
+/**
+ * Parses postcli log output to track POS initialization progress
+ * 
+ * The parser handles several types of log entries:
+ * - File completion notifications
+ * - Error messages
+ * - Final completion status
+ * 
+ * @param {string} log - Raw log output from postcli
+ * @param {POSSettings} settings - Current POS configuration settings
+ * @returns {ParsedPOSProgress} Structured progress information including:
+ *   - Current stage (Processing/Complete/Error)
+ *   - Progress percentage
+ *   - Human-readable status message
+ *   - Error state
+ *   - File progress details (if available)
+ */
 export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSProgress => {
   console.log('Parsing log:', log);
-  // Default response
+  // Initialize with default "processing" state
   const defaultResponse: ParsedPOSProgress = {
     stage: Stage.Processing,
     progress: 0,
@@ -12,15 +40,16 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
     isError: false
   };
 
+  // Return default state if no log provided
   if (!log) return defaultResponse;
 
-  // Remove the "postcli stdout: " prefix if present
+  // Clean up log by removing tool prefix
   const cleanLog = log.replace(/^postcli stdout:\s*/, '');
 
-  // Calculate total files based on settings
+  // Calculate expected total number of files based on current settings
   const totalFiles = calculateNumFiles(settings.numUnits, settings.maxFileSize);
 
-  // Check for errors first
+  // First priority: Check for error messages
   if (cleanLog.toLowerCase().includes("error")) {
     return {
       stage: Stage.Error,
@@ -30,7 +59,8 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
     };
   }
 
-  // Parse file completion
+  // Second priority: Parse file completion progress
+  // Format: "INFO initialization: completed {"fileIndex": X}"
   const fileCompleteMatch = cleanLog.match(/INFO\s+initialization:\s+completed\s+{"fileIndex":\s*(\d+)/);
   if (fileCompleteMatch) {
     const currentFile = parseInt(fileCompleteMatch[1]);
@@ -50,7 +80,7 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
     };
   }
 
-  // Check for final completion
+  // Third priority: Check for final completion message
   if (cleanLog.includes("cli: initialization completed")) {
     return {
       stage: Stage.Complete,
@@ -60,6 +90,6 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
     };
   }
 
-  // Return default response for other log lines
+  // Fallback: Return default "processing" state for unrecognized log lines
   return defaultResponse;
 };

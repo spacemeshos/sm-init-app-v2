@@ -1,18 +1,47 @@
+/**
+ * @fileoverview Utility functions for directory operations and validation
+ * Handles directory path manipulation, validation, and error handling for the POS.
+ * Integrates with Tauri backend for filesystem operations.
+ */
+
 import { homeDir, join } from '@tauri-apps/api/path';
 import { invoke } from "@tauri-apps/api/tauri";
 
+/**
+ * Result of directory validation checks
+ * @interface DirectoryValidationResult
+ */
 export interface DirectoryValidationResult {
   isValid: boolean;
   error?: string;
 }
 
+/**
+ * Backend validation response structure
+ * Contains detailed validation results from Tauri backend
+ * @interface BackendValidation
+ */
 interface BackendValidation {
+  /** Whether the directory exists */
   exists: boolean;
+  /** Whether we have write permissions */
   has_write_permission: boolean;
+  /** Whether there's enough space (minimum 1GB for now, 
+   * in a separate branch check-diskspace I tried to properly check the available space) */
   has_space: boolean;
+  /** Error message if validation failed */
   error: string | null;
 }
 
+/**
+ * Validates a directory for use in the POS system
+ * Performs comprehensive checks including:
+ * - Directory existence
+ * - Write permissions
+ * - Available space
+ * @param {string | null} path - Directory path to validate
+ * @returns {Promise<DirectoryValidationResult>} Validation result with any error messages
+ */
 export const validateDirectory = async (
   path: string | null
 ): Promise<DirectoryValidationResult> => {
@@ -69,6 +98,12 @@ export const validateDirectory = async (
   }
 };
 
+/**
+ * Gets the default directory path for POS data
+ * Creates path under user's home directory: ~/post/data
+ * @returns {Promise<string>} Default directory path
+ * @throws {Error} If unable to determine home directory
+ */
 export const getDefaultDirectory = async (): Promise<string> => {
   try {
     const home = await homeDir();
@@ -79,6 +114,12 @@ export const getDefaultDirectory = async (): Promise<string> => {
   }
 };
 
+/**
+ * Handles directory-related errors and provides user-friendly messages
+ * Maps various error conditions to appropriate error messages
+ * @param {unknown} error - Error object to handle
+ * @returns {string} User-friendly error message
+ */
 export const handleDirectoryError = (error: unknown): string => {
   if (error instanceof Error) {
     // Handle specific error cases
@@ -104,7 +145,12 @@ export const handleDirectoryError = (error: unknown): string => {
   return "An unknown error occurred while selecting the directory";
 };
 
-// Utility function to check directory space separately if needed
+/**
+ * Checks if a directory has sufficient space
+ * Can be used independently of full validation
+ * @param {string} path - Directory path to check
+ * @returns {Promise<boolean>} Whether directory has enough space
+ */
 export const checkDirectorySpace = async (path: string): Promise<boolean> => {
   try {
     return await invoke<boolean>("check_directory_space", { path });
@@ -114,7 +160,12 @@ export const checkDirectorySpace = async (path: string): Promise<boolean> => {
   }
 };
 
-// Utility function to check write permissions separately if needed
+/**
+ * Checks if we have write permission for a directory
+ * Can be used independently of full validation
+ * @param {string} path - Directory path to check
+ * @returns {Promise<boolean>} Whether we have write permission
+ */
 export const checkWritePermission = async (path: string): Promise<boolean> => {
   try {
     return await invoke<boolean>("check_write_permission", { path });
@@ -125,17 +176,12 @@ export const checkWritePermission = async (path: string): Promise<boolean> => {
 };
 
 /**
- * Utility function to shorten the directory path.
- * @param path - The original directory path.
- * @param maxLength - The maximum length of the shortened path.
- * @returns The shortened path.
- */
-/**
- * Gets a formatted display string for the directory path
- * @param selectedDir - The selected custom directory path
- * @param defaultDir - The default directory path
- * @param maxLength - Maximum length for the shortened path
- * @returns Formatted directory display string
+ * Formats a directory path for display
+ * Handles both custom and default directory paths
+ * @param {string | null | undefined} selectedDir - Custom directory path if selected
+ * @param {string | null | undefined} defaultDir - Default directory path
+ * @param {number} maxLength - Maximum length for displayed path (default: 35)
+ * @returns {string} Formatted path string with prefix indicating type (Custom/Default)
  */
 export const getDirectoryDisplay = (
   selectedDir: string | null | undefined,
@@ -148,6 +194,15 @@ export const getDirectoryDisplay = (
   return `Default: ${defaultDir ? shortenPath(defaultDir, maxLength) : "Loading..."}`;
 };
 
+/**
+ * Shortens a path to fit within specified length while maintaining readability
+ * Preserves start and end of path, replacing middle sections with ellipsis
+ * @param {string} path - Full path to shorten
+ * @param {number} maxLength - Maximum allowed length
+ * @returns {string} Shortened path with ellipsis if needed
+ * @example
+ * shortenPath("/very/long/path/to/file.txt", 20) => "/very/.../file.txt"
+ */
 export const shortenPath = (path: string, maxLength: number): string => {
   if (path.length <= maxLength) {
     return path;
