@@ -89,7 +89,7 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const processLog = (log: string) => {
+  const processLog = React.useCallback((log: string) => {
     console.log('Processing log:', log);
     
     // Strip postcli stdout/stderr prefixes from the log
@@ -127,7 +127,7 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
       console.log('New process state:', newState);
       return newState;
     });
-  };
+  }, [settings]);
 
   const reset = () => {
     setProcessState(initialState);
@@ -144,7 +144,7 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
 
     window.addEventListener('postcli-progress', handleProgress);
     return () => window.removeEventListener('postcli-progress', handleProgress);
-  }, [settings]); // Add settings as dependency since processLog uses it
+  }, [processLog]); // processLog contains settings dependency internally
 
   return (
     <POSProcessContext.Provider
