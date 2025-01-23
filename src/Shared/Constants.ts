@@ -1,5 +1,13 @@
-// Probably should be used when app fills with more text and explanations for the user
+/**
+ * @fileoverview Constants used throughout the application
+ */
+
 /* eslint-disable no-unused-vars */
+/**
+ * External links used in the application for documentation, support, and resources
+ * Probably should be used when app fills with more text and explanations for the user
+ * @enum {string}
+ */
 export enum ExternalLinks {
   About = 'https://spacemesh.io/',
   UserGuide = 'https://github.com/spacemeshos/wiki/wiki/Smesher-Guide',
@@ -18,12 +26,27 @@ export enum ExternalLinks {
 }
 /* eslint-enable no-unused-vars */
 
-// Size Constants - From src/utils/sizeUtils.tsx
+/**
+ * Constants related to size calculations and storage management
+ * Used by sizeUtils.tsx for various calculations
+ */
 export const SizeConstants = {
-  CYCLE_GAP_HOURS: 12,
+  CYCLE_GAP_HOURS: 12, // 12 hours - network configuration
+
+  /** Safety period coefficient for data processing (0.7 means 70% of available time) */
   K_SAFE_PERIOD: 0.7,
+
+  /** Default number of units for size calculations */
   DEFAULT_NUM_UNITS: 4,
+
+  /** Default maximum file size in MiB (4096 MiB = 4 GiB) */
   DEFAULT_MAX_FILE_SIZE_MIB: 4096,
+
+  /** Size of one Space Unit in GiB - network configuration*/
   UNIT_SIZE_GIB: 64,
+
+  /** Array of size units for formatting
+   * Follows binary prefix convention (powers of 1024)  
+   */
   SIZE_UNITS: ['GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'] as const,
 };
