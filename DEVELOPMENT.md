@@ -231,6 +231,9 @@ Common issues and solutions:
    - Follow platform-specific OpenCL installation guides
    - Verify GPU compatibility
    - Check driver installations
+  
+5. **Release**:
+   - libwebkit2gtk-4.0-dev with Tauri issues to be investigated further, I did not have enough time to resolve it, so I decided to exclude the Linux platforms from releases for now
 
 ## Roadmap (OLD NOTES, incomplete)
 
