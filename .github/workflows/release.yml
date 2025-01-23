@@ -63,16 +63,65 @@ jobs:
 
       - name: Download post-rs binaries
         run: |
+          # Get latest version with error checking
           LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post-rs/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": ?"([^"]+)".*/\1/')
-          curl -L -o profiler.zip "https://github.com/spacemeshos/post-rs/releases/download/${LATEST_VERSION}/profiler-${{ matrix.os-name }}-${LATEST_VERSION}.zip"
-          unzip profiler.zip -d src-tauri/bin/post-rs
+          if [ -z "$LATEST_VERSION" ]; then
+            echo "Failed to get latest version"
+            exit 1
+          fi
+          echo "Latest version: $LATEST_VERSION"
+          
+          # Map OS names to match release asset naming
+          case "${{ matrix.os-name }}" in
+            "darwin") PLATFORM="Darwin" ;;
+            "linux") PLATFORM="Linux" ;;
+            "windows") PLATFORM="Windows" ;;
+          esac
+          
+          # Construct and verify download URL
+          DOWNLOAD_URL="https://github.com/spacemeshos/post-rs/releases/download/${LATEST_VERSION}/profiler-${PLATFORM}-${LATEST_VERSION}.zip"
+          echo "Downloading from: $DOWNLOAD_URL"
+          
+          # Download with error checking
+          if ! curl -L --fail -o profiler.zip "$DOWNLOAD_URL"; then
+            echo "Failed to download post-rs binary"
+            exit 1
+          fi
+          
+          # Extract with error checking
+          if ! unzip -o profiler.zip -d src-tauri/bin/post-rs; then
+            echo "Failed to extract post-rs binary"
+            exit 1
+          fi
+          
           rm profiler.zip
         shell: bash
 
       - name: Download postcli binaries
         run: |
-          curl -L -o postcli.zip "https://github.com/spacemeshos/post/releases/latest/download/postcli-${{ matrix.os-name }}.zip"
-          unzip postcli.zip -d src-tauri/bin/postcli
+          # Map OS names to match release asset naming
+          case "${{ matrix.os-name }}" in
+            "darwin") PLATFORM="Darwin" ;;
+            "linux") PLATFORM="Linux" ;;
+            "windows") PLATFORM="Windows" ;;
+          esac
+          
+          # Construct and verify download URL
+          DOWNLOAD_URL="https://github.com/spacemeshos/post/releases/latest/download/postcli-${PLATFORM}.zip"
+          echo "Downloading from: $DOWNLOAD_URL"
+          
+          # Download with error checking
+          if ! curl -L --fail -o postcli.zip "$DOWNLOAD_URL"; then
+            echo "Failed to download postcli binary"
+            exit 1
+          fi
+          
+          # Extract with error checking
+          if ! unzip -o postcli.zip -d src-tauri/bin/postcli; then
+            echo "Failed to extract postcli binary"
+            exit 1
+          fi
+          
           rm postcli.zip
         shell: bash
 
