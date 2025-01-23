@@ -1,24 +1,25 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { calculateMaxDataSize, formatSize } from '../utils/sizeUtils';
-import Modal from '../components/modal';
-import { Tile, ActionTile, CoverTile } from '../components/tile';
-import ProfilerTable from '../components/ProfilerTable';
+
+import BackgroundImage from '../assets/banner4.png';
+import File from '../assets/file.png';
+import InfoIcon from '../assets/help.png';
+import NextStep from '../assets/nextstep.png';
+import Gear from '../assets/setting.png';
 import { BackButton, Button, CloseButton } from '../components/button';
 import CustomNumberInput from '../components/input';
+import Modal from '../components/modal';
 import { SelectDirectory } from '../components/pos/SelectDirectory';
+import ProfilerTable from '../components/ProfilerTable';
+import { Tile, ActionTile, CoverTile } from '../components/tile';
+import { useProfiler } from '../hooks/useProfiler';
+import Colors from '../styles/colors';
 import { Background, PageTitleWrapper } from '../styles/containers';
 import { BodyText, Header } from '../styles/texts';
-import Colors from '../styles/colors';
-import { useProfiler } from '../hooks/useProfiler';
+import { calculateMaxDataSize, formatSize } from '../utils/sizeUtils';
 
 // Assets
-import InfoIcon from '../assets/help.png';
-import Gear from '../assets/setting.png';
-import File from '../assets/file.png';
-import NextStep from '../assets/nextstep.png';
-import BackgroundImage from '../assets/banner4.png';
 
 export const PROFILER_CONSTANTS = {
   MIN_NONCES: 16,

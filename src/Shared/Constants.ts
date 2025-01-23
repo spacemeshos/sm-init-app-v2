@@ -1,3 +1,5 @@
+// Probably should be used when app fills with more text and explanations for the user
+/* eslint-disable no-unused-vars */
 export enum ExternalLinks {
   About = 'https://spacemesh.io/',
   UserGuide = 'https://github.com/spacemeshos/wiki/wiki/Smesher-Guide',
@@ -14,6 +16,7 @@ export enum ExternalLinks {
   Docs = 'https://docs.spacemesh.io/docs/start',
   Report = 'https://github.com/spacemeshos/sm-init-app-v2/issues/new',
 }
+/* eslint-enable no-unused-vars */
 
 // Size Constants - From src/utils/sizeUtils.tsx
 export const SizeConstants = {

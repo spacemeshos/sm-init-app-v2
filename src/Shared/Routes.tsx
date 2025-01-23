@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import Docs from "../pages/Docs";
 import Generate from "../pages/Generate";
 import Home from "../pages/Home";
-import Progress from "../pages/Progress";
-import Docs from "../pages/Docs";
 import Profiler from "../pages/Profiler";
+import Progress from "../pages/Progress";
 
 const AppRoutes = () => (
   <BrowserRouter>

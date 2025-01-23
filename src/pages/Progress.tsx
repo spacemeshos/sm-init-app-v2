@@ -1,18 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { usePOSProcess } from "../state/POSProcessContext";
-import { Stage } from "../types/posProgress";
+
 import BackgroundImage from "../assets/wave2.png";
 import { Button } from "../components/button";
 import CircularProgress from "../components/CircularProgress";
-import { useNavigate } from "react-router-dom";
+import {Tile} from "../components/tile";
+import { usePOSProcess } from "../state/POSProcessContext";
+import { useSettings } from "../state/SettingsContext";
+import Colors from "../styles/colors";
 import { Background, PageTitleWrapper } from "../styles/containers";
 import { ErrorMessage, Header } from "../styles/texts";
-import { calculateNumFiles, calculateTotalSize } from "../utils/sizeUtils";
+import { Stage } from "../types/posProgress";
 import { getDirectoryDisplay } from "../utils/directoryUtils";
-import { useSettings } from "../state/SettingsContext";
-import {Tile} from "../components/tile";
-import Colors from "../styles/colors";
+import { calculateNumFiles, calculateTotalSize } from "../utils/sizeUtils";
 
 const ProgressContainer = styled.div`
   width: 810px;

@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useRef } from "react";
 
 import { useConsole } from "../../state/ConsoleContext";
 import { useSettings } from "../../state/SettingsContext";
+import { SetupContainer, SetupTileWrapper } from "../../styles/containers";
 import { ErrorMessage, Subheader } from "../../styles/texts";
 import { FindProviders, Provider } from "../../utils/parseResponse";
 import {Tile} from "../tile";
 
-import { SetupContainer, SetupTileWrapper } from "../../styles/containers";
 
 interface Props {
   isOpen: boolean;
@@ -38,7 +38,7 @@ export const SetupGPU: React.FC<Props> = ({ isOpen, initialProviders }) => {
     if (initialProviders) {
       setResponse(initialProviders);
     }
-  }, [initialProviders]);
+  }, [initialProviders, setResponse]);
 
   // Effect for initial provider detection only if no initialProviders
   useEffect(() => {

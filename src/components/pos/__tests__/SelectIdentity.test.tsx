@@ -1,8 +1,7 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { SelectIdentity } from '../SelectIdentity';
+
 import { Settings } from '../../../state/SettingsContext';
-import { truncateHex } from '../../../utils/hexUtils';
+import { SelectIdentity } from '../SelectIdentity';
 
 // Mock the Tile component
 jest.mock('../../../components/tile', () => ({

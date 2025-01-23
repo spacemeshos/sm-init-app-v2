@@ -1,5 +1,5 @@
-import { parsePOSProgress } from '../posProgressParser';
 import { Stage } from '../../types/posProgress';
+import { parsePOSProgress } from '../posProgressParser';
 import { calculateNumFiles } from '../sizeUtils';
 
 describe('parsePOSProgress', () => {

@@ -3,11 +3,13 @@ import React, {
   useContext,
   useState,
   useEffect,
+  useCallback,
   ReactNode,
 } from "react";
+
+import { fetchLatestAtxId } from "../services/postcliService";
 import { SizeConstants } from "../Shared/Constants";
 import { getDefaultDirectory } from "../utils/directoryUtils";
-import { fetchLatestAtxId } from "../services/postcliService";
 
 export interface Settings {
   pubKey?: string;
@@ -53,7 +55,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
     atxIdSource: 'api'
   });
 
-  const fetchAtxId = async () => {
+  const fetchAtxId = useCallback(async () => {
     try {
       const response = await fetchLatestAtxId();
       setSettings(prev => ({
@@ -71,7 +73,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
       // Retry after 5 seconds
       setTimeout(fetchAtxId, 5000);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const initSettings = async () => {
@@ -91,14 +93,14 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     initSettings();
-  }, []);
+  }, [fetchAtxId]);
 
   // Re-fetch ATX ID if manual input is cleared
   useEffect(() => {
     if (settings.atxId === undefined && settings.atxIdSource === 'manual') {
       fetchAtxId();
     }
-  }, [settings.atxId, settings.atxIdSource]);
+  }, [settings.atxId, settings.atxIdSource, fetchAtxId]);
 
   return (
     <SettingsContext.Provider value={{ settings, setSettings }}>

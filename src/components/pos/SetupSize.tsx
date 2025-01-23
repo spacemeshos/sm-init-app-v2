@@ -2,14 +2,14 @@ import React from "react";
 
 import { SizeConstants } from "../../Shared/Constants";
 import { useSettings } from "../../state/SettingsContext";
-import CustomNumberInput from "../input";
-import {Tile} from "../tile";
-import { calculateTotalSize, calculateNumFiles } from "../../utils/sizeUtils";
-
 import {
   SetupContainer,
   SetupTileWrapper,
 } from "../../styles/containers";
+import { calculateTotalSize, calculateNumFiles } from "../../utils/sizeUtils";
+import CustomNumberInput from "../input";
+import {Tile} from "../tile";
+
 
 export const SetupSize: React.FC = () => {
   const { settings, setSettings } = useSettings();
