@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Custom React hook for managing the Proof of Space (POS) profiler functionality.
+ * This hook handles benchmarking operations, configuration management, and integration with
+ * the Tauri backend for CPU profiling operations.
+ */
+
 import { invoke } from '@tauri-apps/api';
 import { join } from '@tauri-apps/api/path';
 import { useEffect, useState } from 'react';
@@ -11,28 +17,47 @@ import {
   ProfilerResult,
 } from '../types/profiler';
 
+/**
+ * Default configuration for the profiler
+ * @property {number} data_size - Size of data to process in the benchmark (in GB)
+ * @property {number} duration - Duration of the benchmark in seconds
+ */
 const DEFAULT_CONFIG: ProfilerConfig = {
   data_size: 1,
   duration: 10,
 };
 
+/**
+ * Custom hook for managing POS profiler operations and state
+ * @returns {Object} Object containing profiler state and control functions
+ */
 export const useProfiler = () => {
+  // Access global settings context for directory configurations
   const { settings, setSettings } = useSettings();
-  const [maxCores, setMaxCores] = useState(0);
-  const [config, setConfig] = useState<ProfilerConfig>(DEFAULT_CONFIG);
-  const [benchmarks, setBenchmarks] = useState<Benchmark[]>([]);
-  const [benchmarkSettings, setBenchmarkSettings] = useState<BenchmarkSettings>(
+  
+  // State management for profiler configuration and results
+  const [maxCores, setMaxCores] = useState(0);                                    // Maximum available CPU cores
+  const [config, setConfig] = useState<ProfilerConfig>(DEFAULT_CONFIG);           // Current profiler configuration
+  const [benchmarks, setBenchmarks] = useState<Benchmark[]>([]);                  // List of completed and ongoing benchmarks
+  const [benchmarkSettings, setBenchmarkSettings] = useState<BenchmarkSettings>(   // Current benchmark parameters
     {
-      nonces: 288,
-      threads: 1,
+      nonces: 288,  // Default number of nonces to process
+      threads: 1,   // Default number of threads to use, can be freely adjusted
     }
   );
 
+  /**
+   * Initialize the profiler on component mount
+   * - Fetches available CPU cores from the system
+   * - Retrieves default configuration from the backend
+   */
   useEffect(() => {
     const initialize = async () => {
       try {
+        // Get available CPU cores from the system
         const cores = await invoke<number>('get_cpu_cores');
         setMaxCores(cores);
+        // Fetch default configuration from Tauri backend
         const defaultConfig =
           await invoke<ProfilerConfig>('get_default_config');
         setConfig(defaultConfig);
@@ -44,6 +69,11 @@ export const useProfiler = () => {
     initialize();
   }, []);
 
+  /**
+   * Executes a single benchmark with specified parameters
+   * @param {Benchmark} benchmark - Benchmark configuration to run
+   * @throws {Error} If no directory is selected for profiling
+   */
   const runBenchmark = async (benchmark: Benchmark) => {
     try {
       setBenchmarks((prev) =>
@@ -94,6 +124,10 @@ export const useProfiler = () => {
     }
   };
 
+  /**
+   * Creates and executes a new benchmark with current settings
+   * @throws {Error} If no directory is selected for profiling
+   */
   const runCustomBenchmark = async () => {
     if (!settings.selectedDir && !settings.defaultDir) {
       throw new Error('No directory selected for profiling');
@@ -111,6 +145,10 @@ export const useProfiler = () => {
     await runBenchmark(newBenchmark);
   };
 
+  /**
+   * Updates global settings with the results of a completed benchmark
+   * @param {Benchmark} benchmark - The completed benchmark to apply
+   */
   const selectBenchmark = (benchmark: Benchmark) => {
     if (benchmark.status === BenchmarkStatus.Complete) {
       setSettings((prev) => ({
@@ -121,23 +159,31 @@ export const useProfiler = () => {
     }
   };
 
+  /**
+   * Updates the current benchmark settings
+   * @param {Partial<BenchmarkSettings>} settings - Partial settings to update
+   */
   const updateBenchmarkSettings = (settings: Partial<BenchmarkSettings>) => {
     setBenchmarkSettings((prev) => ({ ...prev, ...settings }));
   };
 
+  /**
+   * Updates the profiler configuration
+   * @param {Partial<ProfilerConfig>} updates - Partial configuration to update
+   */
   const updateConfig = (updates: Partial<ProfilerConfig>) => {
     setConfig((prev) => ({ ...prev, ...updates }));
   };
 
   return {
-    maxCores,
-    config,
-    benchmarks,
-    benchmarkSettings,
-    updateConfig,
-    updateBenchmarkSettings,
-    runCustomBenchmark,
-    selectBenchmark,
-    isRunning: benchmarks.some((b) => b.status === BenchmarkStatus.Running),
+    maxCores,                    // Maximum available CPU cores
+    config,                      // Current profiler configuration
+    benchmarks,                  // List of all benchmarks
+    benchmarkSettings,           // Current benchmark settings
+    updateConfig,               // Function to update profiler configuration
+    updateBenchmarkSettings,    // Function to update benchmark settings
+    runCustomBenchmark,        // Function to run a new benchmark
+    selectBenchmark,           // Function to apply a benchmark's results
+    isRunning: benchmarks.some((b) => b.status === BenchmarkStatus.Running), // Whether any benchmark is currently running
   };
 };
