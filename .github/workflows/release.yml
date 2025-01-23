@@ -31,13 +31,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
+        platform: [macos-latest, windows-latest]
         include:
           - platform: macos-latest
             os-name: darwin
-            archive-ext: zip
-          - platform: ubuntu-latest
-            os-name: linux
             archive-ext: zip
           - platform: windows-latest
             os-name: windows
@@ -56,12 +53,6 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
-
       - name: Install app dependencies
         run: yarn install
 
@@ -72,7 +63,7 @@ jobs:
 
       - name: Download post-rs binaries
         run: |
-          LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post-rs/releases/latest | grep -Po '"tag_name": "\K.*?(?=")')
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post-rs/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": ?"([^"]+)".*/\1/')
           curl -L -o profiler.zip "https://github.com/spacemeshos/post-rs/releases/download/${LATEST_VERSION}/profiler-${{ matrix.os-name }}-${LATEST_VERSION}.zip"
           unzip profiler.zip -d src-tauri/bin/post-rs
           rm profiler.zip
