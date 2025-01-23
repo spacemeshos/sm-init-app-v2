@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
 export enum BenchmarkStatus {
   Idle = 'Idle',
   Running = 'Running',
   Complete = 'Complete',
   Error = 'Error',
 }
+/* eslint-enable no-unused-vars */
 
 export interface ProfilerConfig {
   data_size: number;

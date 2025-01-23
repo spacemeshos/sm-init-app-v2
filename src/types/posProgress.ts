@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
 export enum Stage {
   NotStarted = 'NOT_STARTED',
   Processing = 'PROCESSING',
   Complete = 'COMPLETE',
   Error = 'ERROR',
 }
+/* eslint-enable no-unused-vars */
 
 export interface FileProgress {
   currentFile: number;

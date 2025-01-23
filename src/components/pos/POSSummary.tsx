@@ -126,7 +126,7 @@ export const POSSummary: React.FC<POSSummaryProps> = ({
           setSettings(currentSettings);
         } catch (err) {
           errors.push(
-            'Failed to fetch ATX ID. Please try again or enter manually.'
+            `Failed to fetch ATX ID. Please try again or enter manually. ${err}`
           );
           setValidationErrors(errors);
           setShowValidationModal(true);
