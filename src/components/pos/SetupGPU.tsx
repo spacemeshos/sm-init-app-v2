@@ -38,7 +38,7 @@ export const SetupGPU: React.FC<Props> = ({ isOpen, initialProviders }) => {
     if (initialProviders) {
       setResponse(initialProviders);
     }
-  }, [initialProviders]);
+  }, [initialProviders, setResponse]);
 
   // Effect for initial provider detection only if no initialProviders
   useEffect(() => {
