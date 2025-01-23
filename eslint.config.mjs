@@ -41,7 +41,6 @@ export default [
     },
     rules: {
       // Base rules
-
       'no-unused-vars': [
         'warn',
         {
@@ -50,7 +49,7 @@ export default [
           caughtErrors: 'all',
         },
       ],
-
+      
       // Import rules
       'import/order': [
         'error',
