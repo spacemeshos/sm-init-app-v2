@@ -34,14 +34,14 @@ jobs:
         platform: [macos-latest, ubuntu-latest, windows-latest]
         include:
           - platform: macos-latest
-            post-rs-binary: post-rs-macos.tar.gz
-            postcli-binary: postcli-macos.tar.gz
+            os-name: darwin
+            archive-ext: zip
           - platform: ubuntu-latest
-            post-rs-binary: post-rs-linux.tar.gz
-            postcli-binary: postcli-linux.tar.gz
+            os-name: linux
+            archive-ext: zip
           - platform: windows-latest
-            post-rs-binary: post-rs-windows.zip
-            postcli-binary: postcli-windows.zip
+            os-name: windows
+            archive-ext: zip
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -72,22 +72,17 @@ jobs:
 
       - name: Download post-rs binaries
         run: |
-          curl -L https://github.com/spacemeshos/post-rs/releases/latest/download/${{ matrix.post-rs-binary }} -o post-rs.archive
-          if [[ "${{ matrix.platform }}" == "windows-latest" ]]; then
-            unzip post-rs.archive -d src-tauri/bin/post-rs
-          else
-            tar xzf post-rs.archive -C src-tauri/bin/post-rs
-          fi
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post-rs/releases/latest | grep -Po '"tag_name": "\K.*?(?=")')
+          curl -L -o profiler.zip "https://github.com/spacemeshos/post-rs/releases/download/${LATEST_VERSION}/profiler-${{ matrix.os-name }}-${LATEST_VERSION}.zip"
+          unzip profiler.zip -d src-tauri/bin/post-rs
+          rm profiler.zip
         shell: bash
 
       - name: Download postcli binaries
         run: |
-          curl -L https://github.com/spacemeshos/post/releases/latest/download/${{ matrix.postcli-binary }} -o postcli.archive
-          if [[ "${{ matrix.platform }}" == "windows-latest" ]]; then
-            unzip postcli.archive -d src-tauri/bin/postcli
-          else
-            tar xzf postcli.archive -C src-tauri/bin/postcli
-          fi
+          curl -L -o postcli.zip "https://github.com/spacemeshos/post/releases/latest/download/postcli-${{ matrix.os-name }}.zip"
+          unzip postcli.zip -d src-tauri/bin/postcli
+          rm postcli.zip
         shell: bash
 
       - name: Build the app
