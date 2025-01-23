@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Circular progress indicator component
+ * Provides an animated circular progress bar with optional label.
+ * Uses SVG for smooth rendering and animations.
+ */
+
 import * as React from "react";
 import styled from "styled-components";
 
@@ -72,10 +78,18 @@ const Container = styled.div`
   height: 100%;
 `;
 
+/**
+ * SVG container for the progress circles
+ * Rotated to start progress from top
+ */
 const SVGCircle = styled.svg`
   transform: rotate(-90deg);
 `;
 
+/**
+ * Animated progress circle path
+ * Uses transition for smooth progress updates
+ */
 const ProgressPath = styled.circle`
   transition: stroke-dashoffset 0.35s;
   transform-origin: center;

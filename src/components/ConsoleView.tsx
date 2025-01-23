@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Console output display component
+ * Provides an expandable console interface for displaying command outputs,
+ * logs, and errors with automatic scrolling and entry grouping.
+ */
+
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -9,6 +15,10 @@ interface ConsoleContainerProps {
   $height?: number;
 }
 
+/**
+ * Main console container with expansion animation
+ * Transitions between collapsed and expanded states
+ */
 const ConsoleContainer = styled.div<ConsoleContainerProps>`
   background-color: ${Colors.black};
   font-family: 'Courier New', Courier, monospace;
@@ -23,6 +33,10 @@ const ConsoleContainer = styled.div<ConsoleContainerProps>`
   flex-direction: column;
 `;
 
+/**
+ * Container for console control buttons
+ * Sticks to top during scrolling
+ */
 const ButtonContainer = styled.div`
   position: sticky;
   top: 0;
@@ -35,6 +49,10 @@ const ButtonContainer = styled.div`
   flex-shrink: 0;
 `;
 
+/**
+ * Scrollable container for console entries
+ * Includes custom scrollbar styling
+ */
 const ScrollContainer = styled.div`
   overflow-y: auto;
   flex-grow: 1;
@@ -58,6 +76,9 @@ const ScrollContainer = styled.div`
   }
 `;
 
+/**
+ * Styled button for console controls
+ */
 const ConsoleButton = styled.button`
   background-color: ${Colors.black};
   border: none;
@@ -72,21 +93,36 @@ const ConsoleButton = styled.button`
   }
 `;
 
+/**
+ * Container for grouped command entries
+ */
 const CommandGroup = styled.div`
   margin-bottom: 16px;
   padding: 0 8px;
 `;
 
+/**
+ * Command line display with distinct styling
+ */
 const CommandLine = styled.div`
   color: ${Colors.greenLight};
   margin-bottom: 8px;
   font-weight: bold;
 `;
 
+/**
+ * Props for output styling based on content
+ */
 interface OutputProps {
   $content: string;
 }
 
+/**
+ * Styled output display with content-based coloring
+ * - Red for errors
+ * - Green for success
+ * - White for standard output
+ */
 const Output = styled.pre<OutputProps>`
   margin: 0 0 8px 0;
   white-space: pre-wrap;
@@ -108,13 +144,41 @@ const Timestamp = styled.span`
   color: ${Colors.grayLight};
 `;
 
+/**
+ * Console View Component
+ * 
+ * Features:
+ * - Expandable/collapsible view
+ * - Command output grouping
+ * - Automatic scrolling
+ * - Content-based styling
+ * - Clear functionality
+ * 
+ * The component handles:
+ * 1. Entry Display:
+ *    - Groups entries by command
+ *    - Formats timestamps
+ *    - Colors output by type
+ * 
+ * 2. Scrolling:
+ *    - Auto-scrolls to new entries
+ *    - Custom scrollbar styling
+ * 
+ * 3. User Interaction:
+ *    - Expand/collapse toggle
+ *    - Clear console
+ *    - Manual scrolling
+ */
 const ConsoleView: React.FC = () => {
   const { entries, clearConsole, isExpanded, toggleExpand } = useConsole();
   const consoleRef = useRef<HTMLDivElement>(null);
   const prevEntriesLengthRef = useRef(entries.length);
   const [height, setHeight] = useState(300);
 
-  // Handle resize observer
+  /**
+   * Handle console resizing
+   * Updates height state when container is resized
+   */
   useEffect(() => {
     if (!consoleRef.current || !isExpanded) return;
 
@@ -132,12 +196,15 @@ const ConsoleView: React.FC = () => {
     };
   }, [isExpanded]);
 
-  // Debug logging
+  // Debug logging for render tracking
   useEffect(() => {
     console.log("ConsoleView rendered with:", { entries, isExpanded });
   }, [entries, isExpanded]);
 
-  // Auto-scroll to bottom when entries change
+  /**
+   * Auto-scroll to bottom on new entries
+   * Tracks entry count changes to trigger scrolling
+   */
   useEffect(() => {
     if (consoleRef.current && entries.length !== prevEntriesLengthRef.current) {
       consoleRef.current.scrollTop = consoleRef.current.scrollHeight;
@@ -146,6 +213,10 @@ const ConsoleView: React.FC = () => {
     }
   }, [entries]);
 
+  /**
+   * Groups console entries by command
+   * Creates map of command -> array of outputs
+   */
   const groupEntriesByCommand = () => {
     const grouped = new Map<string, { timestamp: string; output: string }[]>();
 
@@ -161,6 +232,12 @@ const ConsoleView: React.FC = () => {
     return grouped;
   };
 
+  /**
+   * Renders grouped console entries
+   * Each group includes:
+   * - Command line (if present)
+   * - Timestamped outputs
+   */
   const renderContent = () => {
     const groupedEntries = groupEntriesByCommand();
 
