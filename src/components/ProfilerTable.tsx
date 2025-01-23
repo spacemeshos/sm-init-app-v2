@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Colors from '../styles/colors';
+import { BenchmarkStatus } from '../types/profiler';
 import { getDirectoryDisplay } from '../utils/directoryUtils';
 import { calculateMaxDataSize, formatSize } from '../utils/sizeUtils';
 
@@ -92,14 +93,6 @@ const StatusIndicator = styled.div<{ color: string }>`
   background: ${({ color }) => color};
   margin-right: 20px;
 `;
-
-// Types and Interfaces
-export enum BenchmarkStatus {
-  Idle = 'Idle',
-  Running = 'Running',
-  Complete = 'Complete',
-  Error = 'Error',
-}
 
 export interface ProfilerResult {
   nonces: number;
