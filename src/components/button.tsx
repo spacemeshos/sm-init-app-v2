@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Button components collection
+ * Provides a comprehensive set of button components with consistent styling
+ * and behavior. Includes standard, transparent, icon, and navigation buttons.
+ */
+
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -9,7 +15,10 @@ import next from "../assets/next.png";
 import close from "../assets/x.png";
 import Colors from "../styles/colors";
 
-// Interface defining the properties for the Button component below
+/**
+ * Common props interface for all button components
+ * @interface ButtonProps
+ */
 interface ButtonProps {
   iconSrc?: string;
   label?: string;
@@ -29,7 +38,10 @@ interface ButtonProps {
   opacity?: number;
 }
 
-// Standard Button component
+/**
+ * Standard Button Component
+ * Primary button with gradient background and hover effects
+ */
 const Button: React.FC<ButtonProps> = ({
   label,
   onClick,
@@ -64,7 +76,10 @@ const Button: React.FC<ButtonProps> = ({
   );
 };
 
-// Transparent, rectangle Button component
+/**
+ * Transparent Button Component
+ * Ghost button with hover underline effect
+ */
 const TransparentButton: React.FC<ButtonProps> = ({
   label,
   onClick,
@@ -105,11 +120,13 @@ const TransparentButton: React.FC<ButtonProps> = ({
   );
 };
 
-// BackButton component
+/**
+ * Back Navigation Button
+ * Handles browser history navigation or custom back action
+ */
 const BackButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
-  // Handle back button click
   const handleBack = () => {
     if (onClick) {
       onClick();
@@ -125,11 +142,13 @@ const BackButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
   );
 };
 
-// Forward Arrow Button component
+/**
+ * Forward Navigation Button
+ * Handles browser history navigation or custom forward action
+ */
 const ForwardButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
   const navigate = useNavigate();
 
-  // Handle forward button click
   const handleForward = () => {
     if (onClick) {
       onClick();
@@ -145,7 +164,10 @@ const ForwardButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
   );
 };
 
-// Icon button component
+/**
+ * Icon Button Base Component
+ * Used by specialized icon buttons (Edit, Save, Cancel, Close)
+ */
 const IconButton: React.FC<ButtonProps> = ({
   onClick,
   size,
@@ -174,27 +196,30 @@ const IconButton: React.FC<ButtonProps> = ({
   );
 };
 
-// Edit button component
+/**
+ * Specialized Icon Buttons
+ * Pre-configured with specific icons and behaviors
+ */
 const EditButton: React.FC<ButtonProps> = (props) => {
   return <IconButton {...props} iconSrc={pen} />;
 };
 
-// Save button component
 const SaveButton: React.FC<ButtonProps> = (props) => {
   return <IconButton {...props} iconSrc={save} />;
 };
 
-// Cancel button component
 const CancelButton: React.FC<ButtonProps> = (props) => {
   return <IconButton {...props} iconSrc={close} />;
 };
 
-// Close button component
 const CloseButton: React.FC<ButtonProps> = (props) => {
   return <IconButton {...props} iconSrc={close} size={24} />;
 };
 
-// Blurry dot button
+/**
+ * Dot Button Component
+ * Toggle button with animated dot indicator
+ */
 const DotButton: React.FC<ButtonProps> = ({
   iconSrc,
   alt,
@@ -228,7 +253,12 @@ const DotButton: React.FC<ButtonProps> = ({
   );
 };
 
-// Styled component for the standard button wrapper
+// Styled Components
+
+/**
+ * Standard button styling
+ * Features gradient background and hover effects
+ */
 const StandardButton = styled.button<{
   top?: number;
   left?: number;
@@ -267,6 +297,10 @@ const StandardButton = styled.button<{
   }
 `;
 
+/**
+ * Transparent button styling
+ * Features underline hover effect
+ */
 const TransparentRectangle = styled.button<{
   top?: number;
   left?: number;
@@ -303,6 +337,10 @@ const TransparentRectangle = styled.button<{
   }
 `;
 
+/**
+ * Button text styling
+ * Adapts to button state and type
+ */
 const ButtonText = styled.span<{ disabled?: boolean; transparent?: boolean }>`
   font-family: "Univers55", sans-serif;
   color: ${({ disabled, transparent }) => {
@@ -316,13 +354,17 @@ const ButtonText = styled.span<{ disabled?: boolean; transparent?: boolean }>`
   line-height: 20px;
 `;
 
-// Styled component for the navigation icon image
+/**
+ * Navigation icon styling
+ */
 const NavIcon = styled.img`
   aspect-ratio: 1;
   width: 45px;
 `;
 
-// Styled component for the navigation button wrapper
+/**
+ * Navigation button wrapper styling
+ */
 const NavWrapper = styled.button<{ top?: number; left?: number }>`
   top: ${({ top }) => top || 96}px;
   left: ${({ left }) => left || 0}px;
@@ -334,12 +376,17 @@ const NavWrapper = styled.button<{ top?: number; left?: number }>`
   position: absolute;
 `;
 
+/**
+ * Button icon styling
+ */
 const ButtonIcon = styled.img<{ size?: number }>`
   aspect-ratio: 1;
   width: ${({ size }) => size || 30}px;
 `;
 
-// Styled component for the icon button wrapper
+/**
+ * Icon button wrapper styling
+ */
 const IconStandardButton = styled.button<{
   top: number;
   left: number;
@@ -354,7 +401,9 @@ const IconStandardButton = styled.button<{
   transform: translate(-50%, 0%);
 `;
 
-// Blurry dot button
+/**
+ * Dot button styling components
+ */
 const DotWrapper = styled.div<ButtonProps>`
   width: 80px;
   height: 70px;
