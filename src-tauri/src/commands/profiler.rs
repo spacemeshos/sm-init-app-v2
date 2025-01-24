@@ -1,7 +1,24 @@
+//! Profiler Module
+//! 
+//! This module provides functionality for performance profiling and benchmarking.
+//! It includes commands for running performance tests, managing profiler configuration,
+//! and calculating probabilities for PoST (Proof of Space-Time) operations.
+//! 
+//! The profiler supports customizable parameters such as:
+//! - Number of nonces
+//! - Thread count
+//! - Data size
+//! - Test duration
+//! - Custom data file paths
+
 use serde::{Deserialize, Serialize};
 use std::time::Instant;
 use tauri::command;
 
+/// Represents the results of a profiling run
+/// 
+/// Contains comprehensive metrics and configuration details from
+/// a completed profiling operation.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProfilerResult {
     pub nonces: u32,
@@ -15,11 +32,25 @@ pub struct ProfilerResult {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProfilerConfig {
-    pub data_size: u32, // in GiB
-    pub duration: u32,  // in seconds
-    pub data_file: Option<String>, // Optional custom path for data file
+    /// Size of data to process in GiB
+    pub data_size: u32,
+    /// Duration of the profiling run in seconds
+    pub duration: u32,
+    /// Optional custom path for the data file
+    pub data_file: Option<String>,
 }
 
+/// Retrieves default configuration settings for the profiler
+/// 
+/// Provides sensible default values for profiler configuration
+/// that can be used as a starting point for profiling runs.
+/// 
+/// # Returns
+/// 
+/// * `ProfilerConfig` - Default configuration with:
+///   - 1 GiB data size
+///   - 10 seconds duration
+///   - No custom data file path
 #[command]
 pub async fn get_default_config() -> ProfilerConfig {
     ProfilerConfig {
@@ -29,6 +60,29 @@ pub async fn get_default_config() -> ProfilerConfig {
     }
 }
 
+/// Executes a profiling run with specified parameters
+/// 
+/// This command runs a performance profiling operation using the provided
+/// configuration. It manages temporary files, executes the profiler binary,
+/// and collects results.
+/// 
+/// # Arguments
+/// 
+/// * `app` - Tauri application handle for resource access
+/// * `nonces` - Number of nonces to use (must be multiple of 16)
+/// * `threads` - Number of threads to utilize
+/// * `config` - Optional custom configuration settings
+/// 
+/// # Returns
+/// 
+/// * `Ok(ProfilerResult)` - Results and metrics from the profiling run
+/// * `Err(String)` - Error message if profiling fails
+/// 
+/// # Validation
+/// 
+/// - Validates that nonces is non-zero and multiple of 16
+/// - Ensures profiler binary exists
+/// - Verifies output can be parsed correctly
 #[command]
 pub async fn run_profiler(
     app: tauri::AppHandle,
@@ -133,6 +187,26 @@ pub async fn run_profiler(
 }
 
 // Helper function to calculate probability of finding PoST in one pass
+/// Calculates the probability of finding a valid PoST in one pass
+/// 
+/// This function implements a simplified probability calculation for
+/// Proof of Space-Time success based on the number of nonces.
+/// 
+/// # Arguments
+/// 
+/// * `nonces` - Number of nonces to use in calculation
+/// 
+/// # Returns
+/// 
+/// * `f64` - Probability value between 0 and 1
+/// 
+/// # Implementation Notes
+/// 
+/// Uses a simplified approximation of the full binomial probability formula:
+/// 1-(1-(1-BINOM.DIST(36,10^9,26/10^9,TRUE)))^nonces
+/// 
+/// The base probability (0.0124) is calibrated for 16 nonces and scaled
+/// based on the input nonce count.
 #[command]
 pub fn calculate_post_probability(nonces: u32) -> f64 {
     // Using simplified probability calculation
