@@ -10,7 +10,7 @@ import styled from 'styled-components';
 
 import { useSettings } from '../../state/SettingsContext';
 import { SetupTileWrapper } from '../../styles/containers';
-import { Subheader } from '../../styles/texts';
+import { BodyText, Subheader } from '../../styles/texts';
 import {
   validateDirectory,
   handleDirectoryError,
@@ -123,16 +123,9 @@ export const SelectDirectory: React.FC<SelectDirectoryProps> = ({
     <Wrapper>
       <Tile
         heading="Select where to store POS data"
-        subheader={
-          variant === 'compact'
-            ? ''
-            : `The selected location should have appropriate permissions and meet
-            space requirements.`
-        }
         footer={variant === 'compact' ? shortenPath(displayPath, 30) : ''}
         errmsg={error ?? undefined}
-        height={350}
-        width={variant === 'compact' ? 400 : 500}
+        height={250}
       />
       <Button
         onClick={handleSelectDirectory}
@@ -142,8 +135,12 @@ export const SelectDirectory: React.FC<SelectDirectoryProps> = ({
       />
       {variant === 'full' && showExplanation && (
         <>
-          <Subheader text="Selected:" top={-160} />
-          <Subheader text={shortenPath(displayPath, 50)} top={-140} />
+          <Subheader text="Selected:" top={-180} />
+          <Subheader text={shortenPath(displayPath, 50)} top={-160} />
+          <BodyText
+            text={`Select a reliable directory. If you don't choose one, the default directory will be used. 
+              \nThe selected location should have appropriate permissions and meet space requirements.`}
+          />
         </>
       )}
     </Wrapper>
