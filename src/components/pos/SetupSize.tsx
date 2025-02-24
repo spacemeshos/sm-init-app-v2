@@ -50,24 +50,27 @@ export const SetupSize: React.FC = () => {
             settings.numUnits || SizeConstants.DEFAULT_NUM_UNITS
           } Space Units (${calculateTotalSize(settings.numUnits)})`}
           footer={`1 Space Unit = ${SizeConstants.UNIT_SIZE_GIB} GiB (Minimum ${SizeConstants.DEFAULT_NUM_UNITS})`}
-          width={250}
+          width={400}
           height={400}
+          border
         />
-          <>
-            {/* Space Units Input
+        <>
+          {/* Space Units Input
                 - Minimum: DEFAULT_NUM_UNITS (cannot allocate less)
                 - Step: 1 unit at a time
                 - Updates total size calculation on change
             */}
-            <CustomNumberInput
-              min={SizeConstants.DEFAULT_NUM_UNITS}
-              step={1}
-              value={settings.numUnits || SizeConstants.DEFAULT_NUM_UNITS}
-              onChange={(val) =>
-                setSettings((prev) => ({ ...prev, numUnits: val }))
-              }
-            />
-          </>
+          <CustomNumberInput
+            min={SizeConstants.DEFAULT_NUM_UNITS}
+            step={1}
+            value={settings.numUnits || SizeConstants.DEFAULT_NUM_UNITS}
+            onChange={(val) =>
+              setSettings((prev) => ({ ...prev, numUnits: val }))
+            }
+            width={150}
+            height={60}
+          />
+        </>
       </SetupTileWrapper>
 
       {/* File Size Configuration */}
@@ -79,26 +82,31 @@ export const SetupSize: React.FC = () => {
             settings.maxFileSize || SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB
           )} files will be generated`}
           footer={`Default: ${SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB} MiB (${SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB / 1024} GiB)`}
-          width={250}
+          width={400}
           height={400}
+          border
         />
-          <>
-            {/* File Size Input
+        <>
+          {/* File Size Input
                 - Minimum: 1 MiB (cannot have empty files)
                 - Maximum: 8192 MiB (8 GiB) for practical file handling, but fs limitations to be considered for better boundries
                 - Step: 1 MiB at a time
                 - Updates file count calculation on change
             */}
-            <CustomNumberInput
-              min={1}
-              max={8192}
-              step={1}
-              value={settings.maxFileSize || SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB}
-              onChange={(val) =>
-                setSettings((prev) => ({ ...prev, maxFileSize: val }))
-              }
-            />
-          </>
+          <CustomNumberInput
+            min={1}
+            max={8192}
+            step={1}
+            value={
+              settings.maxFileSize || SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB
+            }
+            onChange={(val) =>
+              setSettings((prev) => ({ ...prev, maxFileSize: val }))
+            }
+            width={150}
+            height={60}
+          />
+        </>
       </SetupTileWrapper>
     </SetupContainer>
   );
