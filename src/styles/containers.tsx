@@ -60,10 +60,11 @@ export const PageTitleWrapper = styled.div`
 `;
 
 export const SetupContainer = styled.div`
-  height: 90%;
+  height: 95%;
   width: 80%;
   position: absolute;
   top: 0px;
+  padding-top: 20px;
   display: flex;
   justify-content: space-evenly;
   flex-direction: row;
