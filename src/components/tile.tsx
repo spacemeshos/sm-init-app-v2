@@ -19,6 +19,7 @@ export interface TileProps {
   width?: number;
   height?: number;
   top?: number;
+  border?: boolean;
 }
 
 const TileWrapper = styled.div<{
@@ -28,12 +29,15 @@ const TileWrapper = styled.div<{
   backgroundColor?: string;
   blurred?: boolean;
   top?: number;
+  border?: boolean;
 }>`
   height: ${({ height = 450 }) => `${height}px`};
   width: ${({ width = 500 }) => `${width}px`};
   background-color: ${({ selected, backgroundColor = 'transparent' }) =>
     selected ? Colors.greenLightOpaque : backgroundColor};
   backdrop-filter: ${({ blurred }) => (blurred ? 'blur(8px)' : 'none')};
+  border: ${({ border }) =>
+    border ? `1px solid ${Colors.greenLightOpaque}` : 'none'};
   position: relative;
   display: flex;
   justify-content: center;
@@ -48,7 +52,7 @@ const TileHeading = styled.h2`
   text-align: center;
   text-transform: uppercase;
   font-weight: 100;
-  font-size: 14px;
+  font-size: 18px;
   top: 15px;
   position: absolute;
 `;
@@ -59,7 +63,7 @@ const SubHeader = styled.h3`
   top: 30%;
   position: absolute;
   text-align: center;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 100;
 `;
 
@@ -79,7 +83,7 @@ const Footer = styled.h3`
   bottom: 10%;
   position: absolute;
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 100;
   padding: 0px 20px;
 `;
@@ -146,6 +150,7 @@ const Tile: React.FC<TileProps> = ({
   width,
   height,
   top,
+  border
 }) => {
   return (
     <TileWrapper
@@ -156,6 +161,7 @@ const Tile: React.FC<TileProps> = ({
       width={width}
       height={height}
       top={top}
+    border={border}
     >
       <TileHeading>{heading}</TileHeading>
       {!errmsg && <SubHeader>{subheader}</SubHeader>}
