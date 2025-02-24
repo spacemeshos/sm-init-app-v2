@@ -6,12 +6,15 @@
 
 import React, { useCallback, useEffect, useRef } from "react";
 
+import cpu from "../../assets/cpu.png";
+import gpuIcon from "../../assets/gpu.png";
 import { useConsole } from "../../state/ConsoleContext";
 import { useSettings } from "../../state/SettingsContext";
 import { SetupContainer, SetupTileWrapper } from "../../styles/containers";
 import { ErrorMessage, Subheader } from "../../styles/texts";
 import { FindProviders, Provider } from "../../utils/parseResponse";
-import {Tile} from "../tile";
+import Image  from "../image";
+import { Tile } from "../tile";
 
 /**
  * Props for SetupGPU component
@@ -102,15 +105,21 @@ export const SetupGPU: React.FC<Props> = ({ isOpen, initialProviders }) => {
   }, [response, handleProviderSelect]);
 
   // Memoize tile creation to prevent unnecessary re-renders
+  const getProcessorIcon = useCallback((deviceType: string) => {
+    // Default to GPU icon since it's more common
+    return deviceType.toLowerCase().includes("cpu") ? cpu : gpuIcon;
+  }, []);
+
   const createTile = useCallback(
     (processor: Provider) => {
       const isFastest = processor.ID === 0;
       const isSelected = processor.ID === selectedProviderRef.current;
+      const icon = getProcessorIcon(processor.DeviceType);
 
       return (
         <SetupTileWrapper width={350} key={processor.ID}>
           <Tile
-            width={200}
+            width={280}
             heading={processor.Model}
             subheader={`${processor.DeviceType}${
               isFastest ? " (Fastest)" : ""
@@ -118,11 +127,14 @@ export const SetupGPU: React.FC<Props> = ({ isOpen, initialProviders }) => {
             footer={isSelected ? "Selected" : "Click to select"}
             onClick={() => handleProviderSelect(processor.ID, processor.Model)}
             selected={isSelected}
-          />
+            border
+          >
+            <Image src={icon} width={80} top={200} opacity={0.1} />
+          </Tile>
         </SetupTileWrapper>
       );
     },
-    [handleProviderSelect]
+    [handleProviderSelect, getProcessorIcon]
   );
 
   // Don't render if section is not open
