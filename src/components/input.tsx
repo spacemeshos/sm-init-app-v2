@@ -11,6 +11,11 @@ interface CustomNumberInputProps {
   step?: number;
   value?: number;
   onChange?: (value: number) => void;
+  width?: number;
+  height?: number;
+  fontSize?: number;
+  className?: string;
+  isValid?: boolean;
 }
 
 interface HexInputProps {
@@ -25,18 +30,15 @@ interface HexInputProps {
   type?: string;
 }
 
-const StyledInputRoot = styled.div<{ height?: number }>`
+const StyledInputRoot = styled.div<{ height?: number; width?: number }>`
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
   z-index: auto;
   position: absolute;
-  height: 50px;
-  width: 80%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  height: ${({ height }) => height || 50}px;
+  width: ${({ width }) => width || '100%'};
 `;
 
 const StyledInput = styled.input<{
@@ -127,6 +129,11 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   step = 1,
   value = min,
   onChange,
+  width,
+  height,
+  fontSize,
+  className,
+  isValid,
 }) => {
   const [inputValue, setInputValue] = React.useState<number>(value);
 
@@ -164,8 +171,8 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   };
 
   return (
-    <StyledInputRoot>
-      <StyledButton onClick={handleDecrement} className="decrement">
+    <StyledInputRoot width={width} height={height}>
+      <StyledButton onClick={handleDecrement} className="decrement" style={{ height: height || 45 }}>
         <IconImage src={minusIcon} alt="Decrease" />
       </StyledButton>
       <StyledInput
@@ -174,8 +181,13 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
         onChange={handleChange}
         min={min}
         max={max}
+        width={width}
+        height={height}
+        fontSize={fontSize}
+        className={className}
+        isValid={isValid}
       />
-      <StyledButton onClick={handleIncrement} className="increment">
+      <StyledButton onClick={handleIncrement} className="increment" style={{ height: height || 45 }}>
         <IconImage src={plusIcon} alt="Increase" />
       </StyledButton>
     </StyledInputRoot>
