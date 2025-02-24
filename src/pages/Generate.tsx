@@ -47,7 +47,7 @@ const Wrapper = styled.div`
 `;
 
 const SetupContainer = styled.div`
-  width: 800px;
+  width: 1000px;
   height: 420px;
   position: absolute;
   left: 0px;

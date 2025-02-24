@@ -9,13 +9,13 @@ export const Background = styled.img`
 `;
 
 export const MainContainer = styled.div`
-  width: 800px;
+  width: 1000px;
   height: 750px;
   position: absolute;
   top: 0px;
   left: 80px;
   background-color: ${Colors.darkOpaque};
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(20px);
   display: flex;
   align-items: flex-start;
   justify-content: center;
