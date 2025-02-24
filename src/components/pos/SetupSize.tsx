@@ -4,40 +4,38 @@
  * calculations and validation. Provides visual feedback for size implications.
  */
 
-import React from "react";
+import React from 'react';
 
-import { SizeConstants } from "../../Shared/Constants";
-import { useSettings } from "../../state/SettingsContext";
-import {
-  SetupContainer,
-  SetupTileWrapper,
-} from "../../styles/containers";
-import { calculateTotalSize, calculateNumFiles } from "../../utils/sizeUtils";
-import CustomNumberInput from "../input";
-import {Tile} from "../tile";
+import { SizeConstants } from '../../Shared/Constants';
+import { useSettings } from '../../state/SettingsContext';
+import { SetupContainer, SetupTileWrapper } from '../../styles/containers';
+import { BodyText } from '../../styles/texts';
+import { calculateTotalSize, calculateNumFiles } from '../../utils/sizeUtils';
+import CustomNumberInput from '../input';
+import { Tile } from '../tile';
 
 /**
  * Size Configuration Component
- * 
+ *
  * Features:
  * - Space unit allocation configuration
  * - Maximum file size settings
  * - Real-time size calculations
  * - Input validation and constraints
  * - Visual feedback
- * 
+ *
  * The component manages two key aspects:
  * 1. Space Units:
  *    - Number of units to allocate
  *    - Minimum unit requirement
  *    - Total size calculation
- * 
+ *
  * 2. File Size:
  *    - Maximum size per file
  *    - Number of files calculation
  *    - Size constraints and validation
  */
-export const SetupSize: React.FC = () => {
+export const SetupDataSize: React.FC = () => {
   const { settings, setSettings } = useSettings();
 
   return (
@@ -50,9 +48,8 @@ export const SetupSize: React.FC = () => {
             settings.numUnits || SizeConstants.DEFAULT_NUM_UNITS
           } Space Units (${calculateTotalSize(settings.numUnits)})`}
           footer={`1 Space Unit = ${SizeConstants.UNIT_SIZE_GIB} GiB (Minimum ${SizeConstants.DEFAULT_NUM_UNITS})`}
-          width={400}
+          width={700}
           height={400}
-          border
         />
         <>
           {/* Space Units Input
@@ -70,9 +67,22 @@ export const SetupSize: React.FC = () => {
             width={150}
             height={60}
           />
+          <BodyText
+            text={`Choose here the total amount of POS data to generate. The more you allocate, the bigger the rewards. 
+              \nThe POS data will be generated in multiple files. The size of each file is determined by the maximum file size option in advanced settings. 
+              \nNote: Consider your proving capabilities. Too much data may be impossible to prove on time.`}
+          />
         </>
       </SetupTileWrapper>
+    </SetupContainer>
+  );
+};
 
+export const SetupFileSize: React.FC = () => {
+  const { settings, setSettings } = useSettings();
+
+  return (
+    <SetupContainer>
       {/* File Size Configuration */}
       <SetupTileWrapper>
         <Tile
@@ -82,9 +92,8 @@ export const SetupSize: React.FC = () => {
             settings.maxFileSize || SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB
           )} files will be generated`}
           footer={`Default: ${SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB} MiB (${SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB / 1024} GiB)`}
-          width={400}
+          width={500}
           height={400}
-          border
         />
         <>
           {/* File Size Input
@@ -105,6 +114,10 @@ export const SetupSize: React.FC = () => {
             }
             width={150}
             height={60}
+          />
+          <BodyText
+            text={`The POS data will not be generated and stored in one huge file. It will be split across multiple smaller files. You can choose here the size of these files. 
+              \nNote: File size is limited to 8 GiB for practical reasons. Please consider filesystem limitations for larger files.`}
           />
         </>
       </SetupTileWrapper>

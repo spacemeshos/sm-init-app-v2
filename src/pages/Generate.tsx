@@ -16,7 +16,8 @@ import { BackButton, DotButton } from '../components/button';
 import {
   SelectDirectory,
   SetupGPU,
-  SetupSize,
+  SetupFileSize,
+  SetupDataSize,
   SelectIdentity,
   SelectATX,
   POSSummary,
@@ -117,11 +118,11 @@ const Generate: React.FC = () => {
   const { updateConsole } = useConsole();
   const { settings, setSettings } = useSettings();
   const { run, response } = FindProviders();
-  
+
   // Detect providers on component mount
   useEffect(() => {
     const detectProviders = async () => {
-      await run(["-printProviders"], updateConsole);
+      await run(['-printProviders'], updateConsole);
     };
     detectProviders();
   }, [run, updateConsole]);
@@ -129,10 +130,10 @@ const Generate: React.FC = () => {
   // Set initial provider when providers are detected
   useEffect(() => {
     if (response && response.length > 0) {
-      setSettings(prev => ({
+      setSettings((prev) => ({
         ...prev,
         provider: 0,
-        providerModel: response[0].Model
+        providerModel: response[0].Model,
       }));
     }
   }, [response, setSettings]);
@@ -150,7 +151,7 @@ const Generate: React.FC = () => {
     },
     {
       label: 'Set up POS Size',
-      component: <SetupSize />,
+      component: <SetupDataSize />,
       iconSrc: box,
     },
     {
@@ -160,7 +161,7 @@ const Generate: React.FC = () => {
     },
     {
       label: 'Setup Max File Size',
-      component: <SetupSize />,
+      component: <SetupFileSize />,
       iconSrc: file,
     },
     {

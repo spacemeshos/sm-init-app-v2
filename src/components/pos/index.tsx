@@ -1,5 +1,6 @@
 export { SelectDirectory } from "./SelectDirectory";
-export { SetupSize } from "./SetupSize";
+export { SetupDataSize } from "./SetupSize";
+export { SetupFileSize } from "./SetupSize";
 export { SetupGPU } from "./SetupGPU";
 export { SelectIdentity } from "./SelectIdentity";
 export { SelectATX } from "./SelectATX";
