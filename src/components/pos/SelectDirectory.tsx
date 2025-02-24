@@ -6,37 +6,49 @@
 
 import { open } from '@tauri-apps/api/dialog';
 import React, { useState } from 'react';
+import styled from 'styled-components';
 
 import { useSettings } from '../../state/SettingsContext';
 import { SetupTileWrapper } from '../../styles/containers';
+import { Subheader } from '../../styles/texts';
 import {
   validateDirectory,
   handleDirectoryError,
   shortenPath,
 } from '../../utils/directoryUtils';
 import { Button } from '../button';
-import {Tile} from '../tile';
+import { Tile } from '../tile';
+
+interface SelectDirectoryProps {
+  variant?: 'compact' | 'full';
+  width?: number;
+  height?: number;
+  showExplanation?: boolean;
+}
+
+const CompactWrapper = styled(SetupTileWrapper)`
+  margin-top: 40px;
+  height: 140px;
+`;
 
 /**
  * Directory Selection Component
- * 
+ *
  * Features:
  * - Native directory picker integration
  * - Directory validation
  * - Error handling
  * - Path display formatting
  * - Loading state management
- * 
- * The component supports:
- * 1. Using system's native directory picker
- * 2. Validating selected directory for:
- *    - Existence
- *    - Write permissions
- *    - Available space
- * 3. Falling back to default directory
- * 4. Displaying shortened paths for better UI
+ *
+ * Variants:
+ * - full: Complete view with explanations and full-size elements
+ * - compact: Condensed view for space-constrained contexts
  */
-export const SelectDirectory: React.FC = () => {
+export const SelectDirectory: React.FC<SelectDirectoryProps> = ({
+  variant = 'full',
+  showExplanation = false,
+}) => {
   const { settings, setSettings } = useSettings();
   // Track validation error state
   const [error, setError] = useState<string | null>(null);
@@ -45,12 +57,12 @@ export const SelectDirectory: React.FC = () => {
 
   /**
    * Handles directory selection process
-   * 
+   *
    * Process:
    * 1. Opens native directory picker
    * 2. Validates selected directory
    * 3. Updates settings or shows error
-   * 
+   *
    * Error Handling:
    * - User cancellation
    * - Invalid directory
@@ -105,13 +117,22 @@ export const SelectDirectory: React.FC = () => {
   const displayPath =
     settings.selectedDir || settings.defaultDir || 'Loading...';
 
+  const Wrapper = variant === 'compact' ? CompactWrapper : SetupTileWrapper;
+
   return (
-    <SetupTileWrapper>
+    <Wrapper>
       <Tile
         heading="Select where to store POS data"
-        footer={shortenPath(displayPath, 40)}
+        subheader={
+          variant === 'compact'
+            ? ''
+            : `The selected location should have appropriate permissions and meet
+            space requirements.`
+        }
+        footer={variant === 'compact' ? shortenPath(displayPath, 30) : ''}
         errmsg={error ?? undefined}
-        height={120}
+        height={350}
+        width={variant === 'compact' ? 400 : 500}
       />
       <Button
         onClick={handleSelectDirectory}
@@ -119,6 +140,12 @@ export const SelectDirectory: React.FC = () => {
         width={320}
         disabled={isValidating}
       />
-    </SetupTileWrapper>
+      {variant === 'full' && showExplanation && (
+        <>
+          <Subheader text="Selected:" top={-160} />
+          <Subheader text={shortenPath(displayPath, 50)} top={-140} />
+        </>
+      )}
+    </Wrapper>
   );
 };

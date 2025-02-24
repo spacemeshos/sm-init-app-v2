@@ -211,7 +211,7 @@ const Profiler: React.FC = () => {
               />
             ) : (
               <div onClick={(e) => e?.stopPropagation()}>
-                <SelectDirectory />
+                <SelectDirectory variant="compact" width={350} />
                 <CloseButton
                   top={2}
                   left={95}

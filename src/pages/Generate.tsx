@@ -33,7 +33,7 @@ import { Header } from '../styles/texts';
 import { FindProviders } from '../utils/parseResponse';
 
 const Wrapper = styled.div`
-  width: 880px;
+  width: 1080px;
   height: 750px;
   position: relative;
   left: 50%;
@@ -140,7 +140,7 @@ const Generate: React.FC = () => {
   const steps = [
     {
       label: 'Pick Directory',
-      component: <SelectDirectory />,
+      component: <SelectDirectory variant="full" showExplanation={true} />,
       iconSrc: folder,
     },
     {
