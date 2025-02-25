@@ -2,7 +2,7 @@
  * @fileoverview Service layer for interacting with the postcli binary
  * Provides functionality for executing postcli commands, managing processes,
  * and handling command output in both synchronous and detached modes.
- * 
+ *
  * Key Features:
  * - Synchronous command execution with real-time output
  * - Detached process management for long-running operations
@@ -18,15 +18,6 @@ import { Settings } from '../state/SettingsContext';
 import { buildPostCliArgs, validateSettings } from '../utils/postcliUtils';
 
 /**
- * Temporary mock data for ATX ID until API endpoint is available
- * Will be replaced with actual network call to:
- * https://mainnet-api.spacemesh.network/spacemesh.v2alpha1.ActivationService/Highest
- */
-const MOCK_ATX_RESPONSE = {
-  atxId: '65f77244a23870ee39f15cf088ee1651745c3b73195491e277bc65aa56937425',
-};
-
-/**
  * Response structure for postcli command execution
  * @interface PostCliResponse
  */
@@ -34,6 +25,22 @@ export interface PostCliResponse {
   stdout: string;
   stderr: string;
   success: boolean;
+}
+
+/**
+ * Response structure from the Spacemesh API's Highest endpoint
+ * @interface HighestActivationResponse
+ */
+interface HighestActivationResponse {
+  activation: {
+    coinbase: string;
+    height: string;
+    id: string;
+    numUnits: number;
+    publishEpoch: number;
+    smesherId: string;
+    weight: string;
+  }
 }
 
 /**
@@ -58,33 +65,45 @@ export interface DetachedProcessResponse {
 
 /**
  * Fetches the latest ATX ID from the network
- * Currently returns mock data, will be replaced with actual API call
+ * Makes a POST request to the Spacemesh API to get the highest activation
  * 
  * @returns {Promise<AtxIdResponse>} Latest ATX ID information
- * @todo Implement actual API call when endpoint is available
  */
 export const fetchLatestAtxId = async (): Promise<AtxIdResponse> => {
-  // TODO: Replace with actual API call when endpoint is available
-  // const response = await fetch('https://mainnet-api.spacemesh.network/spacemesh.v2alpha1.ActivationService/Highest');
-  // return response.json();
+  try {
+    const response = await fetch('https://mainnet-api.spacemesh.network/spacemesh.v2alpha1.ActivationService/Highest', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({})
+    });
 
-  // Simulate API delay for testing
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`);
+    }
 
-  // Return mock data
-  return MOCK_ATX_RESPONSE;
+    const data: HighestActivationResponse = await response.json();
+    
+    return {
+      atxId: data.activation.id
+    };
+  } catch (error) {
+    console.error('Error fetching latest ATX ID:', error);
+    throw new Error('Failed to fetch latest ATX ID from network');
+  }
 };
 
 /**
  * Executes postcli command synchronously with the provided settings
  * Performs full validation before execution and provides real-time output
- * 
+ *
  * Process:
  * 1. Validates all settings
  * 2. Builds command arguments
  * 3. Executes command and streams output
  * 4. Handles any errors or validation failures
- * 
+ *
  * @param {Settings} settings - POS configuration settings
  * @param {Function} updateConsole - Optional callback for console updates
  * @returns {Promise<PostCliResponse>} Command execution results
@@ -168,13 +187,13 @@ export const executePostCli = async (
 /**
  * Executes postcli command in detached mode for long-running operations
  * Sets up event listeners for progress updates and manages background execution
- * 
+ *
  * Features:
  * - Background process execution
  * - Real-time progress updates via events
  * - Automatic cleanup of event listeners
  * - Comprehensive error handling
- * 
+ *
  * @param {Settings} settings - POS configuration settings
  * @param {Function} updateConsole - Optional callback for console updates
  * @returns {Promise<DetachedProcessResponse>} Detached process information
@@ -267,12 +286,12 @@ export const executePostCliDetached = async (
 /**
  * Stops a running detached postcli process
  * Attempts graceful shutdown of the specified process
- * 
+ *
  * Process:
  * 1. Sends termination signal to process
  * 2. Waits for confirmation
  * 3. Reports success or failure
- * 
+ *
  * @param {number} processId - ID of the process to stop
  * @param {Function} updateConsole - Optional callback for console updates
  * @throws {Error} If process termination fails
@@ -311,13 +330,13 @@ export const stopPostCliProcess = async (
 /**
  * Low-level function to execute postcli commands directly with arguments
  * Used by other service functions and external components
- * 
+ *
  * Features:
  * - Direct command execution with raw arguments
  * - Real-time output streaming
  * - Comprehensive error handling
  * - Console output formatting
- * 
+ *
  * @param {string[]} args - Command line arguments for postcli
  * @param {Function} updateConsole - Optional callback for console updates
  * @returns {Promise<PostCliResponse>} Command execution results
