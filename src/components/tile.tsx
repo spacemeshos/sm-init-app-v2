@@ -40,9 +40,18 @@ const TileWrapper = styled.div<{
     border ? `1px solid ${Colors.greenLightOpaque}` : 'none'};
   position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
   top: ${({ top }) => top || 0}px;
+`;
+
+const ContentContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 80px;
 `;
 
 const TileHeading = styled.h2`
@@ -165,7 +174,9 @@ const Tile: React.FC<TileProps> = ({
     >
       <TileHeading>{heading}</TileHeading>
       {!errmsg && <SubHeader>{subheader}</SubHeader>}
-      {children}
+      <ContentContainer>
+        {children}
+      </ContentContainer>
       {errmsg && <ErrorMessage>{errmsg}</ErrorMessage>}
       <Footer>{footer}</Footer>
     </TileWrapper>
