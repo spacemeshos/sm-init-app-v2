@@ -72,7 +72,7 @@ Platform-specific installation guides for dependencies:
      - Convert total size to MiB (numUnits * 64 GiB * 1024 MiB/GiB)
      - Currently: const totalSizeInMiB = numUnits * 0.00006103515625 * 1024; //TESTING PURPOSES TO BE REVERTED TO 64
 
-2. **ATX ID**:
+2. **ATX ID**: * Update: it's implemented, please check.
    - Mock ATX ID used for testing: "65f77244a23870ee39f15cf088ee1651745c3b73195491e277bc65aa56937425"
    - API endpoint for fetching latest ATX ID not implemented yet
    - TODO: Implement actual API call to fetch ATX ID
