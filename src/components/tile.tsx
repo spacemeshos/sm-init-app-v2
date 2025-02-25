@@ -42,16 +42,9 @@ const TileWrapper = styled.div<{
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
   top: ${({ top }) => top || 0}px;
-`;
-
-const ContentContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 80px;
 `;
 
 const TileHeading = styled.h2`
@@ -159,7 +152,7 @@ const Tile: React.FC<TileProps> = ({
   width,
   height,
   top,
-  border
+  border,
 }) => {
   return (
     <TileWrapper
@@ -170,13 +163,11 @@ const Tile: React.FC<TileProps> = ({
       width={width}
       height={height}
       top={top}
-    border={border}
+      border={border}
     >
       <TileHeading>{heading}</TileHeading>
       {!errmsg && <SubHeader>{subheader}</SubHeader>}
-      <ContentContainer>
-        {children}
-      </ContentContainer>
+      {children}
       {errmsg && <ErrorMessage>{errmsg}</ErrorMessage>}
       <Footer>{footer}</Footer>
     </TileWrapper>
@@ -193,9 +184,9 @@ const ActionTile: React.FC<ActionTileProps> = ({ footer, icon, onClick }) => (
   <Tile
     footer={footer}
     height={65}
-    width={120}
+    width={160}
     blurred
-    backgroundColor={Colors.whiteOpaque}
+    backgroundColor={Colors.darkOpaque}
     onClick={onClick}
   >
     <Image src={icon} width={25} top={10} />
