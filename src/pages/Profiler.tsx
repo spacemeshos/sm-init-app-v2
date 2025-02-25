@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import BackgroundImage from '../assets/banner4.png';
 import File from '../assets/file.png';
 import InfoIcon from '../assets/help.png';
-import NextStep from '../assets/nextstep.png';
 import Gear from '../assets/setting.png';
 import { BackButton, Button, CloseButton } from '../components/button';
 import CustomNumberInput from '../components/input';
@@ -61,7 +60,6 @@ const OptionsContainer = styled.div`
   align-content: flex-start;
   justify-content: center;
   margin-bottom: 15px;
-  gap: 5px;
 `;
 
 const StepsContainer = styled.div`
@@ -122,10 +120,9 @@ const Profiler: React.FC = () => {
         onClose={() => setShowAccuracyModal(false)}
         header="How accurate the test should be" //TO DO rephrase and fix layout
         text="Increase amount of data or duration time for more accurate results"
-        width={700}
-        height={500}
+        width={800}
+        height={600}
       >
-        <>
           <Tile heading="GiB to process:" height={150}>
             <CustomNumberInput
               min={PROFILER_CONSTANTS.MIN_DATA_SIZE}
@@ -144,7 +141,6 @@ const Profiler: React.FC = () => {
               onChange={(val) => updateConfig({ duration: val })}
             />
           </Tile>
-        </>
       </Modal>
 
       {/* Main POSProfiler content */}
@@ -161,11 +157,11 @@ const Profiler: React.FC = () => {
             height={65}
             width={550}
             blurred
-            backgroundColor={Colors.whiteOpaque}
+            backgroundColor={Colors.darkOpaque}
             onClick={() => setShowInfoModal(true)}
           >
             <BodyText
-              top={18}
+              top={0}
               text="The profiler helps estimate how much POS Data you can allocate. 
             Succesful proving within cycle gap is crucial for rewards eligibility."
             />
@@ -186,11 +182,6 @@ const Profiler: React.FC = () => {
             footer="Full config"
             icon={File}
             onClick={() => navigate('/config')}
-          />
-          <ActionTile
-            footer="What Next?"
-            icon={NextStep}
-            onClick={() => navigate('/nextSteps')}
           />
         </OptionsContainer>
 
@@ -241,8 +232,7 @@ const Profiler: React.FC = () => {
                 <Tile
                   heading="Nonces:"
                   footer="more nonces = bigger chance to prove on one pass"
-                  height={170}
-                  top={50}
+                  height={150}
                   onClick={(e) => e?.stopPropagation()}
                 >
                   <CustomNumberInput
@@ -256,8 +246,7 @@ const Profiler: React.FC = () => {
                 <Tile
                   heading="CPU Cores:"
                   footer="more cores = faster proving"
-                  height={170}
-                  top={50}
+                  height={150}
                   onClick={(e) => e?.stopPropagation()}
                 >
                   <CustomNumberInput
@@ -301,7 +290,7 @@ const Profiler: React.FC = () => {
           height={150}
           width={400}
           blurred
-          backgroundColor={Colors.whiteOpaque}
+          backgroundColor={Colors.darkOpaque}
         >
           {benchmarks.length > 0 &&
             (() => {
@@ -316,7 +305,7 @@ const Profiler: React.FC = () => {
           height={150}
           width={400}
           blurred
-          backgroundColor={Colors.whiteOpaque}
+          backgroundColor={Colors.darkOpaque}
         >
           {benchmarks.length > 0 &&
             (() => {
@@ -340,7 +329,7 @@ const Profiler: React.FC = () => {
           height={150}
           width={240}
           blurred
-          backgroundColor={Colors.whiteOpaque}
+          backgroundColor={Colors.darkOpaque}
         >
           {benchmarks.length > 0 && (
             <Header top={60} text={benchmarks[benchmarks.length - 1].status} />
@@ -353,7 +342,7 @@ const Profiler: React.FC = () => {
           height={300}
           width={1050}
           blurred
-          backgroundColor={Colors.whiteOpaque}
+          backgroundColor={Colors.darkOpaque}
           heading="Results History"
         >
           <ProfilerTable
