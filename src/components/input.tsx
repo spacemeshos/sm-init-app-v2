@@ -36,9 +36,9 @@ const StyledInputRoot = styled.div<{ height?: number; width?: number }>`
   justify-content: center;
   align-items: center;
   z-index: auto;
-  position: absolute;
   height: ${({ height }) => height || 50}px;
   width: ${({ width }) => width || '100%'};
+  margin: 120px auto 0;
 `;
 
 const StyledInput = styled.input<{

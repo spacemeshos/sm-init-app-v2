@@ -75,7 +75,7 @@ export const SetupTileWrapper = styled.div<{
   width?: number;
 }>`
   height: 100%;
-  width: ${({ width }) => width || 450}px;
+  width: ${({ width }) => width || 100}%;
   position: relative;
   display: flex;
   justify-content: center;
