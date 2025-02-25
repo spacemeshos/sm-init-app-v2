@@ -49,9 +49,8 @@ export const SetupDataSize: React.FC = () => {
           } Space Units (${calculateTotalSize(settings.numUnits)})`}
           footer={`1 Space Unit = ${SizeConstants.UNIT_SIZE_GIB} GiB (Minimum ${SizeConstants.DEFAULT_NUM_UNITS})`}
           width={700}
-          height={400}
-        />
-        <>
+          height={300}
+        >
           {/* Space Units Input
                 - Minimum: DEFAULT_NUM_UNITS (cannot allocate less)
                 - Step: 1 unit at a time
@@ -67,12 +66,12 @@ export const SetupDataSize: React.FC = () => {
             width={150}
             height={60}
           />
+        </Tile>
           <BodyText
             text={`Choose here the total amount of POS data to generate. The more you allocate, the bigger the rewards. 
               \nThe POS data will be generated in multiple files. The size of each file is determined by the maximum file size option in advanced settings. 
               \nNote: Consider your proving capabilities. Too much data may be impossible to prove on time.`}
           />
-        </>
       </SetupTileWrapper>
     </SetupContainer>
   );
@@ -93,9 +92,8 @@ export const SetupFileSize: React.FC = () => {
           )} files will be generated`}
           footer={`Default: ${SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB} MiB (${SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB / 1024} GiB)`}
           width={500}
-          height={400}
-        />
-        <>
+          height={300}
+        >
           {/* File Size Input
                 - Minimum: 1 MiB (cannot have empty files)
                 - Maximum: 8192 MiB (8 GiB) for practical file handling, but fs limitations to be considered for better boundries
@@ -115,11 +113,11 @@ export const SetupFileSize: React.FC = () => {
             width={150}
             height={60}
           />
+        </Tile>
           <BodyText
-            text={`The POS data will not be generated and stored in one huge file. It will be split across multiple smaller files. You can choose here the size of these files. 
+            text={`The POS data will be split across multiple smaller files. You can choose here the size of these files. 
               \nNote: File size is limited to 8 GiB for practical reasons. Please consider filesystem limitations for larger files.`}
           />
-        </>
       </SetupTileWrapper>
     </SetupContainer>
   );
