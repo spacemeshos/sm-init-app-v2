@@ -38,7 +38,6 @@ const StyledInputRoot = styled.div<{ height?: number; width?: number }>`
   z-index: auto;
   height: ${({ height }) => height || 50}px;
   width: ${({ width }) => width || '100%'};
-  margin: 120px auto 0;
 `;
 
 const StyledInput = styled.input<{

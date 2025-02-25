@@ -12,7 +12,7 @@ const Colors = {
   red: '#EC0000',
   black: '#000000',
   gradientGB: 'linear-gradient(87.93deg, #55E8E2 2.84%, #3AFFA7 97.16%)',
-  backdropColor: 'rgba(0, 0, 0, 0.5)',
+  backdropColor: 'rgba(0, 0, 0, 0.8)',
 };
   
   export default Colors;
