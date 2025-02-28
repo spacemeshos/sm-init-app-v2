@@ -13,7 +13,8 @@ export const MainContainer = styled.div`
   height: 750px;
   position: absolute;
   top: 0px;
-  left: 80px;
+  left: 50%;
+  transform: translateX(-50%);
   background-color: ${Colors.darkOpaque};
   backdrop-filter: blur(20px);
   display: flex;
@@ -53,7 +54,7 @@ export const PageTitleWrapper = styled.div`
   top: 50px;
   left: 50%;
   height: 80px;
-  width: 80%;
+  width: 100%;
   transform: translateX(-50%);
   text-transform: uppercase;
   border-bottom: 1px solid ${Colors.greenLight};
@@ -64,6 +65,8 @@ export const SetupContainer = styled.div`
   width: 80%;
   position: absolute;
   top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
   padding-top: 20px;
   display: flex;
   justify-content: space-evenly;

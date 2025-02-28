@@ -12,7 +12,7 @@ import id from '../assets/id.png';
 import summary from '../assets/justify.png';
 import gear from '../assets/setting.png';
 import BackgroundImage from '../assets/wave2.png';
-import { BackButton, DotButton } from '../components/button';
+import { BackButton } from '../components/button';
 import {
   SelectDirectory,
   SetupGPU,
@@ -22,6 +22,7 @@ import {
   SelectATX,
   POSSummary,
 } from '../components/pos/index';
+import VerticalTabs, { TabItem } from '../components/VerticalTabs';
 import { useConsole } from '../state/ConsoleContext';
 import { useSettings } from '../state/SettingsContext';
 import Colors from '../styles/colors';
@@ -41,52 +42,33 @@ const Wrapper = styled.div`
   transform: translateX(-50%);
   top: 0px;
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  align-content: flex-start;
-  justify-content: center;
-`;
-
-const SetupContainer = styled.div`
-  width: 1000px;
-  height: 500px;
-  position: absolute;
-  left: 0px;
-  top: 180px;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  align-content: center;
-  justify-content: center;
-  padding: 20px;
-`;
-
-const ButtonColumn = styled.div`
-  position: absolute;
-  width: 80px;
-  height: 350px;
-  top: 180px;
-  left: 0px;
-  display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
 `;
 
+const TabsContainer = styled.div`
+  width: 1000px;
+  height: 500px;
+  position: relative;
+  top: 180px;
+`;
+
 const AdvancedSettingsButton = styled.button`
-  background: transparent;
-  border: 1px solid ${Colors.white};
+  background: ${Colors.greenLightOpaque};
+  border: 1px solid ${Colors.greenLightOpaque};
   color: ${Colors.white};
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
   position: absolute;
-  right: 80px;
-  top: 150px;
+  right: 50px;
+  top: 140px;
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 14px;
+  line-height: 18px;
   transition: background 0.2s;
 
   &:hover {
@@ -109,8 +91,7 @@ const ErrorMessage = styled.div`
 `;
 
 const Generate: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState<number>(7);
-  const [showSummary, setShowSummary] = useState<boolean>(true);
+  const [activeTabId, setActiveTabId] = useState<string>('summary');
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [showAdvancedSettings, setShowAdvancedSettings] =
@@ -138,52 +119,109 @@ const Generate: React.FC = () => {
     }
   }, [response, setSettings]);
 
-  const steps = [
-    {
-      label: 'Pick Directory',
-      component: <SelectDirectory variant="full" showExplanation={true} />,
-      iconSrc: folder,
-    },
-    {
-      label: 'Select Processor',
-      component: <SetupGPU isOpen={true} initialProviders={response} />,
-      iconSrc: gpu,
-    },
-    {
-      label: 'Set up POS Size',
-      component: <SetupDataSize />,
-      iconSrc: box,
-    },
-    {
-      label: 'Select Identity',
-      component: <SelectIdentity />,
-      iconSrc: id,
-    },
-    {
-      label: 'Setup Max File Size',
-      component: <SetupFileSize />,
-      iconSrc: file,
-    },
-    {
-      label: 'Select ATX ID',
-      component: <SelectATX />,
-      iconSrc: hex,
-    },
-    {
-      label: 'Split Generation in Subsets',
-      iconSrc: copy,
-    },
-  ];
+  // Define tabs based on whether we're showing basic or advanced settings
+  const getTabs = (): TabItem[] => {
+    const basicTabs: TabItem[] = [
+      {
+        id: 'summary',
+        label: 'Summary',
+        iconSrc: summary,
+        content: (
+          <POSSummary
+            onProceed={handleProceed}
+            isGenerating={isGenerating}
+            error={error}
+            updateConsole={updateConsole}
+            onStepChange={(step) => {
+              const tabId = getTabIdFromStepIndex(step);
+              if (tabId) setActiveTabId(tabId);
+            }}
+          />
+        ),
+      },
+      {
+        id: 'directory',
+        label: 'Pick Directory',
+        iconSrc: folder,
+        content: <SelectDirectory variant="full" showExplanation={true} />,
+      },
+      {
+        id: 'processor',
+        label: 'Select Processor',
+        iconSrc: gpu,
+        content: <SetupGPU isOpen={true} initialProviders={response} />,
+      },
+      {
+        id: 'size',
+        label: 'Set up POS Size',
+        iconSrc: box,
+        content: <SetupDataSize />,
+      },
+    ];
 
-  const handleStepChange = (index: number) => {
-    // If index is out of steps range, show summary
-    if (index >= 7) {
-      setShowSummary(true);
-      setCurrentStep(7); // Set currentStep to steps.length when showing summary
-    } else {
-      setShowSummary(false);
-      setCurrentStep(index);
-    }
+    const advancedTabs: TabItem[] = [
+      {
+        id: 'summary',
+        label: 'Summary',
+        iconSrc: summary,
+        content: (
+          <POSSummary
+            onProceed={handleProceed}
+            isGenerating={isGenerating}
+            error={error}
+            updateConsole={updateConsole}
+            onStepChange={(step) => {
+              const tabId = getTabIdFromStepIndex(step);
+              if (tabId) setActiveTabId(tabId);
+            }}
+            initialAdvancedVisible={true}
+            showOnlyAdvanced={true}
+          />
+        ),
+      },
+      {
+        id: 'identity',
+        label: 'Select Identity',
+        iconSrc: id,
+        content: <SelectIdentity />,
+      },
+      {
+        id: 'filesize',
+        label: 'Setup Max File Size',
+        iconSrc: file,
+        content: <SetupFileSize />,
+      },
+      {
+        id: 'atx',
+        label: 'Select ATX ID',
+        iconSrc: hex,
+        content: <SelectATX />,
+      },
+      {
+        id: 'subsets',
+        label: 'Split Generation',
+        iconSrc: copy,
+        content: <div>To Be Implemented</div>,
+      }
+    ];
+
+    return showAdvancedSettings ? advancedTabs : basicTabs;
+  };
+
+  // Helper function to convert step index to tab ID
+  const getTabIdFromStepIndex = (index: number): string | null => {
+    if (index >= 7) return 'summary';
+
+    const tabIds = showAdvancedSettings
+      ? ['identity', 'filesize', 'atx', 'subsets']
+      : ['directory', 'processor', 'size'];
+
+    return index < tabIds.length ? tabIds[index] : null;
+  };
+
+  // Handle tab change
+  const handleTabChange = (tabId: string) => {
+    setActiveTabId(tabId);
     setError(null);
   };
 
@@ -196,49 +234,21 @@ const Generate: React.FC = () => {
     );
   };
 
-  const renderContent = () => {
-    if (!showSummary) {
-      return steps[currentStep].component;
-    }
-
-    if (showAdvancedSettings) {
-      return (
-        <POSSummary
-          onProceed={handleProceed}
-          isGenerating={isGenerating}
-          error={error}
-          updateConsole={updateConsole}
-          onStepChange={(step) => {
-            setShowSummary(false);
-            handleStepChange(step);
-          }}
-          initialAdvancedVisible={true}
-          showOnlyAdvanced={true}
-        />
-      );
-    }
-
-    return (
-      <POSSummary
-        onProceed={handleProceed}
-        isGenerating={isGenerating}
-        error={error}
-        updateConsole={updateConsole}
-        onStepChange={handleStepChange}
-      />
-    );
+  const toggleAdvancedSettings = () => {
+    setShowAdvancedSettings(!showAdvancedSettings);
+    setActiveTabId('summary'); // Reset to summary view when toggling
   };
 
-  const toggleAdvancedSettings = () => {
+  // Get the current active tab's label for the page title
+  const getPageTitle = () => {
     if (showAdvancedSettings) {
-      setShowAdvancedSettings(false);
-      setShowSummary(true);
-      setCurrentStep(7);
-    } else {
-      setShowAdvancedSettings(true);
-      setShowSummary(true);
-      setCurrentStep(7); // Keep in summary view when entering advanced mode
+      return 'ADVANCED SETTINGS';
     }
+
+    const activeTab = getTabs().find((tab) => tab.id === activeTabId);
+    return activeTab?.id === 'summary'
+      ? 'YOUR POS GENERATION SETTINGS'
+      : activeTab?.label.toUpperCase();
   };
 
   return (
@@ -248,55 +258,23 @@ const Generate: React.FC = () => {
       <Wrapper>
         <MainContainer>
           <PageTitleWrapper>
-            <Header
-              text={
-                showAdvancedSettings
-                  ? 'ADVANCED SETTINGS'
-                  : showSummary
-                    ? 'YOUR POS GENERATION SETTINGS'
-                    : steps[currentStep].label
-              }
-            />
+            <Header text={getPageTitle()} />
           </PageTitleWrapper>
           <AdvancedSettingsButton onClick={toggleAdvancedSettings}>
             <img src={gear} alt="Advanced Settings" />
             {showAdvancedSettings ? 'Back to Main' : 'Advanced Settings'}
           </AdvancedSettingsButton>
-          <SetupContainer>{renderContent()}</SetupContainer>
+          <TabsContainer>
+            <VerticalTabs
+              tabs={getTabs()}
+              activeTab={activeTabId}
+              onTabChange={handleTabChange}
+              width={1000}
+              height={500}
+            />
+          </TabsContainer>
           {error && <ErrorMessage>{error}</ErrorMessage>}
         </MainContainer>
-        <ButtonColumn>
-          <DotButton
-            onClick={() => handleStepChange(steps.length)}
-            $isActive={showSummary && currentStep === 7}
-            iconSrc={summary}
-          />
-          {!showAdvancedSettings
-            ? steps
-                .slice(0, 3)
-                .map((step, index) => (
-                  <DotButton
-                    key={index}
-                    onClick={() => handleStepChange(index)}
-                    $isActive={currentStep === index}
-                    disabled={isGenerating}
-                    iconSrc={step.iconSrc}
-                    alt={step.label}
-                  />
-                ))
-            : steps
-                .slice(3, 7)
-                .map((step, index) => (
-                  <DotButton
-                    key={index + 3}
-                    onClick={() => handleStepChange(index + 3)}
-                    $isActive={currentStep === index + 3}
-                    disabled={isGenerating}
-                    iconSrc={step.iconSrc}
-                    alt={step.label}
-                  />
-                ))}
-        </ButtonColumn>
       </Wrapper>
     </>
   );

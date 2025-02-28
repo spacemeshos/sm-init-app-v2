@@ -31,7 +31,7 @@ const Wrapper = styled.div<{
   position: relative;
   top: ${({ top }) => top}px;
   left: ${({ left }) => left}px;
-  height: ${({ height }) => height || 70}px;
+  height: ${({ height }) => height || 80}px;
   width: ${({ width }) => width || 100}%;
   display: flex;
   justify-content: center;
@@ -39,7 +39,10 @@ const Wrapper = styled.div<{
   align-items: center;
   align-content: center;
   border: 0.5px solid ${Colors.greenLightOpaque};
-  cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
+  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
+  &:hover {
+    background: ${Colors.greenLightOpaque};
+  }
 `;
 
 const FrameHeading = styled.div`

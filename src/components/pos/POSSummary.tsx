@@ -26,22 +26,22 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  width: 100%;
+  width: 920px;
   height: 420px;
   position: absolute;
   top: 0px;
 `;
 
 const SummarySection = styled.div`
-  width: 800px;
+  width: 920px;
   height: 420px;
   position: relative;
   top: 0px;
 `;
 
 const AdvancedSection = styled.div<{ isVisible: boolean }>`
-  width: 800px;
-  height: ${props => props.isVisible ? '280px' : '0px'};
+  width: 920px;
+  height: ${props => props.isVisible ? '420px' : '0px'};
   position: relative;
   top: 0px;
   overflow: hidden;
