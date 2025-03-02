@@ -59,7 +59,6 @@ const OptionsContainer = styled.div`
   align-content: flex-start;
   justify-content: felx-start;
   margin-bottom: 15px;
-  gap: 15px;
 `;
 
 const StepsContainer = styled.div`
@@ -83,7 +82,7 @@ const Profiler: React.FC = () => {
   const [showAccuracyModal, setShowAccuracyModal] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  
+
   // Use the custom hook for each tile
   const directoryTile = useTileHover();
   const provingTile = useTileHover();
@@ -123,26 +122,28 @@ const Profiler: React.FC = () => {
         onClose={() => setShowAccuracyModal(false)}
         header="How accurate the test should be" //TO DO rephrase and fix layout
         text="Increase amount of data or duration time for more accurate results"
-        width={800}
-        height={600}
+        width={700}
+        height={400}
       >
-        <Tile heading="GiB to process:" height={150}>
-          <CustomNumberInput
-            min={PROFILER_CONSTANTS.MIN_DATA_SIZE}
-            max={PROFILER_CONSTANTS.MAX_DATA_SIZE}
-            step={1}
-            value={config.data_size}
-            onChange={(val) => updateConfig({ data_size: val })}
-          />
-        </Tile>
-        <Tile heading="Duration (s):" height={150}>
-          <CustomNumberInput
-            min={PROFILER_CONSTANTS.MIN_DURATION}
-            max={PROFILER_CONSTANTS.MAX_DURATION}
-            step={5}
-            value={config.duration}
-            onChange={(val) => updateConfig({ duration: val })}
-          />
+        <Tile horizontal height={200} width={600}>
+          <Tile heading="GiB to process:" height={150}>
+            <CustomNumberInput
+              min={PROFILER_CONSTANTS.MIN_DATA_SIZE}
+              max={PROFILER_CONSTANTS.MAX_DATA_SIZE}
+              step={1}
+              value={config.data_size}
+              onChange={(val) => updateConfig({ data_size: val })}
+            />
+          </Tile>
+          <Tile heading="Duration (s):" height={150}>
+            <CustomNumberInput
+              min={PROFILER_CONSTANTS.MIN_DURATION}
+              max={PROFILER_CONSTANTS.MAX_DURATION}
+              step={5}
+              value={config.duration}
+              onChange={(val) => updateConfig({ duration: val })}
+            />
+          </Tile>
         </Tile>
       </Modal>
 
@@ -158,15 +159,15 @@ const Profiler: React.FC = () => {
           {/* Info */}
           <Tile
             height={65}
-            width={550}
+            width={710}
             blurred
             backgroundColor={Colors.darkOpaque}
             onClick={() => setShowInfoModal(true)}
           >
             <BodyText
               top={0}
-              text="The profiler helps estimate how much POS Data you can allocate. 
-            Succesful proving within cycle gap is crucial for rewards eligibility."
+              text="The profiler helps estimate how much POS Data you can allocate to be able to prove it on time. 
+              Succesful POST proof generation within cycle gap is crucial for rewards eligibility."
             />
           </Tile>
 
@@ -219,8 +220,9 @@ const Profiler: React.FC = () => {
           {/* Custom Proving Settings */}
           <Tile
             height={250}
-            width={470}
+            width={510}
             blurred
+            horizontal
             backgroundColor={Colors.whiteOpaque}
             onMouseEnter={provingTile.handleMouseEnter}
             onMouseLeave={provingTile.handleMouseLeave}
@@ -228,16 +230,16 @@ const Profiler: React.FC = () => {
             {!provingTile.isVisible ? (
               <CoverTile
                 counter="2"
-                heading="Experiment with Proving Settings"
-                footer="Test different values of these params to find optimal config. 
-              Balance the probability and proving speed."
+                heading="Experiment with speed and probability"
+                footer="Test different numbers of CPU Cores and Nonces to find optimal config. 
+              Balance the probability of one pass and proving speed."
               />
             ) : (
               <>
                 <Tile
                   heading="Nonces:"
-                  footer="more nonces = bigger chance to prove on one pass"
-                  height={150}
+                  footer="more nonces = slower, but higher chance to prove in one pass"
+                  height={200}
                   onClick={(e) => e?.stopPropagation()}
                 >
                   <CustomNumberInput
@@ -250,8 +252,8 @@ const Profiler: React.FC = () => {
                 </Tile>
                 <Tile
                   heading="CPU Cores:"
-                  footer="more cores = faster proving"
-                  height={150}
+                  footer="more cores = faster proving, but more power consumption"
+                  height={200}
                   onClick={(e) => e?.stopPropagation()}
                 >
                   <CustomNumberInput
@@ -274,16 +276,15 @@ const Profiler: React.FC = () => {
           </Tile>
 
           {/* Run Benchmark Button */}
-          <Tile height={250} width={240} backgroundColor={Colors.whiteOpaque}>
+          <Tile height={250} width={200} backgroundColor={Colors.whiteOpaque}>
             <CoverTile counter="3">
               <Button
                 onClick={runCustomBenchmark}
                 disabled={isRunning}
                 label="Run Test"
-                width={120}
+                width={150}
                 height={40}
                 top={65}
-                left={40}
               />
             </CoverTile>
           </Tile>
