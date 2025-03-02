@@ -13,9 +13,13 @@ export interface TileProps {
   children?: React.ReactNode;
   buttonText?: string;
   onClick?: (event?: React.MouseEvent) => void;
+  onHover?: (event?: React.MouseEvent) => void;
+  onMouseEnter?: (event?: React.MouseEvent) => void;
+  onMouseLeave?: (event?: React.MouseEvent) => void;
   selected?: boolean;
   backgroundColor?: string;
   blurred?: boolean;
+  horizontal?: boolean;
   width?: number;
   height?: number;
   top?: number;
@@ -28,8 +32,13 @@ const TileWrapper = styled.div<{
   width?: number;
   backgroundColor?: string;
   blurred?: boolean;
+  horizontal?: boolean;
   top?: number;
   border?: boolean;
+  onClick?: (event?: React.MouseEvent) => void;
+  onHover?: (event?: React.MouseEvent) => void;
+  onMouseEnter?: (event?: React.MouseEvent) => void;
+  onMouseLeave?: (event?: React.MouseEvent) => void;
 }>`
   height: ${({ height = 450 }) => `${height}px`};
   width: ${({ width = 500 }) => `${width}px`};
@@ -40,10 +49,11 @@ const TileWrapper = styled.div<{
     border ? `1px solid ${Colors.greenLightOpaque}` : 'none'};
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: ${({ horizontal }) => (horizontal ? 'row' : 'column')};
   align-items: center;
   justify-content: center;
-  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
+  cursor: ${({ onClick, onHover }) =>
+    onClick || onHover ? 'pointer' : 'default'};
   top: ${({ top }) => top || 0}px;
 `;
 
@@ -92,6 +102,8 @@ const Footer = styled.h3`
 
 const CoverTileWrapper = styled.div<{
   onClick?: () => void;
+  onHover?: () => void;
+  onMouseLeave?: () => void;
 }>`
   height: 100%;
   width: 100%;
@@ -99,7 +111,8 @@ const CoverTileWrapper = styled.div<{
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
+  cursor: ${({ onClick, onHover }) =>
+    onClick || onHover ? 'pointer' : 'default'};
   top: 0px;
   left: 0px;
 `;
@@ -107,12 +120,12 @@ const CoverTileWrapper = styled.div<{
 const CoverTileHeading = styled.h1`
   color: ${Colors.greenLight};
   font-family: 'Univers65', sans-serif;
-  margin: 0px 15px;
-  text-align: center;
+  text-align: left;
   text-transform: uppercase;
   font-weight: 100;
   font-size: 18px;
-  bottom: 40%;
+  left: 120px;
+  top: 40%;
   width: 60%;
   position: absolute;
 `;
@@ -120,13 +133,13 @@ const CoverTileHeading = styled.h1`
 const CoverTileSubheader = styled.h3`
   color: ${Colors.grayLight};
   font-family: 'Univers45', sans-serif;
-  bottom: 10%;
   position: absolute;
-  text-align: center;
+  top: 65%;
+  text-align: justify;
   font-size: 14px;
   font-weight: 100;
   line-height: 1.5;
-  width: 85%;
+  width: 80%;
 `;
 
 const TileCounter = styled.h3`
@@ -134,7 +147,8 @@ const TileCounter = styled.h3`
   color: ${Colors.greenDark};
   position: absolute;
   font-size: 170px;
-  top: -30px;
+  top: 30%;
+  transform: translateY(-50%);
   left: 10px;
   opacity: 0.8;
 `;
@@ -146,9 +160,13 @@ const Tile: React.FC<TileProps> = ({
   errmsg,
   children,
   onClick,
+  onHover,
+  onMouseEnter,
+  onMouseLeave,
   selected,
   backgroundColor,
   blurred,
+  horizontal,
   width,
   height,
   top,
@@ -157,9 +175,13 @@ const Tile: React.FC<TileProps> = ({
   return (
     <TileWrapper
       onClick={onClick}
+      onMouseEnter={onMouseEnter || (onHover ? onHover : undefined)}
+      onMouseLeave={onMouseLeave}
+      onHover={onHover}
       selected={selected}
       backgroundColor={backgroundColor}
       blurred={blurred}
+      horizontal={horizontal}
       width={width}
       height={height}
       top={top}
@@ -184,7 +206,7 @@ const ActionTile: React.FC<ActionTileProps> = ({ footer, icon, onClick }) => (
   <Tile
     footer={footer}
     height={65}
-    width={160}
+    width={130}
     blurred
     backgroundColor={Colors.darkOpaque}
     onClick={onClick}
@@ -199,6 +221,8 @@ interface CoverTileProps {
   footer?: string;
   children?: React.ReactNode;
   onClick?: () => void;
+  onHover?: () => void;
+  onMouseLeave?: () => void;
 }
 
 const CoverTile: React.FC<CoverTileProps> = ({
@@ -207,9 +231,16 @@ const CoverTile: React.FC<CoverTileProps> = ({
   footer,
   children,
   onClick,
+  onHover,
+  onMouseLeave,
 }) => {
   return (
-    <CoverTileWrapper onClick={onClick}>
+    <CoverTileWrapper
+      onHover={onHover}
+      onClick={onClick}
+      onMouseEnter={onHover ? onHover : undefined}
+      onMouseLeave={onMouseLeave ? onMouseLeave : undefined}
+    >
       <CoverTileHeading>{heading}</CoverTileHeading>
       <TileCounter>{counter}</TileCounter>
       {children}
