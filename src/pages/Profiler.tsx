@@ -13,10 +13,10 @@ import { SelectDirectory } from '../components/pos/SelectDirectory';
 import ProfilerTable from '../components/ProfilerTable';
 import { Tile, ActionTile, CoverTile } from '../components/tile';
 import { useProfiler } from '../hooks/useProfiler';
+import useTileHover from '../hooks/useTileHover';
 import Colors from '../styles/colors';
 import { Background, PageTitleWrapper } from '../styles/containers';
 import { BodyText, Header } from '../styles/texts';
-import { calculateMaxDataSize, formatSize } from '../utils/sizeUtils';
 
 // Assets
 
@@ -56,10 +56,10 @@ const OptionsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  align-items: flex-start;
   align-content: flex-start;
-  justify-content: center;
+  justify-content: felx-start;
   margin-bottom: 15px;
+  gap: 15px;
 `;
 
 const StepsContainer = styled.div`
@@ -83,8 +83,11 @@ const Profiler: React.FC = () => {
   const [showAccuracyModal, setShowAccuracyModal] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [showDirectory, setShowDirectory] = useState(false);
-  const [showProving, setShowProving] = useState(false);
+  
+  // Use the custom hook for each tile
+  const directoryTile = useTileHover();
+  const provingTile = useTileHover();
+  const resultsTile = useTileHover();
 
   const {
     maxCores,
@@ -123,24 +126,24 @@ const Profiler: React.FC = () => {
         width={800}
         height={600}
       >
-          <Tile heading="GiB to process:" height={150}>
-            <CustomNumberInput
-              min={PROFILER_CONSTANTS.MIN_DATA_SIZE}
-              max={PROFILER_CONSTANTS.MAX_DATA_SIZE}
-              step={1}
-              value={config.data_size}
-              onChange={(val) => updateConfig({ data_size: val })}
-            />
-          </Tile>
-          <Tile heading="Duration (s):" height={150}>
-            <CustomNumberInput
-              min={PROFILER_CONSTANTS.MIN_DURATION}
-              max={PROFILER_CONSTANTS.MAX_DURATION}
-              step={5}
-              value={config.duration}
-              onChange={(val) => updateConfig({ duration: val })}
-            />
-          </Tile>
+        <Tile heading="GiB to process:" height={150}>
+          <CustomNumberInput
+            min={PROFILER_CONSTANTS.MIN_DATA_SIZE}
+            max={PROFILER_CONSTANTS.MAX_DATA_SIZE}
+            step={1}
+            value={config.data_size}
+            onChange={(val) => updateConfig({ data_size: val })}
+          />
+        </Tile>
+        <Tile heading="Duration (s):" height={150}>
+          <CustomNumberInput
+            min={PROFILER_CONSTANTS.MIN_DURATION}
+            max={PROFILER_CONSTANTS.MAX_DURATION}
+            step={5}
+            value={config.duration}
+            onChange={(val) => updateConfig({ duration: val })}
+          />
+        </Tile>
       </Modal>
 
       {/* Main POSProfiler content */}
@@ -166,7 +169,7 @@ const Profiler: React.FC = () => {
             Succesful proving within cycle gap is crucial for rewards eligibility."
             />
           </Tile>
-          
+
           {/* Action Tiles */}
           <ActionTile
             footer="How it works?"
@@ -189,12 +192,13 @@ const Profiler: React.FC = () => {
           {/* Select Directory */}
           <Tile
             height={250}
-            width={400}
+            width={380}
             blurred
             backgroundColor={Colors.whiteOpaque}
-            onClick={() => setShowDirectory(!showDirectory)}
+            onMouseEnter={directoryTile.handleMouseEnter}
+            onMouseLeave={directoryTile.handleMouseLeave}
           >
-            {!showDirectory ? (
+            {!directoryTile.isVisible ? (
               <CoverTile
                 counter="1"
                 heading="Select Directory"
@@ -206,7 +210,7 @@ const Profiler: React.FC = () => {
                 <CloseButton
                   top={2}
                   left={95}
-                  onClick={() => setShowDirectory(false)}
+                  onClick={directoryTile.handleClose}
                 />
               </div>
             )}
@@ -215,12 +219,13 @@ const Profiler: React.FC = () => {
           {/* Custom Proving Settings */}
           <Tile
             height={250}
-            width={400}
+            width={470}
             blurred
             backgroundColor={Colors.whiteOpaque}
-            onClick={() => setShowProving(!showProving)}
+            onMouseEnter={provingTile.handleMouseEnter}
+            onMouseLeave={provingTile.handleMouseLeave}
           >
-            {!showProving ? (
+            {!provingTile.isVisible ? (
               <CoverTile
                 counter="2"
                 heading="Experiment with Proving Settings"
@@ -262,7 +267,7 @@ const Profiler: React.FC = () => {
                 <CloseButton
                   top={2}
                   left={95}
-                  onClick={() => setShowProving(false)}
+                  onClick={provingTile.handleClose}
                 />
               </>
             )}
@@ -274,85 +279,50 @@ const Profiler: React.FC = () => {
               <Button
                 onClick={runCustomBenchmark}
                 disabled={isRunning}
-                label="Test My Settings"
-                width={200}
-                top={80}
+                label="Run Test"
+                width={120}
+                height={40}
+                top={65}
+                left={40}
               />
             </CoverTile>
           </Tile>
         </StepsContainer>
 
-        {/* Result Max POS Data to Prove + Speed */}
-        <Tile
-          heading="Proving Speed"
-          footer="GiB/s"
-          subheader="result"
-          height={150}
-          width={400}
-          blurred
-          backgroundColor={Colors.darkOpaque}
-        >
-          {benchmarks.length > 0 &&
-            (() => {
-              const speed = benchmarks[benchmarks.length - 1].speed_gib_s;
-              return <Header top={60} text={`${speed?.toFixed(2) ?? '...'}`} />;
-            })()}
-        </Tile>
-
-        <Tile
-          heading="Max POS Size"
-          subheader="result"
-          height={150}
-          width={400}
-          blurred
-          backgroundColor={Colors.darkOpaque}
-        >
-          {benchmarks.length > 0 &&
-            (() => {
-              const speed = benchmarks[benchmarks.length - 1].speed_gib_s;
-              return (
-                <Header
-                  top={60}
-                  text={`${
-                    speed !== undefined
-                      ? formatSize(calculateMaxDataSize(speed))
-                      : '...'
-                  }`}
-                />
-              );
-            })()}
-        </Tile>
-
-        {/* Status */}
-        <Tile
-          heading="Status"
-          height={150}
-          width={240}
-          blurred
-          backgroundColor={Colors.darkOpaque}
-        >
-          {benchmarks.length > 0 && (
-            <Header top={60} text={benchmarks[benchmarks.length - 1].status} />
-          )}
-        </Tile>
-
         {/* Table with test results history*/}
 
         <Tile
-          height={300}
-          width={1050}
+          height={250}
+          width={1100}
           blurred
-          backgroundColor={Colors.darkOpaque}
-          heading="Results History"
+          backgroundColor={Colors.whiteOpaque}
+          onMouseEnter={resultsTile.handleMouseEnter}
+          onMouseLeave={resultsTile.handleMouseLeave}
         >
-          <ProfilerTable
-            benchmarks={benchmarks}
-            onBenchmarkSelect={selectBenchmark}
-            scrollRef={scrollRef}
-            config={config}
-            customNonces={benchmarkSettings.nonces}
-            customThreads={benchmarkSettings.threads}
-          />
+          {!resultsTile.isVisible ? (
+            <CoverTile
+              counter="4"
+              heading="Compare your tests results and pick the best config"
+              footer="Test different values of these params to find optimal config. 
+              Balance the probability and proving speed."
+            />
+          ) : (
+            <>
+              <ProfilerTable
+                benchmarks={benchmarks}
+                onBenchmarkSelect={selectBenchmark}
+                scrollRef={scrollRef}
+                config={config}
+                customNonces={benchmarkSettings.nonces}
+                customThreads={benchmarkSettings.threads}
+              />
+              <CloseButton
+                top={2}
+                left={95}
+                onClick={resultsTile.handleClose}
+              />
+            </>
+          )}
         </Tile>
       </ProfilerContainer>
     </>
