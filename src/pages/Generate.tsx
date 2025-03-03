@@ -305,7 +305,7 @@ const Generate: React.FC = () => {
          */
         setTimeout(() => {
           navigate('/progress');
-        }, 1500);
+        }, 150000);
       } else {
         throw new Error('Failed to start POS generation process');
       }
@@ -454,11 +454,11 @@ const Generate: React.FC = () => {
           navigate('/progress');
         }}
         header="POS Generation Started"
-        width={600}
-        height={80}
+        width={700}
+        height={450}
         text={
           <>
-            WHAT NOW?
+            What Now?
             <br />
             <br />
             Leave your PC on and plugged into a power source 24/7.
