@@ -44,21 +44,8 @@ import { isValidHex } from '../utils/hexUtils';
 import { FindProviders } from '../utils/parseResponse';
 import { calculateNumFiles, calculateTotalSize } from '../utils/sizeUtils';
 
-const Wrapper = styled.div`
-  width: 1080px;
-  height: 750px;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 0px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
 const TabsContainer = styled.div`
-  width: 1000px;
+  width: 100%;
   height: 500px;
   position: relative;
   top: 200px;
@@ -492,7 +479,6 @@ const Generate: React.FC = () => {
         }
       />
       <BackButton />
-      <Wrapper>
         <MainContainer>
           <PageTitleWrapper>
             <Header text={getPageTitle()} />
@@ -506,8 +492,6 @@ const Generate: React.FC = () => {
               tabs={getTabs()}
               activeTab={activeTabId}
               onTabChange={handleTabChange}
-              width={1000}
-              height={500}
               onCollapseChange={setIsTabsCollapsed}
             />
             {!isTabsCollapsed && (
@@ -523,7 +507,6 @@ const Generate: React.FC = () => {
 
           {error && <ErrorMessage text={error} />}
         </MainContainer>
-      </Wrapper>
     </>
   );
 };
