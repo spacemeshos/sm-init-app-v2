@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import BackgroundImage from '../assets/wave2.png';
 import { Button } from '../components/button';
 import CircularProgress from '../components/CircularProgress';
+import Modal from '../components/modal';
 import { Tile } from '../components/tile';
 import { usePOSProcess } from '../state/POSProcessContext';
 import { useSettings } from '../state/SettingsContext';
@@ -67,6 +68,7 @@ const Progress: React.FC = () => {
     progress,
   } = processState;
   const { settings } = useSettings();
+  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
 
   // Debug logging
   React.useEffect(() => {
@@ -80,6 +82,16 @@ const Progress: React.FC = () => {
       progress,
     });
   }, [stage, details, isError, processId, isRunning, fileProgress, progress]);
+
+  // Show error modal when error is detected
+  React.useEffect(() => {
+    if (isError && stage === Stage.Error) {
+      console.log('Error detected, showing modal:', details);
+      setShowErrorModal(true);
+    } else {
+      setShowErrorModal(false);
+    }
+  }, [isError, stage, details]);
 
   React.useEffect(() => {
     if (!isRunning && stage !== Stage.Complete && stage !== Stage.Error) {
@@ -113,6 +125,19 @@ const Progress: React.FC = () => {
 
   return (
     <>
+      {/* Error Modal */}
+      <Modal
+        isOpen={showErrorModal}
+        onClose={() => {
+          setShowErrorModal(false);
+          navigate('/generate');
+        }}
+        header="POS Generation Error"
+        width={600}
+        height={250}
+        text={details}
+      />
+      
       <Background src={BackgroundImage} />
       <PageTitleWrapper>
         <Header text="POS Generation Progress" />
