@@ -40,7 +40,7 @@ const Wrapper = styled.div<{
   left?: number;
   isOpen?: boolean;
 }>`
-  position: absolute;
+  position: fixed;
   top: ${({ top }) => top || 50}%;
   left: ${({ left }) => left || 50}%;
   transform: translate(-50%, -50%);

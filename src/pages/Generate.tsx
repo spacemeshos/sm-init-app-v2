@@ -61,7 +61,7 @@ const TabsContainer = styled.div`
   width: 1000px;
   height: 500px;
   position: relative;
-  top: 180px;
+  top: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -443,7 +443,7 @@ const Generate: React.FC = () => {
         isOpen={showValidationModal}
         onClose={() => setShowValidationModal(false)}
         width={600}
-        height={50}
+        height={300}
         header="Missing Required Parameters"
         text={
           <>

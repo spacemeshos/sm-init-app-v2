@@ -133,7 +133,7 @@ export const fetchLatestAtxId = async (): Promise<AtxIdResponse> => {
       console.error('Network error detected. Possible connectivity issues.');
     }
     
-    throw new Error(`Failed to fetch latest ATX ID from network: ${errorMessage}`);
+    throw new Error(`${errorMessage}`);
   }
 };
 
