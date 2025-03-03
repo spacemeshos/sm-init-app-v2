@@ -20,29 +20,7 @@ export const MainContainer = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  border-radius: 10px;
-  /* Gradient border */
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 10px;
-    padding: 1px;
-    background: linear-gradient(
-      45deg,
-      ${Colors.greenLightOpaque},
-      ${Colors.whiteOpaque}
-    );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
+  border: 1px solid ${Colors.greenLightOpaque};
 `;
 
 export const PageTitleWrapper = styled.div`
