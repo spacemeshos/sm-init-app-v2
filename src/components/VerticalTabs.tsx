@@ -26,6 +26,7 @@ interface VerticalTabsProps {
   onTabChange: (tabId: string) => void;
   width?: number;
   height?: number;
+  onCollapseChange?: (isCollapsed: boolean) => void;
 }
 
 // Styled components
@@ -41,7 +42,6 @@ const TabList = styled.div<{ isCollapsed: boolean }>`
   flex-direction: column;
   justify-content: flex-start;
   width: ${({ isCollapsed }) => (isCollapsed ? '80px' : '1000px')};
-  transition: width 0.3s ease;
   background-color: ${Colors.darkOpaque};
   border-right: 1px solid ${Colors.greenLightOpaque};
   overflow-y: auto;
@@ -126,12 +126,20 @@ const VerticalTabs: React.FC<VerticalTabsProps> = ({
   onTabChange,
   width,
   height,
+  onCollapseChange,
 }) => {
   // State to track whether the tab list is collapsed
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   // Find the active tab object
   const activeTabObject = tabs.find((tab) => tab.id === activeTab) || tabs[0];
+  
+  // Notify parent component when collapse state changes
+  React.useEffect(() => {
+    if (onCollapseChange) {
+      onCollapseChange(isCollapsed);
+    }
+  }, [isCollapsed, onCollapseChange]);
 
   // Handle tab click - collapse the tab list and change the active tab
   const handleTabClick = (tabId: string) => {
