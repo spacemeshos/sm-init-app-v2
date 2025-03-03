@@ -210,12 +210,27 @@ const Generate: React.FC = () => {
 
       // If ATX ID is missing or invalid, try to fetch it
       if (!currentSettings.atxId || !isValidHex(currentSettings.atxId)) {
+        console.log('Generate: ATX ID is missing or invalid, attempting to fetch...');
+        console.log('Current ATX ID state:', {
+          atxId: currentSettings.atxId,
+          isValid: currentSettings.atxId ? isValidHex(currentSettings.atxId) : false,
+          source: currentSettings.atxIdSource,
+          error: currentSettings.atxIdError
+        });
+        
         updateConsole(
           'generate',
           'Fetching ATX ID before starting generation...'
         );
+        
         try {
+          console.log('Generate: Calling fetchLatestAtxId service...');
+          const startTime = Date.now();
           const atxResponse = await fetchLatestAtxId();
+          const fetchDuration = Date.now() - startTime;
+          
+          console.log(`Generate: ATX ID fetch successful in ${fetchDuration}ms:`, atxResponse.atxId);
+          
           // Create new settings object with fetched ATX ID
           currentSettings = {
             ...currentSettings,
@@ -223,16 +238,53 @@ const Generate: React.FC = () => {
             atxIdSource: 'api',
             atxIdError: undefined,
           };
+          
+          console.log('Generate: Updating settings with new ATX ID:', currentSettings.atxId);
+          
           // Update the global settings state
           setSettings(currentSettings);
-        } catch (err) {
-          errors.push(
-            `Failed to fetch ATX ID. Please try again or enter manually. ${err}`
+          
+          updateConsole(
+            'generate',
+            `Successfully fetched ATX ID: ${truncateHex(atxResponse.atxId, 16)}`
           );
+        } catch (err) {
+          const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+          console.error('Generate: Error fetching ATX ID:', {
+            error: err,
+            message: errorMessage
+          });
+          
+          updateConsole(
+            'generate',
+            `Error fetching ATX ID: ${errorMessage}`
+          );
+          
+          // Provide more specific error messages based on error type
+          let userErrorMessage = 'Failed to fetch ATX ID. ';
+          
+          if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+            userErrorMessage += `${errorMessage} Network connectivity issue detected.`;
+          } else if (errorMessage.includes('parse') || errorMessage.includes('JSON')) {
+            userErrorMessage += 'Received invalid data from the server. API format may have changed.';
+          } else if (errorMessage.includes('missing required')) {
+            userErrorMessage += 'API response is missing required data. The service may be experiencing issues.';
+          } else if (errorMessage.includes('status')) {
+            userErrorMessage += `API server error: ${errorMessage}`;
+          } else {
+            userErrorMessage += 'Please try again or enter manually.';
+          }
+          
+          errors.push(userErrorMessage);
           setValidationErrors(errors);
           setShowValidationModal(true);
           return;
         }
+      } else {
+        console.log('Generate: Using existing ATX ID:', {
+          atxId: currentSettings.atxId,
+          source: currentSettings.atxIdSource
+        });
       }
 
       // If we have any other validation errors, show them

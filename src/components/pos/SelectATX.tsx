@@ -34,28 +34,64 @@ export const SelectATX: React.FC = () => {
 
   /**
    * Fetches ATX ID from the network when in auto-fetch mode
-   * Handles loading states and errors appropriately
+   * Handles loading states and errors appropriately with detailed logging
    */
   const fetchAtxId = async () => {
-    if (settings.atxIdSource !== 'api') return;
+    if (settings.atxIdSource !== 'api') {
+      console.log('Skipping ATX ID fetch - not in API mode');
+      return;
+    }
     
+    console.log('Starting ATX ID fetch process...');
     setIsLoading(true);
+    
     try {
+      console.log('Calling fetchLatestAtxId service...');
+      const startTime = Date.now();
       const response = await fetchLatestAtxId();
+      const fetchDuration = Date.now() - startTime;
+      
+      console.log(`ATX ID fetch successful in ${fetchDuration}ms:`, response.atxId);
+      
       setSettings((prev) => ({
         ...prev,
         atxId: response.atxId,
         atxIdError: undefined,
       }));
+      
+      console.log('ATX ID successfully updated in settings');
     } catch (error) {
-      console.error('Failed to fetch ATX ID:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Failed to fetch ATX ID:', {
+        error: error,
+        message: errorMessage
+      });
+      
+      // Provide more specific error messages based on error type
+      let userErrorMessage = 'Failed to fetch ATX ID from network. ';
+      
+      if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+        userErrorMessage += 'Network connectivity issue detected. Check your internet connection.';
+      } else if (errorMessage.includes('parse') || errorMessage.includes('JSON')) {
+        userErrorMessage += 'Received invalid data from the server. API format may have changed.';
+      } else if (errorMessage.includes('missing required')) {
+        userErrorMessage += 'API response is missing required data. The service may be experiencing issues.';
+      } else if (errorMessage.includes('status')) {
+        userErrorMessage += `API server error: ${errorMessage}`;
+      } else {
+        userErrorMessage += 'You can try again or enter it manually.';
+      }
+      
+      console.log('Setting error message for user:', userErrorMessage);
+      
       setSettings((prev) => ({
         ...prev,
         atxId: undefined,
-        atxIdError: 'Failed to fetch ATX ID from network. You can try again or enter it manually.',
+        atxIdError: userErrorMessage,
       }));
     } finally {
       setIsLoading(false);
+      console.log('ATX ID fetch process completed, loading state reset');
     }
   };
 

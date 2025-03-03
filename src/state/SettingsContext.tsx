@@ -98,24 +98,56 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
 
   /**
    * Fetches latest ATX ID from the network
-   * Includes automatic retry on failure
+   * Includes automatic retry on failure with comprehensive logging
    */
   const fetchAtxId = useCallback(async () => {
+    console.log('SettingsContext: Initiating ATX ID fetch...');
+    
     try {
+      console.log('SettingsContext: Calling fetchLatestAtxId service...');
+      const startTime = Date.now();
       const response = await fetchLatestAtxId();
+      const fetchDuration = Date.now() - startTime;
+      
+      console.log(`SettingsContext: ATX ID fetch successful in ${fetchDuration}ms:`, response.atxId);
+      
       setSettings(prev => ({
         ...prev,
         atxId: response.atxId,
         atxIdSource: 'api',
         atxIdError: undefined
       }));
+      
+      console.log('SettingsContext: ATX ID successfully updated in settings');
     } catch (err) {
-      console.error("Error fetching ATX ID:", err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      console.error("SettingsContext: Error fetching ATX ID:", {
+        error: err,
+        message: errorMessage
+      });
+      
+      // Provide more specific error messages based on error type
+      let userErrorMessage = 'Failed to fetch ATX ID';
+      
+      if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+        userErrorMessage += ': Network connectivity issue';
+      } else if (errorMessage.includes('parse') || errorMessage.includes('JSON')) {
+        userErrorMessage += ': Invalid data received';
+      } else if (errorMessage.includes('missing required')) {
+        userErrorMessage += ': Missing data in API response';
+      } else if (errorMessage.includes('status')) {
+        userErrorMessage += `: ${errorMessage}`;
+      }
+      
+      console.log('SettingsContext: Setting error message for user:', userErrorMessage);
+      
       setSettings(prev => ({
         ...prev,
-        atxIdError: "Failed to fetch ATX ID"
+        atxIdError: userErrorMessage
       }));
+      
       // Retry after 5 seconds
+      console.log('SettingsContext: Scheduling retry in 5 seconds...');
       setTimeout(fetchAtxId, 5000);
     }
   }, []);

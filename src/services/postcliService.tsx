@@ -70,27 +70,70 @@ export interface DetachedProcessResponse {
  * @returns {Promise<AtxIdResponse>} Latest ATX ID information
  */
 export const fetchLatestAtxId = async (): Promise<AtxIdResponse> => {
+  console.log('Fetching latest ATX ID from Spacemesh API...');
+  const apiUrl = 'https://mainnet-api.spacemesh.network/spacemesh.v2alpha1.ActivationService/Highest';
+  
   try {
-    const response = await fetch('https://mainnet-api.spacemesh.network/spacemesh.v2alpha1.ActivationService/Highest', {
+    console.log(`Making POST request to: ${apiUrl}`);
+    console.log('Request body:', JSON.stringify({}));
+    
+    const startTime = Date.now();
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({})
     });
-
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
-
-    const data: HighestActivationResponse = await response.json();
+    const requestDuration = Date.now() - startTime;
     
+    console.log(`API response received in ${requestDuration}ms with status: ${response.status}`);
+    
+    if (!response.ok) {
+      const responseText = await response.text();
+      console.error('API error response details:', {
+        status: response.status,
+        statusText: response.statusText,
+        responseBody: responseText
+      });
+      throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
+    }
+    
+    // Try to parse the response as JSON
+    let data: HighestActivationResponse;
+    try {
+      data = await response.json();
+      console.log('API response data:', JSON.stringify(data, null, 2));
+    } catch (parseError) {
+      console.error('Failed to parse API response as JSON:', parseError);
+      const responseText = await response.text();
+      console.error('Raw response body:', responseText);
+      throw new Error('Failed to parse API response as JSON');
+    }
+    
+    // Validate the response structure
+    if (!data || !data.activation || !data.activation.id) {
+      console.error('Invalid API response structure:', data);
+      throw new Error('API response missing required activation ID');
+    }
+    
+    console.log(`Successfully retrieved ATX ID: ${data.activation.id}`);
     return {
       atxId: data.activation.id
     };
   } catch (error) {
-    console.error('Error fetching latest ATX ID:', error);
-    throw new Error('Failed to fetch latest ATX ID from network');
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error fetching latest ATX ID:', {
+      message: errorMessage,
+      error: error
+    });
+    
+    // Check if it's a network error
+    if (error instanceof TypeError && errorMessage.includes('network')) {
+      console.error('Network error detected. Possible connectivity issues.');
+    }
+    
+    throw new Error(`Failed to fetch latest ATX ID from network: ${errorMessage}`);
   }
 };
 
