@@ -16,7 +16,7 @@ export interface TabItem {
   label: string;
   description?: string; // Added field for settings value display
   iconSrc: string;
-  content: React.ReactNode;
+  content?: React.ReactNode;
 }
 
 // Props for the VerticalTabs component
@@ -62,8 +62,7 @@ const TabButton = styled.button<{ isActive: boolean }>`
   text-align: left;
 
   &:hover {
-    background-color: ${({ isActive }) =>
-      isActive ? Colors.greenLightOpaque : 'rgba(255, 255, 255, 0.1)'};
+    background-color: ${Colors.greenLightOpaque};
   }
 `;
 
@@ -97,7 +96,7 @@ const TabDescription = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  right: 0;
+  right: 20px;
   position: absolute;
   margin-right: 22px;
 `;
@@ -130,14 +129,25 @@ const VerticalTabs: React.FC<VerticalTabsProps> = ({
 }) => {
   // State to track whether the tab list is collapsed
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  
+
   // Find the active tab object
   const activeTabObject = tabs.find((tab) => tab.id === activeTab) || tabs[0];
 
   // Handle tab click - collapse the tab list and change the active tab
   const handleTabClick = (tabId: string) => {
-    onTabChange(tabId);
-    setIsCollapsed(true);
+    // If clicking on the summary tab
+    if (tabId === 'summary') {
+      // If a component is open (tabs are collapsed), close it and uncollapse the tabs
+      if (isCollapsed) {
+        setIsCollapsed(false);
+      }
+      // If tabs are not collapsed, do nothing special
+      onTabChange(tabId);
+    } else {
+      // For non-summary tabs, collapse the tabs and show the component
+      onTabChange(tabId);
+      setIsCollapsed(true);
+    }
   };
 
   return (
@@ -148,7 +158,6 @@ const VerticalTabs: React.FC<VerticalTabsProps> = ({
             key={tab.id}
             isActive={tab.id === activeTab}
             onClick={() => {
-              setIsCollapsed(!isCollapsed);
               handleTabClick(tab.id);
             }}
           >
