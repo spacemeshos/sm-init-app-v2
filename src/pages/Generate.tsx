@@ -62,6 +62,10 @@ const TabsContainer = styled.div`
   height: 500px;
   position: relative;
   top: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const AdvancedSettingsButton = styled.button`
@@ -123,6 +127,7 @@ const Generate: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showAdvancedSettings, setShowAdvancedSettings] =
     useState<boolean>(false);
+  const [isTabsCollapsed, setIsTabsCollapsed] = useState<boolean>(false);
   const { updateConsole } = useConsole();
   const { settings, setSettings } = useSettings();
   const { run, response } = FindProviders();
@@ -381,62 +386,61 @@ const Generate: React.FC = () => {
   return (
     <>
       <Background src={BackgroundImage} />
+      {/* Validation Error Modal */}
+      <Modal
+        isOpen={showValidationModal}
+        onClose={() => setShowValidationModal(false)}
+        width={600}
+        height={50}
+        header="Missing Required Parameters"
+        text={
+          <>
+            Please configure the following required parameters:
+            <List
+              items={validationErrors}
+              bulletColor={Colors.red}
+              itemColor={Colors.white}
+              width="80%"
+              maxWidth="400px"
+            />
+          </>
+        }
+      />
+
+      {/* Success Modal with Instructions */}
+      <Modal
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate('/progress');
+        }}
+        header="POS Generation Started"
+        width={600}
+        height={80}
+        text={
+          <>
+            WHAT NOW?
+            <br />
+            <br />
+            Leave your PC on and plugged into a power source 24/7.
+            <br />
+            Your GPU will operate at its full capacity to generate the Proof of
+            Space (PoS) data.
+            <br />
+            <br />
+            The duration of this process depends on your hardware and setup,
+            ranging from several days to a few weeks. While it may require
+            significant effort initially, this is a one-time task.
+            <br />
+            <br />
+            Once your PoS data is successfully generated, you'll be ready to set
+            up a node and actively participate in the network to start earning
+            rewards.
+          </>
+        }
+      />
       <BackButton />
       <Wrapper>
-        {/* Validation Error Modal */}
-        <Modal
-          isOpen={showValidationModal}
-          onClose={() => setShowValidationModal(false)}
-          width={600}
-          height={50}
-          header="Missing Required Parameters"
-          text={
-            <>
-              Please configure the following required parameters:
-              <List
-                items={validationErrors}
-                bulletColor={Colors.red}
-                itemColor={Colors.white}
-                width="80%"
-                maxWidth="400px"
-              />
-            </>
-          }
-        />
-
-        {/* Success Modal with Instructions */}
-        <Modal
-          isOpen={showSuccessModal}
-          onClose={() => {
-            setShowSuccessModal(false);
-            navigate('/progress');
-          }}
-          header="POS Generation Started"
-          width={600}
-          height={80}
-          text={
-            <>
-              WHAT NOW?
-              <br />
-              <br />
-              Leave your PC on and plugged into a power source 24/7.
-              <br />
-              Your GPU will operate at its full capacity to generate the Proof
-              of Space (PoS) data.
-              <br />
-              <br />
-              The duration of this process depends on your hardware and setup,
-              ranging from several days to a few weeks. While it may require
-              significant effort initially, this is a one-time task.
-              <br />
-              <br />
-              Once your PoS data is successfully generated, you'll be ready to
-              set up a node and actively participate in the network to start
-              earning rewards.
-            </>
-          }
-        />
-
         <MainContainer>
           <PageTitleWrapper>
             <Header text={getPageTitle()} />
@@ -452,14 +456,17 @@ const Generate: React.FC = () => {
               onTabChange={handleTabChange}
               width={1000}
               height={500}
+              onCollapseChange={setIsTabsCollapsed}
             />
-            <Button
-              label={isGenerating ? 'Starting...' : 'Generate POS Data'}
-              onClick={handleGenerateClick}
-              width={250}
-              height={56}
-              disabled={isGenerating}
-            />
+            {!isTabsCollapsed && (
+              <Button
+                label={isGenerating ? 'Starting...' : 'Generate POS Data'}
+                onClick={handleGenerateClick}
+                width={250}
+                height={56}
+                disabled={isGenerating}
+              />
+            )}
           </TabsContainer>
 
           {error && <ErrorMessage text={error} />}
