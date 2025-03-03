@@ -35,6 +35,7 @@ const TabsContainer = styled.div<{ width?: number; height?: number }>`
   width: ${({ width }) => width || 1000}px;
   height: ${({ height }) => height || 500}px;
   position: relative;
+  justify-content: center;
 `;
 
 const TabList = styled.div<{ isCollapsed: boolean }>`
@@ -43,7 +44,6 @@ const TabList = styled.div<{ isCollapsed: boolean }>`
   justify-content: flex-start;
   width: ${({ isCollapsed }) => (isCollapsed ? '80px' : '1000px')};
   background-color: ${Colors.darkOpaque};
-  border-right: 1px solid ${Colors.greenLightOpaque};
   overflow-y: auto;
 `;
 
@@ -60,6 +60,7 @@ const TabButton = styled.button<{ isActive: boolean }>`
   width: 100%;
   height: 80px;
   text-align: left;
+  position: relative;
 
   &:hover {
     background-color: ${Colors.greenLightOpaque};
