@@ -49,12 +49,42 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
   // Calculate expected total number of files based on current settings
   const totalFiles = calculateNumFiles(settings.numUnits, settings.maxFileSize);
 
-  // First priority: Check for error messages
-  if (cleanLog.toLowerCase().includes("error")) {
+  // First priority: Check for error messages and critical warnings
+  if (
+    cleanLog.toLowerCase().includes("error") ||
+    cleanLog.toLowerCase().includes("aborting") ||
+    (cleanLog.includes("WARNING") && 
+     (cleanLog.includes("commitmentAtxId") || 
+      cleanLog.includes("cannot proceed")))
+  ) {
+    console.log('Error detected in log:', cleanLog);
+    
+    // Format a user-friendly error message
+    let errorDetails = cleanLog;
+    
+    // Special handling for common error cases
+    if (cleanLog.includes("commitmentAtxId")) {
+      errorDetails = "Directory was previously initialized with a different ATX ID. " +
+                    "Please choose a different directory or use the existing ATX ID.";
+    } else if (cleanLog.toLowerCase().includes("aborting")) {
+      // Extract the reason for aborting if possible
+      const abortLines = cleanLog.split('\n').filter(line => 
+        line.includes("WARNING") || line.toLowerCase().includes("aborting")
+      );
+      
+      if (abortLines.length > 0) {
+        errorDetails = "Process aborted: " + abortLines.join(' ');
+      } else {
+        errorDetails = "Process aborted unexpectedly. Check the console for details.";
+      }
+    }
+    
+    console.log('Formatted error details:', errorDetails);
+    
     return {
       stage: Stage.Error,
       progress: 0,
-      details: cleanLog,
+      details: errorDetails,
       isError: true
     };
   }
