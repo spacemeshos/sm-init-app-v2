@@ -158,14 +158,30 @@ const CustomNumberInput: React.FC<CustomNumberInputProps> = ({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseInt(e.target.value, 10);
-    if (
-      !isNaN(newValue) &&
-      newValue >= min &&
-      (max === undefined || newValue <= max)
-    ) {
-      setInputValue(newValue);
-      onChange?.(newValue);
+    const rawValue = parseInt(e.target.value, 10);
+    
+    if (!isNaN(rawValue)) {
+      // Round to the nearest step multiple if needed
+      let newValue = rawValue;
+      if (step > 1) {
+        const remainder = rawValue % step;
+        if (remainder !== 0) {
+          // Round to nearest multiple of step
+          // If remainder is less than half of step, round down, otherwise round up
+          newValue = remainder < (step / 2) 
+            ? rawValue - remainder 
+            : rawValue + (step - remainder);
+        }
+      }
+      
+      // Check if the rounded value is within bounds
+      if (
+        newValue >= min &&
+        (max === undefined || newValue <= max)
+      ) {
+        setInputValue(newValue);
+        onChange?.(newValue);
+      }
     }
   };
 
