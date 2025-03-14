@@ -38,6 +38,9 @@ export const SizeConstants = {
 
   /** Default number of units for size calculations */
   DEFAULT_NUM_UNITS: 4,
+  /** Default number of labels per unit for size calculation */
+  DEFAULT_LABELS_PER_UNIT: 4294967296, // Default for MainNet
+  BITS_PER_LABEL: 128,
 
   /** Default maximum file size in MiB (4096 MiB = 4 GiB) */
   DEFAULT_MAX_FILE_SIZE_MIB: 4096,
@@ -48,5 +51,5 @@ export const SizeConstants = {
   /** Array of size units for formatting
    * Follows binary prefix convention (powers of 1024)  
    */
-  SIZE_UNITS: ['GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'] as const,
+  SIZE_UNITS: ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'] as const,
 };

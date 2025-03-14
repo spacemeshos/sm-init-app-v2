@@ -16,6 +16,7 @@ import { invoke } from '@tauri-apps/api/tauri';
 
 import { Settings } from '../state/SettingsContext';
 import { buildPostCliArgs, validateSettings } from '../utils/postcliUtils';
+import { base64ToHex } from '../utils/hexUtils';
 
 /**
  * Response structure for postcli command execution
@@ -119,7 +120,7 @@ export const fetchLatestAtxId = async (): Promise<AtxIdResponse> => {
     
     console.log(`Successfully retrieved ATX ID: ${data.activation.id}`);
     return {
-      atxId: data.activation.id
+      atxId: base64ToHex(data.activation.id),
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';

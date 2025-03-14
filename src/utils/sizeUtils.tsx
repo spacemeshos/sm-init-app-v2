@@ -7,13 +7,21 @@
 import { SizeConstants } from "../Shared/Constants";
 
 /**
+ * Calculates the size of a single unit in bytes based on the number of labels per unit
+ * @param {number} labelsPerUnit - Number of labels per unit (defaults to DEFAULT_LABELS_PER_UNIT)
+ * @returns {number} Size of a single unit in bytes
+ */
+export const getSizePerUnit = (labelsPerUnit: number): number =>
+  labelsPerUnit * SizeConstants.BITS_PER_LABEL / 8;
+
+/**
  * Calculates the total size based on the number of units
  * @param {number} numUnits - Number of units to calculate size for (defaults to DEFAULT_NUM_UNITS)
  * @returns {string} Formatted string with size and appropriate unit (e.g., "1.5 TiB")
  */
 export const calculateTotalSize = (numUnits: number = SizeConstants.DEFAULT_NUM_UNITS): string => {
-  const sizeInGiB = numUnits * SizeConstants.UNIT_SIZE_GIB;
-  let size = sizeInGiB;
+  const sizeInBytes = getSizePerUnit(SizeConstants.DEFAULT_LABELS_PER_UNIT) * numUnits;
+  let size = sizeInBytes;
   let unitIndex = 0;
 
   // Loop to find the appropriate unit
@@ -70,6 +78,7 @@ export const calculateNumFiles = (
   maxFileSizeMiB: number = SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB
 ): number => {
   // Convert total size to MiB (numUnits * UNIT_SIZE_GiB * 1024 MiB/GiB)
-  const totalSizeInMiB = numUnits * SizeConstants.UNIT_SIZE_GIB * 1024;
+  const totalSizeInB = getSizePerUnit(SizeConstants.DEFAULT_LABELS_PER_UNIT) * numUnits;
+  const totalSizeInMiB = totalSizeInB / 1024 / 1024;
   return Math.ceil(totalSizeInMiB / maxFileSizeMiB);
 };

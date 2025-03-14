@@ -25,3 +25,17 @@ export const isValidHex = (hex: string, length?: number): boolean => {
   if (length && hex.length !== length) return false;
   return true;
 };
+
+export const base64ToHex = (str: string) => {
+  try {
+    const raw = atob(str);
+    let result = '';
+    for (let i = 0; i < raw.length; i++) {
+      const hex = raw.charCodeAt(i).toString(16);
+      result += (hex.length === 2 ? hex : '0' + hex);
+    }
+    return result.toUpperCase();
+  } catch (err) {
+    throw new Error(`Cannot convert base64 to hex: ${err}. Input: ${str}`);
+  }
+};

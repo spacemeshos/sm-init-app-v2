@@ -67,7 +67,7 @@ export const buildPostCliArgs = (settings: Settings): string[] | null => {
   //args.push("-logLevel=debug");
 
   // Temporary flag for quicker testing
-  args.push("-labelsPerUnit=4096");
+  args.push(`-labelsPerUnit=${SizeConstants.DEFAULT_LABELS_PER_UNIT}`);
   args.push("-yes");
 
   // Always add genproof
