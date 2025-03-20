@@ -1,0 +1,12 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "tauri": {
+    "bundle": {
+      "identifier": "com.tauri.dev",
+      "resources": [
+        "bin/postcli/postcli.exe",
+        "bin/profiler/profiler.exe"
+      ]
+    }
+  }
+}
