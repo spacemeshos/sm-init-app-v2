@@ -14,6 +14,7 @@ import pen from "../assets/edit.png";
 import next from "../assets/next.png";
 import close from "../assets/x.png";
 import Colors from "../styles/colors";
+import { blur } from '../styles/mixins';
 
 /**
  * Common props interface for all button components
@@ -434,7 +435,7 @@ const Square = styled.div`
   left: 10px;
   position: absolute;
   background: ${Colors.darkOpaque};
-  backdrop-filter: blur(5px);
+  ${blur('5px')}
   z-index: 2;
   border: 0.5px solid ${Colors.greenLightOpaque};
 `;

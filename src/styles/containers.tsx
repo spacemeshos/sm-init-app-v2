@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import Colors from "./colors";
+import { blur } from './mixins';
 
 export const Background = styled.img`
   position: fixed;
@@ -16,7 +17,7 @@ export const MainContainer = styled.div`
   left: 50%;
   transform: translateX(-50%);
   background-color: ${Colors.darkOpaque};
-  backdrop-filter: blur(20px);
+  ${blur('20px')}
   display: flex;
   align-items: flex-start;
   justify-content: center;
