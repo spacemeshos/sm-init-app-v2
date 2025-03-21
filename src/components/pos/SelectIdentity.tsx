@@ -86,7 +86,7 @@ export const SelectIdentity: React.FC = () => {
           subheader={
             publicKey && !error
               ? `Custom ID will be used: ${truncateHex(publicKey, 8)}`
-              : 'If no Identity provided, a new one will be created automatically'
+              : 'Leave it blank to create a new identity automatically'
           }
           errmsg={error ?? undefined}
           width={600}

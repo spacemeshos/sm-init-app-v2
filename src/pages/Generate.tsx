@@ -46,40 +46,12 @@ import { calculateNumFiles, calculateTotalSize } from '../utils/sizeUtils';
 
 const TabsContainer = styled.div`
   width: 100%;
-  height: 500px;
   position: relative;
-  top: 200px;
+  top: 150px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`;
-
-const AdvancedSettingsButton = styled.button`
-  background: ${Colors.greenLightOpaque};
-  border: 1px solid ${Colors.greenLightOpaque};
-  color: ${Colors.white};
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  position: absolute;
-  right: 50px;
-  top: 140px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  line-height: 18px;
-  transition: background 0.2s;
-
-  &:hover {
-    background: ${Colors.whiteOpaque};
-  }
-
-  img {
-    width: 16px;
-    height: 16px;
-  }
 `;
 
 /**
@@ -112,8 +84,6 @@ const AdvancedSettingsButton = styled.button`
 const Generate: React.FC = () => {
   const [activeTabId, setActiveTabId] = useState<string>('summary');
   const [error, setError] = useState<string | null>(null);
-  const [showAdvancedSettings, setShowAdvancedSettings] =
-    useState<boolean>(false);
   const [isTabsCollapsed, setIsTabsCollapsed] = useState<boolean>(false);
   const { updateConsole } = useConsole();
   const { settings, setSettings } = useSettings();
@@ -321,83 +291,64 @@ const Generate: React.FC = () => {
   };
 
   // Define tabs based on whether we're showing basic or advanced settings
-  const getTabs = (): TabItem[] => {
-    const basicTabs: TabItem[] = [
-      {
-        id: 'summary',
-        label: 'Summary',
-        iconSrc: summary,
-      },
-      {
-        id: 'directory',
-        label: 'Pick Directory',
-        description: getDirectoryDisplay(
-          settings.selectedDir,
-          settings.defaultDir
-        ),
-        iconSrc: folder,
-        content: <SelectDirectory variant="full" showExplanation={true} />,
-      },
-      {
-        id: 'processor',
-        label: 'Select Processor',
-        description: settings.providerModel
-          ? settings.providerModel
-          : 'Not selected',
-        iconSrc: gpu,
-        content: <SetupGPU isOpen={true} initialProviders={response} />,
-      },
-      {
-        id: 'size',
-        label: 'Set up POS Size',
-        description: `${settings.numUnits || 4} Space Units | ${calculateTotalSize(settings.numUnits)}`,
-        iconSrc: box,
-        content: <SetupDataSize />,
-      },
-    ];
-
-    const advancedTabs: TabItem[] = [
-      {
-        id: 'summary',
-        label: 'Summary',
-        iconSrc: summary,
-      },
-      {
-        id: 'identity',
-        label: 'Select Identity',
-        description: settings.publicKey
-          ? `Key: ${truncateHex(settings.publicKey, 8)}`
-          : 'Create New Identity',
-        iconSrc: id,
-        content: <SelectIdentity />,
-      },
-      {
-        id: 'filesize',
-        label: 'Setup Max File Size',
-        description: `${calculateNumFiles(settings.numUnits, settings.maxFileSize || 4096)} files, ${settings.maxFileSize} MiB each`,
-        iconSrc: file,
-        content: <SetupFileSize />,
-      },
-      {
-        id: 'atx',
-        label: 'Select ATX ID',
-        description: settings.atxId
-          ? `ATX: ${truncateHex(settings.atxId, 8)}`
-          : 'Default',
-        iconSrc: hex,
-        content: <SelectATX />,
-      },
-      {
-        id: 'subsets',
-        label: 'Split Generation',
-        description: 'To Be Implemented',
-        iconSrc: copy,
-        content: <div>To Be Implemented</div>,
-      },
-    ];
-
-    return showAdvancedSettings ? advancedTabs : basicTabs;
-  };
+  const tabs: TabItem[] = [
+    {
+      id: 'summary',
+      label: 'Summary',
+      iconSrc: summary,
+    },
+    {
+      id: 'directory',
+      label: 'Pick Directory',
+      description: getDirectoryDisplay(
+        settings.selectedDir,
+        settings.defaultDir
+      ),
+      iconSrc: folder,
+      content: <SelectDirectory variant="full" showExplanation={true} />,
+    },
+    {
+      id: 'processor',
+      label: 'Select Processor',
+      description: settings.providerModel
+        ? settings.providerModel
+        : 'Not selected',
+      iconSrc: gpu,
+      content: <SetupGPU isOpen={true} initialProviders={response} />,
+    },
+    {
+      id: 'size',
+      label: 'Set up POS Size',
+      description: `${settings.numUnits || 4} Space Units | ${calculateTotalSize(settings.numUnits)}`,
+      iconSrc: box,
+      content: <SetupDataSize />,
+    },
+    {
+      id: 'filesize',
+      label: 'Setup Max File Size',
+      description: `${calculateNumFiles(settings.numUnits, settings.maxFileSize || 4096)} files, ${settings.maxFileSize} MiB each`,
+      iconSrc: file,
+      content: <SetupFileSize />,
+    },
+    {
+      id: 'identity',
+      label: 'Select Identity',
+      description: settings.publicKey
+        ? `Key: ${truncateHex(settings.publicKey, 8)}`
+        : 'Create New Identity',
+      iconSrc: id,
+      content: <SelectIdentity />,
+    },
+    {
+      id: 'atx',
+      label: 'Select ATX ID',
+      description: settings.atxId
+        ? `ATX: ${truncateHex(settings.atxId, 8)}`
+        : 'Fetching...',
+      iconSrc: hex,
+      content: <SelectATX />,
+    },
+  ];
 
   // Handle tab change
   const handleTabChange = (tabId: string) => {
@@ -405,22 +356,37 @@ const Generate: React.FC = () => {
     setError(null);
   };
 
-  const toggleAdvancedSettings = () => {
-    setShowAdvancedSettings(!showAdvancedSettings);
-    setActiveTabId('summary'); // Reset to summary view when toggling
-  };
+  //
+  const activeTabIndex = tabs.findIndex((tab) => tab.id === activeTabId);
+  const activeTab = tabs[activeTabIndex];
+  const nextTab = tabs[activeTabIndex + 1];
 
   // Get the current active tab's label for the page title
-  const getPageTitle = () => {
-    if (showAdvancedSettings) {
-      return 'ADVANCED SETTINGS';
-    }
+  const pageTitle = activeTab?.id === 'summary'
+    ? 'YOUR POS GENERATION SETTINGS'
+    : activeTab?.label.toUpperCase();
 
-    const activeTab = getTabs().find((tab) => tab.id === activeTabId);
-    return activeTab?.id === 'summary'
-      ? 'YOUR POS GENERATION SETTINGS'
-      : activeTab?.label.toUpperCase();
-  };
+  const GenerateButton = () => (
+    <Button
+      label={isGenerating ? 'Starting...' : 'Generate POS Data'}
+      onClick={handleGenerateClick}
+      width={250}
+      height={56}
+      disabled={isGenerating}
+      margin={20}
+    />
+  );
+
+  const NextButton = () =>
+    isGenerating || !nextTab
+      ? <GenerateButton />
+      : <Button
+          label="Next"
+          onClick={() => handleTabChange(nextTab.id)}
+          width={250}
+          height={56}
+          margin={20}
+        />;
 
   return (
     <>
@@ -481,28 +447,16 @@ const Generate: React.FC = () => {
       <BackButton />
         <MainContainer>
           <PageTitleWrapper>
-            <Header text={getPageTitle()} />
+            <Header text={pageTitle} />
           </PageTitleWrapper>
-          <AdvancedSettingsButton onClick={toggleAdvancedSettings}>
-            <img src={gear} alt="Advanced Settings" />
-            {showAdvancedSettings ? 'Back to Main' : 'Advanced Settings'}
-          </AdvancedSettingsButton>
           <TabsContainer>
             <VerticalTabs
-              tabs={getTabs()}
+              tabs={tabs}
               activeTab={activeTabId}
               onTabChange={handleTabChange}
               onCollapseChange={setIsTabsCollapsed}
             />
-            {!isTabsCollapsed && (
-              <Button
-                label={isGenerating ? 'Starting...' : 'Generate POS Data'}
-                onClick={handleGenerateClick}
-                width={250}
-                height={56}
-                disabled={isGenerating}
-              />
-            )}
+            {!isTabsCollapsed ? <GenerateButton /> : <NextButton />}
           </TabsContainer>
 
           {error && <ErrorMessage text={error} />}

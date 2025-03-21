@@ -189,9 +189,9 @@ export const getDirectoryDisplay = (
   maxLength: number = 35
 ): string => {
   if (selectedDir) {
-    return `Custom: ${shortenPath(selectedDir, maxLength)}`;
+    return `${shortenPath(selectedDir, maxLength)}`;
   }
-  return `Default: ${defaultDir ? shortenPath(defaultDir, maxLength) : "Loading..."}`;
+  return defaultDir ? shortenPath(defaultDir, maxLength) : 'Loading...';
 };
 
 /**

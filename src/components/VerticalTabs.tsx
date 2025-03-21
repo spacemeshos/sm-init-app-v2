@@ -32,8 +32,7 @@ interface VerticalTabsProps {
 // Styled components
 const TabsContainer = styled.div<{ width?: number; height?: number }>`
   display: flex;
-  width: ${({ width }) => width || 1000}px;
-  height: ${({ height }) => height || 500}px;
+  width: 100%;
   position: relative;
   justify-content: center;
 `;
@@ -58,7 +57,7 @@ const TabButton = styled.button<{ isActive: boolean }>`
   cursor: pointer;
   transition: background-color 0.2s;
   width: 100%;
-  height: 80px;
+  height: 65px;
   text-align: left;
   position: relative;
 
@@ -70,7 +69,7 @@ const TabButton = styled.button<{ isActive: boolean }>`
 const TabIcon = styled.img<{ isCollapsed: boolean }>`
   width: 26px;
   height: 26px;
-  margin: ${({ isCollapsed }) => (isCollapsed ? '0 auto' : '0px 22px')};
+  margin: ${({ isCollapsed }) => (isCollapsed ? '0 12px' : '0px 22px 0 12px')};
 `;
 
 const TabTextContainer = styled.div<{ isCollapsed: boolean }>`
@@ -106,6 +105,7 @@ const TabContent = styled.div`
   flex: 1;
   padding: 20px;
   overflow-y: auto;
+  ${({ hidden = false }: { hidden?: boolean }) => hidden && 'display: none;'}
 `;
 
 /**
@@ -184,7 +184,7 @@ const VerticalTabs: React.FC<VerticalTabsProps> = ({
           </TabButton>
         ))}
       </TabList>
-      <TabContent>{activeTabObject.content}</TabContent>
+      <TabContent hidden={!isCollapsed}>{activeTabObject.content}</TabContent>
     </TabsContainer>
   );
 };

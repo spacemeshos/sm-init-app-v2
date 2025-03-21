@@ -89,10 +89,9 @@ export const SelectATX: React.FC = () => {
         atxId: undefined,
         atxIdError: userErrorMessage,
       }));
-    } finally {
-      setIsLoading(false);
-      console.log('ATX ID fetch process completed, loading state reset');
     }
+    setIsLoading(false);
+    console.log('ATX ID fetch process completed, loading state reset');
   };
 
   /**
@@ -163,8 +162,6 @@ export const SelectATX: React.FC = () => {
           footer={isLoading ? 'Fetching ATX ID...' : displayValue}
           errmsg={settings.atxIdError}
           height={400}
-          buttonText={settings.atxIdSource === 'api' && settings.atxIdError ? 'Retry Fetch' : undefined}
-          onClick={settings.atxIdSource === 'api' && settings.atxIdError ? fetchAtxId : undefined}
         >
           <HexInput
             type="text"
