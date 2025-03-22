@@ -4,14 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import box from '../assets/box.png';
-import copy from '../assets/copy.png';
 import file from '../assets/filesize.png';
 import folder from '../assets/folder.png';
 import hex from '../assets/formats.png';
 import gpu from '../assets/gpu.png';
 import id from '../assets/id.png';
 import summary from '../assets/justify.png';
-import gear from '../assets/setting.png';
 import BackgroundImage from '../assets/wave2.png';
 import { BackButton } from '../components/button';
 import { Button } from '../components/button';
@@ -25,7 +23,6 @@ import {
   SelectATX,
 } from '../components/pos/index';
 import VerticalTabs, { TabItem } from '../components/VerticalTabs';
-import { fetchLatestAtxId } from '../services/postcliService';
 import { executePostCliDetached } from '../services/postcliService';
 import { useConsole } from '../state/ConsoleContext';
 import { usePOSProcess } from '../state/POSProcessContext';
@@ -86,15 +83,28 @@ const Generate: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isTabsCollapsed, setIsTabsCollapsed] = useState<boolean>(false);
   const { updateConsole } = useConsole();
-  const { settings, setSettings } = useSettings();
+  const { settings, setSettings, fetchAtxId } = useSettings();
   const { run, response } = FindProviders();
   const navigate = useNavigate();
   const { startProcess, processState } = usePOSProcess();
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const isFetchedOnce = React.useRef(false);
 
   const isGenerating = processState.isRunning || false;
+
+  useEffect(() => {
+    if (
+      !isFetchedOnce.current &&
+      !settings.atxIdFetching &&
+      settings.atxIdSource === 'api' &&
+      settings.atxId === undefined
+    ) {
+      fetchAtxId();
+      isFetchedOnce.current = true;
+    }
+  }, [settings]);
 
   // Detect providers on component mount
   useEffect(() => {
@@ -142,8 +152,18 @@ const Generate: React.FC = () => {
       errors.push('Invalid identity key format');
     }
 
+    if (settings.atxIdError) {
+      errors.push(settings.atxIdError);
+    } else if (!settings.atxId) {
+      errors.push('ATX ID is missing or invalid');
+    } else if (!isValidHex(settings.atxId)) {
+      errors.push('Invalid ATX ID format');
+    }
+
     return errors;
   };
+
+  const isValid = validateSettings().length === 0;
 
   /**
    * Handles POS generation initiation
@@ -163,86 +183,10 @@ const Generate: React.FC = () => {
     }
 
     try {
-      let currentSettings = settings;
-
-      // If ATX ID is missing or invalid, try to fetch it
-      if (!currentSettings.atxId || !isValidHex(currentSettings.atxId)) {
-        console.log('Generate: ATX ID is missing or invalid, attempting to fetch...');
-        console.log('Current ATX ID state:', {
-          atxId: currentSettings.atxId,
-          isValid: currentSettings.atxId ? isValidHex(currentSettings.atxId) : false,
-          source: currentSettings.atxIdSource,
-          error: currentSettings.atxIdError
-        });
-        
-        updateConsole(
-          'generate',
-          'Fetching ATX ID before starting generation...'
-        );
-        
-        try {
-          console.log('Generate: Calling fetchLatestAtxId service...');
-          const startTime = Date.now();
-          const atxResponse = await fetchLatestAtxId();
-          const fetchDuration = Date.now() - startTime;
-          
-          console.log(`Generate: ATX ID fetch successful in ${fetchDuration}ms:`, atxResponse.atxId);
-          
-          // Create new settings object with fetched ATX ID
-          currentSettings = {
-            ...currentSettings,
-            atxId: atxResponse.atxId,
-            atxIdSource: 'api',
-            atxIdError: undefined,
-          };
-          
-          console.log('Generate: Updating settings with new ATX ID:', currentSettings.atxId);
-          
-          // Update the global settings state
-          setSettings(currentSettings);
-          
-          updateConsole(
-            'generate',
-            `Successfully fetched ATX ID: ${truncateHex(atxResponse.atxId, 16)}`
-          );
-        } catch (err) {
-          const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-          console.error('Generate: Error fetching ATX ID:', {
-            error: err,
-            message: errorMessage
-          });
-          
-          updateConsole(
-            'generate',
-            `Error fetching ATX ID: ${errorMessage}`
-          );
-          
-          // Provide more specific error messages based on error type
-          let userErrorMessage = 'Failed to fetch ATX ID. ';
-          
-          if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
-            userErrorMessage += `${errorMessage} Network connectivity issue detected.`;
-          } else if (errorMessage.includes('parse') || errorMessage.includes('JSON')) {
-            userErrorMessage += 'Received invalid data from the server. API format may have changed.';
-          } else if (errorMessage.includes('missing required')) {
-            userErrorMessage += 'API response is missing required data. The service may be experiencing issues.';
-          } else if (errorMessage.includes('status')) {
-            userErrorMessage += `API server error: ${errorMessage}`;
-          } else {
-            userErrorMessage += 'Please try again or enter manually.';
-          }
-          
-          errors.push(userErrorMessage);
-          setValidationErrors(errors);
-          setShowValidationModal(true);
-          return;
-        }
-      } else {
-        console.log('Generate: Using existing ATX ID:', {
-          atxId: currentSettings.atxId,
-          source: currentSettings.atxIdSource
-        });
-      }
+      console.log('Generate: Using existing ATX ID:', {
+        atxId: settings.atxId,
+        source: settings.atxIdSource
+      });
 
       // If we have any other validation errors, show them
       if (errors.length > 0) {
@@ -255,7 +199,7 @@ const Generate: React.FC = () => {
 
       // Now we can proceed with POS generation using the current settings
       const response = await executePostCliDetached(
-        currentSettings,
+        settings,
         updateConsole
       );
 
@@ -343,8 +287,11 @@ const Generate: React.FC = () => {
       id: 'atx',
       label: 'Select ATX ID',
       description: settings.atxId
-        ? `ATX: ${truncateHex(settings.atxId, 8)}`
-        : 'Fetching...',
+        ? truncateHex(settings.atxId, 8)
+        : settings.atxIdFetching
+        ? 'Fetching...'
+        : 'Please provide ATX ID manually',
+      error: settings.atxIdError,
       iconSrc: hex,
       content: <SelectATX />,
     },
@@ -372,7 +319,7 @@ const Generate: React.FC = () => {
       onClick={handleGenerateClick}
       width={250}
       height={56}
-      disabled={isGenerating}
+      disabled={isGenerating || !isValid}
       margin={20}
     />
   );

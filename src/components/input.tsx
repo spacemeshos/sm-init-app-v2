@@ -21,6 +21,7 @@ interface CustomNumberInputProps {
 interface HexInputProps {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   fontSize?: number;
   height?: number;
   width?: number;
@@ -28,6 +29,7 @@ interface HexInputProps {
   maxLength?: number;
   className?: string;
   type?: string;
+  disabled?: boolean;
 }
 
 const StyledInputRoot = styled.div<{ height?: number; width?: number }>`
@@ -98,6 +100,7 @@ const IconImage = styled.img`
 const HexInput: React.FC<HexInputProps> = ({
   value = '',
   onChange,
+  onBlur,
   height,
   width,
   placeholder,
@@ -105,6 +108,7 @@ const HexInput: React.FC<HexInputProps> = ({
   className,
   type = 'text',
   fontSize,
+  disabled = false,
 }) => {
   return (
     <StyledInputRoot height={height}>
@@ -112,11 +116,13 @@ const HexInput: React.FC<HexInputProps> = ({
         type={type}
         value={value}
         onChange={onChange}
+        onBlur={onBlur}
         width={width}
         placeholder={placeholder}
         maxLength={maxLength}
         className={className}
         fontSize={fontSize}
+        readOnly={disabled}
       />
     </StyledInputRoot>
   );

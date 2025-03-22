@@ -2,14 +2,14 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import Colors from '../styles/colors';
+import { blur } from '../styles/mixins';
 
 import Image from './image';
-import { blur } from '../styles/mixins';
 
 export interface TileProps {
   heading?: string;
-  subheader?: string;
-  footer?: string;
+  subheader?: string | React.ReactNode;
+  footer?: string | React.ReactNode;
   errmsg?: string;
   children?: React.ReactNode;
   buttonText?: string;

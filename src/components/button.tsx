@@ -53,6 +53,7 @@ const Button: React.FC<ButtonProps> = ({
   width,
   $isActive,
   disabled,
+  opacity,
 }) => {
   const handleClick = () => {
     if (!disabled && typeof onClick === "function") {
@@ -71,6 +72,7 @@ const Button: React.FC<ButtonProps> = ({
       height={height}
       $isActive={$isActive}
       disabled={disabled}
+      opacity={opacity}
     >
       <ButtonText disabled={disabled}>{label}</ButtonText>
     </StandardButton>
@@ -268,6 +270,7 @@ const StandardButton = styled.button<{
   margin?: number;
   $isActive?: boolean;
   disabled?: boolean;
+  opacity?: number;
 }>`
   top: ${({ top }) => top || 0}px;
   left: ${({ left }) => left || 0}px;
@@ -289,7 +292,7 @@ const StandardButton = styled.button<{
   border: 0.5px solid
     ${(props) =>
       props.$isActive ? Colors.whiteOpaque : Colors.greenLightOpaque};
-  opacity: ${({ disabled }) => (disabled ? 0.7 : 1)};
+  opacity: ${({ disabled, opacity }) => opacity || (disabled ? 0.7 : 1)};
 
   &:hover {
     background-color: ${({ disabled }) =>
@@ -331,7 +334,7 @@ const TransparentRectangle = styled.button<{
 
   &:hover {
     text-decoration: underline;
-    text-underline-offset: 10px;
+    text-underline-offset: 2px;
     text-decoration-color: ${Colors.greenLight};
     background-color: ${({ disabled }) =>
       disabled ? Colors.grayMedium : "transparent"};

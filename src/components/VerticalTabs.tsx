@@ -14,7 +14,8 @@ import Colors from '../styles/colors';
 export interface TabItem {
   id: string;
   label: string;
-  description?: string; // Added field for settings value display
+  description?: string;
+  error?: string;
   iconSrc: string;
   content?: React.ReactNode;
 }
@@ -88,8 +89,8 @@ const TabLabel = styled.span`
   margin-bottom: 4px;
 `;
 
-const TabDescription = styled.span`
-  color: ${Colors.grayLight};
+const TabDescription = styled.span<{ hasError?: boolean }>`
+  color: ${({ hasError }) => hasError ? Colors.red : Colors.grayLight};
   font-family: 'Univers45', sans-serif;
   font-size: 14px;
   white-space: nowrap;
@@ -177,7 +178,9 @@ const VerticalTabs: React.FC<VerticalTabsProps> = ({
             />
             <TabTextContainer isCollapsed={isCollapsed}>
               <TabLabel>{tab.label}</TabLabel>
-              {tab.description && (
+              {tab.error ? (
+                <TabDescription hasError>Error: {tab.error}</TabDescription>
+              ) : tab.description && (
                 <TabDescription>{tab.description}</TabDescription>
               )}
             </TabTextContainer>
