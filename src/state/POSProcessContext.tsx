@@ -13,6 +13,7 @@ import { parsePOSProgress } from "../utils/posProgressParser";
 
 import { useConsole } from "./ConsoleContext";
 import { useSettings } from "./SettingsContext";
+import useFileProgress from '../hooks/useFileProgress';
 
 /**
  * State interface for POS process
@@ -79,6 +80,11 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
   const [processState, setProcessState] = useState<POSProcessState>(initialState);
   const { updateConsole } = useConsole();
   const { settings } = useSettings();
+  const { setFileIndex, filePath, fileProgress } = useFileProgress(
+    settings.selectedDir || settings.defaultDir || '',
+    (settings.maxFileSize ?? 32) * 1024 * 1024,
+    10000
+  );
 
   /**
    * Initializes a new POS process
@@ -167,11 +173,18 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
 
       // Keep previous fileProgress if the new parsed state doesn't have it
       const updatedFileProgress = parsed.fileProgress || prev.fileProgress;
+
+      let fileProgressPart = 0;
+      if (updatedFileProgress?.currentFile && !updatedFileProgress?.isCompleted) {
+        setFileIndex(updatedFileProgress.currentFile);
+        fileProgressPart = fileProgress / updatedFileProgress.totalFiles;
+        console.log('Watching for...', fileProgress, '% of', filePath, '=', parsed.progress + fileProgressPart, `${fileProgressPart}%`);
+      }
       
       const newState = {
         ...prev,
         stage: parsed.stage,
-        progress: parsed.progress,
+        progress: parsed.progress + fileProgressPart,
         details: parsed.details,
         isError: parsed.isError,
         fileProgress: updatedFileProgress,

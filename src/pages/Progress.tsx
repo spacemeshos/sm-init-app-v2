@@ -158,11 +158,7 @@ const Progress: React.FC = () => {
           backgroundColor={Colors.whiteOpaque}
         >
           <CircularProgress
-            progress={
-              fileProgress
-                ? ((fileProgress.currentFile + 1) / totalFiles) * 100
-                : 0
-            }
+            progress={progress}
             size={280}
             label="Generation Progress"
           />

@@ -20,6 +20,7 @@ fn main() {
             commands::profiler::run_profiler,
             commands::profiler::get_default_config,
             commands::profiler::calculate_post_probability,
+            commands::fs::get_file_size,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
