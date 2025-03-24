@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 
 import { SizeConstants } from '../Shared/Constants';
 import { useSettings } from '../state/SettingsContext';
-import { PosMetadata } from '../types/metadata';
-import { validateDirectory } from '../utils/directoryUtils';
+import { ParsedMetadata, PosMetadata } from '../types/metadata';
 import { base64ToHex } from '../utils/hexUtils';
+
 import { usePosDirectory } from './usePosDirectory';
 
 export const useMetadataFile = () => {
@@ -16,7 +16,7 @@ export const useMetadataFile = () => {
   const [error, setError] = useState('');
   const [isOpen, setIsOpenModal] = useState(false);
   // Metadata from the metadata file
-  const [metadata, setMetadata] = useState<PosMetadata | null>(null);
+  const [metadata, setMetadata] = useState<ParsedMetadata | null>(null);
 
   const { selectDirectory } = usePosDirectory();
 
@@ -30,6 +30,12 @@ export const useMetadataFile = () => {
           const metadataContent = await readTextFile(metadataPath);
           console.log('metaDataContent', metadataContent);
           const parsedMetadata: PosMetadata = JSON.parse(metadataContent);
+          const metadata: ParsedMetadata = {
+            atxId: base64ToHex(parsedMetadata.CommitmentAtxId).toLowerCase(),
+            publicKey: base64ToHex(parsedMetadata.NodeId).toLowerCase(),
+            numUnits: parsedMetadata.NumUnits,
+            maxFileSize: parsedMetadata.MaxFileSize / 1024 / 1024,
+          };
 
           console.log('parsedMetadata', parsedMetadata);
           // Validate labelsPerUnit
@@ -41,7 +47,15 @@ export const useMetadataFile = () => {
             setIsOpenModal(true);
             return;
           }
-          setMetadata(parsedMetadata);
+          // Do not bother User if metadata is the same (or already loaded)
+          if (
+            settings.atxId === metadata.atxId &&
+            settings.publicKey === metadata.publicKey &&
+            settings.numUnits === metadata.numUnits &&
+            settings.maxFileSize === metadata.maxFileSize
+          ) return;
+
+          setMetadata(metadata);
           setIsOpenModal(true);
         } catch {
           console.log('No metadata file found');
@@ -55,10 +69,7 @@ export const useMetadataFile = () => {
     if (metadata) {
       setSettings((prev) => ({
         ...prev,
-        atxId: base64ToHex(metadata.CommitmentAtxId).toLowerCase(),
-        publicKey: base64ToHex(metadata.NodeId).toLowerCase(),
-        numUnits: metadata.NumUnits,
-        maxFileSize: metadata.MaxFileSize / 1024 / 1024,
+        ...metadata,
       }));
     }
     setIsOpenModal(false);

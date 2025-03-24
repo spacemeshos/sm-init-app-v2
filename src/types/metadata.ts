@@ -10,3 +10,10 @@ export type PosMetadata = {
   Nonce: number;
   NonceValue: HexString;
 };
+
+export type ParsedMetadata = {
+  atxId: HexString;
+  publicKey: HexString;
+  numUnits: number;
+  maxFileSize: number;
+}
