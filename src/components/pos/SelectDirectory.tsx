@@ -4,18 +4,14 @@
  * Handles both custom directory selection and default directory fallback.
  */
 
-import { open } from '@tauri-apps/api/dialog';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
+import { usePosDirectory } from '../../hooks/usePosDirectory';
 import { useSettings } from '../../state/SettingsContext';
 import { SetupTileWrapper } from '../../styles/containers';
 import { BodyText, Subheader } from '../../styles/texts';
-import {
-  validateDirectory,
-  handleDirectoryError,
-  shortenPath,
-} from '../../utils/directoryUtils';
+import { shortenPath } from '../../utils/directoryUtils';
 import { Button } from '../button';
 import { Tile } from '../tile';
 
@@ -49,69 +45,8 @@ export const SelectDirectory: React.FC<SelectDirectoryProps> = ({
   variant = 'full',
   showExplanation = false,
 }) => {
-  const { settings, setSettings } = useSettings();
-  // Track validation error state
-  const [error, setError] = useState<string | null>(null);
-  // Track directory validation progress
-  const [isValidating, setIsValidating] = useState(false);
-
-  /**
-   * Handles directory selection process
-   *
-   * Process:
-   * 1. Opens native directory picker
-   * 2. Validates selected directory
-   * 3. Updates settings or shows error
-   *
-   * Error Handling:
-   * - User cancellation
-   * - Invalid directory
-   * - Permission issues
-   * - Space constraints
-   */
-  const handleSelectDirectory = async () => {
-    try {
-      setIsValidating(true);
-      setError(null);
-
-      // Open native directory picker
-      const selected = await open({
-        directory: true,
-        multiple: false,
-      });
-
-      if (!selected) {
-        // If user cancels selection, clear selectedDir but keep defaultDir
-        setSettings((prev) => ({ ...prev, selectedDir: undefined }));
-        return;
-      }
-
-      const dir = selected as string;
-
-      // Validate custom directory
-      const validationResult = await validateDirectory(dir);
-
-      if (validationResult.isValid) {
-        // Update settings with validated directory
-        setSettings((prev) => ({
-          ...prev,
-          selectedDir: dir,
-        }));
-      } else {
-        // Handle validation failure
-        setError(validationResult.error || 'Invalid directory selected');
-        setSettings((prev) => ({ ...prev, selectedDir: undefined }));
-      }
-    } catch (err: unknown) {
-      // Handle unexpected errors
-      const errorMessage = handleDirectoryError(err);
-      console.error('Directory selection failed:', errorMessage);
-      setError(errorMessage);
-      setSettings((prev) => ({ ...prev, selectedDir: undefined }));
-    } finally {
-      setIsValidating(false);
-    }
-  };
+  const { settings } = useSettings();
+  const { selectDirectory, error, isValidating } = usePosDirectory();
 
   // Display either selected directory or default path
   const displayPath =
@@ -128,7 +63,7 @@ export const SelectDirectory: React.FC<SelectDirectoryProps> = ({
         height={250}
       />
       <Button
-        onClick={handleSelectDirectory}
+        onClick={selectDirectory}
         label={isValidating ? 'Validating...' : 'Choose custom directory'}
         width={320}
         disabled={isValidating}

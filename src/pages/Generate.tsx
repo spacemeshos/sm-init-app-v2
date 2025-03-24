@@ -40,6 +40,7 @@ import { truncateHex } from '../utils/hexUtils';
 import { isValidHex } from '../utils/hexUtils';
 import { FindProviders } from '../utils/parseResponse';
 import { calculateNumFiles, calculateTotalSize } from '../utils/sizeUtils';
+import { MetafileModal } from '../components/MetafileModal';
 
 const TabsContainer = styled.div`
   width: 100%;
@@ -408,6 +409,7 @@ const Generate: React.FC = () => {
 
           {error && <ErrorMessage text={error} />}
         </MainContainer>
+        <MetafileModal />
     </>
   );
 };
