@@ -91,6 +91,9 @@ const ConsoleButton = styled.button`
   &:hover {
     background-color: ${Colors.greenLight}20;
   }
+
+  user-select: none;
+  -webkit-user-select: none;
 `;
 
 /**
@@ -196,11 +199,6 @@ const ConsoleView: React.FC = () => {
     };
   }, [isExpanded]);
 
-  // Debug logging for render tracking
-  useEffect(() => {
-    console.log("ConsoleView rendered with:", { entries, isExpanded });
-  }, [entries, isExpanded]);
-
   /**
    * Auto-scroll to bottom on new entries
    * Tracks entry count changes to trigger scrolling
@@ -209,7 +207,6 @@ const ConsoleView: React.FC = () => {
     if (consoleRef.current && entries.length !== prevEntriesLengthRef.current) {
       consoleRef.current.scrollTop = consoleRef.current.scrollHeight;
       prevEntriesLengthRef.current = entries.length;
-      console.log("Scrolled to bottom, new entries length:", entries.length);
     }
   }, [entries]);
 

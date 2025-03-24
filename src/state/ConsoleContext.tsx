@@ -66,8 +66,6 @@ const initialState: ConsoleState = {
  * @returns {ConsoleState} New console state
  */
 function consoleReducer(state: ConsoleState, action: ConsoleAction): ConsoleState {
-  console.log('Console reducer called with action:', action);
-  
   switch (action.type) {
     case 'UPDATE': {
       const timestamp = new Date().toLocaleTimeString();
@@ -76,11 +74,6 @@ function consoleReducer(state: ConsoleState, action: ConsoleAction): ConsoleStat
         output: action.output,
         timestamp
       };
-      
-      console.log('New state after update:', {
-        ...state,
-        entries: [...state.entries, newEntry]
-      });
       
       return {
         ...state,
@@ -138,7 +131,6 @@ export const ConsoleProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Initialize console on mount
   useEffect(() => {
-    console.log('Initializing console...');
     dispatch({ type: 'INITIALIZE' });
   }, []);
 
@@ -148,7 +140,6 @@ export const ConsoleProvider: React.FC<{ children: React.ReactNode }> = ({ child
    * @param {string} output - Output from command execution
    */
   const updateConsole = useCallback((command: string, output: string) => {
-    console.log('updateConsole called with:', { command, output });
     dispatch({ type: 'UPDATE', command, output });
   }, []);
 
@@ -157,7 +148,6 @@ export const ConsoleProvider: React.FC<{ children: React.ReactNode }> = ({ child
    * Resets console to empty state
    */
   const clearConsole = useCallback(() => {
-    console.log('clearConsole called');
     dispatch({ type: 'CLEAR' });
   }, []);
 
@@ -166,13 +156,11 @@ export const ConsoleProvider: React.FC<{ children: React.ReactNode }> = ({ child
    * Controls visibility of full console in UI
    */
   const toggleExpand = useCallback(() => {
-    console.log('toggleExpand called');
     dispatch({ type: 'TOGGLE_EXPAND' });
   }, []);
 
   // Debug log state changes
   useEffect(() => {
-    console.log('Console state:', state);
   }, [state]);
 
   // Memoize context value to prevent unnecessary re-renders
@@ -203,19 +191,4 @@ export const useConsole = () => {
     throw error;
   }
   return context;
-};
-
-/**
- * Debug utility for inspecting console state
- * Logs detailed information about current console state
- * 
- * @param {ConsoleState} state - Console state to inspect
- */
-export const debugConsoleState = (state: ConsoleState) => {
-  console.log('Current console state:', {
-    entries: state.entries,
-    entryCount: state.entries.length,
-    hasContent: state.entries.length > 0,
-    isExpanded: state.isExpanded
-  });
 };

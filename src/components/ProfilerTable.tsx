@@ -118,6 +118,9 @@ const ToggleButton = styled.button`
   &:hover {
     background: ${Colors.darkOpaque};
   }
+
+  user-select: none;
+  -webkit-user-select: none;
 `;
 
 /**

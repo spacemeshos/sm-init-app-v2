@@ -31,7 +31,6 @@ import { calculateNumFiles } from "./sizeUtils";
  *   - File progress details (if available)
  */
 export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSProgress => {
-  console.log('Parsing log:', log);
   // Initialize with default "processing" state
   const defaultResponse: ParsedPOSProgress = {
     stage: Stage.Processing,
@@ -49,7 +48,7 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
   // Calculate expected total number of files based on current settings
   const totalFiles = calculateNumFiles(settings.numUnits, settings.maxFileSize);
 
-  // First priority: Check for error messages and critical warnings
+  // First: Check for error messages and critical warnings
   if (
     cleanLog.toLowerCase().includes("error") ||
     cleanLog.toLowerCase().includes("aborting") ||
@@ -89,9 +88,30 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
     };
   }
 
-  // Second priority: Parse file completion progress
+  // Second: Watch for currently initializing file size
+  const fileStartMatch = cleanLog.match(/initialization:\s+(?:starting|continuing)\s+to\s+write\s+file\s+{"fileIndex":\s*(\d+)/);
+  if (fileStartMatch) {
+    const currentFile = parseInt(fileStartMatch[1]);
+    const progress = (currentFile / totalFiles) * 100;
+    
+    console.log('Matched file start:', { currentFile, totalFiles, progress });
+    
+    return {
+      stage: Stage.Processing,
+      progress,
+      details: `Writing file ${currentFile} of ${totalFiles}...`,
+      isError: false,
+      fileProgress: {
+        isCompleted: false,
+        currentFile,
+        totalFiles,
+      }
+    };
+  }
+
+  // Third: Parse file completion progress
   // Format: "INFO initialization: completed {"fileIndex": X}"
-  const fileCompleteMatch = cleanLog.match(/INFO\s+initialization:\s+completed\s+{"fileIndex":\s*(\d+)/);
+  const fileCompleteMatch = cleanLog.match(/INFO\s+initialization:\s+(?:completed|file already initialized)\s+{"fileIndex":\s*(\d+)/);
   if (fileCompleteMatch) {
     const currentFile = parseInt(fileCompleteMatch[1]);
     const progress = ((currentFile + 1) / totalFiles) * 100;
@@ -104,14 +124,15 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
       details: `${currentFile + 1} of ${totalFiles} files generated (${Math.round(progress)}%)`,
       isError: false,
       fileProgress: {
+        isCompleted: true,
         currentFile,
         totalFiles,
       }
     };
   }
 
-  // Third priority: Check for final completion message
-  if (cleanLog.includes("cli: initialization completed")) {
+  // Finally: Check for final completion message
+  if (cleanLog.includes("cli: initialization completed") || cleanLog.includes("initialization: completed, found nonce")) {
     return {
       stage: Stage.Complete,
       progress: 100,

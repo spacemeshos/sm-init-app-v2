@@ -13,6 +13,7 @@ import { parsePOSProgress } from "../utils/posProgressParser";
 
 import { useConsole } from "./ConsoleContext";
 import { useSettings } from "./SettingsContext";
+import useFileProgress from '../hooks/useFileProgress';
 
 /**
  * State interface for POS process
@@ -79,6 +80,11 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
   const [processState, setProcessState] = useState<POSProcessState>(initialState);
   const { updateConsole } = useConsole();
   const { settings } = useSettings();
+  const { setFileIndex, fileProgress } = useFileProgress(
+    settings.selectedDir || settings.defaultDir || '',
+    (settings.maxFileSize ?? 32) * 1024 * 1024,
+    10000
+  );
 
   /**
    * Initializes a new POS process
@@ -86,6 +92,7 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
    * @param {number} pid - Process ID of the new process
    */
   const startProcess = (pid: number) => {
+    setFileIndex(0);
     setProcessState(prev => ({
       ...prev,
       isRunning: true,
@@ -154,11 +161,7 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
       numUnits: settings.numUnits || SizeConstants.DEFAULT_NUM_UNITS,
       maxFileSize: settings.maxFileSize || SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB
     };
-
-    console.log('Settings for parsing:', posSettings);
     const parsed = parsePOSProgress(cleanLog, posSettings);
-    console.log('Parsed progress:', parsed);
-    
     setProcessState(prev => {
       // If we're already in a terminal state (Complete or Error), don't process more logs
       if (prev.stage === Stage.Complete || (prev.stage === Stage.Error && prev.isError)) {
@@ -167,7 +170,10 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
 
       // Keep previous fileProgress if the new parsed state doesn't have it
       const updatedFileProgress = parsed.fileProgress || prev.fileProgress;
-      
+;
+      if (updatedFileProgress?.currentFile && !updatedFileProgress?.isCompleted) {
+        setFileIndex(updatedFileProgress.currentFile); 
+      }
       const newState = {
         ...prev,
         stage: parsed.stage,
@@ -183,6 +189,16 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
       return newState;
     });
   }, [settings]);
+
+  const totalFiles = processState.fileProgress?.totalFiles ?? 1;
+  const entireFileProgress = ((processState.fileProgress?.currentFile ?? 0) / totalFiles) * 100;
+  React.useEffect(() => {
+    const fileProgressPart = fileProgress / totalFiles;
+    setProcessState(prev => ({
+      ...prev,
+      progress: entireFileProgress + fileProgressPart,
+    }));
+  }, [entireFileProgress, fileProgress, totalFiles]);
 
   /**
    * Resets process state to initial values

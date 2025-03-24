@@ -150,7 +150,7 @@ const Profiler: React.FC = () => {
       {/* Main POSProfiler content */}
 
       <Background src={BackgroundImage} />
-      <BackButton onClick={() => navigate('/')} />
+      <BackButton />
       <PageTitleWrapper>
         <Header text="PoS Profiler" />
       </PageTitleWrapper>

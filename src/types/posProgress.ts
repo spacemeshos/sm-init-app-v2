@@ -8,6 +8,7 @@ export enum Stage {
 /* eslint-enable no-unused-vars */
 
 export interface FileProgress {
+  isCompleted: boolean;
   currentFile: number;
   totalFiles: number;
 }

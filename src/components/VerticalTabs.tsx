@@ -14,7 +14,8 @@ import Colors from '../styles/colors';
 export interface TabItem {
   id: string;
   label: string;
-  description?: string; // Added field for settings value display
+  description?: string;
+  error?: string;
   iconSrc: string;
   content?: React.ReactNode;
 }
@@ -32,8 +33,7 @@ interface VerticalTabsProps {
 // Styled components
 const TabsContainer = styled.div<{ width?: number; height?: number }>`
   display: flex;
-  width: ${({ width }) => width || 1000}px;
-  height: ${({ height }) => height || 500}px;
+  width: 100%;
   position: relative;
   justify-content: center;
 `;
@@ -58,19 +58,22 @@ const TabButton = styled.button<{ isActive: boolean }>`
   cursor: pointer;
   transition: background-color 0.2s;
   width: 100%;
-  height: 80px;
+  height: 65px;
   text-align: left;
   position: relative;
 
   &:hover {
     background-color: ${Colors.greenLightOpaque};
   }
+
+  user-select: none;
+  -webkit-user-select: none;
 `;
 
 const TabIcon = styled.img<{ isCollapsed: boolean }>`
   width: 26px;
   height: 26px;
-  margin: ${({ isCollapsed }) => (isCollapsed ? '0 auto' : '0px 22px')};
+  margin: ${({ isCollapsed }) => (isCollapsed ? '0 12px' : '0px 22px 0 12px')};
 `;
 
 const TabTextContainer = styled.div<{ isCollapsed: boolean }>`
@@ -89,8 +92,8 @@ const TabLabel = styled.span`
   margin-bottom: 4px;
 `;
 
-const TabDescription = styled.span`
-  color: ${Colors.grayLight};
+const TabDescription = styled.span<{ hasError?: boolean }>`
+  color: ${({ hasError }) => hasError ? Colors.red : Colors.grayLight};
   font-family: 'Univers45', sans-serif;
   font-size: 14px;
   white-space: nowrap;
@@ -106,6 +109,9 @@ const TabContent = styled.div`
   flex: 1;
   padding: 20px;
   overflow-y: auto;
+  ${({ hidden = false }: { hidden?: boolean }) =>
+    hidden ? 'display: none;' : 'padding-right: 100px;'
+  }
 `;
 
 /**
@@ -177,14 +183,16 @@ const VerticalTabs: React.FC<VerticalTabsProps> = ({
             />
             <TabTextContainer isCollapsed={isCollapsed}>
               <TabLabel>{tab.label}</TabLabel>
-              {tab.description && (
+              {tab.error ? (
+                <TabDescription hasError>Error: {tab.error}</TabDescription>
+              ) : tab.description && (
                 <TabDescription>{tab.description}</TabDescription>
               )}
             </TabTextContainer>
           </TabButton>
         ))}
       </TabList>
-      <TabContent>{activeTabObject.content}</TabContent>
+      <TabContent hidden={!isCollapsed}>{activeTabObject.content}</TabContent>
     </TabsContainer>
   );
 };

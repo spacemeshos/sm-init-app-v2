@@ -2,13 +2,14 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import Colors from '../styles/colors';
+import { blur } from '../styles/mixins';
 
 import Image from './image';
 
 export interface TileProps {
   heading?: string;
-  subheader?: string;
-  footer?: string;
+  subheader?: string | React.ReactNode;
+  footer?: string | React.ReactNode;
   errmsg?: string;
   children?: React.ReactNode;
   buttonText?: string;
@@ -44,7 +45,7 @@ const TileWrapper = styled.div<{
   width: ${({ width = 500 }) => `${width}px`};
   background-color: ${({ selected, backgroundColor = 'transparent' }) =>
     selected ? Colors.greenLightOpaque : backgroundColor};
-  backdrop-filter: ${({ blurred }) => (blurred ? 'blur(8px)' : 'none')};
+  ${({ blurred }) => blur(blurred ? '8px' : 'none')}
   border: ${({ border }) =>
     border ? `1px solid ${Colors.greenLightOpaque}` : 'none'};
   position: relative;

@@ -14,6 +14,16 @@ import { SizeConstants } from "../Shared/Constants";
 export const getSizePerUnit = (labelsPerUnit: number): number =>
   labelsPerUnit * SizeConstants.BITS_PER_LABEL / 8;
 
+export const formatSizeUnits = (size: number) => {
+  let unitIndex = 0;
+  while (size >= 1024 && unitIndex < SizeConstants.SIZE_UNITS.length - 1) {
+    size /= 1024;
+    unitIndex++;
+  }
+  // Return the size with the corresponding unit
+  return `${size.toFixed(1)} ${SizeConstants.SIZE_UNITS[unitIndex]}`;
+};
+
 /**
  * Calculates the total size based on the number of units
  * @param {number} numUnits - Number of units to calculate size for (defaults to DEFAULT_NUM_UNITS)
@@ -21,17 +31,7 @@ export const getSizePerUnit = (labelsPerUnit: number): number =>
  */
 export const calculateTotalSize = (numUnits: number = SizeConstants.DEFAULT_NUM_UNITS): string => {
   const sizeInBytes = getSizePerUnit(SizeConstants.DEFAULT_LABELS_PER_UNIT) * numUnits;
-  let size = sizeInBytes;
-  let unitIndex = 0;
-
-  // Loop to find the appropriate unit
-  while (size >= 1024 && unitIndex < SizeConstants.SIZE_UNITS.length - 1) {
-    size /= 1024;
-    unitIndex++;
-  }
-
-  // Return the size with the corresponding unit
-  return `${size.toFixed(1)} ${SizeConstants.SIZE_UNITS[unitIndex]}`;
+  return formatSizeUnits(sizeInBytes);
 };
 
 /**

@@ -4,17 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import box from '../assets/box.png';
-import copy from '../assets/copy.png';
 import file from '../assets/filesize.png';
 import folder from '../assets/folder.png';
 import hex from '../assets/formats.png';
 import gpu from '../assets/gpu.png';
 import id from '../assets/id.png';
 import summary from '../assets/justify.png';
-import gear from '../assets/setting.png';
 import BackgroundImage from '../assets/wave2.png';
 import { BackButton } from '../components/button';
 import { Button } from '../components/button';
+import { MetafileModal } from '../components/MetafileModal';
 import Modal from '../components/modal';
 import {
   SelectDirectory,
@@ -25,7 +24,6 @@ import {
   SelectATX,
 } from '../components/pos/index';
 import VerticalTabs, { TabItem } from '../components/VerticalTabs';
-import { fetchLatestAtxId } from '../services/postcliService';
 import { executePostCliDetached } from '../services/postcliService';
 import { useConsole } from '../state/ConsoleContext';
 import { usePOSProcess } from '../state/POSProcessContext';
@@ -46,40 +44,12 @@ import { calculateNumFiles, calculateTotalSize } from '../utils/sizeUtils';
 
 const TabsContainer = styled.div`
   width: 100%;
-  height: 500px;
   position: relative;
-  top: 200px;
+  top: 150px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`;
-
-const AdvancedSettingsButton = styled.button`
-  background: ${Colors.greenLightOpaque};
-  border: 1px solid ${Colors.greenLightOpaque};
-  color: ${Colors.white};
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  position: absolute;
-  right: 50px;
-  top: 140px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  line-height: 18px;
-  transition: background 0.2s;
-
-  &:hover {
-    background: ${Colors.whiteOpaque};
-  }
-
-  img {
-    width: 16px;
-    height: 16px;
-  }
 `;
 
 /**
@@ -112,19 +82,30 @@ const AdvancedSettingsButton = styled.button`
 const Generate: React.FC = () => {
   const [activeTabId, setActiveTabId] = useState<string>('summary');
   const [error, setError] = useState<string | null>(null);
-  const [showAdvancedSettings, setShowAdvancedSettings] =
-    useState<boolean>(false);
   const [isTabsCollapsed, setIsTabsCollapsed] = useState<boolean>(false);
   const { updateConsole } = useConsole();
-  const { settings, setSettings } = useSettings();
+  const { settings, setSettings, fetchAtxId } = useSettings();
   const { run, response } = FindProviders();
   const navigate = useNavigate();
   const { startProcess, processState } = usePOSProcess();
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const isFetchedOnce = React.useRef(false);
 
   const isGenerating = processState.isRunning || false;
+
+  useEffect(() => {
+    if (
+      !isFetchedOnce.current &&
+      !settings.atxIdFetching &&
+      settings.atxIdSource === 'api' &&
+      settings.atxId === undefined
+    ) {
+      fetchAtxId();
+      isFetchedOnce.current = true;
+    }
+  }, [settings]);
 
   // Detect providers on component mount
   useEffect(() => {
@@ -172,8 +153,18 @@ const Generate: React.FC = () => {
       errors.push('Invalid identity key format');
     }
 
+    if (settings.atxIdError) {
+      errors.push(settings.atxIdError);
+    } else if (!settings.atxId) {
+      errors.push('ATX ID is missing or invalid');
+    } else if (!isValidHex(settings.atxId)) {
+      errors.push('Invalid ATX ID format');
+    }
+
     return errors;
   };
+
+  const isValid = validateSettings().length === 0;
 
   /**
    * Handles POS generation initiation
@@ -193,86 +184,10 @@ const Generate: React.FC = () => {
     }
 
     try {
-      let currentSettings = settings;
-
-      // If ATX ID is missing or invalid, try to fetch it
-      if (!currentSettings.atxId || !isValidHex(currentSettings.atxId)) {
-        console.log('Generate: ATX ID is missing or invalid, attempting to fetch...');
-        console.log('Current ATX ID state:', {
-          atxId: currentSettings.atxId,
-          isValid: currentSettings.atxId ? isValidHex(currentSettings.atxId) : false,
-          source: currentSettings.atxIdSource,
-          error: currentSettings.atxIdError
-        });
-        
-        updateConsole(
-          'generate',
-          'Fetching ATX ID before starting generation...'
-        );
-        
-        try {
-          console.log('Generate: Calling fetchLatestAtxId service...');
-          const startTime = Date.now();
-          const atxResponse = await fetchLatestAtxId();
-          const fetchDuration = Date.now() - startTime;
-          
-          console.log(`Generate: ATX ID fetch successful in ${fetchDuration}ms:`, atxResponse.atxId);
-          
-          // Create new settings object with fetched ATX ID
-          currentSettings = {
-            ...currentSettings,
-            atxId: atxResponse.atxId,
-            atxIdSource: 'api',
-            atxIdError: undefined,
-          };
-          
-          console.log('Generate: Updating settings with new ATX ID:', currentSettings.atxId);
-          
-          // Update the global settings state
-          setSettings(currentSettings);
-          
-          updateConsole(
-            'generate',
-            `Successfully fetched ATX ID: ${truncateHex(atxResponse.atxId, 16)}`
-          );
-        } catch (err) {
-          const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-          console.error('Generate: Error fetching ATX ID:', {
-            error: err,
-            message: errorMessage
-          });
-          
-          updateConsole(
-            'generate',
-            `Error fetching ATX ID: ${errorMessage}`
-          );
-          
-          // Provide more specific error messages based on error type
-          let userErrorMessage = 'Failed to fetch ATX ID. ';
-          
-          if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
-            userErrorMessage += `${errorMessage} Network connectivity issue detected.`;
-          } else if (errorMessage.includes('parse') || errorMessage.includes('JSON')) {
-            userErrorMessage += 'Received invalid data from the server. API format may have changed.';
-          } else if (errorMessage.includes('missing required')) {
-            userErrorMessage += 'API response is missing required data. The service may be experiencing issues.';
-          } else if (errorMessage.includes('status')) {
-            userErrorMessage += `API server error: ${errorMessage}`;
-          } else {
-            userErrorMessage += 'Please try again or enter manually.';
-          }
-          
-          errors.push(userErrorMessage);
-          setValidationErrors(errors);
-          setShowValidationModal(true);
-          return;
-        }
-      } else {
-        console.log('Generate: Using existing ATX ID:', {
-          atxId: currentSettings.atxId,
-          source: currentSettings.atxIdSource
-        });
-      }
+      console.log('Generate: Using existing ATX ID:', {
+        atxId: settings.atxId,
+        source: settings.atxIdSource
+      });
 
       // If we have any other validation errors, show them
       if (errors.length > 0) {
@@ -285,7 +200,7 @@ const Generate: React.FC = () => {
 
       // Now we can proceed with POS generation using the current settings
       const response = await executePostCliDetached(
-        currentSettings,
+        settings,
         updateConsole
       );
 
@@ -321,83 +236,67 @@ const Generate: React.FC = () => {
   };
 
   // Define tabs based on whether we're showing basic or advanced settings
-  const getTabs = (): TabItem[] => {
-    const basicTabs: TabItem[] = [
-      {
-        id: 'summary',
-        label: 'Summary',
-        iconSrc: summary,
-      },
-      {
-        id: 'directory',
-        label: 'Pick Directory',
-        description: getDirectoryDisplay(
-          settings.selectedDir,
-          settings.defaultDir
-        ),
-        iconSrc: folder,
-        content: <SelectDirectory variant="full" showExplanation={true} />,
-      },
-      {
-        id: 'processor',
-        label: 'Select Processor',
-        description: settings.providerModel
-          ? settings.providerModel
-          : 'Not selected',
-        iconSrc: gpu,
-        content: <SetupGPU isOpen={true} initialProviders={response} />,
-      },
-      {
-        id: 'size',
-        label: 'Set up POS Size',
-        description: `${settings.numUnits || 4} Space Units | ${calculateTotalSize(settings.numUnits)}`,
-        iconSrc: box,
-        content: <SetupDataSize />,
-      },
-    ];
-
-    const advancedTabs: TabItem[] = [
-      {
-        id: 'summary',
-        label: 'Summary',
-        iconSrc: summary,
-      },
-      {
-        id: 'identity',
-        label: 'Select Identity',
-        description: settings.publicKey
-          ? `Key: ${truncateHex(settings.publicKey, 8)}`
-          : 'Create New Identity',
-        iconSrc: id,
-        content: <SelectIdentity />,
-      },
-      {
-        id: 'filesize',
-        label: 'Setup Max File Size',
-        description: `${calculateNumFiles(settings.numUnits, settings.maxFileSize || 4096)} files, ${settings.maxFileSize} MiB each`,
-        iconSrc: file,
-        content: <SetupFileSize />,
-      },
-      {
-        id: 'atx',
-        label: 'Select ATX ID',
-        description: settings.atxId
-          ? `ATX: ${truncateHex(settings.atxId, 8)}`
-          : 'Default',
-        iconSrc: hex,
-        content: <SelectATX />,
-      },
-      {
-        id: 'subsets',
-        label: 'Split Generation',
-        description: 'To Be Implemented',
-        iconSrc: copy,
-        content: <div>To Be Implemented</div>,
-      },
-    ];
-
-    return showAdvancedSettings ? advancedTabs : basicTabs;
-  };
+  const tabs: TabItem[] = [
+    {
+      id: 'summary',
+      label: 'Summary',
+      iconSrc: summary,
+    },
+    {
+      id: 'directory',
+      label: 'Pick Directory',
+      description: getDirectoryDisplay(
+        settings.selectedDir,
+        settings.defaultDir
+      ),
+      iconSrc: folder,
+      content: <SelectDirectory variant="full" showExplanation={true} />,
+    },
+    {
+      id: 'processor',
+      label: 'Select Processor',
+      description: settings.providerModel
+        ? settings.providerModel
+        : 'Not selected',
+      iconSrc: gpu,
+      content: <SetupGPU isOpen={true} initialProviders={response} />,
+    },
+    {
+      id: 'size',
+      label: 'Set up POS Size',
+      description: `${settings.numUnits || 4} Space Units | ${calculateTotalSize(settings.numUnits)}`,
+      iconSrc: box,
+      content: <SetupDataSize />,
+    },
+    {
+      id: 'filesize',
+      label: 'Setup Max File Size',
+      description: `${calculateNumFiles(settings.numUnits, settings.maxFileSize || 4096)} files, ${settings.maxFileSize} MiB each`,
+      iconSrc: file,
+      content: <SetupFileSize />,
+    },
+    {
+      id: 'identity',
+      label: 'Select Identity',
+      description: settings.publicKey
+        ? `Key: ${truncateHex(settings.publicKey, 8)}`
+        : 'Create New Identity',
+      iconSrc: id,
+      content: <SelectIdentity />,
+    },
+    {
+      id: 'atx',
+      label: 'Select ATX ID',
+      description: settings.atxId
+        ? truncateHex(settings.atxId, 8)
+        : settings.atxIdFetching
+        ? 'Fetching...'
+        : 'Please provide ATX ID manually',
+      error: settings.atxIdError,
+      iconSrc: hex,
+      content: <SelectATX />,
+    },
+  ];
 
   // Handle tab change
   const handleTabChange = (tabId: string) => {
@@ -405,22 +304,37 @@ const Generate: React.FC = () => {
     setError(null);
   };
 
-  const toggleAdvancedSettings = () => {
-    setShowAdvancedSettings(!showAdvancedSettings);
-    setActiveTabId('summary'); // Reset to summary view when toggling
-  };
+  //
+  const activeTabIndex = tabs.findIndex((tab) => tab.id === activeTabId);
+  const activeTab = tabs[activeTabIndex];
+  const nextTab = tabs[activeTabIndex + 1];
 
   // Get the current active tab's label for the page title
-  const getPageTitle = () => {
-    if (showAdvancedSettings) {
-      return 'ADVANCED SETTINGS';
-    }
+  const pageTitle = activeTab?.id === 'summary'
+    ? 'YOUR POS GENERATION SETTINGS'
+    : activeTab?.label.toUpperCase();
 
-    const activeTab = getTabs().find((tab) => tab.id === activeTabId);
-    return activeTab?.id === 'summary'
-      ? 'YOUR POS GENERATION SETTINGS'
-      : activeTab?.label.toUpperCase();
-  };
+  const GenerateButton = () => (
+    <Button
+      label={isGenerating ? 'Starting...' : 'Generate POS Data'}
+      onClick={handleGenerateClick}
+      width={250}
+      height={56}
+      disabled={isGenerating || !isValid}
+      margin={20}
+    />
+  );
+
+  const NextButton = () =>
+    isGenerating || !nextTab
+      ? <GenerateButton />
+      : <Button
+          label="Next"
+          onClick={() => handleTabChange(nextTab.id)}
+          width={250}
+          height={56}
+          margin={20}
+        />;
 
   return (
     <>
@@ -481,32 +395,21 @@ const Generate: React.FC = () => {
       <BackButton />
         <MainContainer>
           <PageTitleWrapper>
-            <Header text={getPageTitle()} />
+            <Header text={pageTitle} />
           </PageTitleWrapper>
-          <AdvancedSettingsButton onClick={toggleAdvancedSettings}>
-            <img src={gear} alt="Advanced Settings" />
-            {showAdvancedSettings ? 'Back to Main' : 'Advanced Settings'}
-          </AdvancedSettingsButton>
           <TabsContainer>
             <VerticalTabs
-              tabs={getTabs()}
+              tabs={tabs}
               activeTab={activeTabId}
               onTabChange={handleTabChange}
               onCollapseChange={setIsTabsCollapsed}
             />
-            {!isTabsCollapsed && (
-              <Button
-                label={isGenerating ? 'Starting...' : 'Generate POS Data'}
-                onClick={handleGenerateClick}
-                width={250}
-                height={56}
-                disabled={isGenerating}
-              />
-            )}
+            {!isTabsCollapsed ? <GenerateButton /> : <NextButton />}
           </TabsContainer>
 
           {error && <ErrorMessage text={error} />}
         </MainContainer>
+        <MetafileModal />
     </>
   );
 };

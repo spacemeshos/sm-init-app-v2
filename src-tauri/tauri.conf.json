@@ -19,6 +19,10 @@
         "open": true,
         "scope": [],
         "sidecar": false
+      },
+      "fs": {
+        "readFile": true,
+        "scope": ["*", "**/*"]
       }
     },
     "bundle": {
@@ -38,12 +42,6 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [
-        "bin/postcli/postcli",
-        "bin/postcli/postcli.exe",
-        "bin/profiler/profiler",
-        "bin/profiler/profiler.exe"
-      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {

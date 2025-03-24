@@ -49,6 +49,8 @@ export interface Settings {
   atxIdSource: 'api' | 'manual';
   /** Error message if ATX ID fetch fails */
   atxIdError?: string;
+  /** Is Atx ID is fetching right now  */
+  atxIdFetching: boolean;
 }
 
 /**
@@ -60,6 +62,9 @@ interface SettingsContextProps {
   settings: Settings;
   /** Function to update settings */
   setSettings: React.Dispatch<React.SetStateAction<Settings>>;
+
+  /** Trigger fetching ATX ID */
+  fetchAtxId: () => void;
 }
 
 // Create context with undefined default value
@@ -93,7 +98,9 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
     identityFile: undefined,
     publicKey: undefined,
     atxId: undefined,
-    atxIdSource: 'api'
+    atxIdSource: 'api',
+    atxIdFetching: false,
+    atxIdError: undefined,
   });
 
   /**
@@ -101,24 +108,30 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
    * Includes automatic retry on failure with comprehensive logging
    */
   const fetchAtxId = useCallback(async () => {
-    console.log('SettingsContext: Initiating ATX ID fetch...');
-    
     try {
-      console.log('SettingsContext: Calling fetchLatestAtxId service...');
-      const startTime = Date.now();
-      const response = await fetchLatestAtxId();
-      const fetchDuration = Date.now() - startTime;
-      
-      console.log(`SettingsContext: ATX ID fetch successful in ${fetchDuration}ms:`, response.atxId);
-      
       setSettings(prev => ({
         ...prev,
-        atxId: response.atxId,
+        atxId: undefined,
         atxIdSource: 'api',
-        atxIdError: undefined
+        atxIdFetching: true,
       }));
+
+      const response = await fetchLatestAtxId();
       
-      console.log('SettingsContext: ATX ID successfully updated in settings');
+      setSettings(prev =>
+        // Update final result only if it still has API source
+        // This prevents overriding manual input while fetching
+        prev.atxIdFetching && prev.atxIdSource === 'api'
+        ? ({
+            ...prev,
+            atxId: response.atxId,
+            atxIdSource: 'api',
+            atxIdFetching: false,
+            atxIdError: undefined
+          })
+        : prev
+      );
+      
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       console.error("SettingsContext: Error fetching ATX ID:", {
@@ -139,16 +152,12 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
         userErrorMessage += `: ${errorMessage}`;
       }
       
-      console.log('SettingsContext: Setting error message for user:', userErrorMessage);
-      
+      console.error('SettingsContext: ', userErrorMessage);
       setSettings(prev => ({
         ...prev,
+        atxIdFetching: false,
         atxIdError: userErrorMessage
       }));
-      
-      // Retry after 5 seconds
-      console.log('SettingsContext: Scheduling retry in 5 seconds...');
-      setTimeout(fetchAtxId, 5000);
     }
   }, []);
 
@@ -168,26 +177,13 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
       } catch (err) {
         console.error("Error getting default directory:", err);
       }
-
-      // Fetch ATX ID
-      fetchAtxId();
     };
 
     initSettings();
-  }, [fetchAtxId]);
-
-  /**
-   * Handle ATX ID source changes
-   * Re-fetches ATX ID when manual input is cleared
-   */
-  useEffect(() => {
-    if (settings.atxId === undefined && settings.atxIdSource === 'manual') {
-      fetchAtxId();
-    }
-  }, [settings.atxId, settings.atxIdSource, fetchAtxId]);
+  }, []);
 
   return (
-    <SettingsContext.Provider value={{ settings, setSettings }}>
+    <SettingsContext.Provider value={{ settings, setSettings, fetchAtxId }}>
       {children}
     </SettingsContext.Provider>
   );

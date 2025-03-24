@@ -14,6 +14,7 @@ import pen from "../assets/edit.png";
 import next from "../assets/next.png";
 import close from "../assets/x.png";
 import Colors from "../styles/colors";
+import { blur } from '../styles/mixins';
 
 /**
  * Common props interface for all button components
@@ -52,6 +53,7 @@ const Button: React.FC<ButtonProps> = ({
   width,
   $isActive,
   disabled,
+  opacity,
 }) => {
   const handleClick = () => {
     if (!disabled && typeof onClick === "function") {
@@ -70,6 +72,7 @@ const Button: React.FC<ButtonProps> = ({
       height={height}
       $isActive={$isActive}
       disabled={disabled}
+      opacity={opacity}
     >
       <ButtonText disabled={disabled}>{label}</ButtonText>
     </StandardButton>
@@ -131,7 +134,7 @@ const BackButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
     if (onClick) {
       onClick();
     } else {
-      navigate(-1);
+      navigate('/');
     }
   };
 
@@ -267,6 +270,7 @@ const StandardButton = styled.button<{
   margin?: number;
   $isActive?: boolean;
   disabled?: boolean;
+  opacity?: number;
 }>`
   top: ${({ top }) => top || 0}px;
   left: ${({ left }) => left || 0}px;
@@ -288,13 +292,16 @@ const StandardButton = styled.button<{
   border: 0.5px solid
     ${(props) =>
       props.$isActive ? Colors.whiteOpaque : Colors.greenLightOpaque};
-  opacity: ${({ disabled }) => (disabled ? 0.7 : 1)};
+  opacity: ${({ disabled, opacity }) => opacity || (disabled ? 0.7 : 1)};
 
   &:hover {
     background-color: ${({ disabled }) =>
       disabled ? Colors.grayMedium : Colors.greenLightOpaque};
     border: 1px solid ${Colors.whiteOpaque};
   }
+
+  user-select: none;
+  -webkit-user-select: none;
 `;
 
 /**
@@ -330,7 +337,7 @@ const TransparentRectangle = styled.button<{
 
   &:hover {
     text-decoration: underline;
-    text-underline-offset: 10px;
+    text-underline-offset: 2px;
     text-decoration-color: ${Colors.greenLight};
     background-color: ${({ disabled }) =>
       disabled ? Colors.grayMedium : "transparent"};
@@ -366,7 +373,7 @@ const NavIcon = styled.img`
  * Navigation button wrapper styling
  */
 const NavWrapper = styled.button<{ top?: number; left?: number }>`
-  top: ${({ top }) => top || 96}px;
+  top: ${({ top }) => top || 66}px;
   left: ${({ left }) => left || 0}px;
   border: transparent;
   background: transparent;
@@ -399,6 +406,9 @@ const IconStandardButton = styled.button<{
   top: ${({ top }) => top}%;
   left: ${({ left }) => left}%;
   transform: translate(-50%, 0%);
+
+  user-select: none;
+  -webkit-user-select: none;
 `;
 
 /**
@@ -434,7 +444,7 @@ const Square = styled.div`
   left: 10px;
   position: absolute;
   background: ${Colors.darkOpaque};
-  backdrop-filter: blur(5px);
+  ${blur('5px')}
   z-index: 2;
   border: 0.5px solid ${Colors.greenLightOpaque};
 `;
