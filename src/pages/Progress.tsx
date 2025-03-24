@@ -203,21 +203,15 @@ const Progress: React.FC = () => {
         />
         <ButtonsContainer>
           <Button
-            label="Stop Generation"
+            label={stage === Stage.Complete ? 'Finished!' : 'Stop Generation'}
             onClick={handleStopGeneration}
             width={250}
             height={52}
             disabled={stage === Stage.Complete || stage === Stage.Error}
           />
           <Button
-            label="View full config"
-            onClick={() => navigate('/config')} //TO DO
-            width={250}
-            height={52}
-          />
-          <Button
-            label="What next?"
-            onClick={() => navigate('/nextSteps')} //TO DO
+            label="Init another PoS data"
+            onClick={() => navigate('/generate')}
             width={250}
             height={52}
           />
