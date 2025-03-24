@@ -62,26 +62,12 @@ const Progress: React.FC = () => {
     stage,
     details,
     isError,
-    processId,
     isRunning,
     fileProgress,
     progress,
   } = processState;
   const { settings } = useSettings();
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
-
-  // Debug logging
-  React.useEffect(() => {
-    console.log('Progress state updated:', {
-      stage,
-      details,
-      isError,
-      processId,
-      isRunning,
-      fileProgress,
-      progress,
-    });
-  }, [stage, details, isError, processId, isRunning, fileProgress, progress]);
 
   // Show error modal when error is detected
   React.useEffect(() => {

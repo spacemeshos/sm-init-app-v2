@@ -160,11 +160,8 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
       numUnits: settings.numUnits || SizeConstants.DEFAULT_NUM_UNITS,
       maxFileSize: settings.maxFileSize || SizeConstants.DEFAULT_MAX_FILE_SIZE_MIB
     };
-
-    console.log('Settings for parsing:', posSettings);
     const parsed = parsePOSProgress(cleanLog, posSettings);
-    console.log('Parsed progress:', parsed);
-    
+    console.log('parsed progress', parsed);
     setProcessState(prev => {
       // If we're already in a terminal state (Complete or Error), don't process more logs
       if (prev.stage === Stage.Complete || (prev.stage === Stage.Error && prev.isError)) {

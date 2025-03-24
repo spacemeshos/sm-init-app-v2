@@ -28,7 +28,6 @@ export const useMetadataFile = () => {
         try {
           const metadataPath = await join(dir, 'postdata_metadata.json');
           const metadataContent = await readTextFile(metadataPath);
-          console.log('metaDataContent', metadataContent);
           const parsedMetadata: PosMetadata = JSON.parse(metadataContent);
           const metadata: ParsedMetadata = {
             atxId: base64ToHex(parsedMetadata.CommitmentAtxId).toLowerCase(),
@@ -37,7 +36,6 @@ export const useMetadataFile = () => {
             maxFileSize: parsedMetadata.MaxFileSize / 1024 / 1024,
           };
 
-          console.log('parsedMetadata', parsedMetadata);
           // Validate labelsPerUnit
           if (parsedMetadata.LabelsPerUnit !== SizeConstants.DEFAULT_LABELS_PER_UNIT) {
             setError(

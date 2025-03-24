@@ -71,14 +71,9 @@ export interface DetachedProcessResponse {
  * @returns {Promise<AtxIdResponse>} Latest ATX ID information
  */
 export const fetchLatestAtxId = async (): Promise<AtxIdResponse> => {
-  console.log('Fetching latest ATX ID from Spacemesh API...');
   const apiUrl = 'https://mainnet-api.spacemesh.network/spacemesh.v2alpha1.ActivationService/Highest';
   
-  try {
-    console.log(`Making POST request to: ${apiUrl}`);
-    console.log('Request body:', JSON.stringify({}));
-    
-    const startTime = Date.now();
+  try {   
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
@@ -86,9 +81,6 @@ export const fetchLatestAtxId = async (): Promise<AtxIdResponse> => {
       },
       body: JSON.stringify({})
     });
-    const requestDuration = Date.now() - startTime;
-    
-    console.log(`API response received in ${requestDuration}ms with status: ${response.status}`);
     
     if (!response.ok) {
       const responseText = await response.text();
@@ -104,7 +96,6 @@ export const fetchLatestAtxId = async (): Promise<AtxIdResponse> => {
     let data: HighestActivationResponse;
     try {
       data = await response.json();
-      console.log('API response data:', JSON.stringify(data, null, 2));
     } catch (parseError) {
       console.error('Failed to parse API response as JSON:', parseError);
       const responseText = await response.text();
@@ -188,28 +179,23 @@ export const executePostCli = async (
   }
 
   try {
-    console.log('Invoking Tauri command with args:', args);
     const response = await invoke<{ stdout: string; stderr: string }>(
       'run_postcli_command',
       { args }
     );
-    console.log('Command response:', response);
 
     // Handle stdout output
     if (response.stdout && response.stdout.trim()) {
-      console.log('Command stdout:', response.stdout);
       updateConsole?.(commandStr, `> Output:\n${response.stdout.trim()}`);
     }
 
     // Handle stderr output (may contain errors or warnings)
     if (response.stderr && response.stderr.trim()) {
-      console.error('Command stderr:', response.stderr);
       updateConsole?.(commandStr, `> Error Output:\n${response.stderr.trim()}`);
     }
 
     // Handle case where command produces no output
     if (!response.stdout && !response.stderr) {
-      console.log('Command completed with no output');
       updateConsole?.(commandStr, '> Command completed with no output');
     }
 
@@ -407,13 +393,11 @@ export const callPostCli = async (
 
     // Handle stdout output
     if (response.stdout && response.stdout.trim()) {
-      console.log('Command stdout:', response.stdout);
       updateConsole?.(commandStr, `> Output:\n${response.stdout.trim()}`);
     }
 
     // Handle stderr output (may contain errors or warnings)
     if (response.stderr && response.stderr.trim()) {
-      console.error('Command stderr:', response.stderr);
       updateConsole?.(commandStr, `> Error Output:\n${response.stderr.trim()}`);
     }
 

@@ -108,8 +108,6 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
    * Includes automatic retry on failure with comprehensive logging
    */
   const fetchAtxId = useCallback(async () => {
-    console.log('SettingsContext: Initiating ATX ID fetch...');
-
     try {
       setSettings(prev => ({
         ...prev,
@@ -118,12 +116,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
         atxIdFetching: true,
       }));
 
-      console.log('SettingsContext: Calling fetchLatestAtxId service...');
-      const startTime = Date.now();
       const response = await fetchLatestAtxId();
-      const fetchDuration = Date.now() - startTime;
-      
-      console.log(`SettingsContext: ATX ID fetch successful in ${fetchDuration}ms:`, response.atxId);
       
       setSettings(prev =>
         // Update final result only if it still has API source
@@ -139,7 +132,6 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
         : prev
       );
       
-      console.log('SettingsContext: ATX ID successfully updated in settings');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       console.error("SettingsContext: Error fetching ATX ID:", {
@@ -160,8 +152,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
         userErrorMessage += `: ${errorMessage}`;
       }
       
-      console.log('SettingsContext: Setting error message for user:', userErrorMessage);
-      
+      console.error('SettingsContext: ', userErrorMessage);
       setSettings(prev => ({
         ...prev,
         atxIdFetching: false,

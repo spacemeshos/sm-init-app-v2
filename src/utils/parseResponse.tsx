@@ -93,7 +93,6 @@ const FindProviders = (): UsePostCliReturn => {
 
     // If no providers were found with the main regex, try a simpler fallback pattern
     if (providers.length === 0) {
-      console.log('Attempting fallback provider parsing');
       const fallbackRegex = /ID:\s*(\d+).*?Model:\s*"([^"]+)".*?DeviceType:\s*(\w+)/g;
       while ((match = fallbackRegex.exec(response)) !== null) {
         try {
@@ -118,7 +117,6 @@ const FindProviders = (): UsePostCliReturn => {
 
     // Log the parsed results for debugging
     console.log('Parsed providers:', providers);
-    console.log('Original response:', response);
 
     return providers;
   }, []);
@@ -146,9 +144,6 @@ const FindProviders = (): UsePostCliReturn => {
     try {
       // Pass only the supported arguments to callPostCli
       const result = await callPostCli(args, updateConsole);
-      
-      // Log the raw output for debugging
-      console.log('Raw postcli output:', result);
       
       if (!result.stdout && result.stderr) {
         throw new Error(result.stderr);
