@@ -14,7 +14,8 @@ import { Background, PageTitleWrapper } from '../styles/containers';
 import { ErrorMessage, Header } from '../styles/texts';
 import { Stage } from '../types/posProgress';
 import { getDirectoryDisplay } from '../utils/directoryUtils';
-import { calculateNumFiles, calculateTotalSize } from '../utils/sizeUtils';
+import { calculateNumFiles, calculateTotalSize, formatSizeUnits, getSizePerUnit } from '../utils/sizeUtils';
+import { SizeConstants } from '../Shared/Constants';
 
 const ProgressContainer = styled.div`
   width: 1000px;
@@ -101,14 +102,14 @@ const Progress: React.FC = () => {
   // Helper function to format progress display
   const getProgressDisplay = () => {
     if (!fileProgress) {
-      return `0 of ${totalFiles} Files (0%)`;
+      return `0 of ${totalFiles} Files`;
     }
-    const currentProgress = ((fileProgress.currentFile + 1) / totalFiles) * 100;
     return `${
       fileProgress.currentFile + 1
-    } of ${totalFiles} Files (${Math.round(currentProgress)}%)`;
+    } of ${totalFiles} Files`;
   };
 
+  const totalSize = calculateTotalSize(settings.numUnits);
   return (
     <>
       {/* Error Modal */}
@@ -131,11 +132,15 @@ const Progress: React.FC = () => {
       <ProgressContainer>
         {isError && <ErrorMessage text={details} />}
         <Tile
-          height={50}
+          height={80}
           width={1000}
           blurred
           backgroundColor={Colors.whiteOpaque}
-          heading={details}
+          heading={getDirectoryDisplay(
+            settings.selectedDir,
+            settings.defaultDir
+          )}
+          footer="POS Location"
         />
         <Tile
           height={325}
@@ -158,7 +163,7 @@ const Progress: React.FC = () => {
             footer={`${settings.numUnits} Space Units`}
             heading="Total Size" 
           >
-            <Header text={calculateTotalSize(settings.numUnits)} top={-5} />
+            <Header text={totalSize} top={-5} />
           </Tile>
 
           <Tile
@@ -166,23 +171,14 @@ const Progress: React.FC = () => {
             width={590}
             blurred
             backgroundColor={Colors.whiteOpaque}
-            heading= "Progress"
-            footer="Generated"
+            heading={stage === Stage.Complete ? 'Generated' : 'Generating...'}
+            footer={
+              `${formatSizeUnits((progress / 100) * getSizePerUnit(SizeConstants.DEFAULT_LABELS_PER_UNIT) * (settings.numUnits ?? 0))} / ${totalSize}`
+            }
           >
             <Header text={getProgressDisplay()} top={-5} />
           </Tile>
         </DetailsContainer>
-        <Tile
-          height={80}
-          width={1000}
-          blurred
-          backgroundColor={Colors.whiteOpaque}
-          heading={getDirectoryDisplay(
-            settings.selectedDir,
-            settings.defaultDir
-          )}
-          footer="POS Location"
-        />
         <ButtonsContainer>
           <Button
             label={stage === Stage.Complete ? 'Finished!' : 'Stop Generation'}
@@ -191,12 +187,14 @@ const Progress: React.FC = () => {
             height={52}
             disabled={stage === Stage.Complete || stage === Stage.Error}
           />
-          <Button
-            label="Init another PoS data"
-            onClick={() => navigate('/generate')}
-            width={250}
-            height={52}
-          />
+          {stage === Stage.Complete && (
+            <Button
+              label="Init another PoS data"
+              onClick={() => navigate('/generate')}
+              width={250}
+              height={52}
+            />
+          )}
         </ButtonsContainer>
       </ProgressContainer>
     </>

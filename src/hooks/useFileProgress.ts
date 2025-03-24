@@ -22,17 +22,18 @@ const useFileProgress = (posDir: string, maxFileSize: number, pollInterval = 100
   useEffect(() => {
     if (!filePath || !maxFileSize) return;
 
-    const interval = setInterval(async () => {
+    const upd = async () => {
       try {
         const size = await invoke<number>('get_file_size', { filePath });
         const percent = (size / maxFileSize) * 100;
-        console.log('GET SIZE oF', filePath, '=', size, `${percent}%`);
         setFileProgress(percent);
       } catch (err) {
         setFileProgress(0);
         console.error('Failed to get file size:', err, '??', filePath);
       }
-    }, pollInterval);
+    };
+    const interval = setInterval(upd, pollInterval);
+    upd();
 
     return () => clearInterval(interval);
   }, [filePath, maxFileSize, pollInterval]);
