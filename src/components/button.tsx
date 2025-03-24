@@ -134,7 +134,7 @@ const BackButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
     if (onClick) {
       onClick();
     } else {
-      navigate(-1);
+      navigate('/');
     }
   };
 
@@ -299,6 +299,9 @@ const StandardButton = styled.button<{
       disabled ? Colors.grayMedium : Colors.greenLightOpaque};
     border: 1px solid ${Colors.whiteOpaque};
   }
+
+  user-select: none;
+  -webkit-user-select: none;
 `;
 
 /**
@@ -370,7 +373,7 @@ const NavIcon = styled.img`
  * Navigation button wrapper styling
  */
 const NavWrapper = styled.button<{ top?: number; left?: number }>`
-  top: ${({ top }) => top || 96}px;
+  top: ${({ top }) => top || 66}px;
   left: ${({ left }) => left || 0}px;
   border: transparent;
   background: transparent;
@@ -403,6 +406,9 @@ const IconStandardButton = styled.button<{
   top: ${({ top }) => top}%;
   left: ${({ left }) => left}%;
   transform: translate(-50%, 0%);
+
+  user-select: none;
+  -webkit-user-select: none;
 `;
 
 /**

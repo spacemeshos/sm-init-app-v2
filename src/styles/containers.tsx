@@ -7,6 +7,9 @@ export const Background = styled.img`
   position: fixed;
   width: 100%;
   object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 `;
 
 export const MainContainer = styled.div`

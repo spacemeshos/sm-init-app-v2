@@ -65,6 +65,9 @@ const TabButton = styled.button<{ isActive: boolean }>`
   &:hover {
     background-color: ${Colors.greenLightOpaque};
   }
+
+  user-select: none;
+  -webkit-user-select: none;
 `;
 
 const TabIcon = styled.img<{ isCollapsed: boolean }>`

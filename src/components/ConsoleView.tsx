@@ -91,6 +91,9 @@ const ConsoleButton = styled.button`
   &:hover {
     background-color: ${Colors.greenLight}20;
   }
+
+  user-select: none;
+  -webkit-user-select: none;
 `;
 
 /**

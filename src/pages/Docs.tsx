@@ -30,11 +30,9 @@ const StyledIframe = styled.iframe`
 `;
 
 const Docs: React.FC = () => {
-  const navigate = useNavigate();
-
   return (
     <Container>
-      <BackButton onClick={() => navigate("/")}  />
+      <BackButton />
       <IframeContainer>
         <StyledIframe
           src={ExternalLinks.Requirements}

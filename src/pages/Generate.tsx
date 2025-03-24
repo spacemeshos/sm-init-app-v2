@@ -13,6 +13,7 @@ import summary from '../assets/justify.png';
 import BackgroundImage from '../assets/wave2.png';
 import { BackButton } from '../components/button';
 import { Button } from '../components/button';
+import { MetafileModal } from '../components/MetafileModal';
 import Modal from '../components/modal';
 import {
   SelectDirectory,
@@ -40,7 +41,6 @@ import { truncateHex } from '../utils/hexUtils';
 import { isValidHex } from '../utils/hexUtils';
 import { FindProviders } from '../utils/parseResponse';
 import { calculateNumFiles, calculateTotalSize } from '../utils/sizeUtils';
-import { MetafileModal } from '../components/MetafileModal';
 
 const TabsContainer = styled.div`
   width: 100%;

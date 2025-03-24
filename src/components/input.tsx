@@ -89,6 +89,9 @@ const StyledButton = styled.button`
   &:focus-visible {
     outline: 0;
   }
+
+  user-select: none;
+  -webkit-user-select: none;
 `;
 
 const IconImage = styled.img`

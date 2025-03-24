@@ -91,7 +91,7 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
 
   // Second priority: Parse file completion progress
   // Format: "INFO initialization: completed {"fileIndex": X}"
-  const fileCompleteMatch = cleanLog.match(/INFO\s+initialization:\s+completed\s+{"fileIndex":\s*(\d+)/);
+  const fileCompleteMatch = cleanLog.match(/INFO\s+initialization:\s+(?:completed|file already initialized)\s+{"fileIndex":\s*(\d+)/);
   if (fileCompleteMatch) {
     const currentFile = parseInt(fileCompleteMatch[1]);
     const progress = ((currentFile + 1) / totalFiles) * 100;
@@ -111,7 +111,7 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
   }
 
   // Third priority: Check for final completion message
-  if (cleanLog.includes("cli: initialization completed")) {
+  if (cleanLog.includes("cli: initialization completed") || cleanLog.includes("initialization: completed, found nonce")) {
     return {
       stage: Stage.Complete,
       progress: 100,
