@@ -106,7 +106,9 @@ const TabContent = styled.div`
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  ${({ hidden = false }: { hidden?: boolean }) => hidden && 'display: none;'}
+  ${({ hidden = false }: { hidden?: boolean }) =>
+    hidden ? 'display: none;' : 'padding-right: 100px;'
+  }
 `;
 
 /**
