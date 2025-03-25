@@ -60,7 +60,15 @@ export const useMetadataFile = () => {
         }
       })();
     }
-  }, [settings.selectedDir]);
+  }, [
+    setSettings,
+    settings.selectedDir,
+    settings.atxId,
+    settings.defaultDir,
+    settings.maxFileSize,
+    settings.numUnits,
+    settings.publicKey,
+  ]);
 
   // Load metadata from the selected directory
   const handleLoadMetadata = async () => {

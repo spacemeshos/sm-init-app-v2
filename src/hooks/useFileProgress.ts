@@ -17,7 +17,7 @@ const useFileProgress = (posDir: string, maxFileSize: number, pollInterval = 100
       const filePath = await join(posDir, `postdata_${fileIndex}.bin`);
       setFilePath(filePath);
     })();
-  }, [fileIndex]);
+  }, [fileIndex, posDir]);
 
   useEffect(() => {
     if (!filePath || !maxFileSize) return;
