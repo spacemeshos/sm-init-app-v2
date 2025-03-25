@@ -31,6 +31,7 @@ describe('parsePOSProgress', () => {
       details: `6 of ${totalFiles} files generated (${Math.round(progress)}%)`,
       isError: false,
       fileProgress: {
+        isCompleted: true,
         currentFile: 5,
         totalFiles
       }
