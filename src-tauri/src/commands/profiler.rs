@@ -12,7 +12,6 @@
 //! - Custom data file paths
 
 use serde::{Deserialize, Serialize};
-use std::time::Instant;
 use tauri::command;
 
 /// Represents the results of a profiling run
@@ -138,8 +137,6 @@ pub async fn run_profiler(
     }
 
     // Run profiler
-    let start = Instant::now();
-
     let output = std::process::Command::new(&profiler_path)
         .arg("--threads")
         .arg(threads.to_string())
