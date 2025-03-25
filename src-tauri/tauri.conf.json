@@ -33,7 +33,7 @@
         "depends": []
       },
       "externalBin": [],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.spacemesh.init",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
