@@ -4,11 +4,11 @@
     "beforeBuildCommand": "yarn build",
     "beforeDevCommand": "yarn start",
     "devPath": "http://localhost:3000",
-    "distDir": "../src"
+    "distDir": "../build"
   },
   "package": {
-    "productName": "sm-init-app-v2",
-    "version": "1.2.5"
+    "productName": "Spacemesh PoS Init",
+    "version": "1.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -27,23 +27,27 @@
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
+      "identifier": "com.spacemesh.init",
+      "longDescription": "The application to initialize Spacemesh PoS data",
+      "shortDescription": "",
+      "copyright": "spacemesh.io",
+      "category": "Utility",
+      "icon": [
+        "icons/icon.icns",
+        "icons/icon.ico",
+        "icons/icon.png"
+      ],
+      "targets": "all",
       "deb": {
         "depends": []
       },
-      "externalBin": [],
-      "identifier": "com.spacemesh.init",
-      "longDescription": "",
       "macOS": {
-        "entitlements": null,
+        "entitlements": "src-tauri/entitlements.plist",
         "exceptionDomain": "",
         "frameworks": [],
         "providerShortName": null,
         "signingIdentity": null
       },
-      "shortDescription": "",
-      "targets": "all",
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
@@ -51,17 +55,20 @@
       }
     },
     "security": {
-      "csp": "default-src 'self' blob: data: filesystem: ws: http: https: 'unsafe-eval' 'unsafe-inline'; script-src 'self'; style-src 'self'"
+      "csp": "default-src 'self' blob: data: filesystem: ws: http: https: 'unsafe-eval' 'unsafe-inline'; script-src 'self'; style-src 'self' 'unsafe-inline'"
     },
     "updater": {
       "active": false
     },
     "windows": [
       {
+        "title": "Spacemesh PoS Init",
         "label": "main",
         "width": 1300,
         "height": 800,
-        "resizable": false,
+        "minHeight": 800,
+        "minWidth": 1300,
+        "resizable": true,
         "fullscreen": false,
         "decorations": true
       }

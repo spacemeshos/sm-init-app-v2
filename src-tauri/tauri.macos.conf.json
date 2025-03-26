@@ -4,6 +4,7 @@
     "bundle": {
       "identifier": "com.spacemesh.init",
       "resources": [
+        "bin/postcli/libpost.dylib",
         "bin/postcli/postcli",
         "bin/profiler/profiler"
       ]

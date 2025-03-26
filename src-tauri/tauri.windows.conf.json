@@ -4,6 +4,7 @@
     "bundle": {
       "identifier": "com.spacemesh.init",
       "resources": [
+        "bin/postcli/post.dll",
         "bin/postcli/postcli.exe",
         "bin/profiler/profiler.exe"
       ]
