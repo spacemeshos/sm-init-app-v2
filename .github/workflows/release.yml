@@ -32,6 +32,10 @@ jobs:
             exit 1
           fi
           echo "::set-output name=version::$LATEST_VERSION"
+      - name: Latest versions
+        run: |
+          echo "profiler: ${{ steps.profiler.outputs.version }}"
+          echo "postcli: ${{ steps.postcli.outputs.version }}"
   build-tauri:
     strategy:
       fail-fast: false
