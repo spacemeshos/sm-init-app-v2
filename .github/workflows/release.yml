@@ -6,6 +6,32 @@ on:
       - 'v*'
 
 jobs:
+  dep-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      profiler: ${{ steps.profiler.outputs.version }}
+      postcli: ${{ steps.postcli.outputs.version }}
+    steps:
+      - name: Get latest profiler version
+        id: profiler
+        shell: bash
+        run: |
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post-rs/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": ?"([^"]+)".*/\1/')
+          if [ -z "$LATEST_VERSION" ]; then
+            echo "Failed to get latest version"
+            exit 1
+          fi
+          echo "::set-output name=version::$LATEST_VERSION"
+      - name: Get latest postcli version
+        id: postcli
+        shell: bash
+        run: |
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": ?"([^"]+)".*/\1/')
+          if [ -z "$LATEST_VERSION" ]; then
+            echo "Failed to get latest version"
+            exit 1
+          fi
+          echo "::set-output name=version::$LATEST_VERSION"
   build-tauri:
     strategy:
       fail-fast: false
@@ -30,6 +56,7 @@ jobs:
             arch-postcli: ""
 
     runs-on: ${{ matrix.platform }}
+    needs: dep-versions
     steps:
       - uses: actions/checkout@v3
 
@@ -54,13 +81,8 @@ jobs:
         id: profiler
         shell: bash
         run: |
-          LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post-rs/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": ?"([^"]+)".*/\1/')
-          if [ -z "$LATEST_VERSION" ]; then
-            echo "Failed to get latest version"
-            exit 1
-          fi
-          echo "::set-output name=version::$LATEST_VERSION"
-
+          LATEST_VERSION=${{ needs.dep-versions.outputs.profiler }}
+          
           # Map OS names to match release asset naming
           case "${{ matrix.os-name }}" in
             "darwin") PLATFORM="macos" ;;
@@ -93,12 +115,7 @@ jobs:
         id: postcli
         shell: bash
         run: |
-          LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": ?"([^"]+)".*/\1/')
-          if [ -z "$LATEST_VERSION" ]; then
-            echo "Failed to get latest version"
-            exit 1
-          fi
-          echo "::set-output name=version::$LATEST_VERSION"
+          LATEST_VERSION=${{ needs.dep-versions.outputs.postcli }}
 
           # Map OS names to match release asset naming
           case "${{ matrix.os-name }}" in
