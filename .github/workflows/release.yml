@@ -154,6 +154,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y pkg-config libgtk-3-dev libappindicator3-dev librsvg2-dev
+          sudo apt-get install -y ocl-icd-libopencl1 ocl-icd-dev opencl-headers
 
 
       - name: Install libwebkit2gtk-4.0-dev (Linux only)
