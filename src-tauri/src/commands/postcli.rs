@@ -7,7 +7,6 @@
 //! The module supports both Unix-like systems and Windows, with platform-specific
 //! implementations for process management operations.
 
-use std::env;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 use std::thread;
@@ -53,14 +52,25 @@ pub struct DetachedProcessInfo {
 /// # Returns
 /// 
 /// * `PathBuf` - The complete path to the PostCLI executable
-fn get_postcli_path() -> PathBuf {
-    let mut path: PathBuf = env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
-    path.push("bin");
-    path.push("postcli");
-    #[cfg(windows)]
-    path.push("postcli.exe");
-    #[cfg(unix)]
-    path.push("postcli");
+fn get_postcli_path(
+    app: tauri::AppHandle,
+) -> Result<PathBuf, String> {
+    let resource_path = app
+        .path_resolver()
+        .resource_dir()
+        .ok_or_else(|| "Failed to get resource directory".to_string());
+    let path =
+        resource_path
+            .map(|p|
+                p
+                    .join("bin")
+                    .join("postcli")
+                    .join(if cfg!(target_os = "windows") {
+                        "postcli.exe"
+                    } else {
+                        "postcli"
+                    })
+            );
     path
 }
 
@@ -85,8 +95,11 @@ fn get_postcli_path() -> PathBuf {
 /// println!("PostCLI output: {}", output.stdout);
 /// ```
 #[tauri::command]
-pub fn run_postcli_command(args: Vec<String>) -> Result<CommandOutput, String> {
-    let path = get_postcli_path();
+pub fn run_postcli_command(
+    app: tauri::AppHandle,
+    args: Vec<String>
+) -> Result<CommandOutput, String> {
+    let path = get_postcli_path(app.clone())?;
 
     // Check if postcli exists
     if !path.exists() {
@@ -146,7 +159,7 @@ pub fn run_postcli_command(args: Vec<String>) -> Result<CommandOutput, String> {
 /// ```
 #[tauri::command]
 pub async fn run_postcli_detached(args: Vec<String>, app: tauri::AppHandle) -> Result<DetachedProcessInfo, String> {
-    let path = get_postcli_path();
+    let path = get_postcli_path(app.clone())?;
 
     // Check if postcli exists
     if !path.exists() {

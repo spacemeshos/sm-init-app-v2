@@ -6,28 +6,37 @@ on:
       - 'v*'
 
 jobs:
-  create-release:
+  dep-versions:
     runs-on: ubuntu-latest
     outputs:
-      release_id: ${{ steps.create-release.outputs.id }}
-      release_upload_url: ${{ steps.create-release.outputs.upload_url }}
-
+      profiler: ${{ steps.profiler.outputs.version }}
+      postcli: ${{ steps.postcli.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Create Release
-        id: create-release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: true
-          prerelease: false
-
+      - name: Get latest profiler version
+        id: profiler
+        shell: bash
+        run: |
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post-rs/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": ?"([^"]+)".*/\1/')
+          if [ -z "$LATEST_VERSION" ]; then
+            echo "Failed to get latest version"
+            exit 1
+          fi
+          echo "::set-output name=version::$LATEST_VERSION"
+      - name: Get latest postcli version
+        id: postcli
+        shell: bash
+        run: |
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": ?"([^"]+)".*/\1/')
+          if [ -z "$LATEST_VERSION" ]; then
+            echo "Failed to get latest version"
+            exit 1
+          fi
+          echo "::set-output name=version::$LATEST_VERSION"
+      - name: Latest versions
+        run: |
+          echo "profiler: ${{ steps.profiler.outputs.version }}"
+          echo "postcli: ${{ steps.postcli.outputs.version }}"
   build-tauri:
-    needs: create-release
     strategy:
       fail-fast: false
       matrix:
@@ -35,12 +44,23 @@ jobs:
         include:
           - platform: macos-latest
             os-name: darwin
-            archive-ext: zip
+            arch: "-m1"
+            arch-postcli: "_ARM64"
+          - platform: macos-13
+            os-name: darwin
+            arch: ""
+            arch-postcli: ""
+          - platform: ubuntu-latest
+            os-name: linux
+            arch: ""
+            arch-postcli: ""
           - platform: windows-latest
             os-name: windows
-            archive-ext: zip
+            arch: ""
+            arch-postcli: ""
 
     runs-on: ${{ matrix.platform }}
+    needs: dep-versions
     steps:
       - uses: actions/checkout@v3
 
@@ -58,60 +78,65 @@ jobs:
 
       - name: Create binary directories
         run: |
-          mkdir -p src-tauri/bin/post-rs
+          mkdir -p src-tauri/bin/profiler
           mkdir -p src-tauri/bin/postcli
 
-      - name: Download post-rs binaries
+      - name: Get latest version and URL of profiler
+        id: profiler
+        shell: bash
         run: |
-          # Get latest version with error checking
-          LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post-rs/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": ?"([^"]+)".*/\1/')
-          if [ -z "$LATEST_VERSION" ]; then
-            echo "Failed to get latest version"
-            exit 1
-          fi
-          echo "Latest version: $LATEST_VERSION"
+          LATEST_VERSION=${{ needs.dep-versions.outputs.profiler }}
           
           # Map OS names to match release asset naming
           case "${{ matrix.os-name }}" in
-            "darwin") PLATFORM="Darwin" ;;
-            "linux") PLATFORM="Linux" ;;
-            "windows") PLATFORM="Windows" ;;
+            "darwin") PLATFORM="macos" ;;
+            "linux") PLATFORM="linux" ;;
+            "windows") PLATFORM="windows" ;;
           esac
           
           # Construct and verify download URL
-          DOWNLOAD_URL="https://github.com/spacemeshos/post-rs/releases/download/${LATEST_VERSION}/profiler-${PLATFORM}-${LATEST_VERSION}.zip"
-          echo "Downloading from: $DOWNLOAD_URL"
-          
+          DOWNLOAD_URL="https://github.com/spacemeshos/post-rs/releases/download/${LATEST_VERSION}/profiler-${PLATFORM}${{ matrix.arch }}-${LATEST_VERSION}.zip"
+          echo "::set-output name=url::$DOWNLOAD_URL"
+
+      - name: Download profiler binaries
+        shell: bash
+        run: |
           # Download with error checking
-          if ! curl -L --fail -o profiler.zip "$DOWNLOAD_URL"; then
-            echo "Failed to download post-rs binary"
+          if ! curl -L --fail -o profiler.zip "${{ steps.profiler.outputs.url }}"; then
+            echo "Failed to download profiler binary (from post-rs repo)"
             exit 1
           fi
           
           # Extract with error checking
-          if ! unzip -o profiler.zip -d src-tauri/bin/post-rs; then
-            echo "Failed to extract post-rs binary"
-            exit 1
+          if ! unzip -o profiler.zip -d src-tauri/bin/profiler; then
+            echo "Failed to extract profiler binary"
+            exit 2
           fi
           
           rm profiler.zip
-        shell: bash
 
-      - name: Download postcli binaries
+      - name: Get latest version and URL of postcli
+        id: postcli
+        shell: bash
         run: |
+          LATEST_VERSION=${{ needs.dep-versions.outputs.postcli }}
+
           # Map OS names to match release asset naming
           case "${{ matrix.os-name }}" in
-            "darwin") PLATFORM="Darwin" ;;
+            "darwin") PLATFORM="macOS" ;;
             "linux") PLATFORM="Linux" ;;
             "windows") PLATFORM="Windows" ;;
           esac
           
           # Construct and verify download URL
-          DOWNLOAD_URL="https://github.com/spacemeshos/post/releases/latest/download/postcli-${PLATFORM}.zip"
-          echo "Downloading from: $DOWNLOAD_URL"
-          
+          DOWNLOAD_URL="https://github.com/spacemeshos/post/releases/latest/download/postcli-${PLATFORM}${{ matrix.arch-postcli }}.zip"
+          echo "::set-output name=url::$DOWNLOAD_URL"
+
+      - name: Download postcli binaries
+        shell: bash
+        run: |
           # Download with error checking
-          if ! curl -L --fail -o postcli.zip "$DOWNLOAD_URL"; then
+          if ! curl -L --fail -o postcli.zip "${{ steps.postcli.outputs.url }}"; then
             echo "Failed to download postcli binary"
             exit 1
           fi
@@ -123,16 +148,64 @@ jobs:
           fi
           
           rm postcli.zip
+
+      - name: Set permissions for binaries
         shell: bash
+        run: |
+          chmod +x src-tauri/bin/profiler/*
+          chmod +x src-tauri/bin/postcli/*
+
+      - name: Disable Apple quarantine for binaries (MacOS only)
+        if: matrix.os-name == 'darwin'
+        run: |
+          sudo xattr -rd com.apple.quarantine src-tauri/bin/profiler/*
+          sudo xattr -rd com.apple.quarantine src-tauri/bin/postcli/*
+
+      - name: Install dependencies (Linux only)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config libgtk-3-dev libappindicator3-dev librsvg2-dev
+          sudo apt-get install -y ocl-icd-libopencl1 ocl-icd-dev opencl-headers
+
+
+      - name: Install libwebkit2gtk-4.0-dev (Linux only)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -e
+          SOURCEFILE=$(mktemp -u /etc/apt/sources.list.d/jammy-webkit.XXXXXX.sources)
+          cleanup() {
+              echo "Cleaning up..."
+              sudo rm -f "$SOURCEFILE"
+              sudo apt update
+          }
+          trap cleanup EXIT
+          echo "Creating temporary jammy repository source..."
+          sudo tee "$SOURCEFILE" > /dev/null << 'EOF'
+          Types: deb
+          URIs: http://gb.archive.ubuntu.com/ubuntu
+          Suites: jammy
+          Components: main universe
+          Enabled: yes
+          EOF
+          echo "Updating package lists..."
+          sudo apt update
+          echo "Installing libwebkit2gtk-4.0-dev..."
+          if ! sudo apt install -y libwebkit2gtk-4.0-dev; then
+              echo "Failed to install libwebkit2gtk-4.0-dev"
+              exit 1
+          fi
+          echo "Success: libwebkit2gtk-4.0-dev is installed."
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          releaseId: ${{ needs.create-release.outputs.release_id }}
           tagName: ${{ github.ref_name }}
           releaseName: 'App v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
+          args: "--verbose"
