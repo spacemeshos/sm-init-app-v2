@@ -149,6 +149,18 @@ jobs:
           
           rm postcli.zip
 
+      - name: Set permissions for binaries
+        shell: bash
+        run: |
+          chmod +x src-tauri/bin/profiler/*
+          chmod +x src-tauri/bin/postcli/*
+
+      - name: Disable Apple quarantine for binaries (MacOS only)
+        if: matrix.os-name == 'darwin'
+        run: |
+          sudo xattr -rd com.apple.quarantine src-tauri/bin/profiler/*
+          sudo xattr -rd com.apple.quarantine src-tauri/bin/postcli/*
+
       - name: Install dependencies (Linux only)
         if: runner.os == 'Linux'
         run: |
