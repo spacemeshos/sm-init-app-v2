@@ -42,7 +42,7 @@
         "depends": []
       },
       "macOS": {
-        "entitlements": "src-tauri/entitlements.plist",
+        "entitlements": null,
         "exceptionDomain": "",
         "frameworks": [],
         "providerShortName": null,
