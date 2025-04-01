@@ -46,7 +46,8 @@
         "exceptionDomain": "",
         "frameworks": [],
         "providerShortName": null,
-        "signingIdentity": null
+        "signingIdentity": "Developer ID Application: UNRULY TECHNOLOGIES, INC. (8HMDJMTL6B)",
+        "hardenedRuntime": true
       },
       "windows": {
         "certificateThumbprint": null,
