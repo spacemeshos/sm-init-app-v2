@@ -198,6 +198,52 @@ jobs:
           fi
           echo "Success: libwebkit2gtk-4.0-dev is installed."
 
+      - name: Set up signing keychain for embedded binaries
+        if: runner.os == 'macOS'
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          echo "$APPLE_CERTIFICATE" | base64 --decode > cert.p12
+      
+          security create-keychain -p embedded-binaries embedded-binaries.keychain
+          security set-keychain-settings -lut 3600 embedded-binaries.keychain
+          security unlock-keychain -p embedded-binaries embedded-binaries.keychain
+      
+          security import cert.p12 \
+            -k embedded-binaries.keychain \
+            -P "$APPLE_CERTIFICATE_PASSWORD" \
+            -T /usr/bin/codesign \
+            -T /usr/bin/productbuild \
+            -T /usr/bin/pkgbuild
+      
+          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+            -s -k embedded-binaries embedded-binaries.keychain
+      
+          security list-keychain -d user -s embedded-binaries.keychain login.keychain
+
+      - name: Sign embedded binaries
+        if: runner.os == 'macOS'
+        env:
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+        run: |
+          IDENTITY="$APPLE_SIGNING_IDENTITY"
+          KEYCHAIN="embedded-binaries.keychain"
+      
+          echo "Signing embedded binaries with identity: $IDENTITY"
+      
+          find "src-tauri/bin/postcli" -type f \! -name .DS_Store | while read BIN; do
+            echo "Signing $BIN"
+            codesign --force --options runtime --timestamp \
+              --sign "$IDENTITY" --keychain "$KEYCHAIN" "$BIN"
+          done
+      
+          find "src-tauri/bin/profiler" -type f \! -name .DS_Store | while read BIN; do
+            echo "Signing $BIN"
+            codesign --force --options runtime --timestamp \
+              --sign "$IDENTITY" --keychain "$KEYCHAIN" "$BIN"
+          done
+
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
         env:
