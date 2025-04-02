@@ -386,6 +386,11 @@ jobs:
           path: ./signed/*
           if-no-files-found: error
 
+      - name: Delete unsigned artifacts
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: windows
+
   sign-linux:
     runs-on: ubuntu-latest
     needs: build-tauri
@@ -432,6 +437,11 @@ jobs:
           path: ./signed/*
           if-no-files-found: error
 
+      - name: Delete unsigned artifacts
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: linux
+
   release:
     runs-on: ubuntu-latest
     needs: [build-tauri, sign-windows, sign-linux]
@@ -440,6 +450,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./release/
+          merge-multiple: true
+
+      - name: Copy .dmg to release directory
+        run: |
+          find . -type f -name "*.dmg" | while read -r dmg; do
+            echo "💿 Found DMG: $dmg"
+            cp "$dmg" ./release/
+          done
 
       - name: Create Release
         id: create-release
@@ -458,9 +476,7 @@ jobs:
         uses: geekyeggo/delete-artifact@v1
         with:
           name: |
-            windows
             windows-signed
-            linux
             linux-signed
             macos-x64
             macos-arm64
