@@ -38,7 +38,39 @@ jobs:
           echo "profiler: ${{ steps.profiler.outputs.version }}"
           echo "postcli: ${{ steps.postcli.outputs.version }}"
 
+  check-gpg-keys:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Validate public GPG key in repo matches secret
+        run: |
+          export GNUPGHOME_SECRET="$(mktemp -d)"
+          chmod 700 "$GNUPGHOME_SECRET"
+
+          echo "$GPG_SIGNING_KEY" | base64 -d | gpg --batch --import
+          SECRET_FPR=$(gpg --with-colons --fingerprint | grep "^fpr" | head -n1 | cut -d: -f10)
+
+          echo "🔐 Secret key fingerprint: $SECRET_FPR"
+
+          export GNUPGHOME_PUB="$(mktemp -d)"
+          chmod 700 "$GNUPGHOME_PUB"
+          gpg --batch --no-default-keyring --keyring "$GNUPGHOME_PUB/pubring.kbx" --import public-key.gpg
+
+          REPO_FPR=$(gpg --no-default-keyring --keyring "$GNUPGHOME_PUB/pubring.kbx" --with-colons --fingerprint | grep "^fpr" | head -n1 | cut -d: -f10)
+
+          echo "📂 Repo key fingerprint:    $REPO_FPR"
+
+          if [[ "$SECRET_FPR" == "$REPO_FPR" ]]; then
+            echo "✅ Fingerprints match — public key is valid"
+          else
+            echo "❌ Fingerprints do NOT match!"
+            exit 1
+          fi
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+
   build-tauri:
+    needs: [check-gpg-keys, dep-versions]
     strategy:
       fail-fast: false
       matrix:
@@ -66,7 +98,6 @@ jobs:
             arch-postcli: ""
 
     runs-on: ${{ matrix.platform }}
-    needs: dep-versions
     steps:
       - uses: actions/checkout@v3
 
@@ -403,7 +434,7 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
-    needs: [build-tauri, sign-win-app, sign-app-image]
+    needs: [build-tauri, sign-windows, sign-linux]
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -417,6 +448,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           name: Release ${{ github.ref_name }}
+          body: |
+            > To verify the signature of Linux artifacts please use [public-key.gpg](https://github.com/spacemeshos/sm-init-app-v2/blob/${{ github.ref_name }}/public-key.gpg) from the repository.
           draft: true
           prerelease: true
           files: "./release/*"
