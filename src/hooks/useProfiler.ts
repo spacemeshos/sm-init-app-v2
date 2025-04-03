@@ -141,6 +141,7 @@ export const useProfiler = () => {
 
     const currentDir = settings.selectedDir || (settings.defaultDir as string);
     const newBenchmark: Benchmark = {
+      id: Date.now(),
       nonces: benchmarkSettings.nonces,
       threads: benchmarkSettings.threads,
       status: BenchmarkStatus.Idle,
