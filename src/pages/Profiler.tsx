@@ -1,9 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import BackgroundImage from '../assets/banner4.png';
-import File from '../assets/file.png';
 import InfoIcon from '../assets/help.png';
 import Gear from '../assets/setting.png';
 import { BackButton, Button, CloseButton } from '../components/button';
@@ -78,7 +76,6 @@ const StepsContainer = styled.div`
 `;
 
 const Profiler: React.FC = () => {
-  const navigate = useNavigate();
   const [showAccuracyModal, setShowAccuracyModal] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -159,7 +156,7 @@ const Profiler: React.FC = () => {
           {/* Info */}
           <Tile
             height={65}
-            width={710}
+            width={840}
             blurred
             backgroundColor={Colors.darkOpaque}
             onClick={() => setShowInfoModal(true)}
@@ -181,11 +178,6 @@ const Profiler: React.FC = () => {
             footer="Test Accuracy"
             icon={Gear}
             onClick={() => setShowAccuracyModal(true)}
-          />
-          <ActionTile
-            footer="Full config"
-            icon={File}
-            onClick={() => navigate('/config')}
           />
         </OptionsContainer>
 
