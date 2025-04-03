@@ -223,7 +223,7 @@ const Profiler: React.FC = () => {
               <CoverTile
                 counter="2"
                 heading="Experiment with speed and probability"
-                footer="Test different numbers of CPU Cores and Nonces to find optimal config. 
+                footer="Test different numbers of CPU Threads and Nonces to find optimal config. 
               Balance the probability of one pass and proving speed."
               />
             ) : (
@@ -243,8 +243,8 @@ const Profiler: React.FC = () => {
                   />
                 </Tile>
                 <Tile
-                  heading="CPU Cores:"
-                  footer="more cores = faster proving, but more power consumption"
+                  heading="CPU Threads:"
+                  footer="more threads = faster proving, but more power consumption"
                   height={200}
                   onClick={(e) => e?.stopPropagation()}
                 >
