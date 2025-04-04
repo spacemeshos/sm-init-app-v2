@@ -155,6 +155,7 @@ export interface ProfilerResult {
  * Extends ProfilerResult but makes some fields optional for in-progress benchmarks
  */
 export interface Benchmark extends Partial<ProfilerResult> {
+  id: number;
   nonces: number;
   threads: number;
   status: BenchmarkStatus;
@@ -240,9 +241,9 @@ const ProfilerTable: React.FC<ProfilerTableProps> = ({
         )}
       </TableHeader>
       <TableBody ref={scrollRef}>
-        {benchmarks.map((benchmark, index) => (
+        {benchmarks.map((benchmark) => (
           <TableRow
-            key={`${benchmark.nonces}-${benchmark.threads}-${index}`}
+            key={`${benchmark.nonces}-${benchmark.threads}-${benchmark.id}`}
             isClickable={benchmark.status === BenchmarkStatus.Complete}
             onClick={() => onBenchmarkSelect(benchmark)}
           >

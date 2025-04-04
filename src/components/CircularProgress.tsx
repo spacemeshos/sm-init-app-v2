@@ -62,7 +62,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
         />
       </SVGCircle>
       <TextContainer>
-        <ProgressText>{Math.round(normalizedProgress)}%</ProgressText>
+        <ProgressText>{normalizedProgress.toFixed(2)}%</ProgressText>
         {label && <Label>{label}</Label>}
       </TextContainer>
     </Container>
