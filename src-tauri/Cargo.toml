@@ -7,7 +7,6 @@ license = ""
 repository = ""
 default-run = "app"
 edition = "2021"
-rust-version = "1.60"
 
 [build-dependencies]
 tauri-build = { version = "1.5.2", features = [] }
@@ -15,16 +14,20 @@ tauri-build = { version = "1.5.2", features = [] }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.6.7", features = [ "api-all"] } # Enabling all API features
+tauri = { version = "1.6.7", features = ["api-all"] }
 wgpu = "0.12"
 sys-info = "0.9.1"
 libc = "0.2.155"
 num_cpus = "1.16.0"
 nix = { version = "0.26", features = ["signal"] }
-winapi = { version = "0.3", features = ["processthreadsapi", "winnt", "handleapi"] }
+winapi = { version = "0.3", features = [
+    "processthreadsapi",
+    "winnt",
+    "handleapi",
+] }
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.
 # If you use cargo directly instead of tauri's cli you can use this feature flag to switch between tauri's `dev` and `build` modes.
 # DO NOT REMOVE!!
-custom-protocol = [ "tauri/custom-protocol" ]
+custom-protocol = ["tauri/custom-protocol"]
