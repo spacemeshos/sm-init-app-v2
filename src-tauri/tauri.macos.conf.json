@@ -2,8 +2,9 @@
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "tauri": {
     "bundle": {
-      "identifier": "com.tauri.dev",
+      "identifier": "com.spacemesh.init",
       "resources": [
+        "bin/postcli/libpost.dylib",
         "bin/postcli/postcli",
         "bin/profiler/profiler"
       ]

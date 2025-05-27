@@ -24,34 +24,30 @@
 This application requires specific binary files to function properly. These files are not included in the repository and need to be downloaded separately:
 
 1. Download the required binaries from the official Spacemesh releases:
-   - post-rs binaries:
-     - macOS: libpost.dylib, post-service, profiler
-     - Windows: post.dll, post-service.exe, profiler.exe
-   - postcli binaries:
+   - profiler binaries from [spacemeshos/post-rs](https://github.com/spacemeshos/post-rs/releases):
+     - macOS: profiler
+     - linux: profiler
+     - Windows: profiler.exe
+   - postcli binaries from [spacemeshos/post](https://github.com/spacemeshos/post/releases):
      - macOS: libpost.dylib, postcli
+     - linux: libpost.so, postcli
      - Windows: post.dll, postcli.exe
 
 2. Place the downloaded files in their respective directories:
    ```
-   src-tauri/bin/post-rs/
+   src-tauri/bin/profiler/
    src-tauri/bin/postcli/
    ```
-
-You can find the latest versions of these binaries at:
-- [Post-rs Releases](https://github.com/spacemeshos/post-rs/releases) for post-rs
-- [PostCli Releases](https://github.com/spacemeshos/post/releases) for postcli
 
 ### Platform-Specific Notes
 
 #### Windows
 - Download Windows-specific binaries (*.exe)
 - Required Visual C++ Redistributable packages must be installed
-- Application expects postcli.exe in the bin/postcli directory
 
-#### macOS
-- Download macOS-specific binaries (double check the architecture)
-- Application expects postcli in the bin/postcli directory
-- Ensure binary files have execute permissions (`chmod +x`)
+#### macOS and Linux
+- Download platform-specific binaries (double check the architecture)
+- Ensure binary files have execute permissions (`chmod +x ./src-tauri/bin/**/*`)
 
 ### Installation Steps
 
@@ -77,7 +73,7 @@ yarn dev
 ### Production Build
 
 ```sh
-yarn build
+yarn bundle
 ```
 
 ### Running Tests

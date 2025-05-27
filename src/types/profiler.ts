@@ -41,6 +41,7 @@ export interface ProfilerResult {
  * @extends ProfilerResult
  */
 export interface Benchmark extends ProfilerResult {
+  id: number;             // Unique identifier of benchmark (to not overwrite previous runs)
   nonces: number;         // Number of nonces to process in the benchmark
   threads: number;        // Number of CPU threads to use
   status: BenchmarkStatus; // Current status of the benchmark

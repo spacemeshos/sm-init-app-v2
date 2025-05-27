@@ -188,7 +188,7 @@ export const POSProcessProvider: React.FC<{ children: ReactNode }> = ({
       console.log('New process state:', newState);
       return newState;
     });
-  }, [settings]);
+  }, [settings, setFileIndex]);
 
   const totalFiles = processState.fileProgress?.totalFiles ?? 1;
   const entireFileProgress = ((processState.fileProgress?.currentFile ?? 0) / totalFiles) * 100;

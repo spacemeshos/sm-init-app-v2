@@ -31,6 +31,7 @@ import { calculateNumFiles } from "./sizeUtils";
  *   - File progress details (if available)
  */
 export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSProgress => {
+
   // Initialize with default "processing" state
   const defaultResponse: ParsedPOSProgress = {
     stage: Stage.Processing,
@@ -55,9 +56,7 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
     (cleanLog.includes("WARNING") && 
      (cleanLog.includes("commitmentAtxId") || 
       cleanLog.includes("cannot proceed")))
-  ) {
-    console.log('Error detected in log:', cleanLog);
-    
+  ) {   
     // Format a user-friendly error message
     let errorDetails = cleanLog;
     
@@ -78,8 +77,6 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
       }
     }
     
-    console.log('Formatted error details:', errorDetails);
-    
     return {
       stage: Stage.Error,
       progress: 0,
@@ -93,8 +90,6 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
   if (fileStartMatch) {
     const currentFile = parseInt(fileStartMatch[1]);
     const progress = (currentFile / totalFiles) * 100;
-    
-    console.log('Matched file start:', { currentFile, totalFiles, progress });
     
     return {
       stage: Stage.Processing,
@@ -115,8 +110,6 @@ export const parsePOSProgress = (log: string, settings: POSSettings): ParsedPOSP
   if (fileCompleteMatch) {
     const currentFile = parseInt(fileCompleteMatch[1]);
     const progress = ((currentFile + 1) / totalFiles) * 100;
-    
-    console.log('Matched file completion:', { currentFile, totalFiles, progress });
     
     return {
       stage: Stage.Processing,

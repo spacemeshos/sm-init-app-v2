@@ -105,7 +105,7 @@ const Generate: React.FC = () => {
       fetchAtxId();
       isFetchedOnce.current = true;
     }
-  }, [settings]);
+  }, [settings, fetchAtxId]);
 
   // Detect providers on component mount
   useEffect(() => {

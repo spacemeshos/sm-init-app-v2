@@ -38,12 +38,14 @@ export const calculateTotalSize = (numUnits: number = SizeConstants.DEFAULT_NUM_
  * Calculates the maximum data size that can be processed based on speed
  * Uses cycle gap hours and safety period for calculation
  * @param {number} speed - Processing speed in GiB/s
- * @returns {number} Maximum size in GiB that can be processed within constraints
+ * @returns {number} Maximum size in bytes that can be processed within constraints
  */
 export const calculateMaxDataSize = (speed: number): number => {
   const cycleGapSeconds = SizeConstants.CYCLE_GAP_HOURS * 3600; // Convert hours to seconds
-  const gibSize = cycleGapSeconds * SizeConstants.K_SAFE_PERIOD * speed;
-  return Math.floor(gibSize);
+  const speedBytes = speed * 1024 * 1024 * 1024; // Convert GiB/s to bytes/s
+  const maxSize = speedBytes * cycleGapSeconds; // Maximum size in bytes
+  const maxSafeSize = maxSize * SizeConstants.K_SAFE_PERIOD;
+  return Math.floor(maxSafeSize);
 };
 
 /**

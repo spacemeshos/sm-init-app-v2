@@ -8,6 +8,7 @@ import { invoke } from '@tauri-apps/api';
 import { join } from '@tauri-apps/api/path';
 import { useEffect, useState } from 'react';
 
+import { useConsole } from '../state/ConsoleContext';
 import { useSettings } from '../state/SettingsContext';
 import {
   Benchmark,
@@ -34,6 +35,7 @@ const DEFAULT_CONFIG: ProfilerConfig = {
 export const useProfiler = () => {
   // Access global settings context for directory configurations
   const { settings, setSettings } = useSettings();
+  const { updateConsole } = useConsole();
   
   // State management for profiler configuration and results
   const [maxCores, setMaxCores] = useState(0);                                    // Maximum available CPU cores
@@ -78,7 +80,7 @@ export const useProfiler = () => {
     try {
       setBenchmarks((prev) =>
         prev.map((b) =>
-          b.nonces === benchmark.nonces && b.threads === benchmark.threads
+          b.id === benchmark.id
             ? { ...b, status: BenchmarkStatus.Running }
             : b
         )
@@ -92,6 +94,8 @@ export const useProfiler = () => {
         settings.selectedDir || (settings.defaultDir as string);
       const dataFilePath = await join(currentDir, 'profiler-data');
 
+      updateConsole('profiler', `Running profiler: ${benchmark.nonces} nonces, ${benchmark.threads} threads at ${dataFilePath}. Data size: ${config.data_size} GiB, duration: ${config.duration} seconds`);
+
       const result = await invoke<ProfilerResult>('run_profiler', {
         nonces: benchmark.nonces,
         threads: benchmark.threads,
@@ -100,6 +104,8 @@ export const useProfiler = () => {
           data_file: dataFilePath,
         },
       });
+
+      updateConsole('profiler', `Profiler result: ${JSON.stringify(result)}`);
 
       setBenchmarks((prev) =>
         prev.map((b) =>
@@ -135,6 +141,7 @@ export const useProfiler = () => {
 
     const currentDir = settings.selectedDir || (settings.defaultDir as string);
     const newBenchmark: Benchmark = {
+      id: Date.now(),
       nonces: benchmarkSettings.nonces,
       threads: benchmarkSettings.threads,
       status: BenchmarkStatus.Idle,

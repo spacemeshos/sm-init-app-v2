@@ -6,39 +6,96 @@ on:
       - 'v*'
 
 jobs:
-  create-release:
+
+  dep-versions:
     runs-on: ubuntu-latest
     outputs:
-      release_id: ${{ steps.create-release.outputs.id }}
-      release_upload_url: ${{ steps.create-release.outputs.upload_url }}
+      profiler: ${{ steps.profiler.outputs.version }}
+      postcli: ${{ steps.postcli.outputs.version }}
+    steps:
+      - name: Get latest profiler version
+        id: profiler
+        shell: bash
+        run: |
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post-rs/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": ?"([^"]+)".*/\1/')
+          if [ -z "$LATEST_VERSION" ]; then
+            echo "Failed to get latest version"
+            exit 1
+          fi
+          echo "::set-output name=version::$LATEST_VERSION"
+      - name: Get latest postcli version
+        id: postcli
+        shell: bash
+        run: |
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": ?"([^"]+)".*/\1/')
+          if [ -z "$LATEST_VERSION" ]; then
+            echo "Failed to get latest version"
+            exit 1
+          fi
+          echo "::set-output name=version::$LATEST_VERSION"
+      - name: Latest versions
+        run: |
+          echo "profiler: ${{ steps.profiler.outputs.version }}"
+          echo "postcli: ${{ steps.postcli.outputs.version }}"
 
+  check-gpg-keys:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Create Release
-        id: create-release
-        uses: actions/create-release@v1
+      - name: Validate public GPG key in repo matches secret
+        run: |
+          export GNUPGHOME_SECRET="$(mktemp -d)"
+          chmod 700 "$GNUPGHOME_SECRET"
+
+          echo "$GPG_SIGNING_KEY" | base64 -d | gpg --batch --import
+          SECRET_FPR=$(gpg --with-colons --fingerprint | grep "^fpr" | head -n1 | cut -d: -f10)
+
+          echo "🔐 Secret key fingerprint: $SECRET_FPR"
+
+          export GNUPGHOME_PUB="$(mktemp -d)"
+          chmod 700 "$GNUPGHOME_PUB"
+          gpg --batch --no-default-keyring --keyring "$GNUPGHOME_PUB/pubring.kbx" --import public-key.gpg
+
+          REPO_FPR=$(gpg --no-default-keyring --keyring "$GNUPGHOME_PUB/pubring.kbx" --with-colons --fingerprint | grep "^fpr" | head -n1 | cut -d: -f10)
+
+          echo "📂 Repo key fingerprint:    $REPO_FPR"
+
+          if [[ "$SECRET_FPR" == "$REPO_FPR" ]]; then
+            echo "✅ Fingerprints match — public key is valid"
+          else
+            echo "❌ Fingerprints do NOT match!"
+            exit 1
+          fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: true
-          prerelease: false
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
 
   build-tauri:
-    needs: create-release
+    needs: [check-gpg-keys, dep-versions]
     strategy:
       fail-fast: false
       matrix:
         platform: [macos-latest, windows-latest]
         include:
           - platform: macos-latest
+            id: macos-arm64
             os-name: darwin
-            archive-ext: zip
+            arch: "-m1"
+            arch-postcli: "_ARM64"
+          - platform: macos-13
+            id: macos-x64
+            os-name: darwin
+            arch: ""
+            arch-postcli: ""
+          - platform: ubuntu-latest
+            id: linux
+            os-name: linux
+            arch: ""
+            arch-postcli: ""
           - platform: windows-latest
+            id: windows
             os-name: windows
-            archive-ext: zip
+            arch: ""
+            arch-postcli: ""
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -61,60 +118,65 @@ jobs:
 
       - name: Create binary directories
         run: |
-          mkdir -p src-tauri/bin/post-rs
+          mkdir -p src-tauri/bin/profiler
           mkdir -p src-tauri/bin/postcli
 
-      - name: Download post-rs binaries
+      - name: Get latest version and URL of profiler
+        id: profiler
+        shell: bash
         run: |
-          # Get latest version with error checking
-          LATEST_VERSION=$(curl -s https://api.github.com/repos/spacemeshos/post-rs/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": ?"([^"]+)".*/\1/')
-          if [ -z "$LATEST_VERSION" ]; then
-            echo "Failed to get latest version"
-            exit 1
-          fi
-          echo "Latest version: $LATEST_VERSION"
+          LATEST_VERSION=${{ needs.dep-versions.outputs.profiler }}
           
           # Map OS names to match release asset naming
           case "${{ matrix.os-name }}" in
-            "darwin") PLATFORM="Darwin" ;;
-            "linux") PLATFORM="Linux" ;;
-            "windows") PLATFORM="Windows" ;;
+            "darwin") PLATFORM="macos" ;;
+            "linux") PLATFORM="linux" ;;
+            "windows") PLATFORM="windows" ;;
           esac
           
           # Construct and verify download URL
-          DOWNLOAD_URL="https://github.com/spacemeshos/post-rs/releases/download/${LATEST_VERSION}/profiler-${PLATFORM}-${LATEST_VERSION}.zip"
-          echo "Downloading from: $DOWNLOAD_URL"
-          
+          DOWNLOAD_URL="https://github.com/spacemeshos/post-rs/releases/download/${LATEST_VERSION}/profiler-${PLATFORM}${{ matrix.arch }}-${LATEST_VERSION}.zip"
+          echo "::set-output name=url::$DOWNLOAD_URL"
+
+      - name: Download profiler binaries
+        shell: bash
+        run: |
           # Download with error checking
-          if ! curl -L --fail -o profiler.zip "$DOWNLOAD_URL"; then
-            echo "Failed to download post-rs binary"
+          if ! curl -L --fail -o profiler.zip "${{ steps.profiler.outputs.url }}"; then
+            echo "Failed to download profiler binary (from post-rs repo)"
             exit 1
           fi
           
           # Extract with error checking
-          if ! unzip -o profiler.zip -d src-tauri/bin/post-rs; then
-            echo "Failed to extract post-rs binary"
-            exit 1
+          if ! unzip -o profiler.zip -d src-tauri/bin/profiler; then
+            echo "Failed to extract profiler binary"
+            exit 2
           fi
           
           rm profiler.zip
-        shell: bash
 
-      - name: Download postcli binaries
+      - name: Get latest version and URL of postcli
+        id: postcli
+        shell: bash
         run: |
+          LATEST_VERSION=${{ needs.dep-versions.outputs.postcli }}
+
           # Map OS names to match release asset naming
           case "${{ matrix.os-name }}" in
-            "darwin") PLATFORM="Darwin" ;;
+            "darwin") PLATFORM="macOS" ;;
             "linux") PLATFORM="Linux" ;;
             "windows") PLATFORM="Windows" ;;
           esac
           
           # Construct and verify download URL
-          DOWNLOAD_URL="https://github.com/spacemeshos/post/releases/latest/download/postcli-${PLATFORM}.zip"
-          echo "Downloading from: $DOWNLOAD_URL"
-          
+          DOWNLOAD_URL="https://github.com/spacemeshos/post/releases/latest/download/postcli-${PLATFORM}${{ matrix.arch-postcli }}.zip"
+          echo "::set-output name=url::$DOWNLOAD_URL"
+
+      - name: Download postcli binaries
+        shell: bash
+        run: |
           # Download with error checking
-          if ! curl -L --fail -o postcli.zip "$DOWNLOAD_URL"; then
+          if ! curl -L --fail -o postcli.zip "${{ steps.postcli.outputs.url }}"; then
             echo "Failed to download postcli binary"
             exit 1
           fi
@@ -126,16 +188,298 @@ jobs:
           fi
           
           rm postcli.zip
+
+      - name: Set permissions for binaries
         shell: bash
+        run: |
+          chmod +x src-tauri/bin/profiler/*
+          chmod +x src-tauri/bin/postcli/*
+
+      - name: Disable Apple quarantine for binaries (MacOS only)
+        if: matrix.os-name == 'darwin'
+        run: |
+          sudo xattr -rd com.apple.quarantine src-tauri/bin/profiler/*
+          sudo xattr -rd com.apple.quarantine src-tauri/bin/postcli/*
+
+      - name: Install dependencies (Linux only)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config libgtk-3-dev libappindicator3-dev librsvg2-dev
+          sudo apt-get install -y ocl-icd-libopencl1 ocl-icd-dev opencl-headers
+
+
+      - name: Install libwebkit2gtk-4.0-dev (Linux only)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -e
+          SOURCEFILE=$(mktemp -u /etc/apt/sources.list.d/jammy-webkit.XXXXXX.sources)
+          cleanup() {
+              echo "Cleaning up..."
+              sudo rm -f "$SOURCEFILE"
+              sudo apt update
+          }
+          trap cleanup EXIT
+          echo "Creating temporary jammy repository source..."
+          sudo tee "$SOURCEFILE" > /dev/null << 'EOF'
+          Types: deb
+          URIs: http://gb.archive.ubuntu.com/ubuntu
+          Suites: jammy
+          Components: main universe
+          Enabled: yes
+          EOF
+          echo "Updating package lists..."
+          sudo apt update
+          echo "Installing libwebkit2gtk-4.0-dev..."
+          if ! sudo apt install -y libwebkit2gtk-4.0-dev; then
+              echo "Failed to install libwebkit2gtk-4.0-dev"
+              exit 1
+          fi
+          echo "Success: libwebkit2gtk-4.0-dev is installed."
+
+      - name: Set up signing keychain for embedded binaries
+        if: runner.os == 'macOS'
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          echo "$APPLE_CERTIFICATE" | base64 --decode > cert.p12
+      
+          security create-keychain -p embedded-binaries embedded-binaries.keychain
+          security set-keychain-settings -lut 3600 embedded-binaries.keychain
+          security unlock-keychain -p embedded-binaries embedded-binaries.keychain
+      
+          security import cert.p12 \
+            -k embedded-binaries.keychain \
+            -P "$APPLE_CERTIFICATE_PASSWORD" \
+            -T /usr/bin/codesign \
+            -T /usr/bin/productbuild \
+            -T /usr/bin/pkgbuild
+      
+          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+            -s -k embedded-binaries embedded-binaries.keychain
+      
+          security list-keychain -d user -s embedded-binaries.keychain login.keychain
+
+      - name: Sign embedded binaries
+        if: runner.os == 'macOS'
+        env:
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+        run: |
+          IDENTITY="$APPLE_SIGNING_IDENTITY"
+          KEYCHAIN="embedded-binaries.keychain"
+      
+          echo "Signing embedded binaries with identity: $IDENTITY"
+      
+          find "src-tauri/bin/postcli" -type f \! -name .DS_Store | while read BIN; do
+            echo "Signing $BIN"
+            codesign --force --options runtime --timestamp \
+              --sign "$IDENTITY" --keychain "$KEYCHAIN" "$BIN"
+          done
+      
+          find "src-tauri/bin/profiler" -type f \! -name .DS_Store | while read BIN; do
+            echo "Signing $BIN"
+            codesign --force --options runtime --timestamp \
+              --sign "$IDENTITY" --keychain "$KEYCHAIN" "$BIN"
+          done
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
-          releaseId: ${{ needs.create-release.outputs.release_id }}
-          tagName: ${{ github.ref_name }}
-          releaseName: 'App v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
-          prerelease: false
+          args: "--verbose"
+
+      # Store artifacts for further jobs
+      - name: Store artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.id }}
+          path: |
+            ./src-tauri/target/release/bundle/**/*
+          if-no-files-found: error
+
+  sign-windows:
+    # CodeSignTool works perfectly on any platform even it signs a windows file
+    # So we use ubuntu to make job faster and more stable
+    runs-on: ubuntu-latest
+    needs: build-tauri
+    steps:
+      - name: Download windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows
+          path: ./release/
+
+      - name: Cache CodeSignTool
+        id: cache-codesigntool
+        uses: actions/cache@v3
+        with:
+          path: ./codesigntool
+          key: codesign-cache-2
+          restore-keys: codesign-cache-2
+
+      - name: Download CodeSignTool archive
+        if: steps.cache-codesigntool.outputs.cache-hit != 'true'
+        run: |
+          curl -L -k --output ./codesigntool.zip --create-dirs https://smapp-downloads.spacemesh.network/codesigntool.zip
+
+      - name: Unzip archive
+        if: steps.cache-codesigntool.outputs.cache-hit != 'true'
+        run: |
+          unzip -d ./ ./codesigntool.zip
+          chmod 755 ./codesigntool/*
+
+      # CodeSignTool requires Java 11 and ubuntu-latest uses it by default
+      # but to make it robust add extra step to ensure a Java version
+      - name: Switch to Java 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: "adopt"
+          java-version: "11"
+
+      - name: Create directory for signed artifact
+        run: mkdir -p ./signed/
+
+      - name: Sign App
+        # Rename file and then vice versa, because CodeSignTool can't accept path with spaces
+        run: |
+          set -e
+          mkdir -p signed
+
+          find ./release/ \( -iname "*.exe" -o -iname "*.msi" \) -type f -print0 | while IFS= read -r -d '' BIN; do
+            EXT="${BIN##*.}"
+            TMP_NAME="spacemesh.${EXT}"
+            ORIG_NAME=$(basename "$BIN")
+
+            echo "🔄 Renaming '$ORIG_NAME' to '$TMP_NAME'"
+            cp "$BIN" "./codesigntool/$TMP_NAME"
+
+            (
+              cd ./codesigntool
+              ./CodeSignTool.sh sign \
+                -username="$USERNAME" \
+                -password="$PASSWORD" \
+                -totp_secret="$TOTP" \
+                -input_file_path="$TMP_NAME" \
+                -output_dir_path="../signed"
+            )
+
+            echo "✅ Moving signed file back to original name: $ORIG_NAME"
+            mv "signed/$TMP_NAME" "signed/$ORIG_NAME"
+
+            rm "./codesigntool/$TMP_NAME"
+          done
+        env:
+          USERNAME: ${{ secrets.EVCS_USERNAME }}
+          PASSWORD: ${{ secrets.EVCS_PASSWORD }}
+          TOTP: ${{ secrets.EVCS_TOTP_SECRET }}
+
+      - name: Store signed artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-signed
+          path: ./signed/*
+          if-no-files-found: error
+
+      - name: Delete unsigned artifacts
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: windows
+
+  sign-linux:
+    runs-on: ubuntu-latest
+    needs: build-tauri
+    steps:
+      - name: Download x64 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux
+          path: ./release/
+
+      - name: Import GPG keys
+        run: |
+          export GPG_TTY=$(tty)
+          echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import --pinentry-mode=loopback --passphrase "$GPG_PASSPHRASE"
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: List files
+        run: |
+          ls -la ./release
+
+# /home/runner/work/sm-init-app-v2/sm-init-app-v2/src-tauri/target/release/bundle/deb/Spacemesh PoS Init_1.0.1_amd64.deb
+# /home/runner/work/sm-init-app-v2/sm-init-app-v2/src-tauri/target/release/bundle/rpm/Spacemesh PoS Init-1.0.1-1.x86_64.rpm
+# /home/runner/work/sm-init-app-v2/sm-init-app-v2/src-tauri/target/release/bundle/appimage/Spacemesh PoS Init_1.0.1_amd64.AppImage
+
+      - name: Sign files x64
+        run: |
+          mkdir -p signed
+
+          find "./release/" -type f -name "*.deb" -o -name "*.rpm" -o -name "*.AppImage" | while read BIN; do
+            FILENAME=$(basename "$BIN")
+            echo "🔐 Signing $BIN"
+            gpg --pinentry-mode=loopback --passphrase "$GPG_PASSPHRASE" --output "./signed/$FILENAME.sig" --detach-sign "$BIN"
+            mv "$BIN" "./signed/$FILENAME"
+          done
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Store signatures
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-signed
+          path: ./signed/*
+          if-no-files-found: error
+
+      - name: Delete unsigned artifacts
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: linux
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [build-tauri, sign-windows, sign-linux]
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./release/
+          merge-multiple: true
+
+      - name: Copy .dmg to release directory
+        run: |
+          find . -type f -name "*.dmg" | while read -r dmg; do
+            echo "💿 Found DMG: $dmg"
+            cp "$dmg" ./release/
+          done
+
+      - name: Create Release
+        id: create-release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: Release ${{ github.ref_name }}
+          body: |
+            > To verify the signature of Linux artifacts please use [public-key.gpg](https://github.com/spacemeshos/sm-init-app-v2/blob/${{ github.ref_name }}/public-key.gpg) from the repository.
+          draft: true
+          prerelease: true
+          files: "./release/*"
+
+      - name: Delete all artifacts
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: |
+            windows-signed
+            linux-signed
+            macos-x64
+            macos-arm64

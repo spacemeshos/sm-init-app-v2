@@ -8,10 +8,10 @@ import React from 'react';
 
 import { useSettings } from '../../state/SettingsContext';
 import { SetupContainer, SetupTileWrapper } from '../../styles/containers';
-import { truncateHex, isValidHex } from '../../utils/hexUtils';
+import { isValidHex } from '../../utils/hexUtils';
+import { Button } from '../button';
 import { HexInput } from '../input';
 import { Tile } from '../tile';
-import { Button } from '../button';
 
 /**
  * ATX ID Selection Component
