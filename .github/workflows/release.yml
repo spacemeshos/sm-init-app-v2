@@ -107,8 +107,11 @@ jobs:
           node-version: '21.x'
           cache: 'yarn'
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@1.85
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
 
       - name: Install app dependencies
         run: yarn install
